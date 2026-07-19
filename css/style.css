@@ -476,7 +476,7 @@ h3 {
      mais estreitas que a foto, o corte de "cover" estava sobrando pista
      vazia embaixo e cortando a parte de cima que interessa. */
   background: linear-gradient(160deg, var(--cor-primaria-escura), var(--cor-primaria) 60%),
-    url("../images/banner.jpg") center 22% / cover no-repeat;
+    url("../images/banner.webp") center 22% / cover no-repeat;
   background-blend-mode: multiply;
   color: var(--cor-branco);
   overflow: hidden;

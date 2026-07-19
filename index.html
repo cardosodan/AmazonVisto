@@ -29,6 +29,11 @@
 
   <link rel="icon" type="image/png" href="images/favicon.png" />
 
+  <!-- Preload da foto do banner: ela só é "descoberta" pelo navegador depois
+       que o CSS termina de processar (é background-image, não <img>) — sem
+       isso, o carregamento começa mais tarde do que precisava. -->
+  <link rel="preload" as="image" href="images/banner.webp" type="image/webp" />
+
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
@@ -36,7 +41,7 @@
     rel="stylesheet"
   />
 
-  <link rel="stylesheet" href="css/style.css?v=4" />
+  <link rel="stylesheet" href="css/style.css?v=5" />
 </head>
 <body>
   <a class="pular-conteudo" href="#inicio">Pular para o conteúdo</a>
@@ -48,7 +53,7 @@
     <div class="container cabecalho__conteudo">
       <a href="#inicio" class="cabecalho__marca">
         <img
-          src="images/logo.png"
+          src="images/logo.webp"
           alt="Logo Amazon Visto"
           width="44"
           height="44"
@@ -134,7 +139,7 @@
       <div class="container secao__grade sobre__grade">
         <div class="sobre__imagem reveal">
           <img
-            src="images/sobre.jpg?v=2"
+            src="images/sobre.webp"
             alt="Equipe Amazon Visto atendendo clientes"
             width="900"
             height="1100"
@@ -214,7 +219,7 @@
         <div class="cartoes-grade" id="gradeServicos">
           <article class="cartao-produto reveal">
             <div class="cartao-produto__imagem">
-              <img src="images/produto-1.jpg?v=2" alt="Visto Americano" width="800" height="800" loading="lazy" />
+              <img src="images/produto-1.webp" alt="Visto Americano" width="800" height="800" loading="lazy" />
             </div>
             <div class="cartao-produto__corpo">
               <h3>Visto Americano</h3>
@@ -224,7 +229,7 @@
 
           <article class="cartao-produto reveal">
             <div class="cartao-produto__imagem">
-              <img src="images/produto-2.jpg?v=2" alt="Visto Canadense" width="800" height="800" loading="lazy" />
+              <img src="images/produto-2.webp" alt="Visto Canadense" width="800" height="800" loading="lazy" />
             </div>
             <div class="cartao-produto__corpo">
               <h3>Visto Canadense</h3>
@@ -234,7 +239,7 @@
 
           <article class="cartao-produto reveal">
             <div class="cartao-produto__imagem">
-              <img src="images/produto-3.jpg?v=2" alt="Visto Chinês" width="800" height="800" loading="lazy" />
+              <img src="images/produto-3.webp" alt="Visto Chinês" width="800" height="800" loading="lazy" />
             </div>
             <div class="cartao-produto__corpo">
               <h3>Visto Chinês</h3>
@@ -244,7 +249,7 @@
 
           <article class="cartao-produto reveal">
             <div class="cartao-produto__imagem">
-              <img src="images/produto-4.jpg?v=2" alt="Visto Peruano" width="800" height="800" loading="lazy" />
+              <img src="images/produto-4.webp" alt="Visto Peruano" width="800" height="800" loading="lazy" />
             </div>
             <div class="cartao-produto__corpo">
               <h3>Visto Peruano</h3>
@@ -254,7 +259,7 @@
 
           <article class="cartao-produto reveal">
             <div class="cartao-produto__imagem">
-              <img src="images/produto-5.jpg?v=2" alt="Passaporte Brasileiro" width="800" height="800" loading="lazy" />
+              <img src="images/produto-5.webp" alt="Passaporte Brasileiro" width="800" height="800" loading="lazy" />
             </div>
             <div class="cartao-produto__corpo">
               <h3>Passaporte Brasileiro</h3>
@@ -264,7 +269,7 @@
 
           <article class="cartao-produto reveal">
             <div class="cartao-produto__imagem">
-              <img src="images/produto-6.jpg?v=2" alt="Intercâmbio: Estudo e Trabalho" width="800" height="800" loading="lazy" />
+              <img src="images/produto-6.webp" alt="Intercâmbio: Estudo e Trabalho" width="800" height="800" loading="lazy" />
             </div>
             <div class="cartao-produto__corpo">
               <h3>Intercâmbio: Estudo e Trabalho</h3>
@@ -279,7 +284,7 @@
                ================================================================ -->
           <article class="cartao-produto cartao-produto--extra">
             <div class="cartao-produto__imagem">
-              <img src="images/produto-7.jpg" alt="TROCAR: nome do serviço 7" width="800" height="800" loading="lazy" />
+              <img src="images/produto-7.webp" alt="TROCAR: nome do serviço 7" width="800" height="800" loading="lazy" />
             </div>
             <div class="cartao-produto__corpo">
               <h3>TROCAR: Nome do serviço 7</h3>
@@ -289,7 +294,7 @@
 
           <article class="cartao-produto cartao-produto--extra">
             <div class="cartao-produto__imagem">
-              <img src="images/produto-8.jpg" alt="TROCAR: nome do serviço 8" width="800" height="800" loading="lazy" />
+              <img src="images/produto-8.webp" alt="TROCAR: nome do serviço 8" width="800" height="800" loading="lazy" />
             </div>
             <div class="cartao-produto__corpo">
               <h3>TROCAR: Nome do serviço 8</h3>
@@ -299,7 +304,7 @@
 
           <article class="cartao-produto cartao-produto--extra">
             <div class="cartao-produto__imagem">
-              <img src="images/produto-9.jpg" alt="TROCAR: nome do serviço 9" width="800" height="800" loading="lazy" />
+              <img src="images/produto-9.webp" alt="TROCAR: nome do serviço 9" width="800" height="800" loading="lazy" />
             </div>
             <div class="cartao-produto__corpo">
               <h3>TROCAR: Nome do serviço 9</h3>
@@ -309,7 +314,7 @@
 
           <article class="cartao-produto cartao-produto--extra">
             <div class="cartao-produto__imagem">
-              <img src="images/produto-10.jpg" alt="TROCAR: nome do serviço 10" width="800" height="800" loading="lazy" />
+              <img src="images/produto-10.webp" alt="TROCAR: nome do serviço 10" width="800" height="800" loading="lazy" />
             </div>
             <div class="cartao-produto__corpo">
               <h3>TROCAR: Nome do serviço 10</h3>
@@ -319,7 +324,7 @@
 
           <article class="cartao-produto cartao-produto--extra">
             <div class="cartao-produto__imagem">
-              <img src="images/produto-11.jpg" alt="TROCAR: nome do serviço 11" width="800" height="800" loading="lazy" />
+              <img src="images/produto-11.webp" alt="TROCAR: nome do serviço 11" width="800" height="800" loading="lazy" />
             </div>
             <div class="cartao-produto__corpo">
               <h3>TROCAR: Nome do serviço 11</h3>
@@ -329,7 +334,7 @@
 
           <article class="cartao-produto cartao-produto--extra">
             <div class="cartao-produto__imagem">
-              <img src="images/produto-12.jpg" alt="TROCAR: nome do serviço 12" width="800" height="800" loading="lazy" />
+              <img src="images/produto-12.webp" alt="TROCAR: nome do serviço 12" width="800" height="800" loading="lazy" />
             </div>
             <div class="cartao-produto__corpo">
               <h3>TROCAR: Nome do serviço 12</h3>
@@ -432,7 +437,7 @@
   <footer class="rodape">
     <div class="container rodape__conteudo">
       <div class="rodape__marca">
-        <img src="images/logo.png" alt="" width="32" height="32" loading="lazy" />
+        <img src="images/logo.webp" alt="" width="32" height="32" loading="lazy" />
         <span>Amazon Visto</span>
       </div>
 
