@@ -419,19 +419,41 @@ h3 {
   width: 100%;
   background: var(--cor-primaria-escura);
   border-radius: 2px;
-  transition: transform var(--transicao), opacity var(--transicao);
+}
+
+/* Animação em DUAS ETAPAS sequenciadas (não simultâneas), pra nunca mais
+   cruzar as 3 barras no meio do caminho:
+   - ABRINDO (vira X): a barra do meio some PRIMEIRO (sem atraso, rápido) e
+     só DEPOIS (atraso de 0.13s) as outras duas giram — quando elas começam
+     a girar, o meio já sumiu de vez, sem cruzar com nada.
+   - FECHANDO (volta a hambúrguer): a ordem inverte — as duas giram de volta
+     PRIMEIRO (sem atraso) e só DEPOIS (atraso de 0.16s) a barra do meio
+     reaparece, quando as outras já estão quase paradas de novo. */
+.menu-mobile span:nth-child(1),
+.menu-mobile span:nth-child(3) {
+  transition: transform 0.22s ease;
+}
+
+.menu-mobile span:nth-child(2) {
+  transition: opacity 0.15s ease 0.16s, width 0.15s ease 0.16s;
 }
 
 .menu-mobile[aria-expanded="true"] span:nth-child(1) {
   transform: translateY(7px) rotate(45deg);
-}
-
-.menu-mobile[aria-expanded="true"] span:nth-child(2) {
-  opacity: 0;
+  transition-delay: 0.13s;
 }
 
 .menu-mobile[aria-expanded="true"] span:nth-child(3) {
   transform: translateY(-7px) rotate(-45deg);
+  transition-delay: 0.13s;
+}
+
+.menu-mobile[aria-expanded="true"] span:nth-child(2) {
+  opacity: 0;
+  width: 0;
+  margin-left: auto;
+  margin-right: auto;
+  transition-delay: 0s;
 }
 
 /* ==========================================================================
@@ -439,10 +461,13 @@ h3 {
    ========================================================================== */
 .hero {
   position: relative;
-  /* Mais baixo no celular (a barra de endereço do navegador já consome boa
-     parte da tela) — fica mais alto de novo a partir do tablet, ver @media
-     no final do arquivo. */
-  min-height: 74vh;
+  /* Mais baixo no celular — de propósito BEM mais baixo que os 92vh do
+     desktop: sobra uma faixa da seção "Sobre" (incluindo o topo da foto)
+     visível já na primeira tela, sem precisar rolar nada. Isso funciona
+     como uma dica visual de "tem mais coisa aqui embaixo, arrasta" — mais
+     forte que só a setinha ou a onda decorativa sozinhas. Fica mais alto
+     de novo a partir do tablet, ver @media no final do arquivo. */
+  min-height: 58vh;
   display: flex;
   align-items: center;
   padding-top: 72px;
