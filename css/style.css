@@ -461,14 +461,7 @@ h3 {
    ========================================================================== */
 .hero {
   position: relative;
-  /* min-height sozinho NUNCA corta conteúdo (só define um piso — se o
-     conteúdo precisar de mais espaço, a caixa cresce à vontade). Cheguei a
-     testar um max-height fixo pra forçar o hero mais baixo, mas isso
-     CORTAVA o texto/botões quando não cabiam nesse limite — revertido. A
-     forma segura de deixar o hero mais baixo no celular é diminuir o
-     espaçamento interno dele mesmo (ver .hero__conteudo e afins, logo
-     abaixo), não impor um teto arbitrário na caixa de fora. */
-  min-height: 40vh;
+  min-height: 74vh;
   display: flex;
   align-items: center;
   padding-top: 72px;
@@ -496,12 +489,8 @@ h3 {
   position: relative;
   z-index: 1;
   max-width: 720px;
-  /* Espaçamento bem mais enxuto que o do desktop (ver @media 768px) — é
-     isso (não um teto artificial na caixa de fora) que genuinamente
-     encurta o hero no celular sem arriscar cortar nada: o conteúdo em si
-     ocupa menos espaço, então a caixa nunca precisa ficar tão alta. */
-  padding-top: 1.5rem;
-  padding-bottom: 1.75rem;
+  padding-top: 3rem;
+  padding-bottom: 3rem;
 }
 
 .hero__eyebrow {
@@ -510,28 +499,28 @@ h3 {
   letter-spacing: 0.12em;
   font-size: 0.85rem;
   color: var(--cor-secundaria);
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.6rem;
   font-weight: 600;
 }
 
 .hero__titulo {
   color: var(--cor-branco);
   font-size: clamp(2.1rem, 7vw, 3.6rem);
-  margin-bottom: 0.75rem;
+  margin-bottom: 1.25rem;
 }
 
 .hero__frase {
   font-size: clamp(1rem, 2.4vw, 1.25rem);
   color: rgba(255, 255, 255, 0.92);
   max-width: 52ch;
-  margin-bottom: 1.25rem;
+  margin-bottom: 2rem;
 }
 
 .hero__acoes {
   display: flex;
   flex-direction: column;
   flex-wrap: wrap;
-  gap: 0.65rem;
+  gap: 1rem;
 }
 
 /* No celular os botões ficam empilhados e com largura total — evita o texto
@@ -1049,24 +1038,10 @@ h3 {
 
   .hero__conteudo {
     padding-top: 4rem;
-    padding-bottom: 3rem;
-  }
-
-  .hero__eyebrow {
-    margin-bottom: 0.6rem;
-  }
-
-  .hero__titulo {
-    margin-bottom: 1.25rem;
-  }
-
-  .hero__frase {
-    margin-bottom: 2rem;
   }
 
   .hero__acoes {
     flex-direction: row;
-    gap: 1rem;
   }
 
   .hero__acoes .botao {
