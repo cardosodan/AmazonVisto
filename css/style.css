@@ -1,0 +1,1104 @@
+/* ==========================================================================
+   TEMPLATE DE SITE INSTITUCIONAL — FOLHA DE ESTILOS
+   ==========================================================================
+   Este arquivo é mobile-first: os estilos "de base" (sem @media) valem para
+   celular; as @media (min-width: ...) no final vão AJUSTANDO o layout para
+   telas maiores (tablet, depois desktop). Isso é de propósito — a maioria
+   dos visitantes desse tipo de site acessa pelo celular.
+
+   Para customizar rapidamente um cliente novo, normalmente você só precisa
+   mexer no bloco ":root" logo abaixo (cores e fontes). O resto do arquivo
+   raramente precisa ser tocado.
+   ========================================================================== */
+
+/* ==========================================================================
+   1. VARIÁVEIS DE CUSTOMIZAÇÃO — TROQUE AQUI PARA REBRANDEAR O SITE INTEIRO
+   ========================================================================== */
+:root {
+  /* Cores principais — extraídas por amostragem de pixel direto no logo real
+     da Amazon Visto (não é aproximação): azul-marinho #0f1862 e vermelho
+     #df0112, as mesmas cores do escudo EUA/Canadá e do texto "Amazon Visto".
+     --cor-primaria  = cor de destaque (botões, links, ícones, título do hero)
+     --cor-secundaria = cor de contraste (usada com moderação, em detalhes) */
+  --cor-primaria: #0f1862;
+  --cor-primaria-escura: #090f42;
+  --cor-primaria-clara: #e8e9f3;
+  --cor-secundaria: #df0112;
+  --cor-secundaria-escura: #a3020e;
+
+  /* Cores neutras (texto e fundo) — normalmente não precisa trocar */
+  --cor-texto: #1e2130;
+  --cor-texto-claro: #5c6072;
+  --cor-fundo: #ffffff;
+  --cor-fundo-alt: #e7e9f3;
+  --cor-borda: #e2e4ef;
+  --cor-branco: #ffffff;
+
+  /* Fontes — troque o nome aqui E no link do Google Fonts, no <head> do
+     index.html, se quiser usar outras fontes. */
+  --fonte-titulo: "Poppins", "Segoe UI", Arial, sans-serif;
+  --fonte-corpo: "Inter", "Segoe UI", Arial, sans-serif;
+
+  /* Espaçamento, sombra e cantos — controla o "estilo" geral do site */
+  --raio-borda: 16px;
+  --raio-borda-pequeno: 10px;
+  --sombra-suave: 0 4px 18px rgba(18, 74, 61, 0.08);
+  --sombra-media: 0 14px 34px rgba(18, 74, 61, 0.14);
+  --transicao: 0.25s ease;
+  --largura-max: 1180px;
+}
+
+/* ==========================================================================
+   2. RESET BÁSICO
+   ========================================================================== */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  /* Compensa a altura do cabeçalho fixo ao clicar em links de âncora (#sobre etc) */
+  scroll-padding-top: 84px;
+}
+
+html,
+body {
+  /* Rede de segurança: se algum texto/elemento acabar um pouco mais largo
+     que a tela (nome de e-mail comprido, etc), isso vira barra de rolagem
+     horizontal em vez de "esticar"/empurrar o layout inteiro para o lado —
+     sintoma que costuma ser confundido com "site bugado" no celular. */
+  overflow-x: hidden;
+  max-width: 100%;
+}
+
+body {
+  font-family: var(--fonte-corpo);
+  color: var(--cor-texto);
+  background: var(--cor-fundo);
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  overflow-wrap: break-word;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+ul {
+  list-style: none;
+}
+
+button {
+  font: inherit;
+  cursor: pointer;
+  border: none;
+  background: none;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--fonte-titulo);
+  line-height: 1.2;
+  font-weight: 700;
+  color: var(--cor-primaria-escura);
+}
+
+/* Respeita quem prefere menos animação (acessibilidade) */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+/* Link "pular para o conteúdo" — só aparece quando focado via teclado (Tab) */
+.pular-conteudo {
+  position: absolute;
+  left: -999px;
+  top: 0;
+  background: var(--cor-primaria);
+  color: var(--cor-branco);
+  padding: 0.8rem 1.2rem;
+  z-index: 1000;
+  border-radius: 0 0 var(--raio-borda-pequeno) 0;
+}
+
+.pular-conteudo:focus {
+  left: 0;
+}
+
+/* ==========================================================================
+   3. LAYOUT / UTILITÁRIOS
+   ========================================================================== */
+.container {
+  width: 100%;
+  max-width: var(--largura-max);
+  margin: 0 auto;
+  padding: 0 1.25rem;
+}
+
+.secao {
+  padding: 4.5rem 0;
+}
+
+.secao--alt {
+  background: var(--cor-fundo-alt);
+}
+
+.secao__eyebrow {
+  font-family: var(--fonte-titulo);
+  font-weight: 600;
+  color: var(--cor-secundaria-escura);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.85rem;
+  margin-bottom: 0.6rem;
+}
+
+.secao__titulo {
+  font-size: clamp(1.6rem, 4vw, 2.3rem);
+  margin-bottom: 1rem;
+}
+
+.secao__subtitulo {
+  color: var(--cor-texto-claro);
+  max-width: 46ch;
+}
+
+.secao__cabecalho {
+  text-align: center;
+  max-width: 640px;
+  margin: 0 auto 3rem;
+}
+
+.secao__cabecalho .secao__subtitulo {
+  margin: 0 auto;
+}
+
+.secao__grade {
+  display: grid;
+  gap: 2.5rem;
+}
+
+/* ==========================================================================
+   4. BOTÕES
+   ========================================================================== */
+.botao {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.85rem 1.6rem;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  text-align: center;
+  transition: transform var(--transicao), box-shadow var(--transicao), background-color var(--transicao);
+}
+
+.botao .icone {
+  width: 1.1em;
+  height: 1.1em;
+  flex-shrink: 0;
+}
+
+.botao--primario {
+  background: var(--cor-primaria);
+  color: var(--cor-branco);
+  box-shadow: var(--sombra-suave);
+}
+
+.botao--primario:hover {
+  background: var(--cor-primaria-escura);
+  transform: translateY(-2px);
+  box-shadow: var(--sombra-media);
+}
+
+/* Verde oficial do WhatsApp — usado nos botões que abrem conversa no
+   WhatsApp (todos os "botao--primario" deste site levam pro WhatsApp, então
+   ficou mais consistente um verde reconhecível do que a cor da marca). */
+.botao--whatsapp {
+  background: #25d366;
+  color: #ffffff;
+  box-shadow: 0 4px 18px rgba(37, 211, 102, 0.35);
+}
+
+.botao--whatsapp:hover {
+  background: #1da851;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 28px rgba(37, 211, 102, 0.45);
+}
+
+.botao--fantasma {
+  background: transparent;
+  color: var(--cor-primaria-escura);
+  border: 1.5px solid var(--cor-borda);
+}
+
+.botao--fantasma:hover {
+  border-color: var(--cor-primaria);
+  background: var(--cor-primaria-clara);
+}
+
+.botao--grande {
+  padding: 1rem 2rem;
+  font-size: 1rem;
+}
+
+/* ==========================================================================
+   5. CABEÇALHO / NAVEGAÇÃO
+   ========================================================================== */
+.cabecalho {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  transition: box-shadow var(--transicao), background-color var(--transicao);
+}
+
+/* Fita "bandeira" — azul/branco/vermelho — detalhe discreto no topo de tudo,
+   reforça a identidade sem virar exagero. Fica colada na borda de cima do
+   cabeçalho fixo. */
+.cabecalho::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(
+    to right,
+    var(--cor-primaria) 0%,
+    var(--cor-primaria) 33.33%,
+    #ffffff 33.33%,
+    #ffffff 66.66%,
+    var(--cor-secundaria) 66.66%,
+    var(--cor-secundaria) 100%
+  );
+}
+
+/* Classe adicionada via JS quando a página é rolada — dá uma sombra sutil */
+.cabecalho--rolado {
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.08);
+  background: rgba(255, 255, 255, 0.98);
+}
+
+.cabecalho__conteudo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 72px;
+}
+
+.cabecalho__marca {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  min-width: 0;
+  flex-shrink: 1;
+}
+
+.cabecalho__logo {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--raio-borda-pequeno);
+  object-fit: cover;
+  flex-shrink: 0;
+  /* Fundo cinza claro sólido atrás do PNG transparente — qualquer resquício
+     de anti-aliasing nas bordas se mistura nele em vez de aparecer como
+     pontinho branco contra um fundo escuro. */
+  background: #e7e9f0;
+}
+
+.cabecalho__nome {
+  font-family: var(--fonte-titulo);
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: var(--cor-primaria-escura);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  /* Sem isso, um filho flex com white-space:nowrap se recusa a encolher
+     abaixo do tamanho total do texto (o "min-width:auto" padrão do flexbox
+     usa o conteúdo sem quebra como largura mínima) — o nome da empresa
+     nunca encolhia de verdade, só o pai (.cabecalho__marca) tentava, e
+     sobrava menos espaço que o previsto pro botão de menu no celular. */
+  min-width: 0;
+}
+
+/* Navegação — em telas pequenas vira um painel deslizando do topo,
+   controlado pela classe .navegacao--aberta (adicionada via JS) */
+.navegacao {
+  position: fixed;
+  top: 72px;
+  left: 0;
+  right: 0;
+  background: var(--cor-branco);
+  border-bottom: 1px solid var(--cor-borda);
+  padding: 1.5rem 1.25rem 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  transform: translateY(-8px);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity var(--transicao), transform var(--transicao), visibility var(--transicao);
+}
+
+.navegacao--aberta {
+  transform: translateY(0);
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.navegacao__lista {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+  text-align: center;
+}
+
+.navegacao__link {
+  font-weight: 500;
+  font-size: 1.05rem;
+  color: var(--cor-texto);
+  transition: color var(--transicao);
+}
+
+.navegacao__link:hover,
+.navegacao__link--ativo {
+  color: var(--cor-primaria);
+}
+
+.navegacao__cta {
+  align-self: center;
+}
+
+/* Botão hambúrguer (só aparece no mobile) */
+.menu-mobile {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: stretch;
+  gap: 5px;
+  width: 40px;
+  min-width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  /* Reforço: sempre gruda na borda direita do cabeçalho, sem depender só do
+     justify-content:space-between do container (a <nav> do meio é
+     position:fixed e não deveria interferir, mas isso garante o
+     posicionamento mesmo assim). */
+  margin-left: auto;
+}
+
+.menu-mobile span {
+  display: block;
+  height: 2px;
+  width: 100%;
+  background: var(--cor-primaria-escura);
+  border-radius: 2px;
+  transition: transform var(--transicao), opacity var(--transicao);
+}
+
+.menu-mobile[aria-expanded="true"] span:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
+}
+
+.menu-mobile[aria-expanded="true"] span:nth-child(2) {
+  opacity: 0;
+}
+
+.menu-mobile[aria-expanded="true"] span:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
+}
+
+/* ==========================================================================
+   6. HERO
+   ========================================================================== */
+.hero {
+  position: relative;
+  /* Mais baixo no celular (a barra de endereço do navegador já consome boa
+     parte da tela) — fica mais alto de novo a partir do tablet, ver @media
+     no final do arquivo. */
+  min-height: 74vh;
+  display: flex;
+  align-items: center;
+  padding-top: 72px;
+  /* "center 22%": mantém centralizado na horizontal, mas ancora o recorte
+     mais perto do topo da imagem (avião + céu) em vez do meio — em telas
+     mais estreitas que a foto, o corte de "cover" estava sobrando pista
+     vazia embaixo e cortando a parte de cima que interessa. */
+  background: linear-gradient(160deg, var(--cor-primaria-escura), var(--cor-primaria) 60%),
+    url("../images/banner.jpg") center 22% / cover no-repeat;
+  background-blend-mode: multiply;
+  color: var(--cor-branco);
+  overflow: hidden;
+}
+
+.hero__overlay {
+  position: absolute;
+  inset: 0;
+  /* Azul-marinho da marca (era um verde esquecido do template original —
+     bug real, corrigido aqui). Um pouco mais leve que o padrão do template
+     pra deixar o pôr do sol da foto de fundo aparecer, não só escurecer tudo. */
+  background: linear-gradient(180deg, rgba(9, 15, 66, 0.4) 0%, rgba(9, 15, 66, 0.68) 100%);
+}
+
+.hero__conteudo {
+  position: relative;
+  z-index: 1;
+  max-width: 720px;
+  padding-top: 3rem;
+  padding-bottom: 3rem;
+}
+
+.hero__eyebrow {
+  font-family: var(--fonte-titulo);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 0.85rem;
+  color: var(--cor-secundaria);
+  margin-bottom: 0.6rem;
+  font-weight: 600;
+}
+
+.hero__titulo {
+  color: var(--cor-branco);
+  font-size: clamp(2.1rem, 7vw, 3.6rem);
+  margin-bottom: 1.25rem;
+}
+
+.hero__frase {
+  font-size: clamp(1rem, 2.4vw, 1.25rem);
+  color: rgba(255, 255, 255, 0.92);
+  max-width: 52ch;
+  margin-bottom: 2rem;
+}
+
+.hero__acoes {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+/* No celular os botões ficam empilhados e com largura total — evita o texto
+   longo do botão de WhatsApp forçar o layout a "estourar" para o lado
+   (era a causa do conteúdo parecendo esticado horizontalmente no celular).
+   A partir do tablet (ver @media mais abaixo) voltam a ficar lado a lado. */
+.hero__acoes .botao {
+  width: 100%;
+}
+
+.hero .botao--fantasma {
+  color: var(--cor-branco);
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+.hero .botao--fantasma:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: var(--cor-branco);
+}
+
+.hero__seta {
+  /* Escondida no celular: o hero ali é mais baixo (74vh) e o conteúdo
+     (título + frase + 2 botões empilhados) já ocupa quase todo o espaço —
+     sobrava pouco lugar pra essa setinha sem encavalar no botão "Ver
+     serviços". Num touchscreen "role pra baixo" já é intuitivo mesmo sem
+     dica visual, então some no mobile e volta a partir do tablet. */
+  display: none;
+  position: absolute;
+  /* Levantado pra ficar acima da onda decorativa (.hero__onda) no rodapé
+     do hero, em vez de ficar por trás/cortado por ela. */
+  bottom: 4.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  align-items: center;
+  justify-content: center;
+  color: var(--cor-branco);
+  border: 1.5px solid rgba(255, 255, 255, 0.5);
+  animation: flutuar 2.4s ease-in-out infinite;
+  z-index: 2;
+}
+
+/* Onda decorativa na base do hero — transição suave pra seção seguinte em
+   vez de um corte reto, dá mais dinamismo sem perder a sobriedade. */
+.hero__onda {
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  width: 100%;
+  height: 56px;
+  z-index: 1;
+}
+
+.hero__onda-path {
+  fill: var(--cor-fundo);
+}
+
+.hero__seta svg {
+  width: 20px;
+  height: 20px;
+}
+
+@keyframes flutuar {
+  0%,
+  100% {
+    transform: translate(-50%, 0);
+  }
+  50% {
+    transform: translate(-50%, 8px);
+  }
+}
+
+/* ==========================================================================
+   7. SOBRE
+   ========================================================================== */
+.sobre__imagem img {
+  border-radius: var(--raio-borda);
+  box-shadow: var(--sombra-media);
+  /* No celular a imagem ocupa a LARGURA TODA da tela (a grade vira 1
+     coluna) — com a proporção vertical (9/11) pensada pro desktop, isso
+     virava uma foto gigante e comprida. Mais baixa/larga aqui; volta pra
+     vertical só no desktop (ver @media 1024px), onde ela divide espaço
+     com o texto ao lado, não a largura toda.
+     max-height é um limite duro em pixels — trava o tamanho de vez,
+     independente de qualquer cálculo de proporção/largura de viewport. */
+  aspect-ratio: 4 / 3;
+  max-height: 260px;
+  object-fit: cover;
+  width: 100%;
+}
+
+.sobre__texto p {
+  color: var(--cor-texto-claro);
+  margin-bottom: 1rem;
+}
+
+.sobre__diferenciais {
+  margin-top: 1.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+}
+
+.sobre__diferenciais li {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  padding-left: 1.2rem;
+  border-left: 3px solid var(--cor-secundaria);
+}
+
+.sobre__diferenciais strong {
+  font-family: var(--fonte-titulo);
+  color: var(--cor-primaria-escura);
+}
+
+.sobre__diferenciais span {
+  color: var(--cor-texto-claro);
+  font-size: 0.95rem;
+}
+
+/* Faixa escura de números/prêmios — quebra o branco entre Sobre e Serviços */
+.faixa-numeros {
+  background: linear-gradient(135deg, var(--cor-primaria-escura), var(--cor-primaria));
+  padding: 3rem 0;
+}
+
+.faixa-numeros__grade {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2rem;
+  text-align: center;
+}
+
+.faixa-numeros__item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.faixa-numeros__valor {
+  font-family: var(--fonte-titulo);
+  font-weight: 800;
+  font-size: clamp(1.7rem, 5vw, 2.5rem);
+  color: var(--cor-branco);
+}
+
+.faixa-numeros__legenda {
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.75);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* ==========================================================================
+   8. SERVIÇOS / PRODUTOS (cards)
+   ========================================================================== */
+.cartoes-grade {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.75rem;
+}
+
+.cartao-produto {
+  /* No celular os cards ficam DEITADOS (foto pequena + texto do lado) —
+     bem mais compactos que foto quadrada em cima + texto embaixo, que
+     fazia cada card sozinho quase preencher a tela. A partir do tablet
+     (ver @media mais abaixo) volta pro layout empilhado, melhor pra
+     grade de 2-3 colunas. */
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  background: var(--cor-branco);
+  border-radius: var(--raio-borda);
+  overflow: hidden;
+  box-shadow: var(--sombra-suave);
+  transition: transform var(--transicao), box-shadow var(--transicao);
+  border-left: 4px solid var(--cor-primaria);
+}
+
+/* Alterna a cor de destaque entre os cards — dá ritmo visual à vitrine em
+   vez de repetir a mesma cor 6 vezes seguidas. Guarda os dois lados (topo
+   E esquerda) porque qual dos dois fica visível depende do breakpoint. */
+.cartao-produto:nth-child(even) {
+  border-left-color: var(--cor-secundaria);
+  border-top-color: var(--cor-secundaria);
+}
+
+.cartao-produto:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--sombra-media);
+}
+
+.cartao-produto__imagem {
+  width: 108px;
+  flex-shrink: 0;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+}
+
+.cartao-produto__imagem img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.cartao-produto:hover .cartao-produto__imagem img {
+  transform: scale(1.06);
+}
+
+.cartao-produto__corpo {
+  padding: 0.85rem 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.cartao-produto__corpo h3 {
+  font-size: 1rem;
+  margin-bottom: 0.25rem;
+}
+
+.cartao-produto__corpo p {
+  color: var(--cor-texto-claro);
+  font-size: 0.85rem;
+  /* Trava em 2 linhas no card deitado do celular — evita que uma descrição
+     mais longa estique o card e desalinhe a foto ao lado. */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Cards extras — só aparecem depois de clicar em "Ver mais serviços"
+   (.cartoes-grade--expandida, classe adicionada via JS). Sem depender do
+   IntersectionObserver do scroll-reveal, por isso a entrada usa uma
+   animação simples em vez da classe .reveal. */
+.cartao-produto--extra {
+  display: none;
+}
+
+.cartoes-grade--expandida .cartao-produto--extra {
+  /* Mesmo display do card normal nesse breakpoint (row deitado no
+     celular, column empilhado a partir do tablet — ver @media 768px) —
+     senão os cards revelados ficariam com um layout diferente dos 6 que
+     já apareciam antes de clicar "Ver mais". */
+  display: flex;
+  animation: cartaoExtraSurge 0.45s ease;
+}
+
+@keyframes cartaoExtraSurge {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.servicos__acao {
+  display: flex;
+  justify-content: center;
+  margin-top: 2.75rem;
+}
+
+.botaoVerMaisServicos__seta {
+  width: 1.1em;
+  height: 1.1em;
+  transition: transform var(--transicao);
+}
+
+#botaoVerMaisServicos[aria-expanded="true"] .botaoVerMaisServicos__seta {
+  transform: rotate(180deg);
+}
+
+/* ==========================================================================
+   10. CONTATO
+   ========================================================================== */
+.contato__lista {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin: 1.75rem 0;
+}
+
+.contato__lista li {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  color: var(--cor-texto-claro);
+}
+
+.contato__lista .icone {
+  width: 18px;
+  height: 18px;
+  padding: 10px;
+  box-sizing: content-box;
+  background: var(--cor-primaria-clara);
+  color: var(--cor-primaria);
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.contato__lista a:hover {
+  color: var(--cor-primaria);
+}
+
+.contato__mapa {
+  border-radius: var(--raio-borda);
+  overflow: hidden;
+  box-shadow: var(--sombra-suave);
+  /* Altura fixa (não só min-height): o iframe usa height:100% do pai, e
+     percentual de altura só funciona corretamente contra um pai com altura
+     definida — com só min-height, o iframe podia cair no tamanho padrão do
+     navegador (150px) em vez de preencher o quadro. */
+  height: 320px;
+}
+
+.contato__mapa iframe {
+  width: 100%;
+  height: 100%;
+  min-height: 320px;
+  border: 0;
+  display: block;
+}
+
+/* ==========================================================================
+   11. RODAPÉ
+   ========================================================================== */
+.rodape {
+  background: var(--cor-primaria-escura);
+  color: rgba(255, 255, 255, 0.85);
+  padding: 3rem 0 2rem;
+}
+
+.rodape__conteudo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.25rem;
+  text-align: center;
+}
+
+.rodape__marca {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-family: var(--fonte-titulo);
+  font-weight: 600;
+  color: var(--cor-branco);
+}
+
+.rodape__marca img {
+  border-radius: 6px;
+  background: #e7e9f0;
+  padding: 3px;
+}
+
+.rodape__redes {
+  display: flex;
+  gap: 0.9rem;
+}
+
+.rodape__redes a {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255, 255, 255, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background var(--transicao), border-color var(--transicao);
+}
+
+.rodape__redes svg {
+  width: 18px;
+  height: 18px;
+}
+
+.rodape__redes a:hover {
+  background: var(--cor-secundaria);
+  border-color: var(--cor-secundaria);
+}
+
+.rodape__copyright {
+  font-size: 0.85rem;
+}
+
+.rodape__creditos {
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.rodape__creditos a {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+/* ==========================================================================
+   12. BOTÃO FLUTUANTE DE WHATSAPP
+   ========================================================================== */
+.whatsapp-flutuante {
+  position: fixed;
+  right: 1.25rem;
+  bottom: 1.25rem;
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  background: #25d366;
+  color: var(--cor-branco);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+  z-index: 90;
+  animation: pulsar 2.6s ease-in-out infinite;
+}
+
+.whatsapp-flutuante svg {
+  width: 30px;
+  height: 30px;
+}
+
+.whatsapp-flutuante:hover {
+  transform: scale(1.06);
+}
+
+@keyframes pulsar {
+  0%,
+  100% {
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25), 0 0 0 0 rgba(37, 211, 102, 0.45);
+  }
+  50% {
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25), 0 0 0 10px rgba(37, 211, 102, 0);
+  }
+}
+
+/* ==========================================================================
+   13. ANIMAÇÃO DE ENTRADA AO ROLAR (SCROLL REVEAL)
+   Controlado via JS (main.js), que adiciona ".reveal--visivel" quando o
+   elemento entra na tela. Sutil de propósito: leve fade + deslocamento.
+   ========================================================================== */
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.reveal--visivel {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ==========================================================================
+   14. RESPONSIVO — TABLET (≥768px)
+   ========================================================================== */
+@media (min-width: 768px) {
+  .secao {
+    padding: 6rem 0;
+  }
+
+  .cartoes-grade {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  /* Volta pro layout empilhado (foto em cima, texto embaixo) — o card
+     deitado é uma otimização só pro celular, numa grade de 2-3 colunas
+     ele funciona melhor assim. */
+  .cartao-produto {
+    flex-direction: column;
+    border-left: none;
+    border-top: 4px solid var(--cor-primaria);
+  }
+
+  .cartao-produto:nth-child(even) {
+    border-top-color: var(--cor-secundaria);
+  }
+
+  .cartao-produto__imagem {
+    width: 100%;
+  }
+
+  .cartao-produto__corpo {
+    padding: 1.25rem 1.4rem 1.5rem;
+    display: block;
+  }
+
+  .cartao-produto__corpo h3 {
+    font-size: 1.1rem;
+    margin-bottom: 0.4rem;
+  }
+
+  .cartao-produto__corpo p {
+    font-size: 0.95rem;
+    /* Desfaz o truque de "trava em 2 linhas" do celular — no card
+       empilhado do tablet/desktop tem espaço de sobra, o texto flui normal. */
+    display: block;
+    -webkit-line-clamp: unset;
+    -webkit-box-orient: unset;
+    overflow: visible;
+  }
+
+  .faixa-numeros__grade {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .hero {
+    min-height: 92vh;
+  }
+
+  .hero__conteudo {
+    padding-top: 4rem;
+  }
+
+  .hero__acoes {
+    flex-direction: row;
+  }
+
+  .hero__acoes .botao {
+    width: auto;
+  }
+
+  .hero__seta {
+    display: flex;
+  }
+}
+
+/* ==========================================================================
+   15. RESPONSIVO — DESKTOP (≥1024px)
+   ========================================================================== */
+@media (min-width: 1024px) {
+  .menu-mobile {
+    display: none;
+  }
+
+  .navegacao {
+    position: static;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-end;
+    flex: 1;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    transform: none;
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    gap: 2.5rem;
+  }
+
+  .navegacao__lista {
+    flex-direction: row;
+    gap: 2rem;
+  }
+
+  .sobre__grade {
+    grid-template-columns: 0.85fr 1fr;
+    align-items: center;
+    gap: 4rem;
+  }
+
+  .sobre__imagem img {
+    aspect-ratio: 9 / 11;
+    max-height: none;
+  }
+
+  .cartoes-grade {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .contato__grade {
+    grid-template-columns: 1fr 1fr;
+    align-items: stretch;
+    gap: 4rem;
+  }
+
+  .contato__mapa {
+    /* No desktop o grid (align-items:stretch) já define a altura real da
+       célula — volta a ser automática para acompanhar a coluna de texto
+       ao lado, em vez de ficar travado nos 320px fixos do celular. */
+    height: auto;
+  }
+
+  .rodape__conteudo {
+    flex-direction: row;
+    justify-content: space-between;
+    text-align: left;
+  }
+
+  .rodape__copyright,
+  .rodape__creditos {
+    margin-left: auto;
+  }
+}
