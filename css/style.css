@@ -462,12 +462,17 @@ h3 {
 .hero {
   position: relative;
   /* Mais baixo no celular — de propósito BEM mais baixo que os 92vh do
-     desktop: sobra uma faixa da seção "Sobre" (incluindo o topo da foto)
-     visível já na primeira tela, sem precisar rolar nada. Isso funciona
-     como uma dica visual de "tem mais coisa aqui embaixo, arrasta" — mais
-     forte que só a setinha ou a onda decorativa sozinhas. Fica mais alto
-     de novo a partir do tablet, ver @media no final do arquivo. */
-  min-height: 58vh;
+     desktop: sobra uma faixa boa da seção "Sobre" (incluindo o topo da
+     foto) visível já na primeira tela, sem precisar rolar nada. Isso
+     funciona como uma dica visual de "tem mais coisa aqui embaixo,
+     arrasta" — mais forte que só a setinha ou a onda decorativa sozinhas.
+     max-height é um teto rígido em pixels — trava isso de vez mesmo em
+     celulares onde 1vh do navegador calcula diferente do esperado (a barra
+     de endereço que aparece/some muda esse cálculo dependendo do celular).
+     Fica mais alto de novo a partir do tablet, ver @media no final do
+     arquivo. */
+  min-height: 44vh;
+  max-height: 420px;
   display: flex;
   align-items: center;
   padding-top: 72px;
@@ -1040,6 +1045,7 @@ h3 {
 
   .hero {
     min-height: 92vh;
+    max-height: none;
   }
 
   .hero__conteudo {
