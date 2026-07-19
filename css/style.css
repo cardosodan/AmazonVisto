@@ -422,16 +422,20 @@ h3 {
 }
 
 /* Animação em DUAS ETAPAS sequenciadas (não simultâneas), pra nunca mais
-   cruzar as 3 barras no meio do caminho:
-   - ABRINDO (vira X): a barra do meio some PRIMEIRO (sem atraso, rápido) e
-     só DEPOIS (atraso de 0.13s) as outras duas giram — quando elas começam
-     a girar, o meio já sumiu de vez, sem cruzar com nada.
-   - FECHANDO (volta a hambúrguer): a ordem inverte — as duas giram de volta
-     PRIMEIRO (sem atraso) e só DEPOIS (atraso de 0.16s) a barra do meio
-     reaparece, quando as outras já estão quase paradas de novo. */
+   cruzar as 3 barras no meio do caminho. Cada regra declara o `transition`
+   completo (propriedade+duração+atraso, tudo junto) em vez de misturar
+   shorthand numa regra e transition-delay solto em outra — misturar os
+   dois em regras diferentes é frágil (o navegador pode não somar do jeito
+   esperado). Cada estado (fechado/aberto) tem seu PRÓPRIO transition
+   completo e autocontido:
+   - ABRINDO (vira X): a barra do meio some PRIMEIRO (sem atraso) e só
+     DEPOIS (atraso de 0.13s) as outras duas giram.
+   - FECHANDO (volta a hambúrguer): ordem invertida — as duas giram de
+     volta PRIMEIRO (sem atraso) e só DEPOIS (atraso de 0.16s) a barra do
+     meio reaparece. */
 .menu-mobile span:nth-child(1),
 .menu-mobile span:nth-child(3) {
-  transition: transform 0.22s ease;
+  transition: transform 0.22s ease 0s;
 }
 
 .menu-mobile span:nth-child(2) {
@@ -440,12 +444,12 @@ h3 {
 
 .menu-mobile[aria-expanded="true"] span:nth-child(1) {
   transform: translateY(7px) rotate(45deg);
-  transition-delay: 0.13s;
+  transition: transform 0.22s ease 0.13s;
 }
 
 .menu-mobile[aria-expanded="true"] span:nth-child(3) {
   transform: translateY(-7px) rotate(-45deg);
-  transition-delay: 0.13s;
+  transition: transform 0.22s ease 0.13s;
 }
 
 .menu-mobile[aria-expanded="true"] span:nth-child(2) {
@@ -453,7 +457,7 @@ h3 {
   width: 0;
   margin-left: auto;
   margin-right: auto;
-  transition-delay: 0s;
+  transition: opacity 0.15s ease 0s, width 0.15s ease 0s;
 }
 
 /* ==========================================================================
