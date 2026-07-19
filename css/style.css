@@ -461,7 +461,17 @@ h3 {
    ========================================================================== */
 .hero {
   position: relative;
+  /* vh puro é instável no celular: o navegador recalcula ele de forma
+     diferente conforme a barra de endereço aparece/some ao rolar a
+     página — por isso a altura do hero (e quanto da próxima seção
+     "espiava" embaixo) mudava dependendo se você tinha rolado antes ou
+     não, mesmo sem nenhum CSS novo. dvh ("dynamic viewport height") é a
+     unidade feita pra resolver exatamente isso: sempre reflete o tamanho
+     de tela REALMENTE visível no momento. Mantido o vh como respaldo pra
+     navegador muito antigo — quem entende dvh usa a segunda linha (que
+     sempre vence por vir depois). */
   min-height: 74vh;
+  min-height: 74dvh;
   display: flex;
   align-items: center;
   padding-top: 72px;
@@ -1034,6 +1044,7 @@ h3 {
 
   .hero {
     min-height: 92vh;
+    min-height: 92dvh;
   }
 
   .hero__conteudo {
