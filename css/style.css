@@ -461,11 +461,7 @@ h3 {
    ========================================================================== */
 .hero {
   position: relative;
-  /* Reduzido de 74vh — no print que você mandou dava pra ver bastante
-     espaço vazio sobrando entre o botão "Ver serviços" e a onda, então
-     cortei dali (não do conteúdo em si). Ainda com folga seguindo o
-     conteúdo real do hero, pra nunca cortar texto/botão. */
-  min-height: 64vh;
+  min-height: 74vh;
   display: flex;
   align-items: center;
   padding-top: 72px;
@@ -493,10 +489,8 @@ h3 {
   position: relative;
   z-index: 1;
   max-width: 720px;
-  /* Menos espaço vazio acima/abaixo do bloco de texto no celular (volta
-     ao valor original — mais espaçoso — a partir do tablet, @media 768px). */
-  padding-top: 1.75rem;
-  padding-bottom: 1.75rem;
+  padding-top: 3rem;
+  padding-bottom: 3rem;
 }
 
 .hero__eyebrow {
@@ -1044,7 +1038,6 @@ h3 {
 
   .hero__conteudo {
     padding-top: 4rem;
-    padding-bottom: 3rem;
   }
 
   .hero__acoes {
