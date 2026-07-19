@@ -421,18 +421,22 @@ h3 {
   border-radius: 2px;
 }
 
-/* Animação em DUAS ETAPAS sequenciadas (não simultâneas), pra nunca mais
-   cruzar as 3 barras no meio do caminho. Cada regra declara o `transition`
-   completo (propriedade+duração+atraso, tudo junto) em vez de misturar
-   shorthand numa regra e transition-delay solto em outra — misturar os
-   dois em regras diferentes é frágil (o navegador pode não somar do jeito
-   esperado). Cada estado (fechado/aberto) tem seu PRÓPRIO transition
-   completo e autocontido:
-   - ABRINDO (vira X): a barra do meio some PRIMEIRO (sem atraso) e só
-     DEPOIS (atraso de 0.13s) as outras duas giram.
-   - FECHANDO (volta a hambúrguer): ordem invertida — as duas giram de
-     volta PRIMEIRO (sem atraso) e só DEPOIS (atraso de 0.16s) a barra do
-     meio reaparece. */
+/* ABRIR é a mesma animação de FECHAR tocada de trás pra frente — os atrasos
+   abaixo são o espelho matemático exato um do outro, não números ajustados
+   a olho (por isso a abertura tinha uma leve mistura dos 2 símbolos antes:
+   o atraso das barras de fora ao abrir, 0.13s, não era o inverso exato do
+   atraso da barra do meio ao fechar, 0.16s).
+
+   FECHANDO (X -> hambúrguer, já confirmado correto): as duas barras de fora
+   giram de volta primeiro (atraso 0s, duração 0.22s => ativas de 0 a 0.22s),
+   só depois (atraso 0.16s, duração 0.15s => ativa de 0.16 a 0.31s) a barra
+   do meio reaparece. Duração total da sequência: 0.31s.
+
+   ABRINDO (hambúrguer -> X): pra ser o inverso exato, cada trecho precisa
+   come far no instante espelhado (T - fim_original) e com a MESMA duração:
+   - barra do meio: espelho de [0.16, 0.31] => [0, 0.15]  (atraso 0s)
+   - barras de fora: espelho de [0, 0.22] => [0.09, 0.31] (atraso 0.09s)
+   Isso é literalmente tocar o fechamento de trás pra frente. */
 .menu-mobile span:nth-child(1),
 .menu-mobile span:nth-child(3) {
   transition: transform 0.22s ease 0s;
@@ -444,12 +448,12 @@ h3 {
 
 .menu-mobile[aria-expanded="true"] span:nth-child(1) {
   transform: translateY(7px) rotate(45deg);
-  transition: transform 0.22s ease 0.13s;
+  transition: transform 0.22s ease 0.09s;
 }
 
 .menu-mobile[aria-expanded="true"] span:nth-child(3) {
   transform: translateY(-7px) rotate(-45deg);
-  transition: transform 0.22s ease 0.13s;
+  transition: transform 0.22s ease 0.09s;
 }
 
 .menu-mobile[aria-expanded="true"] span:nth-child(2) {
