@@ -482,7 +482,13 @@ h3 {
      a partir do tablet (ver @media 768px). */
   min-height: 540px;
   display: flex;
-  align-items: center;
+  /* flex-end (não center): ancora o texto perto da base, junto da onda —
+     com o conteúdo centralizado no meio de um hero tão alto, sobrava vazio
+     simétrico em cima E embaixo, dando a impressão de "só o meio tem
+     coisa". Empurrar pra base usa aquele espaço de verdade, sem precisar
+     mexer na altura do hero (min-height acima já foi calibrado e mexida
+     nisso causou problema antes, ver histórico de commits). */
+  align-items: flex-end;
   padding-top: 72px;
   /* "center 22%": mantém centralizado na horizontal, mas ancora o recorte
      mais perto do topo da imagem (avião + céu) em vez do meio — em telas
@@ -502,74 +508,6 @@ h3 {
      cara — pedido explícito do cliente, "está pouco chamativo") e ainda
      escuro o bastante embaixo, onde o texto fica, pra manter legibilidade. */
   background: linear-gradient(180deg, rgba(9, 15, 66, 0.18) 0%, rgba(9, 15, 66, 0.62) 100%);
-}
-
-/* Selo flutuante com um dos números reais da faixa-numeros (prêmio) —
-   credibilidade já visível no primeiro scroll, sem esperar o visitante
-   descer a página. Escondido no celular (ver @media 768px): a foto ali é
-   mais baixa, não sobra espaço sem brigar com o título. */
-.hero__selo {
-  display: none;
-  position: absolute;
-  top: 96px;
-  right: 5%;
-  z-index: 2;
-  align-items: center;
-  gap: 0.6rem;
-  background: rgba(255, 255, 255, 0.12);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.35);
-  border-radius: 999px;
-  padding: 0.5rem 1.1rem 0.5rem 0.5rem;
-  color: var(--cor-branco);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
-  animation: flutuarSelo 3.4s ease-in-out infinite;
-}
-
-.hero__selo-icone {
-  width: 34px;
-  height: 34px;
-  border-radius: 50%;
-  background: var(--cor-secundaria);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-
-.hero__selo-icone svg {
-  width: 17px;
-  height: 17px;
-}
-
-.hero__selo-texto {
-  display: flex;
-  flex-direction: column;
-  line-height: 1.15;
-  font-size: 0.7rem;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  opacity: 0.85;
-  white-space: nowrap;
-}
-
-.hero__selo-texto strong {
-  font-family: var(--fonte-titulo);
-  font-size: 1.05rem;
-  text-transform: none;
-  letter-spacing: 0;
-  opacity: 1;
-}
-
-@keyframes flutuarSelo {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-8px);
-  }
 }
 
 .hero__conteudo {
@@ -1180,6 +1118,10 @@ h3 {
 
   .hero__conteudo {
     padding-top: 4rem;
+    /* Folga extra embaixo (só a partir daqui, onde a setinha de rolar
+       existe de verdade — ver .hero__seta) pra ela não encostar na nota
+       de parcelamento agora que o conteúdo ficou ancorado na base. */
+    padding-bottom: 6.5rem;
   }
 
   .hero__acoes {
@@ -1191,10 +1133,6 @@ h3 {
   }
 
   .hero__seta {
-    display: flex;
-  }
-
-  .hero__selo {
     display: flex;
   }
 }
