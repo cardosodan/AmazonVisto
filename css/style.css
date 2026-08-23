@@ -9,6 +9,13 @@
    Para customizar rapidamente um cliente novo, normalmente você só precisa
    mexer no bloco ":root" logo abaixo (cores e fontes). O resto do arquivo
    raramente precisa ser tocado.
+
+   Linguagem visual (reescrita): "documento oficial / painel técnico" — grade
+   precisa, seções numeradas (como um contrato ou formulário de visto de
+   verdade), números tabulares, pouquíssimo movimento decorativo. Nada de
+   cursor customizado, ímã em botão, tilt 3D ou entrada saltitante — pra uma
+   assessoria de visto, a confiança vem de parecer precisa e séria, não
+   "divertida".
    ========================================================================== */
 
 /* ==========================================================================
@@ -38,6 +45,9 @@
      index.html, se quiser usar outras fontes. */
   --fonte-titulo: "Poppins", "Segoe UI", Arial, sans-serif;
   --fonte-corpo: "Inter", "Segoe UI", Arial, sans-serif;
+  /* Só pra números/índices — reforça a leitura "documento técnico" nos
+     chips de seção numerada, no processo e nos números da faixa de prova. */
+  --fonte-mono: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
 
   /* Espaçamento, sombra e cantos — controla o "estilo" geral do site */
   --raio-borda: 16px;
@@ -61,25 +71,35 @@ html {
   scroll-behavior: smooth;
   /* Compensa a altura do cabeçalho fixo ao clicar em links de âncora (#sobre etc) */
   scroll-padding-top: 84px;
-}
-
-html,
-body {
   /* Rede de segurança: se algum texto/elemento acabar um pouco mais largo
      que a tela (nome de e-mail comprido, etc), isso vira barra de rolagem
      horizontal em vez de "esticar"/empurrar o layout inteiro para o lado —
-     sintoma que costuma ser confundido com "site bugado" no celular. */
+     sintoma que costuma ser confundido com "site bugado" no celular.
+     Só no <html>, não no <body>: declarar "overflow-x" nos dois força o
+     navegador a computar "overflow-y" como "auto" em AMBOS (regra do CSS
+     Overflow — um eixo não-visible "puxa" o outro pra auto), o que faz o
+     <body> virar um scroll-container próprio e quebra QUALQUER
+     "position: sticky" da página (ver ".servicos-scroll__pin"). Só no
+     html isso não acontece porque ele já é o scroller raiz do documento. */
   overflow-x: hidden;
   max-width: 100%;
 }
 
 body {
+  max-width: 100%;
   font-family: var(--fonte-corpo);
   color: var(--cor-texto);
   background: var(--cor-fundo);
   line-height: 1.65;
   -webkit-font-smoothing: antialiased;
   overflow-wrap: break-word;
+}
+
+/* Contador nativo de CSS pro sistema de numeração das seções (ver ".secao"
+   mais abaixo) — cada ".secao" dentro de <main> ganha um índice sequencial
+   automático (01, 02, 03...) sem precisar escrever o número no HTML. */
+main {
+  counter-reset: secao;
 }
 
 img {
@@ -92,7 +112,8 @@ a {
   text-decoration: none;
 }
 
-ul {
+ul,
+ol {
   list-style: none;
 }
 
@@ -107,8 +128,9 @@ h1,
 h2,
 h3 {
   font-family: var(--fonte-titulo);
-  line-height: 1.2;
+  line-height: 1.15;
   font-weight: 700;
+  letter-spacing: -0.01em;
   color: var(--cor-primaria-escura);
 }
 
@@ -152,26 +174,80 @@ h3 {
   padding: 0 1.25rem;
 }
 
+/* Esconde visualmente mas mantém acessível a leitor de tela — usado onde um
+   efeito decorativo (ex.: o typewriter do hero) é aria-hidden e precisa de
+   um texto completo "de verdade" ao lado pra quem usa leitor de tela. */
+.visualmente-oculto {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 .secao {
   padding: 4.5rem 0;
+  counter-increment: secao;
+  position: relative;
 }
 
 .secao--alt {
   background: var(--cor-fundo-alt);
 }
 
+/* Textura de pontos — reforça o lado "painel técnico" nas seções claras
+   (que antes ficavam totalmente lisas). Radial-gradient repetido, estático
+   (sem animação: é textura de fundo, não efeito), opacidade bem baixa —
+   dá profundidade sem disputar atenção com o conteúdo. */
+.secao::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(rgba(15, 24, 98, 0.08) 1px, transparent 1px);
+  background-size: 22px 22px;
+  -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 12%, #000 88%, transparent 100%);
+  mask-image: linear-gradient(180deg, transparent 0%, #000 12%, #000 88%, transparent 100%);
+  pointer-events: none;
+}
+
+.secao > * {
+  position: relative;
+}
+
+/* Chip numerado (01, 02, 03...) antes do rótulo — o mesmo índice usado nas
+   abas de um formulário oficial. Gerado por counter(), então nunca fica
+   fora de sincronia se uma seção for adicionada/removida/reordenada. */
 .secao__eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
   font-family: var(--fonte-titulo);
   font-weight: 600;
   color: var(--cor-secundaria-escura);
   text-transform: uppercase;
   letter-spacing: 0.08em;
   font-size: 0.85rem;
-  margin-bottom: 0.6rem;
+  margin-bottom: 0.9rem;
+}
+
+.secao__eyebrow::before {
+  content: counter(secao, decimal-leading-zero);
+  font-family: var(--fonte-mono);
+  font-weight: 700;
+  font-size: 0.72rem;
+  letter-spacing: 0;
+  color: var(--cor-branco);
+  background: var(--cor-primaria);
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
 }
 
 .secao__titulo {
-  font-size: clamp(1.6rem, 4vw, 2.3rem);
+  font-size: clamp(1.7rem, 4vw, 2.5rem);
   margin-bottom: 1rem;
 }
 
@@ -199,22 +275,58 @@ h3 {
    4. BOTÕES
    ========================================================================== */
 .botao {
+  position: relative;
+  overflow: hidden;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
   padding: 0.85rem 1.6rem;
   border-radius: 999px;
-  font-weight: 600;
+  font-weight: 700;
   font-size: 0.95rem;
+  letter-spacing: 0.01em;
   text-align: center;
-  transition: transform var(--transicao), box-shadow var(--transicao), background-color var(--transicao);
+  cursor: pointer;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease, background-color 0.25s ease,
+    border-color 0.25s ease, color 0.25s ease;
+}
+
+/* Brilho diagonal que varre o botão no hover — reforço de "isso é
+   clicável" sem depender de nenhuma animação contínua/piscando (o tipo de
+   movimento que já foi tirado do site por deixar tudo infantilizado). Só
+   ativa no :hover, então nunca compete com o resto da página. Puro
+   transform, sem custo de layout. */
+.botao::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(115deg, transparent 30%, rgba(255, 255, 255, 0.4) 50%, transparent 70%);
+  transform: translateX(-120%);
+  pointer-events: none;
+}
+
+.botao:hover::before {
+  transform: translateX(120%);
+  transition: transform 0.7s ease;
+}
+
+.botao:active {
+  transform: scale(0.97);
 }
 
 .botao .icone {
   width: 1.1em;
   height: 1.1em;
   flex-shrink: 0;
+}
+
+.botao__seta {
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.botao:hover .botao__seta {
+  transform: translateX(4px);
 }
 
 .botao--primario {
@@ -225,23 +337,25 @@ h3 {
 
 .botao--primario:hover {
   background: var(--cor-primaria-escura);
-  transform: translateY(-2px);
+  transform: translateY(-3px);
   box-shadow: var(--sombra-media);
 }
 
 /* Verde oficial do WhatsApp — usado nos botões que abrem conversa no
    WhatsApp (todos os "botao--primario" deste site levam pro WhatsApp, então
-   ficou mais consistente um verde reconhecível do que a cor da marca). */
+   ficou mais consistente um verde reconhecível do que a cor da marca).
+   Gradiente sutil (não é chapado) + sombra colorida — dá mais profundidade
+   sem depender de mais nenhum efeito animado. */
 .botao--whatsapp {
-  background: #25d366;
+  background: linear-gradient(135deg, #2fe27a 0%, #1da851 100%);
   color: #ffffff;
-  box-shadow: 0 4px 18px rgba(37, 211, 102, 0.35);
+  box-shadow: 0 6px 20px rgba(29, 168, 85, 0.38);
 }
 
 .botao--whatsapp:hover {
-  background: #1da851;
-  transform: translateY(-2px);
-  box-shadow: 0 10px 28px rgba(37, 211, 102, 0.45);
+  background: linear-gradient(135deg, #37ec84 0%, #1a9548 100%);
+  transform: translateY(-3px);
+  box-shadow: 0 16px 34px rgba(29, 168, 85, 0.48);
 }
 
 .botao--fantasma {
@@ -253,10 +367,11 @@ h3 {
 .botao--fantasma:hover {
   border-color: var(--cor-primaria);
   background: var(--cor-primaria-clara);
+  transform: translateY(-3px);
 }
 
 .botao--grande {
-  padding: 1rem 2rem;
+  padding: 1.05rem 2.1rem;
   font-size: 1rem;
 }
 
@@ -395,17 +510,26 @@ h3 {
   align-self: center;
 }
 
-/* Botão hambúrguer (só aparece no mobile) */
+/* Botão hambúrguer (só aparece no mobile) — mesma linguagem visual dos
+   outros botões do site (borda + fundo + sombra suave, ghost-button), em
+   vez de 3 linhas soltas flutuando sem nenhum contêiner. 44x44 pelo
+   mínimo de área de toque recomendado (a caixa antiga era 40x40). */
 .menu-mobile {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: stretch;
+  align-items: center;
   gap: 5px;
-  width: 40px;
-  min-width: 40px;
-  height: 40px;
+  width: 44px;
+  min-width: 44px;
+  height: 44px;
   flex-shrink: 0;
+  border-radius: var(--raio-borda-pequeno);
+  border: 1.5px solid var(--cor-borda);
+  background: var(--cor-branco);
+  box-shadow: var(--sombra-suave);
+  transition: border-color var(--transicao), background-color var(--transicao), box-shadow var(--transicao),
+    transform 0.2s ease;
   /* Reforço: sempre gruda na borda direita do cabeçalho, sem depender só do
      justify-content:space-between do container (a <nav> do meio é
      position:fixed e não deveria interferir, mas isso garante o
@@ -413,12 +537,31 @@ h3 {
   margin-left: auto;
 }
 
+.menu-mobile:hover {
+  border-color: var(--cor-primaria);
+  background: var(--cor-primaria-clara);
+  box-shadow: var(--sombra-media);
+}
+
+.menu-mobile:active {
+  transform: scale(0.92);
+}
+
 .menu-mobile span {
   display: block;
-  height: 2px;
-  width: 100%;
+  height: 2.5px;
+  width: 20px;
   background: var(--cor-primaria-escura);
-  border-radius: 2px;
+  border-radius: 999px;
+  transition: background-color var(--transicao);
+}
+
+/* Barra do meio um pouco mais curta e na cor de destaque — um toque de
+   marca discreto no ícone mais "genérico" do site; some (opacity/width)
+   assim que o menu abre, sobrando só as duas barras formando o X. */
+.menu-mobile span:nth-child(2) {
+  width: 13px;
+  background: var(--cor-secundaria);
 }
 
 /* ABRIR é a mesma animação de FECHAR tocada de trás pra frente — os atrasos
@@ -490,20 +633,83 @@ h3 {
      nisso causou problema antes, ver histórico de commits). */
   align-items: flex-end;
   padding-top: 72px;
-  /* "center 22%": mantém centralizado na horizontal, mas ancora o recorte
-     mais perto do topo da imagem (avião + céu) em vez do meio — em telas
-     mais estreitas que a foto, o corte de "cover" estava sobrando pista
-     vazia embaixo e cortando a parte de cima que interessa. */
-  background: linear-gradient(160deg, var(--cor-primaria-escura), var(--cor-primaria) 60%),
-    url("../images/banner.webp") center 22% / cover no-repeat;
-  background-blend-mode: multiply;
+  /* O degradê de marca fica só no elemento .hero (a foto virou um elemento
+     próprio, .hero__foto, logo abaixo) — assim dá pra animar o zoom da
+     foto isolado, sem mexer no resto. */
+  background: linear-gradient(160deg, var(--cor-primaria-escura), var(--cor-primaria) 60%);
   color: var(--cor-branco);
   overflow: hidden;
+}
+
+/* Foto do banner com "respiração" lenta (efeito Ken Burns) — zoom contínuo
+   e muito lento (20s) que nunca se repete de forma perceptível, dá vida ao
+   hero sem ser uma animação "notada". mix-blend-mode faz o mesmo papel do
+   antigo background-blend-mode: multiply (mistura a foto com o degradê da
+   marca por trás dela). */
+.hero__foto {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: url("../images/banner.webp") center 22% / cover no-repeat;
+  mix-blend-mode: multiply;
+  transform: scale(1.1);
+  animation: heroZoomFoto 20s ease-in-out infinite alternate;
+}
+
+@keyframes heroZoomFoto {
+  from {
+    transform: scale(1.1);
+  }
+  to {
+    transform: scale(1.22);
+  }
+}
+
+/* Luz ambiente lenta atrás da foto — dois brilhos (vermelho da marca +
+   azul claro) que derivam devagar (14s) em loop, tipo "aurora" contida.
+   mix-blend-mode: screen só clareia, nunca escurece — fica sempre sutil. */
+.hero__aurora {
+  position: absolute;
+  inset: -15%;
+  z-index: 2;
+  /* Sem filter:blur() E sem mix-blend-mode — medimos os dois: cada um
+     sozinho já é caro o bastante, animado numa área deste tamanho, pra
+     derrubar a página a ~1 frame por segundo neste ambiente (achamos isso
+     na prática, não é teórico). Opacidade simples nas próprias cores
+     rgba() já dá o efeito de brilho sutil sem entrar no caminho caro de
+     composição que blend-mode/blur exigem a cada frame. */
+  background: radial-gradient(38% 38% at 22% 28%, rgba(223, 1, 18, 0.22) 0%, rgba(223, 1, 18, 0.1) 40%, transparent 72%),
+    radial-gradient(34% 34% at 78% 72%, rgba(93, 166, 214, 0.2) 0%, rgba(93, 166, 214, 0.09) 40%, transparent 72%);
+  animation: auroraFluir 14s ease-in-out infinite alternate;
+  pointer-events: none;
+}
+
+@keyframes auroraFluir {
+  from {
+    transform: translate(-3%, -2%);
+  }
+  to {
+    transform: translate(3%, 3%);
+  }
+}
+
+/* Textura técnica sutil por cima da foto — linhas finas tipo grade de
+   planta baixa/carta náutica, reforça o lado "tecnológico" do negócio sem
+   competir com o texto (opacidade bem baixa, só se nota de perto). */
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  background-image: repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.05) 0 1px, transparent 1px 88px),
+    repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.05) 0 1px, transparent 1px 88px);
+  pointer-events: none;
 }
 
 .hero__overlay {
   position: absolute;
   inset: 0;
+  z-index: 4;
   /* Mais claro no topo (deixa a foto aparecer com mais cor/energia logo de
      cara — pedido explícito do cliente, "está pouco chamativo") e ainda
      escuro o bastante embaixo, onde o texto fica, pra manter legibilidade. */
@@ -512,31 +718,102 @@ h3 {
 
 .hero__conteudo {
   position: relative;
-  z-index: 1;
+  z-index: 5;
   max-width: 720px;
   padding-top: 3rem;
   padding-bottom: 3rem;
 }
 
+@media (prefers-reduced-motion: reduce) {
+  .hero__foto,
+  .hero__aurora {
+    animation: none;
+  }
+}
+
+/* Selo do hero — reescrito como indicador de status ("badge" com ponto),
+   não mais um carimbo saltitante. Vidro fosco sutil (glassmorphism
+   discreto) em vez de vermelho sólido: lê como "informação verificada",
+   não como chamada de brinquedo. */
 .hero__eyebrow {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
   font-family: var(--fonte-titulo);
   text-transform: uppercase;
-  letter-spacing: 0.1em;
-  font-size: 0.8rem;
+  letter-spacing: 0.12em;
+  font-size: 0.75rem;
   color: var(--cor-branco);
-  background: var(--cor-secundaria);
-  padding: 0.45rem 1rem;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  padding: 0.55rem 1.1rem;
   border-radius: 999px;
-  margin-bottom: 1.1rem;
+  margin-bottom: 1.4rem;
   font-weight: 700;
-  box-shadow: 0 8px 20px rgba(223, 1, 18, 0.4);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+.hero__eyebrow::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--cor-secundaria);
+  flex-shrink: 0;
+}
+
+/* Nome do serviço digitado/apagado em loop (ver main.js,
+   "ativarTypewriterDeServicos") — largura mínima evita o resto do texto
+   "pulando" de lugar a cada letra digitada/apagada. */
+.hero__eyebrow-typewriter {
+  display: inline-block;
+  min-width: 9.5ch;
+  font-weight: 800;
+}
+
+.hero__eyebrow-typewriter::after {
+  content: "";
+  display: inline-block;
+  width: 2px;
+  height: 0.85em;
+  margin-left: 0.15em;
+  background: var(--cor-branco);
+  vertical-align: -0.1em;
+  animation: caretPiscar 1s step-end infinite;
+}
+
+@keyframes caretPiscar {
+  0%,
+  49% {
+    opacity: 1;
+  }
+  50%,
+  100% {
+    opacity: 0;
+  }
 }
 
 .hero__titulo {
   color: var(--cor-branco);
-  font-size: clamp(2.1rem, 7vw, 3.6rem);
+  font-size: clamp(2.2rem, 7vw, 3.75rem);
+  letter-spacing: -0.02em;
   margin-bottom: 1.25rem;
+}
+
+/* Cada letra entra separada (ver main.js, "ativarTituloEmLetras") — some
+   junto com o texto normal se o JS não rodar (progressive enhancement: sem
+   JS, o <h1> simplesmente mostra "Amazon Visto" direto, sem quebrar nada). */
+.hero__titulo-letra {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(0.35em);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.hero__titulo--revelado .hero__titulo-letra {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .hero__frase {
@@ -563,47 +840,26 @@ h3 {
 
 .hero .botao--fantasma {
   color: var(--cor-branco);
-  border-color: rgba(255, 255, 255, 0.5);
+  border: 2px solid rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
 }
 
+/* Inverte pra branco sólido no hover (em vez de um leve tint) — no fundo
+   escuro do hero, esse contraste forte é o que faz o botão realmente
+   "chamar", sem precisar de nenhuma cor fora da paleta. */
 .hero .botao--fantasma:hover {
-  background: rgba(255, 255, 255, 0.12);
+  background: var(--cor-branco);
   border-color: var(--cor-branco);
-}
-
-/* Anel pulsando ao redor do CTA principal — mesma linguagem visual do botão
-   flutuante de WhatsApp (que já pulsa), só que aqui reforça justo o botão
-   de conversão mais importante da página inteira. */
-.hero .botao--whatsapp {
-  position: relative;
-}
-
-.hero .botao--whatsapp::after {
-  content: "";
-  position: absolute;
-  inset: -5px;
-  border-radius: inherit;
-  border: 2px solid rgba(37, 211, 102, 0.55);
-  animation: pulsarCtaHero 2.4s ease-out infinite;
-  pointer-events: none;
-}
-
-@keyframes pulsarCtaHero {
-  0% {
-    transform: scale(1);
-    opacity: 0.8;
-  }
-  100% {
-    transform: scale(1.12);
-    opacity: 0;
-  }
+  color: var(--cor-primaria-escura);
+  box-shadow: 0 16px 34px rgba(0, 0, 0, 0.25);
 }
 
 .hero__nota {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  margin-top: 1.4rem;
+  margin-top: 1.1rem;
   font-size: 0.88rem;
   color: rgba(255, 255, 255, 0.85);
 }
@@ -644,7 +900,7 @@ h3 {
   color: var(--cor-branco);
   border: 1.5px solid rgba(255, 255, 255, 0.5);
   animation: flutuar 2.4s ease-in-out infinite;
-  z-index: 2;
+  z-index: 6;
 }
 
 /* Onda decorativa na base do hero — transição suave pra seção seguinte em
@@ -655,7 +911,7 @@ h3 {
   left: 0;
   width: 100%;
   height: 56px;
-  z-index: 1;
+  z-index: 5;
 }
 
 .hero__onda-path {
@@ -726,81 +982,247 @@ h3 {
   font-size: 0.95rem;
 }
 
-/* Faixa escura de números/prêmios — quebra o branco entre Sobre e Serviços */
+/* ==========================================================================
+   8. COMO FUNCIONA (processo em passos)
+   Numeração própria (não usa o counter() das seções, esses números são o
+   CONTEÚDO da seção, não um índice de navegação) — círculo com o mesmo
+   tratamento monoespaçado do chip do eyebrow, pra soar como o mesmo
+   "sistema de numeração" em todo o site.
+   ========================================================================== */
+.processo__lista {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2.25rem;
+}
+
+.processo__passo {
+  position: relative;
+  padding-left: 3.5rem;
+}
+
+.processo__numero {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 2.5rem;
+  height: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--cor-primaria-clara);
+  color: var(--cor-primaria);
+  font-family: var(--fonte-mono);
+  font-weight: 700;
+  font-size: 0.85rem;
+}
+
+.processo__passo h3 {
+  font-size: 1.05rem;
+  margin-bottom: 0.4rem;
+}
+
+.processo__passo p {
+  color: var(--cor-texto-claro);
+  font-size: 0.92rem;
+}
+
+/* ==========================================================================
+   9. FAIXA DE NÚMEROS (prova/credibilidade)
+   Reescrita como painel de dados — divisórias finas entre células, números
+   com espaçamento tabular (não "dançam" de largura ao contar), textura de
+   grade técnica de fundo. Ainda conta de 0 até o valor real (ver main.js).
+   ========================================================================== */
 .faixa-numeros {
+  position: relative;
   background: linear-gradient(135deg, var(--cor-primaria-escura), var(--cor-primaria));
-  padding: 3rem 0;
+  padding: 3.5rem 0;
+  overflow: hidden;
+}
+
+.faixa-numeros::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.05) 0 1px, transparent 1px 64px),
+    repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.05) 0 1px, transparent 1px 64px);
+  pointer-events: none;
 }
 
 .faixa-numeros__grade {
+  position: relative;
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 2rem;
+  gap: 0;
   text-align: center;
 }
 
 .faixa-numeros__item {
   display: flex;
   flex-direction: column;
-  gap: 0.35rem;
+  gap: 0.4rem;
+  padding: 0.75rem;
+  border-left: 1px solid rgba(255, 255, 255, 0.14);
+}
+
+.faixa-numeros__item:nth-child(odd) {
+  border-left: none;
 }
 
 .faixa-numeros__valor {
   font-family: var(--fonte-titulo);
   font-weight: 800;
+  font-variant-numeric: tabular-nums;
   font-size: clamp(1.7rem, 5vw, 2.5rem);
+  letter-spacing: -0.02em;
   color: var(--cor-branco);
 }
 
 .faixa-numeros__legenda {
-  font-size: 0.8rem;
-  color: rgba(255, 255, 255, 0.75);
+  font-size: 0.78rem;
+  color: rgba(255, 255, 255, 0.7);
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.06em;
 }
 
 /* ==========================================================================
-   8. SERVIÇOS / PRODUTOS (cards)
-   ========================================================================== */
-.cartoes-grade {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 1.75rem;
+   10. SERVIÇOS — TRILHA COM SCROLL HORIZONTAL "PINADO"
+   Substitui a antiga grade + botão "ver mais". A seção (.servicos-scroll)
+   ganha uma altura extra calculada via JS; enquanto essa sobra é rolada, o
+   miolo (.servicos-scroll__pin) fica grudado no topo (position:sticky) e a
+   trilha de cards desliza na horizontal (ver main.js,
+   "ativarScrollHorizontalServicos") — o resultado lembra um ScrollTrigger
+   do GSAP, só que com CSS/JS puro. Em telas menores e com menos animação
+   preferida, vira uma faixa comum de rolagem horizontal nativa (classes
+   "--simples"/"--nativa", aplicadas via JS). */
+/* Duas classes (em vez de só ".servicos-scroll") pra especificidade bater a
+   regra ".secao { padding: 6rem 0; }" do @media de tablet, que vem DEPOIS
+   desta no arquivo — sem isso o padding do template genérico voltaria a
+   aparecer aqui e desalinharia a matemática do pin (ver main.js). */
+.secao.servicos-scroll {
+  padding: 0;
 }
 
-.cartao-produto {
-  /* No celular os cards ficam DEITADOS (foto pequena + texto do lado) —
-     bem mais compactos que foto quadrada em cima + texto embaixo, que
-     fazia cada card sozinho quase preencher a tela. A partir do tablet
-     (ver @media mais abaixo) volta pro layout empilhado, melhor pra
-     grade de 2-3 colunas. */
+.servicos-scroll__pin {
+  position: sticky;
+  top: 72px; /* altura do cabeçalho fixo — ver main.js, "alturaCabecalho" */
+  min-height: calc(100vh - 72px);
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
+  justify-content: center;
+  gap: 2.75rem;
+  padding: 4.5rem 0;
+  overflow: hidden;
+  /* Fundo suave (estático, sem animação) só pra dar profundidade ao vidro
+     dos cards — sem isso o "liquid glass" não tem nada de variado atrás
+     pra desfocar/refletir. */
+  background: radial-gradient(120% 140% at 12% 0%, var(--cor-primaria-clara) 0%, transparent 55%),
+    linear-gradient(160deg, var(--cor-fundo-alt) 0%, var(--cor-fundo) 70%);
+}
+
+.servicos-scroll--simples .servicos-scroll__pin {
+  position: static;
+  min-height: 0;
+}
+
+.servicos-scroll__trilha {
+  display: flex;
   align-items: stretch;
-  background: var(--cor-branco);
+  gap: 1.5rem;
+  padding: 0 1.25rem;
+  counter-reset: servico;
+  will-change: transform;
+}
+
+/* Fallback: celular/tablet e "prefers-reduced-motion" — em vez de pin +
+   JS calculando translateX a cada scroll, é só uma faixa com rolagem
+   horizontal nativa do próprio navegador (mais previsível no touch, e sem
+   nenhum "sequestro" de scroll pra quem pediu menos movimento). */
+.servicos-scroll__trilha--nativa {
+  overflow-x: auto;
+  scroll-snap-type: x proximity;
+  padding-bottom: 1.5rem;
+  -webkit-overflow-scrolling: touch;
+}
+
+.servicos-scroll__trilha--nativa .cartao-produto {
+  scroll-snap-align: start;
+}
+
+/* Cartão "liquid glass" — vidro fosco claro (translúcido, não escuro): tom
+   alto de opacidade branca + saturação no blur, senão em fundo claro o
+   glassmorphism costuma ficar ilegível (ver checklist de contraste). Usado
+   em QUALQUER card do site (o mesmo bloco vale se reaproveitado em outras
+   seções). */
+.cartao-produto {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  flex: 0 0 clamp(230px, 78vw, 300px);
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(18px) saturate(1.6);
+  -webkit-backdrop-filter: blur(18px) saturate(1.6);
+  border: 1px solid rgba(255, 255, 255, 0.85);
   border-radius: var(--raio-borda);
   overflow: hidden;
-  box-shadow: var(--sombra-suave);
+  box-shadow: var(--sombra-media);
   transition: transform var(--transicao), box-shadow var(--transicao);
-  border-left: 4px solid var(--cor-primaria);
+  border-top: 4px solid var(--cor-primaria);
+  counter-increment: servico;
+}
+
+/* Fio de luz no topo do vidro — reforça a leitura de "superfície de
+   vidro" sem precisar de mais nenhum elemento animado. Estático (custa
+   bem menos que o blur já usado no background do card). */
+.cartao-produto::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0) 40%);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+/* Brilho que segue o mouse — contido DENTRO do card (não é um cursor de
+   página inteira). --mx/--my são atualizados via JS só enquanto o mouse
+   está em cima deste card específico (ver main.js); o glow correspondente
+   à cor do card (azul nos ímpares, vermelho nos pares — ver nth-child
+   abaixo) aparece só no hover, então nunca compete com o resto da página. */
+.cartao-produto::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(240px circle at var(--mx, 50%) var(--my, 0%), rgba(15, 24, 98, 0.16), transparent 70%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.cartao-produto:nth-child(even)::after {
+  background: radial-gradient(240px circle at var(--mx, 50%) var(--my, 0%), rgba(223, 1, 18, 0.14), transparent 70%);
+}
+
+.cartao-produto:hover::after {
+  opacity: 1;
 }
 
 /* Alterna a cor de destaque entre os cards — dá ritmo visual à vitrine em
-   vez de repetir a mesma cor 6 vezes seguidas. Guarda os dois lados (topo
-   E esquerda) porque qual dos dois fica visível depende do breakpoint. */
+   vez de repetir a mesma cor o tempo todo. */
 .cartao-produto:nth-child(even) {
-  border-left-color: var(--cor-secundaria);
   border-top-color: var(--cor-secundaria);
 }
 
 .cartao-produto:hover {
   transform: translateY(-6px);
-  box-shadow: var(--sombra-media);
+  box-shadow: 0 20px 40px rgba(15, 24, 98, 0.18);
 }
 
 .cartao-produto__imagem {
-  width: 108px;
-  flex-shrink: 0;
+  width: 100%;
   aspect-ratio: 1 / 1;
   overflow: hidden;
 }
@@ -817,74 +1239,89 @@ h3 {
 }
 
 .cartao-produto__corpo {
-  padding: 0.85rem 1rem;
+  padding: 1.1rem 1.25rem 1.35rem;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  flex: 1;
 }
 
 .cartao-produto__corpo h3 {
-  font-size: 1rem;
-  margin-bottom: 0.25rem;
+  display: flex;
+  align-items: baseline;
+  gap: 0.45rem;
+  font-size: 1.05rem;
+  margin-bottom: 0.4rem;
+}
+
+.cartao-produto__corpo h3::before {
+  content: counter(servico, decimal-leading-zero);
+  font-family: var(--fonte-mono);
+  font-weight: 700;
+  font-size: 0.72rem;
+  color: var(--cor-texto-claro);
 }
 
 .cartao-produto__corpo p {
   color: var(--cor-texto-claro);
-  font-size: 0.85rem;
-  /* Trava em 2 linhas no card deitado do celular — evita que uma descrição
-     mais longa estique o card e desalinhe a foto ao lado. */
+  font-size: 0.9rem;
+  /* Trava em 3 linhas — mantém os cards com a mesma altura na trilha,
+     mesmo quando uma descrição é mais longa que as outras. */
   display: -webkit-box;
-  -webkit-line-clamp: 2;
+  -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
 
-/* Cards extras — só aparecem depois de clicar em "Ver mais serviços"
-   (.cartoes-grade--expandida, classe adicionada via JS). Sem depender do
-   IntersectionObserver do scroll-reveal, por isso a entrada usa uma
-   animação simples em vez da classe .reveal. */
-.cartao-produto--extra {
-  display: none;
+/* ==========================================================================
+   10b. TEXTO COM BRILHO (gradiente "shiny")
+   Aplicado com moderação, só em 2 pontos de destaque (ver index.html): o
+   título "Líder de mercado..." da seção Sobre e os números da faixa de
+   prova. Gradiente animado + background-clip:text — estático o bastante
+   (sem blur, sem blend-mode) pra não repetir os problemas de performance
+   já encontrados neste arquivo no fundo do hero. Duas variantes porque o
+   contraste de base é diferente: texto escuro sobre fundo claro (Sobre) e
+   texto branco sobre fundo escuro (faixa de números).
+   ========================================================================== */
+.texto-brilho {
+  background-image: linear-gradient(
+    100deg,
+    var(--cor-primaria-escura) 0%,
+    var(--cor-primaria-escura) 38%,
+    var(--cor-secundaria) 50%,
+    var(--cor-primaria-escura) 62%,
+    var(--cor-primaria-escura) 100%
+  );
+  background-size: 250% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  animation: brilhoVarrer 6s ease-in-out infinite;
 }
 
-.cartoes-grade--expandida .cartao-produto--extra {
-  /* Mesmo display do card normal nesse breakpoint (row deitado no
-     celular, column empilhado a partir do tablet — ver @media 768px) —
-     senão os cards revelados ficariam com um layout diferente dos 6 que
-     já apareciam antes de clicar "Ver mais". */
-  display: flex;
-  animation: cartaoExtraSurge 0.45s ease;
+.texto-brilho--claro {
+  background-image: linear-gradient(
+    100deg,
+    rgba(255, 255, 255, 0.7) 0%,
+    rgba(255, 255, 255, 0.7) 38%,
+    #ffffff 50%,
+    rgba(255, 255, 255, 0.7) 62%,
+    rgba(255, 255, 255, 0.7) 100%
+  );
+  animation-duration: 4.5s;
 }
 
-@keyframes cartaoExtraSurge {
-  from {
-    opacity: 0;
-    transform: translateY(12px);
+@keyframes brilhoVarrer {
+  0% {
+    background-position: 200% 0;
   }
-  to {
-    opacity: 1;
-    transform: translateY(0);
+  100% {
+    background-position: -100% 0;
   }
-}
-
-.servicos__acao {
-  display: flex;
-  justify-content: center;
-  margin-top: 2.75rem;
-}
-
-.botaoVerMaisServicos__seta {
-  width: 1.1em;
-  height: 1.1em;
-  transition: transform var(--transicao);
-}
-
-#botaoVerMaisServicos[aria-expanded="true"] .botaoVerMaisServicos__seta {
-  transform: rotate(180deg);
 }
 
 /* ==========================================================================
-   10. CONTATO
+   11. CONTATO
    ========================================================================== */
 .contato__lista {
   display: flex;
@@ -935,7 +1372,7 @@ h3 {
 }
 
 /* ==========================================================================
-   11. RODAPÉ
+   12. RODAPÉ
    ========================================================================== */
 .rodape {
   background: var(--cor-primaria-escura);
@@ -1005,7 +1442,7 @@ h3 {
 }
 
 /* ==========================================================================
-   12. BOTÃO FLUTUANTE DE WHATSAPP
+   13. BOTÃO FLUTUANTE DE WHATSAPP
    ========================================================================== */
 .whatsapp-flutuante {
   position: fixed;
@@ -1044,14 +1481,16 @@ h3 {
 }
 
 /* ==========================================================================
-   13. ANIMAÇÃO DE ENTRADA AO ROLAR (SCROLL REVEAL)
+   14. ANIMAÇÃO DE ENTRADA AO ROLAR (SCROLL REVEAL)
    Controlado via JS (main.js), que adiciona ".reveal--visivel" quando o
-   elemento entra na tela. Sutil de propósito: leve fade + deslocamento.
+   elemento entra na tela. Sutil de propósito: leve fade + deslocamento — é
+   o ÚNICO idioma de movimento do site inteiro (junto do contador de
+   números e da barra de progresso), reaproveitado em toda seção nova.
    ========================================================================== */
 .reveal {
   opacity: 0;
-  transform: translateY(24px);
-  transition: opacity 0.6s ease, transform 0.6s ease;
+  transform: translateY(20px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
 }
 
 .reveal--visivel {
@@ -1060,56 +1499,41 @@ h3 {
 }
 
 /* ==========================================================================
-   14. RESPONSIVO — TABLET (≥768px)
+   16. RESPONSIVO — TABLET (≥768px)
    ========================================================================== */
 @media (min-width: 768px) {
   .secao {
     padding: 6rem 0;
   }
 
-  .cartoes-grade {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  /* Volta pro layout empilhado (foto em cima, texto embaixo) — o card
-     deitado é uma otimização só pro celular, numa grade de 2-3 colunas
-     ele funciona melhor assim. */
-  .cartao-produto {
-    flex-direction: column;
-    border-left: none;
-    border-top: 4px solid var(--cor-primaria);
-  }
-
-  .cartao-produto:nth-child(even) {
-    border-top-color: var(--cor-secundaria);
-  }
-
-  .cartao-produto__imagem {
-    width: 100%;
-  }
-
-  .cartao-produto__corpo {
-    padding: 1.25rem 1.4rem 1.5rem;
-    display: block;
-  }
-
+  /* Cards de serviço (trilha horizontal) ganham mais respiro nesse
+     breakpoint — o resto do layout (coluna, largura fixa) já é o mesmo
+     desde o celular, ver ".cartao-produto" na seção 10. */
   .cartao-produto__corpo h3 {
     font-size: 1.1rem;
-    margin-bottom: 0.4rem;
   }
 
   .cartao-produto__corpo p {
     font-size: 0.95rem;
-    /* Desfaz o truque de "trava em 2 linhas" do celular — no card
-       empilhado do tablet/desktop tem espaço de sobra, o texto flui normal. */
-    display: block;
-    -webkit-line-clamp: unset;
-    -webkit-box-orient: unset;
-    overflow: visible;
   }
 
   .faixa-numeros__grade {
     grid-template-columns: repeat(4, 1fr);
+  }
+
+  /* Em 1 linha só (4 colunas), a divisória some da primeira célula, não
+     mais das ímpares (que faziam sentido só no layout de 2 colunas/linha). */
+  .faixa-numeros__item {
+    border-left: 1px solid rgba(255, 255, 255, 0.14);
+  }
+
+  .faixa-numeros__item:first-child {
+    border-left: none;
+  }
+
+  .processo__lista {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2.5rem 2rem;
   }
 
   .hero {
@@ -1138,7 +1562,7 @@ h3 {
 }
 
 /* ==========================================================================
-   15. RESPONSIVO — DESKTOP (≥1024px)
+   17. RESPONSIVO — DESKTOP (≥1024px)
    ========================================================================== */
 @media (min-width: 1024px) {
   .menu-mobile {
@@ -1163,7 +1587,7 @@ h3 {
 
   .navegacao__lista {
     flex-direction: row;
-    gap: 2rem;
+    gap: 1.75rem;
   }
 
   .sobre__grade {
@@ -1177,8 +1601,10 @@ h3 {
     max-height: none;
   }
 
-  .cartoes-grade {
-    grid-template-columns: repeat(3, 1fr);
+  /* Cards um pouco mais largos no desktop — mais espaço de leitura por
+     card na trilha (ver ".cartao-produto" na seção 10). */
+  .cartao-produto {
+    flex-basis: 320px;
   }
 
   .contato__grade {
@@ -1203,5 +1629,57 @@ h3 {
   .rodape__copyright,
   .rodape__creditos {
     margin-left: auto;
+  }
+
+  /* Processo em passos: 4 colunas com uma linha fina conectando os
+     círculos numerados — lê como uma linha do tempo/fluxograma, reforça o
+     "como funciona" de forma visual, não só em texto. */
+  .processo__lista {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2.5rem;
+    position: relative;
+  }
+
+  .processo__lista::before {
+    content: "";
+    position: absolute;
+    top: 1.25rem;
+    left: calc(12.5% + 1.25rem);
+    right: calc(12.5% + 1.25rem);
+    height: 1px;
+    background: var(--cor-borda);
+    z-index: 0;
+  }
+
+  /* Linha de preenchimento por cima da linha cinza acima — mesma posição
+     exata, mas com as cores da marca e escala ligada ao scroll (JS define
+     --progresso-processo de 0 a 1 conforme a seção passa pela tela, ver
+     main.js). "Desenha" o percurso à medida que o visitante rola, em vez
+     de aparecer pronta de uma vez. */
+  .processo__lista::after {
+    content: "";
+    position: absolute;
+    top: 1.25rem;
+    left: calc(12.5% + 1.25rem);
+    right: calc(12.5% + 1.25rem);
+    height: 2px;
+    background: linear-gradient(to right, var(--cor-primaria), var(--cor-secundaria));
+    transform: scaleX(var(--progresso-processo, 0));
+    transform-origin: left;
+    z-index: 0;
+  }
+
+  .processo__passo {
+    padding-left: 0;
+    padding-top: 3.75rem;
+  }
+
+  .processo__numero {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    background: var(--cor-fundo);
+    box-shadow: 0 0 0 6px var(--cor-fundo);
   }
 }

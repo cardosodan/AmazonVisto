@@ -41,7 +41,7 @@
     rel="stylesheet"
   />
 
-  <link rel="stylesheet" href="css/style.css?v=16" />
+  <link rel="stylesheet" href="css/style.css?v=18" />
 </head>
 <body>
   <a class="pular-conteudo" href="#inicio">Pular para o conteúdo</a>
@@ -66,6 +66,7 @@
         <ul class="navegacao__lista">
           <li><a href="#inicio" class="navegacao__link">Início</a></li>
           <li><a href="#sobre" class="navegacao__link">Sobre</a></li>
+          <li><a href="#processo" class="navegacao__link">Como funciona</a></li>
           <li><a href="#servicos" class="navegacao__link">Serviços</a></li>
           <li><a href="#contato" class="navegacao__link">Contato</a></li>
         </ul>
@@ -96,10 +97,16 @@
          HERO / INÍCIO
          ========================================================================== -->
     <section class="hero" id="inicio">
+      <div class="hero__foto" aria-hidden="true"></div>
+      <div class="hero__aurora" aria-hidden="true"></div>
       <div class="hero__overlay" aria-hidden="true"></div>
       <div class="container hero__conteudo reveal">
-        <p class="hero__eyebrow">Turismo, estudo e trabalho</p>
-        <h1 class="hero__titulo">Amazon Visto</h1>
+        <p class="hero__eyebrow">
+          Assessoria em
+          <span class="hero__eyebrow-typewriter" id="typewriterServico" aria-hidden="true"></span>
+          <span class="visualmente-oculto">Visto Americano, Visto Canadense, Visto Chinês, Visto Peruano, Passaporte Brasileiro e Intercâmbio</span>
+        </p>
+        <h1 class="hero__titulo" id="heroTitulo">Amazon Visto</h1>
         <p class="hero__frase">
           Visto Americano, Canadense, Chinês, Peruano e Passaporte — sem sair de
           casa, parcelado em até 10x. Nunca foi tão fácil realizar a viagem dos
@@ -119,13 +126,24 @@
             </svg>
             Fale com um especialista
           </a>
-          <a href="#servicos" class="botao botao--fantasma botao--grande">Ver serviços</a>
+          <a href="#servicos" class="botao botao--fantasma botao--grande">
+            Ver serviços
+            <svg class="icone botao__seta" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true">
+              <path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </a>
         </div>
         <p class="hero__nota">
           <svg class="icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true">
             <path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round" />
           </svg>
           Parcele em até <strong>10x sem juros</strong> no cartão
+        </p>
+        <p class="hero__nota">
+          <svg class="icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true">
+            <path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+          <strong>Empresa do Ano 2025</strong> e Empresa Destaque 2026
         </p>
       </div>
       <a href="#sobre" class="hero__seta" aria-label="Rolar para a seção Sobre">
@@ -154,7 +172,7 @@
         </div>
         <div class="sobre__texto reveal">
           <p class="secao__eyebrow">Sobre a Amazon Visto</p>
-          <h2 class="secao__titulo">Líder de mercado no Norte do Brasil</h2>
+          <h2 class="secao__titulo texto-brilho">Líder de mercado no Norte do Brasil</h2>
           <p>
             A Amazon Visto é referência em assessoria de vistos, passaporte e
             intercâmbio, com atendimento presencial em Manaus-AM e Brasília-DF,
@@ -167,15 +185,15 @@
             processos descomplicados, seguros e sem burocracia.
           </p>
           <ul class="sobre__diferenciais">
-            <li>
+            <li class="reveal">
               <strong>Prêmios reconhecidos</strong>
               <span>Empresa do Ano 2025 e Empresa Destaque 2026 — líder de mercado no Norte.</span>
             </li>
-            <li>
+            <li class="reveal">
               <strong>100% online</strong>
               <span>Resolva tudo pelo WhatsApp, sem sair de casa e com total segurança dos seus dados.</span>
             </li>
-            <li>
+            <li class="reveal">
               <strong>Parcelamento facilitado</strong>
               <span>Parcele em até 10x sem juros no cartão, em português ou español.</span>
             </li>
@@ -185,25 +203,63 @@
     </section>
 
     <!-- ==========================================================================
-         NÚMEROS / RECONHECIMENTO — faixa escura entre Sobre e Serviços, quebra
-         o branco da página e dá mais destaque aos prêmios/números da empresa
+         COMO FUNCIONA — processo em 4 passos. Mostra que não é uma "caixa
+         preta": o visitante sabe exatamente o que esperar antes de chamar
+         no WhatsApp, o que reduz atrito pra dar o primeiro passo.
+         ========================================================================== -->
+    <section class="secao processo" id="processo">
+      <div class="container">
+        <div class="secao__cabecalho reveal">
+          <p class="secao__eyebrow">Como funciona</p>
+          <h2 class="secao__titulo">Do primeiro contato à aprovação</h2>
+          <p class="secao__subtitulo">Um processo claro, sem burocracia escondida.</p>
+        </div>
+
+        <ol class="processo__lista">
+          <li class="processo__passo reveal">
+            <span class="processo__numero" aria-hidden="true">01</span>
+            <h3>Consulta inicial gratuita</h3>
+            <p>Você conta seu objetivo — turismo, estudo ou trabalho — e recebe uma análise sem custo pelo WhatsApp.</p>
+          </li>
+          <li class="processo__passo reveal">
+            <span class="processo__numero" aria-hidden="true">02</span>
+            <h3>Documentação organizada</h3>
+            <p>Nossa equipe monta a lista exata de documentos para o seu caso específico, sem enrolação.</p>
+          </li>
+          <li class="processo__passo reveal">
+            <span class="processo__numero" aria-hidden="true">03</span>
+            <h3>Submissão acompanhada</h3>
+            <p>Cuidamos do processo junto ao consulado ou embaixada e te mantemos informado a cada etapa.</p>
+          </li>
+          <li class="processo__passo reveal">
+            <span class="processo__numero" aria-hidden="true">04</span>
+            <h3>Aprovação e embarque</h3>
+            <p>Visto ou passaporte em mãos — prontos para a viagem que você planejou.</p>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         NÚMEROS / RECONHECIMENTO — faixa escura entre o processo e Serviços,
+         quebra o branco da página e dá mais destaque aos prêmios/números
          ========================================================================== -->
     <section class="faixa-numeros">
       <div class="container faixa-numeros__grade">
         <div class="faixa-numeros__item reveal">
-          <span class="faixa-numeros__valor">55,7 mil</span>
+          <span class="faixa-numeros__valor texto-brilho texto-brilho--claro" data-contar>55,7 mil</span>
           <span class="faixa-numeros__legenda">Seguidores no Instagram</span>
         </div>
         <div class="faixa-numeros__item reveal">
-          <span class="faixa-numeros__valor">2025</span>
+          <span class="faixa-numeros__valor texto-brilho texto-brilho--claro" data-contar>2025</span>
           <span class="faixa-numeros__legenda">Prêmio Empresa do Ano</span>
         </div>
         <div class="faixa-numeros__item reveal">
-          <span class="faixa-numeros__valor">2026</span>
+          <span class="faixa-numeros__valor texto-brilho texto-brilho--claro" data-contar>2026</span>
           <span class="faixa-numeros__legenda">Empresa Destaque</span>
         </div>
         <div class="faixa-numeros__item reveal">
-          <span class="faixa-numeros__valor">10x</span>
+          <span class="faixa-numeros__valor texto-brilho texto-brilho--claro" data-contar>10x</span>
           <span class="faixa-numeros__legenda">Parcelamento sem juros</span>
         </div>
       </div>
@@ -212,18 +268,20 @@
     <!-- ==========================================================================
          SERVIÇOS
          ========================================================================== -->
-    <section class="secao secao--alt servicos" id="servicos">
-      <div class="container">
-        <div class="secao__cabecalho reveal">
-          <p class="secao__eyebrow">O que oferecemos</p>
-          <h2 class="secao__titulo">Nossos serviços</h2>
-          <p class="secao__subtitulo">
-            Assessoria completa, do primeiro passo até a aprovação.
-          </p>
+    <section class="secao servicos-scroll" id="servicos">
+      <div class="servicos-scroll__pin">
+        <div class="container">
+          <div class="secao__cabecalho reveal">
+            <p class="secao__eyebrow">O que oferecemos</p>
+            <h2 class="secao__titulo">Nossos serviços</h2>
+            <p class="secao__subtitulo">
+              Assessoria completa, do primeiro passo até a aprovação — arraste para o lado para ver todos.
+            </p>
+          </div>
         </div>
 
-        <div class="cartoes-grade" id="gradeServicos">
-          <article class="cartao-produto reveal">
+        <div class="servicos-scroll__trilha" id="trilhaServicos">
+          <article class="cartao-produto">
             <div class="cartao-produto__imagem">
               <img src="images/produto-1.webp" alt="Visto Americano" width="800" height="800" loading="lazy" />
             </div>
@@ -233,7 +291,7 @@
             </div>
           </article>
 
-          <article class="cartao-produto reveal">
+          <article class="cartao-produto">
             <div class="cartao-produto__imagem">
               <img src="images/produto-2.webp" alt="Visto Canadense" width="800" height="800" loading="lazy" />
             </div>
@@ -243,7 +301,7 @@
             </div>
           </article>
 
-          <article class="cartao-produto reveal">
+          <article class="cartao-produto">
             <div class="cartao-produto__imagem">
               <img src="images/produto-3.webp" alt="Visto Chinês" width="800" height="800" loading="lazy" />
             </div>
@@ -253,7 +311,7 @@
             </div>
           </article>
 
-          <article class="cartao-produto reveal">
+          <article class="cartao-produto">
             <div class="cartao-produto__imagem">
               <img src="images/produto-4.webp" alt="Visto Peruano" width="800" height="800" loading="lazy" />
             </div>
@@ -263,7 +321,7 @@
             </div>
           </article>
 
-          <article class="cartao-produto reveal">
+          <article class="cartao-produto">
             <div class="cartao-produto__imagem">
               <img src="images/produto-5.webp" alt="Passaporte Brasileiro" width="800" height="800" loading="lazy" />
             </div>
@@ -273,7 +331,7 @@
             </div>
           </article>
 
-          <article class="cartao-produto reveal">
+          <article class="cartao-produto">
             <div class="cartao-produto__imagem">
               <img src="images/produto-6.webp" alt="Intercâmbio: Estudo e Trabalho" width="800" height="800" loading="lazy" />
             </div>
@@ -284,11 +342,10 @@
           </article>
 
           <!-- ================================================================
-               6 CARDS EXTRAS — escondidos até clicar em "Ver mais serviços".
-               TROCAR: nome/descrição/foto de cada um assim que a empresa
-               definir quais outros serviços entram aqui.
+               6 CARDS EXTRAS — TROCAR: nome/descrição/foto de cada um assim
+               que a empresa definir quais outros serviços entram aqui.
                ================================================================ -->
-          <article class="cartao-produto cartao-produto--extra">
+          <article class="cartao-produto">
             <div class="cartao-produto__imagem">
               <img src="images/produto-7.webp" alt="TROCAR: nome do serviço 7" width="800" height="800" loading="lazy" />
             </div>
@@ -298,7 +355,7 @@
             </div>
           </article>
 
-          <article class="cartao-produto cartao-produto--extra">
+          <article class="cartao-produto">
             <div class="cartao-produto__imagem">
               <img src="images/produto-8.webp" alt="TROCAR: nome do serviço 8" width="800" height="800" loading="lazy" />
             </div>
@@ -308,7 +365,7 @@
             </div>
           </article>
 
-          <article class="cartao-produto cartao-produto--extra">
+          <article class="cartao-produto">
             <div class="cartao-produto__imagem">
               <img src="images/produto-9.webp" alt="TROCAR: nome do serviço 9" width="800" height="800" loading="lazy" />
             </div>
@@ -318,7 +375,7 @@
             </div>
           </article>
 
-          <article class="cartao-produto cartao-produto--extra">
+          <article class="cartao-produto">
             <div class="cartao-produto__imagem">
               <img src="images/produto-10.webp" alt="TROCAR: nome do serviço 10" width="800" height="800" loading="lazy" />
             </div>
@@ -328,7 +385,7 @@
             </div>
           </article>
 
-          <article class="cartao-produto cartao-produto--extra">
+          <article class="cartao-produto">
             <div class="cartao-produto__imagem">
               <img src="images/produto-11.webp" alt="TROCAR: nome do serviço 11" width="800" height="800" loading="lazy" />
             </div>
@@ -338,7 +395,7 @@
             </div>
           </article>
 
-          <article class="cartao-produto cartao-produto--extra">
+          <article class="cartao-produto">
             <div class="cartao-produto__imagem">
               <img src="images/produto-12.webp" alt="TROCAR: nome do serviço 12" width="800" height="800" loading="lazy" />
             </div>
@@ -347,15 +404,6 @@
               <p>TROCAR: descrição curta sobre esse serviço.</p>
             </div>
           </article>
-        </div>
-
-        <div class="servicos__acao">
-          <button type="button" class="botao botao--fantasma" id="botaoVerMaisServicos" aria-expanded="false" aria-controls="gradeServicos">
-            <span class="botao__texto">Ver mais serviços</span>
-            <svg class="icone botaoVerMaisServicos__seta" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-              <path d="M6 9l6 6 6-6" stroke-linecap="round" stroke-linejoin="round" />
-            </svg>
-          </button>
         </div>
       </div>
     </section>
