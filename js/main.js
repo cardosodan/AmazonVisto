@@ -185,8 +185,14 @@ function atualizarAnoDoRodape() {
    nenhum "sequestro" de scroll). -------------------------------------------------------------------------- */
 function ativarScrollHorizontalServicos() {
   const secao = document.querySelector(".servicos-scroll");
+  // A "pista" é só o miolo que cria a sobra de altura (o pin some daqui —
+  // o texto de cabeçalho da seção fica FORA dela, rolando normal; isso
+  // evita que os cards fiquem espremidos/cortados embaixo da tela, já que
+  // agora o pin só precisa caber os cards, não cabeçalho + cards juntos).
+  const pista = document.getElementById("pistaServicos");
+  const pin = document.querySelector(".servicos-scroll__pin");
   const trilha = document.getElementById("trilhaServicos");
-  if (!secao || !trilha) return;
+  if (!secao || !pista || !pin || !trilha) return;
 
   const semTelaGrande = window.matchMedia("(max-width: 1023px)").matches;
   const prefereMenosMovimento = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -197,11 +203,9 @@ function ativarScrollHorizontalServicos() {
     return;
   }
 
-  const alturaCabecalho = 72; // mesmo valor do "top" do .servicos-scroll__pin no CSS
-
   const recalcularAltura = () => {
     const distanciaHorizontal = Math.max(0, trilha.scrollWidth - window.innerWidth);
-    secao.style.height = `${window.innerHeight - alturaCabecalho + distanciaHorizontal}px`;
+    pista.style.height = `${pin.offsetHeight + distanciaHorizontal}px`;
   };
 
   const atualizarPosicao = () => {
@@ -210,8 +214,8 @@ function ativarScrollHorizontalServicos() {
       trilha.style.transform = "translateX(0)";
       return;
     }
-    const caixa = secao.getBoundingClientRect();
-    const percurso = caixa.height - window.innerHeight;
+    const caixa = pista.getBoundingClientRect();
+    const percurso = caixa.height - pin.offsetHeight;
     const progresso = percurso > 0 ? -caixa.top / percurso : 0;
     const progressoLimitado = Math.min(1, Math.max(0, progresso));
     trilha.style.transform = `translateX(-${progressoLimitado * distanciaHorizontal}px)`;

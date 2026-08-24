@@ -216,6 +216,36 @@ h3 {
 
 .secao > * {
   position: relative;
+  z-index: 1;
+}
+
+/* Manchas de luz decorativas — pras seções que ficavam totalmente lisas
+   (Sobre, Como funciona, Contato). Puro radial-gradient parado (sem
+   filter:blur nem mix-blend-mode animado — a mesma lição de performance já
+   aprendida no fundo do hero), então custa bem pouco pra desenhar. */
+.sobre::after,
+.processo::after,
+.contato::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.sobre::after {
+  background: radial-gradient(46% 60% at 92% -10%, rgba(15, 24, 98, 0.2) 0%, transparent 70%),
+    radial-gradient(40% 52% at -6% 110%, rgba(223, 1, 18, 0.16) 0%, transparent 70%);
+}
+
+.processo::after {
+  background: radial-gradient(50% 64% at 4% -8%, rgba(223, 1, 18, 0.16) 0%, transparent 70%),
+    radial-gradient(44% 56% at 102% 108%, rgba(15, 24, 98, 0.2) 0%, transparent 70%);
+}
+
+.contato::after {
+  background: radial-gradient(55% 68% at 90% 6%, rgba(15, 24, 98, 0.18) 0%, transparent 70%),
+    radial-gradient(30% 40% at 0% 100%, rgba(223, 1, 18, 0.12) 0%, transparent 70%);
 }
 
 /* Chip numerado (01, 02, 03...) antes do rótulo — o mesmo índice usado nas
@@ -241,13 +271,15 @@ h3 {
   font-size: 0.72rem;
   letter-spacing: 0;
   color: var(--cor-branco);
-  background: var(--cor-primaria);
-  padding: 0.2rem 0.5rem;
-  border-radius: 4px;
+  background: linear-gradient(135deg, var(--cor-primaria), var(--cor-primaria-escura));
+  padding: 0.25rem 0.55rem;
+  border-radius: 5px;
+  box-shadow: 0 4px 14px rgba(15, 24, 98, 0.35);
 }
 
 .secao__titulo {
-  font-size: clamp(1.7rem, 4vw, 2.5rem);
+  font-size: clamp(1.9rem, 4.4vw, 2.85rem);
+  letter-spacing: -0.015em;
   margin-bottom: 1rem;
 }
 
@@ -390,25 +422,39 @@ h3 {
   transition: box-shadow var(--transicao), background-color var(--transicao);
 }
 
-/* Fita "bandeira" — azul/branco/vermelho — detalhe discreto no topo de tudo,
-   reforça a identidade sem virar exagero. Fica colada na borda de cima do
-   cabeçalho fixo. */
+/* Fita de marca no topo de tudo — antes era 3 blocos sólidos (azul/branco/
+   vermelho); o terço branco do meio se misturava com o fundo claro do
+   cabeçalho e lia como "a linha quebrou/sumiu no meio". Agora é um
+   gradiente CONTÍNUO (nunca passa por branco puro) com um brilho que varre
+   devagar — mesma técnica seguraa já usada no ".texto-brilho" (só
+   background-position, sem blur/blend-mode animado). */
 .cabecalho::before {
   content: "";
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
-  height: 4px;
+  height: 5px;
   background: linear-gradient(
-    to right,
+    90deg,
     var(--cor-primaria) 0%,
-    var(--cor-primaria) 33.33%,
-    #ffffff 33.33%,
-    #ffffff 66.66%,
-    var(--cor-secundaria) 66.66%,
-    var(--cor-secundaria) 100%
+    var(--cor-primaria-escura) 22%,
+    var(--cor-secundaria) 50%,
+    var(--cor-primaria-escura) 78%,
+    var(--cor-primaria) 100%
   );
+  background-size: 200% 100%;
+  animation: fitaVarrer 8s linear infinite;
+  z-index: 1;
+}
+
+@keyframes fitaVarrer {
+  0% {
+    background-position: 0% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
 }
 
 /* Classe adicionada via JS quando a página é rolada — dá uma sombra sutil */
@@ -678,8 +724,9 @@ h3 {
      na prática, não é teórico). Opacidade simples nas próprias cores
      rgba() já dá o efeito de brilho sutil sem entrar no caminho caro de
      composição que blend-mode/blur exigem a cada frame. */
-  background: radial-gradient(38% 38% at 22% 28%, rgba(223, 1, 18, 0.22) 0%, rgba(223, 1, 18, 0.1) 40%, transparent 72%),
-    radial-gradient(34% 34% at 78% 72%, rgba(93, 166, 214, 0.2) 0%, rgba(93, 166, 214, 0.09) 40%, transparent 72%);
+  background: radial-gradient(40% 40% at 22% 26%, rgba(223, 1, 18, 0.28) 0%, rgba(223, 1, 18, 0.12) 40%, transparent 72%),
+    radial-gradient(36% 36% at 80% 74%, rgba(93, 166, 214, 0.24) 0%, rgba(93, 166, 214, 0.1) 40%, transparent 72%),
+    radial-gradient(30% 30% at 50% 100%, rgba(223, 1, 18, 0.16) 0%, transparent 70%);
   animation: auroraFluir 14s ease-in-out infinite alternate;
   pointer-events: none;
 }
@@ -1044,7 +1091,8 @@ h3 {
   content: "";
   position: absolute;
   inset: 0;
-  background-image: repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.05) 0 1px, transparent 1px 64px),
+  background-image: radial-gradient(45% 80% at 15% 50%, rgba(223, 1, 18, 0.16) 0%, transparent 70%),
+    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.05) 0 1px, transparent 1px 64px),
     repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.05) 0 1px, transparent 1px 64px);
   pointer-events: none;
 }
@@ -1098,31 +1146,49 @@ h3 {
 /* Duas classes (em vez de só ".servicos-scroll") pra especificidade bater a
    regra ".secao { padding: 6rem 0; }" do @media de tablet, que vem DEPOIS
    desta no arquivo — sem isso o padding do template genérico voltaria a
-   aparecer aqui e desalinharia a matemática do pin (ver main.js). */
+   aparecer aqui e desalinharia a matemática do pin (ver main.js). Só o
+   TOPO é do template — o resto do espaçamento é da ".pista" abaixo, que
+   controla sua própria altura via JS. */
 .secao.servicos-scroll {
-  padding: 0;
+  padding: 4.5rem 0 0;
+}
+
+/* O texto de cabeçalho (eyebrow + título + subtítulo) NÃO fica mais dentro
+   do pin — ele rola normal, como qualquer outra seção. Só a pista de
+   cards abaixo é que "prende". Isso resolve o problema de os cards
+   ficarem cortados embaixo da tela: antes o pin tinha que caber texto E
+   cards na mesma altura de viewport; agora ele é só dos cards. */
+.servicos-scroll__pista {
+  position: relative;
+  /* Altura calculada via JS (ativarScrollHorizontalServicos) igual à
+     distância horizontal que a trilha precisa percorrer — é essa sobra
+     de altura, rolada verticalmente, que "pilota" o deslocamento
+     horizontal dos cards. */
 }
 
 .servicos-scroll__pin {
   position: sticky;
   top: 72px; /* altura do cabeçalho fixo — ver main.js, "alturaCabecalho" */
-  min-height: calc(100vh - 72px);
+  height: calc(100vh - 72px);
   display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 2.75rem;
-  padding: 4.5rem 0;
+  align-items: center;
   overflow: hidden;
   /* Fundo suave (estático, sem animação) só pra dar profundidade ao vidro
      dos cards — sem isso o "liquid glass" não tem nada de variado atrás
      pra desfocar/refletir. */
   background: radial-gradient(120% 140% at 12% 0%, var(--cor-primaria-clara) 0%, transparent 55%),
+    radial-gradient(90% 120% at 100% 100%, rgba(223, 1, 18, 0.1) 0%, transparent 55%),
     linear-gradient(160deg, var(--cor-fundo-alt) 0%, var(--cor-fundo) 70%);
+}
+
+.servicos-scroll--simples .servicos-scroll__pista {
+  height: auto !important;
 }
 
 .servicos-scroll--simples .servicos-scroll__pin {
   position: static;
-  min-height: 0;
+  height: auto;
+  padding: 2.5rem 0;
 }
 
 .servicos-scroll__trilha {
@@ -1223,7 +1289,10 @@ h3 {
 
 .cartao-produto__imagem {
   width: 100%;
-  aspect-ratio: 1 / 1;
+  /* 4/3 em vez de quadrada — card mais baixo, cabe inteiro dentro da
+     "janela" de altura fixa do pin de serviços (ver ".servicos-scroll__pin")
+     mesmo em telas mais baixas, sem cortar o rodapé do card. */
+  aspect-ratio: 4 / 3;
   overflow: hidden;
 }
 
