@@ -763,9 +763,15 @@ h3 {
   background: linear-gradient(180deg, rgba(9, 15, 66, 0.18) 0%, rgba(9, 15, 66, 0.62) 100%);
 }
 
-.hero__conteudo {
+.hero__grade {
   position: relative;
   z-index: 5;
+  display: grid;
+  grid-template-columns: 1fr;
+  align-items: center;
+}
+
+.hero__conteudo {
   max-width: 720px;
   padding-top: 3rem;
   padding-bottom: 3rem;
@@ -775,6 +781,166 @@ h3 {
   .hero__foto,
   .hero__aurora {
     animation: none;
+  }
+}
+
+/* ==========================================================================
+   VITRINE DE DESTINOS — leque de fotos reais (as mesmas dos cards de
+   Serviços) estilo carimbo/foto de passaporte, com um selo de "aprovado"
+   por cima. Só desktop (≥1024px, ver media query lá embaixo): é o
+   elemento que dá o "uau" que faltava na tela inicial — específico do
+   negócio (visto/passaporte), não um efeito genérico de landing page.
+   ========================================================================== */
+.hero__vitrine {
+  display: none;
+  position: relative;
+  height: 480px;
+}
+
+.hero__selo {
+  --rot: 0deg;
+  --px: 0px;
+  --py: 0px;
+  position: absolute;
+  width: 190px;
+  margin: 0;
+  padding: 10px 10px 34px;
+  background: var(--cor-branco);
+  border-radius: 10px;
+  box-shadow: 0 20px 45px rgba(4, 8, 40, 0.4);
+  opacity: 0;
+  transform: translate(var(--px), var(--py)) rotate(var(--rot)) scale(0.7) translateY(40px);
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.5s ease, box-shadow 0.3s ease;
+  cursor: default;
+}
+
+.hero__selo img {
+  width: 100%;
+  /* "height: auto" é essencial aqui: sem isso, o atributo height="800" do
+     HTML (bom pra evitar layout-shift, mas pensado pro card quadrado da
+     seção Serviços) vence e ignora o aspect-ratio abaixo — o card fica
+     gigante (a altura real da imagem, 800px, em vez de 4:5 proporcional
+     à largura). */
+  height: auto;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+  border-radius: 4px;
+  display: block;
+}
+
+.hero__selo figcaption {
+  position: absolute;
+  left: 10px;
+  right: 10px;
+  bottom: 10px;
+  font-family: var(--fonte-titulo);
+  font-weight: 700;
+  font-size: 0.72rem;
+  color: var(--cor-primaria-escura);
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.hero__selo--1 {
+  --rot: -8deg;
+  top: 0;
+  left: 6%;
+  z-index: 3;
+}
+
+.hero__selo--2 {
+  --rot: 6deg;
+  top: 18px;
+  left: 46%;
+  z-index: 4;
+}
+
+.hero__selo--3 {
+  --rot: 5deg;
+  top: 208px;
+  left: 0%;
+  z-index: 2;
+}
+
+.hero__selo--4 {
+  --rot: -7deg;
+  top: 224px;
+  left: 42%;
+  z-index: 1;
+}
+
+.hero__vitrine--revelada .hero__selo {
+  opacity: 1;
+  transform: translate(var(--px), var(--py)) rotate(var(--rot)) scale(1) translateY(0);
+}
+
+.hero__vitrine--revelada .hero__selo--1 {
+  transition-delay: 0.15s;
+}
+
+.hero__vitrine--revelada .hero__selo--2 {
+  transition-delay: 0.32s;
+}
+
+.hero__vitrine--revelada .hero__selo--3 {
+  transition-delay: 0.49s;
+}
+
+.hero__vitrine--revelada .hero__selo--4 {
+  transition-delay: 0.66s;
+}
+
+/* Ordem no arquivo importa aqui: precisa vir DEPOIS de ".hero__vitrine--revelada
+   .hero__selo" pra vencer no empate de especificidade (as duas regras têm
+   0,2,0) e "endireitar"/aproximar o card do mouse no hover. */
+.hero__selo:hover {
+  --rot: 0deg;
+  transform: translate(var(--px), var(--py)) rotate(var(--rot)) scale(1.07) translateY(-10px);
+  box-shadow: 0 30px 60px rgba(4, 8, 40, 0.48);
+  z-index: 10;
+}
+
+/* Selo circular "VISTO APROVADO" — SVG puro (sem imagem/lib nenhuma),
+   texto seguindo um path circular. "Bate" no leque com um pequeno impacto
+   de escala, como um carimbo de verdade sendo aplicado. */
+.hero__carimbo {
+  --px: 0px;
+  --py: 0px;
+  position: absolute;
+  top: -20px;
+  right: -6px;
+  width: 128px;
+  height: 128px;
+  color: var(--cor-secundaria);
+  opacity: 0;
+  transform: translate(var(--px), var(--py)) rotate(-16deg) scale(1.8);
+  filter: drop-shadow(0 12px 22px rgba(0, 0, 0, 0.4));
+  z-index: 6;
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease;
+  transition-delay: 0.85s;
+}
+
+.hero__vitrine--revelada .hero__carimbo {
+  opacity: 0.96;
+  transform: translate(var(--px), var(--py)) rotate(-16deg) scale(1);
+}
+
+@media (min-width: 1024px) {
+  .hero__grade {
+    grid-template-columns: 1.05fr 0.95fr;
+    gap: 2.5rem;
+  }
+
+  .hero__vitrine {
+    display: block;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero__selo,
+  .hero__carimbo {
+    transition: none;
   }
 }
 

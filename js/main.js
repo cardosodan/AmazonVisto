@@ -23,6 +23,7 @@ document.addEventListener("DOMContentLoaded", () => {
   ativarTypewriterDeServicos();
   ativarContadores();
   ativarTituloEmLetras();
+  ativarVitrineDoHero();
   ativarBrilhoNosCards();
   ativarLinhaDoProcesso();
 });
@@ -392,6 +393,55 @@ function ativarTituloEmLetras() {
   // podem cair no mesmo frame e a transição simplesmente não roda.
   requestAnimationFrame(() => {
     titulo.classList.add("hero__titulo--revelado");
+  });
+}
+
+/* --------------------------------------------------------------------------
+   9b. VITRINE DE DESTINOS DO HERO (leque de fotos + selo "aprovado")
+   Revela o leque com um pequeno atraso (depois do título já ter começado a
+   entrar) e liga um paralaxe leve — cada foto se desloca um pouco conforme
+   o mouse anda pela seção, dando profundidade sem nenhum blur/blend-mode
+   animado (a mesma lição de performance já aprendida no fundo do hero:
+   só transform, nada de propriedade cara de recompor a cada frame).
+   -------------------------------------------------------------------------- */
+function ativarVitrineDoHero() {
+  const vitrine = document.getElementById("vitrineHero");
+  if (!vitrine) return;
+
+  const prefereMenosMovimento = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (prefereMenosMovimento) {
+    vitrine.classList.add("hero__vitrine--revelada");
+    return;
+  }
+
+  setTimeout(() => vitrine.classList.add("hero__vitrine--revelada"), 350);
+  ativarParallaxDaVitrine(vitrine);
+}
+
+function ativarParallaxDaVitrine(vitrine) {
+  const hero = document.getElementById("inicio");
+  const semMouseDeVerdade = window.matchMedia("(pointer: coarse)").matches;
+  if (!hero || semMouseDeVerdade) return;
+
+  const cartoes = vitrine.querySelectorAll(".hero__selo");
+  const carimbo = vitrine.querySelector(".hero__carimbo");
+
+  hero.addEventListener("mousemove", (evento) => {
+    const centroX = window.innerWidth / 2;
+    const centroY = window.innerHeight / 2;
+    const deslocamentoX = (evento.clientX - centroX) / centroX;
+    const deslocamentoY = (evento.clientY - centroY) / centroY;
+
+    cartoes.forEach((cartao, indice) => {
+      const profundidade = (indice + 1) * 3.5;
+      cartao.style.setProperty("--px", `${deslocamentoX * profundidade}px`);
+      cartao.style.setProperty("--py", `${deslocamentoY * profundidade}px`);
+    });
+
+    if (carimbo) {
+      carimbo.style.setProperty("--px", `${deslocamentoX * 6}px`);
+      carimbo.style.setProperty("--py", `${deslocamentoY * 6}px`);
+    }
   });
 }
 
