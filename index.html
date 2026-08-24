@@ -41,7 +41,7 @@
     rel="stylesheet"
   />
 
-  <link rel="stylesheet" href="css/style.css?v=20" />
+  <link rel="stylesheet" href="css/style.css?v=21" />
 </head>
 <body>
   <a class="pular-conteudo" href="#inicio">Pular para o conteúdo</a>
@@ -194,6 +194,29 @@
         <path class="hero__onda-path" d="M0,40 C360,100 1080,0 1440,55 L1440,100 L0,100 Z"></path>
       </svg>
     </section>
+
+    <!-- ==========================================================================
+         FAIXA "TICKER" — rolagem infinita com os serviços. Decorativa (os
+         mesmos nomes já existem como texto real nos cards de Serviços e no
+         rodapé), por isso aria-hidden e a lista duplicada uma vez pra criar
+         o loop contínuo (ver CSS, ".ticker__trilha").
+         ========================================================================== -->
+    <div class="ticker" aria-hidden="true">
+      <div class="ticker__trilha">
+        <span class="ticker__item">Visto Americano</span>
+        <span class="ticker__item">Visto Canadense</span>
+        <span class="ticker__item">Visto Chinês</span>
+        <span class="ticker__item">Visto Peruano</span>
+        <span class="ticker__item">Passaporte Brasileiro</span>
+        <span class="ticker__item">Intercâmbio</span>
+        <span class="ticker__item">Visto Americano</span>
+        <span class="ticker__item">Visto Canadense</span>
+        <span class="ticker__item">Visto Chinês</span>
+        <span class="ticker__item">Visto Peruano</span>
+        <span class="ticker__item">Passaporte Brasileiro</span>
+        <span class="ticker__item">Intercâmbio</span>
+      </div>
+    </div>
 
     <!-- ==========================================================================
          SOBRE
@@ -530,29 +553,92 @@
        RODAPÉ
        ========================================================================== -->
   <footer class="rodape">
-    <div class="container rodape__conteudo">
-      <div class="rodape__marca">
-        <img src="images/logo.webp" alt="" width="32" height="32" loading="lazy" />
-        <span>Amazon Visto</span>
+    <!-- CTA final — última chance de conversão antes do rodapé "administrativo".
+         Reaproveita o mesmo botão/estilo do resto do site, nada novo pra manter
+         consistente. -->
+    <div class="container rodape__cta">
+      <div>
+        <p class="rodape__cta-eyebrow">Pronto pra começar?</p>
+        <h2 class="rodape__cta-titulo">Sua próxima viagem começa com uma conversa</h2>
+      </div>
+      <a
+        href="https://wa.me/5592981265897?text=Ol%C3%A1!%20Vim%20pelo%20site%20e%20gostaria%20de%20mais%20informa%C3%A7%C3%B5es%20sobre%20visto."
+        target="_blank"
+        rel="noopener"
+        class="botao botao--whatsapp botao--grande"
+      >
+        <svg class="icone" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path
+            d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5.1-1.3A10 10 0 1 0 12 2Zm5.7 14.2c-.2.7-1.4 1.3-2 1.4-.5.1-1.1.1-1.8-.1-.4-.1-.9-.3-1.6-.6-2.8-1.2-4.6-4-4.7-4.2-.1-.2-1.1-1.5-1.1-2.8 0-1.3.7-2 1-2.2.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.4.2.5.7 1.8.8 1.9.1.2.1.3 0 .5-.1.2-.1.3-.3.5l-.4.5c-.1.2-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.4 2.4 1.5.3.1.5.1.6-.1.2-.2.7-.8.9-1.1.2-.3.4-.2.6-.1.2.1 1.5.7 1.8.8.3.1.5.2.5.3.1.2.1.6-.1 1.2Z"
+          />
+        </svg>
+        Chamar no WhatsApp
+      </a>
+    </div>
+
+    <div class="container rodape__grade">
+      <div class="rodape__coluna rodape__coluna--marca">
+        <div class="rodape__marca">
+          <img src="images/logo.webp" alt="" width="32" height="32" loading="lazy" />
+          <span>Amazon Visto</span>
+        </div>
+        <p class="rodape__tagline">
+          Assessoria completa em vistos, passaporte e intercâmbio. Líder de
+          mercado no Norte do Brasil, com atendimento 100% online pra todo o
+          país.
+        </p>
+        <div class="rodape__redes">
+          <a href="https://instagram.com/amazonvisto" target="_blank" rel="noopener" aria-label="Instagram">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+              <rect x="3" y="3" width="18" height="18" rx="5" />
+              <circle cx="12" cy="12" r="4" />
+              <circle cx="17.2" cy="6.8" r="1.1" fill="currentColor" stroke="none" />
+            </svg>
+          </a>
+          <a href="https://wa.me/5592981265897" target="_blank" rel="noopener" aria-label="WhatsApp">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path
+                d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5.1-1.3A10 10 0 1 0 12 2Zm5.7 14.2c-.2.7-1.4 1.3-2 1.4-.5.1-1.1.1-1.8-.1-.4-.1-.9-.3-1.6-.6-2.8-1.2-4.6-4-4.7-4.2-.1-.2-1.1-1.5-1.1-2.8 0-1.3.7-2 1-2.2.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.4.2.5.7 1.8.8 1.9.1.2.1.3 0 .5-.1.2-.1.3-.3.5l-.4.5c-.1.2-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.4 2.4 1.5.3.1.5.1.6-.1.2-.2.7-.8.9-1.1.2-.3.4-.2.6-.1.2.1 1.5.7 1.8.8.3.1.5.2.5.3.1.2.1.6-.1 1.2Z"
+              />
+            </svg>
+          </a>
+        </div>
       </div>
 
-      <div class="rodape__redes">
-        <a href="https://instagram.com/amazonvisto" target="_blank" rel="noopener" aria-label="Instagram">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
-            <rect x="3" y="3" width="18" height="18" rx="5" />
-            <circle cx="12" cy="12" r="4" />
-            <circle cx="17.2" cy="6.8" r="1.1" fill="currentColor" stroke="none" />
-          </svg>
-        </a>
-        <a href="https://wa.me/5592981265897" target="_blank" rel="noopener" aria-label="WhatsApp">
-          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-            <path
-              d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5.1-1.3A10 10 0 1 0 12 2Zm5.7 14.2c-.2.7-1.4 1.3-2 1.4-.5.1-1.1.1-1.8-.1-.4-.1-.9-.3-1.6-.6-2.8-1.2-4.6-4-4.7-4.2-.1-.2-1.1-1.5-1.1-2.8 0-1.3.7-2 1-2.2.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.4.2.5.7 1.8.8 1.9.1.2.1.3 0 .5-.1.2-.1.3-.3.5l-.4.5c-.1.2-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.4 2.4 1.5.3.1.5.1.6-.1.2-.2.7-.8.9-1.1.2-.3.4-.2.6-.1.2.1 1.5.7 1.8.8.3.1.5.2.5.3.1.2.1.6-.1 1.2Z"
-            />
-          </svg>
-        </a>
+      <div class="rodape__coluna">
+        <h3 class="rodape__titulo-coluna">Navegação</h3>
+        <ul class="rodape__lista-links">
+          <li><a href="#inicio">Início</a></li>
+          <li><a href="#sobre">Sobre</a></li>
+          <li><a href="#processo">Como funciona</a></li>
+          <li><a href="#servicos">Serviços</a></li>
+          <li><a href="#contato">Contato</a></li>
+        </ul>
       </div>
 
+      <div class="rodape__coluna">
+        <h3 class="rodape__titulo-coluna">Serviços</h3>
+        <ul class="rodape__lista-links">
+          <li><a href="#servicos">Visto Americano</a></li>
+          <li><a href="#servicos">Visto Canadense</a></li>
+          <li><a href="#servicos">Visto Chinês</a></li>
+          <li><a href="#servicos">Visto Peruano</a></li>
+          <li><a href="#servicos">Passaporte Brasileiro</a></li>
+          <li><a href="#servicos">Intercâmbio</a></li>
+        </ul>
+      </div>
+
+      <div class="rodape__coluna">
+        <h3 class="rodape__titulo-coluna">Contato</h3>
+        <ul class="rodape__lista-links rodape__lista-links--contato">
+          <li>Rua Costa Azevedo, 9 — Sala 901, Centro, Manaus-AM</li>
+          <li><a href="https://wa.me/5592981265897">(92) 98126-5897</a></li>
+          <li><a href="https://wa.me/51939125188">+51 939 125 188 (Español)</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="container rodape__base">
       <p class="rodape__copyright">&copy; <span id="anoAtual"></span> Amazon Visto. Todos os direitos reservados.</p>
       <p class="rodape__creditos">
         Desenvolvido por
@@ -560,6 +646,18 @@
       </p>
     </div>
   </footer>
+
+  <!-- Navegação lateral por pontos — só desktop (ver CSS): um ponto por
+       seção principal, destaca a atual (reaproveita o mesmo
+       IntersectionObserver do menu do cabeçalho, ver main.js,
+       "ativarLinkAtivoNaNavegacao") e leva direto pra lá ao clicar. -->
+  <nav class="dot-nav" id="dotNav" aria-label="Navegação rápida por seção">
+    <a href="#inicio" class="dot-nav__item" aria-label="Início"><span></span></a>
+    <a href="#sobre" class="dot-nav__item" aria-label="Sobre"><span></span></a>
+    <a href="#processo" class="dot-nav__item" aria-label="Como funciona"><span></span></a>
+    <a href="#servicos" class="dot-nav__item" aria-label="Serviços"><span></span></a>
+    <a href="#contato" class="dot-nav__item" aria-label="Contato"><span></span></a>
+  </nav>
 
   <a
     href="https://wa.me/5592981265897?text=Ol%C3%A1!%20Vim%20pelo%20site%20e%20gostaria%20de%20mais%20informa%C3%A7%C3%B5es%20sobre%20visto."
@@ -575,6 +673,6 @@
     </svg>
   </a>
 
-  <script src="js/main.js?v=20"></script>
+  <script src="js/main.js?v=21"></script>
 </body>
 </html>

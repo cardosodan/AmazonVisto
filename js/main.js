@@ -137,7 +137,11 @@ function ativarRevelacaoAoRolar() {
 function ativarLinkAtivoNaNavegacao() {
   const secoes = document.querySelectorAll("main section[id]");
   const links = document.querySelectorAll(".navegacao__link");
-  if (!secoes.length || !links.length || !("IntersectionObserver" in window)) return;
+  // Pontinhos de navegação lateral (ver index.html, "#dotNav") — mesma
+  // ideia dos links do menu, então reaproveita o MESMO observer em vez de
+  // criar um segundo IntersectionObserver rodando em paralelo.
+  const pontos = document.querySelectorAll(".dot-nav__item");
+  if (!secoes.length || !("IntersectionObserver" in window)) return;
 
   const linkPorId = new Map();
   links.forEach((link) => {
@@ -145,14 +149,27 @@ function ativarLinkAtivoNaNavegacao() {
     linkPorId.set(id, link);
   });
 
+  const pontoPorId = new Map();
+  pontos.forEach((ponto) => {
+    const id = ponto.getAttribute("href").replace("#", "");
+    pontoPorId.set(id, ponto);
+  });
+
   const observador = new IntersectionObserver(
     (entradas) => {
       entradas.forEach((entrada) => {
+        if (!entrada.isIntersecting) return;
+
         const link = linkPorId.get(entrada.target.id);
-        if (!link) return;
-        if (entrada.isIntersecting) {
+        if (link) {
           links.forEach((l) => l.classList.remove("navegacao__link--ativo"));
           link.classList.add("navegacao__link--ativo");
+        }
+
+        const ponto = pontoPorId.get(entrada.target.id);
+        if (ponto) {
+          pontos.forEach((p) => p.classList.remove("dot-nav__item--ativo"));
+          ponto.classList.add("dot-nav__item--ativo");
         }
       });
     },

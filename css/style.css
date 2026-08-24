@@ -1147,6 +1147,68 @@ h3 {
 }
 
 /* ==========================================================================
+   6b. FAIXA "TICKER" — rolagem infinita com os serviços
+   Lista duplicada uma vez (ver HTML) + translateX(-50%): quando a primeira
+   cópia sai totalmente da tela, a segunda está exatamente onde a primeira
+   começou — loop perfeito sem "pulo". Só transform animado (sem
+   layout/paint caro), custa bem pouco mesmo rodando o tempo todo.
+   ========================================================================== */
+.ticker {
+  position: relative;
+  overflow: hidden;
+  background: var(--cor-primaria-escura);
+  padding: 1.1rem 0;
+}
+
+.ticker__trilha {
+  display: flex;
+  align-items: center;
+  width: max-content;
+  animation: tickerRolar 30s linear infinite;
+  will-change: transform;
+}
+
+.ticker:hover .ticker__trilha {
+  animation-play-state: paused;
+}
+
+.ticker__item {
+  display: inline-flex;
+  align-items: center;
+  font-family: var(--fonte-titulo);
+  font-weight: 700;
+  font-size: clamp(1.05rem, 2.2vw, 1.5rem);
+  letter-spacing: 0.01em;
+  color: rgba(255, 255, 255, 0.92);
+  white-space: nowrap;
+}
+
+.ticker__item::after {
+  content: "";
+  width: 7px;
+  height: 7px;
+  margin: 0 1.75rem;
+  border-radius: 50%;
+  background: var(--cor-secundaria);
+  flex-shrink: 0;
+}
+
+@keyframes tickerRolar {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ticker__trilha {
+    animation: none;
+  }
+}
+
+/* ==========================================================================
    7. SOBRE
    ========================================================================== */
 .sobre__imagem img {
@@ -1610,17 +1672,69 @@ h3 {
    12. RODAPÉ
    ========================================================================== */
 .rodape {
+  position: relative;
   background: var(--cor-primaria-escura);
   color: rgba(255, 255, 255, 0.85);
-  padding: 3rem 0 2rem;
+  overflow: hidden;
 }
 
-.rodape__conteudo {
+/* Mesma fita animada do cabeçalho, aqui no topo do rodapé — fecha o site
+   com a mesma assinatura visual que abre ele (ver ".cabecalho::before"). */
+.rodape::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(
+    90deg,
+    var(--cor-secundaria) 0%,
+    var(--cor-primaria-escura) 22%,
+    var(--cor-primaria) 50%,
+    var(--cor-primaria-escura) 78%,
+    var(--cor-secundaria) 100%
+  );
+  background-size: 200% 100%;
+  animation: fitaVarrer 8s linear infinite;
+}
+
+/* CTA final — última chance de conversão antes do rodapé "administrativo",
+   reaproveitando o mesmo botão do resto do site. */
+.rodape__cta {
+  position: relative;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 1.25rem;
-  text-align: center;
+  gap: 1.5rem;
+  align-items: flex-start;
+  padding: 3.5rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.rodape__cta-eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--cor-secundaria);
+  margin-bottom: 0.5rem;
+}
+
+.rodape__cta-titulo {
+  font-family: var(--fonte-titulo);
+  font-weight: 700;
+  color: var(--cor-branco);
+  font-size: clamp(1.5rem, 3.6vw, 2.2rem);
+  max-width: 32ch;
+  letter-spacing: -0.01em;
+}
+
+.rodape__grade {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2.5rem;
+  padding: 3rem 0;
 }
 
 .rodape__marca {
@@ -1628,17 +1742,27 @@ h3 {
   align-items: center;
   gap: 0.6rem;
   font-family: var(--fonte-titulo);
-  font-weight: 600;
+  font-weight: 700;
+  font-size: 1.05rem;
   color: var(--cor-branco);
+  margin-bottom: 0.9rem;
 }
 
 .rodape__marca img {
   border-radius: 6px;
 }
 
+.rodape__tagline {
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.62);
+  max-width: 32ch;
+  margin-bottom: 1.4rem;
+}
+
 .rodape__redes {
   display: flex;
-  gap: 0.9rem;
+  gap: 0.75rem;
 }
 
 .rodape__redes a {
@@ -1649,7 +1773,7 @@ h3 {
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background var(--transicao), border-color var(--transicao);
+  transition: background var(--transicao), border-color var(--transicao), transform var(--transicao);
 }
 
 .rodape__redes svg {
@@ -1660,6 +1784,58 @@ h3 {
 .rodape__redes a:hover {
   background: var(--cor-secundaria);
   border-color: var(--cor-secundaria);
+  transform: translateY(-3px);
+}
+
+.rodape__titulo-coluna {
+  font-family: var(--fonte-titulo);
+  font-weight: 700;
+  font-size: 0.82rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--cor-branco);
+  margin-bottom: 1.1rem;
+}
+
+.rodape__lista-links {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+
+.rodape__lista-links a {
+  font-size: 0.88rem;
+  color: rgba(255, 255, 255, 0.62);
+  transition: color var(--transicao);
+}
+
+.rodape__lista-links a:hover {
+  color: var(--cor-branco);
+}
+
+.rodape__lista-links--contato li {
+  font-size: 0.88rem;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.62);
+}
+
+.rodape__lista-links--contato a {
+  color: rgba(255, 255, 255, 0.62);
+}
+
+.rodape__lista-links--contato a:hover {
+  color: var(--cor-branco);
+}
+
+.rodape__base {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  align-items: center;
+  text-align: center;
+  padding: 1.5rem 0 2rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
 }
 
 .rodape__copyright {
@@ -1674,6 +1850,84 @@ h3 {
 .rodape__creditos a {
   text-decoration: underline;
   text-underline-offset: 2px;
+}
+
+/* ==========================================================================
+   12b. NAVEGAÇÃO LATERAL POR PONTOS
+   Só desktop — em telas menores não sobra margem lateral suficiente sem
+   sobrepor conteúdo. Preenchimento branco + anel na cor da marca (não só
+   uma cor sólida): assim o ponto continua visível tanto no hero escuro
+   quanto nas seções claras, sem precisar trocar de cor por seção.
+   ========================================================================== */
+.dot-nav {
+  display: none;
+  position: fixed;
+  right: 1.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 90;
+  flex-direction: column;
+  gap: 1.1rem;
+}
+
+.dot-nav__item {
+  position: relative;
+  width: 14px;
+  height: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dot-nav__item span {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--cor-branco);
+  border: 1.5px solid var(--cor-primaria);
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.3);
+  transition: transform var(--transicao), background var(--transicao), border-color var(--transicao);
+}
+
+.dot-nav__item:hover span {
+  transform: scale(1.25);
+}
+
+/* Legenda que aparece ao lado no hover — sem depender de "title" nativo
+   (aparece devagar demais / inconsistente entre navegadores). */
+.dot-nav__item::before {
+  content: attr(aria-label);
+  position: absolute;
+  right: 24px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: var(--cor-primaria-escura);
+  color: var(--cor-branco);
+  font-family: var(--fonte-titulo);
+  font-weight: 600;
+  font-size: 0.72rem;
+  padding: 0.35rem 0.75rem;
+  border-radius: 6px;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--transicao);
+}
+
+.dot-nav__item:hover::before {
+  opacity: 1;
+}
+
+.dot-nav__item--ativo span {
+  background: var(--cor-secundaria);
+  border-color: var(--cor-secundaria);
+  transform: scale(1.35);
+}
+
+@media (min-width: 1024px) {
+  .dot-nav {
+    display: flex;
+  }
 }
 
 /* ==========================================================================
@@ -1754,6 +2008,17 @@ h3 {
 
   .faixa-numeros__grade {
     grid-template-columns: repeat(4, 1fr);
+  }
+
+  .rodape__cta {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+  }
+
+  .rodape__grade {
+    grid-template-columns: 1.2fr 1fr;
   }
 
   /* Em 1 linha só (4 colunas), a divisória some da primeira célula, não
@@ -1855,15 +2120,14 @@ h3 {
     height: auto;
   }
 
-  .rodape__conteudo {
+  .rodape__grade {
+    grid-template-columns: 1.4fr 1fr 1fr 1fr;
+  }
+
+  .rodape__base {
     flex-direction: row;
     justify-content: space-between;
     text-align: left;
-  }
-
-  .rodape__copyright,
-  .rodape__creditos {
-    margin-left: auto;
   }
 
   /* Processo em passos: 4 colunas com uma linha fina conectando os
