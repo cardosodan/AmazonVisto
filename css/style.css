@@ -422,40 +422,6 @@ h3 {
   transition: box-shadow var(--transicao), background-color var(--transicao);
 }
 
-/* Fita de marca no topo de tudo — antes era 3 blocos sólidos (azul/branco/
-   vermelho); o terço branco do meio se misturava com o fundo claro do
-   cabeçalho e lia como "a linha quebrou/sumiu no meio". Agora é um
-   gradiente CONTÍNUO (nunca passa por branco puro) com um brilho que varre
-   devagar — mesma técnica seguraa já usada no ".texto-brilho" (só
-   background-position, sem blur/blend-mode animado). */
-.cabecalho::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 5px;
-  background: linear-gradient(
-    90deg,
-    var(--cor-primaria) 0%,
-    var(--cor-primaria-escura) 22%,
-    var(--cor-secundaria) 50%,
-    var(--cor-primaria-escura) 78%,
-    var(--cor-primaria) 100%
-  );
-  background-size: 200% 100%;
-  animation: fitaVarrer 8s linear infinite;
-  z-index: 1;
-}
-
-@keyframes fitaVarrer {
-  0% {
-    background-position: 0% 0;
-  }
-  100% {
-    background-position: 200% 0;
-  }
-}
 
 /* Classe adicionada via JS quando a página é rolada — dá uma sombra sutil */
 .cabecalho--rolado {
@@ -1676,27 +1642,6 @@ h3 {
   background: var(--cor-primaria-escura);
   color: rgba(255, 255, 255, 0.85);
   overflow: hidden;
-}
-
-/* Mesma fita animada do cabeçalho, aqui no topo do rodapé — fecha o site
-   com a mesma assinatura visual que abre ele (ver ".cabecalho::before"). */
-.rodape::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 4px;
-  background: linear-gradient(
-    90deg,
-    var(--cor-secundaria) 0%,
-    var(--cor-primaria-escura) 22%,
-    var(--cor-primaria) 50%,
-    var(--cor-primaria-escura) 78%,
-    var(--cor-secundaria) 100%
-  );
-  background-size: 200% 100%;
-  animation: fitaVarrer 8s linear infinite;
 }
 
 /* CTA final — última chance de conversão antes do rodapé "administrativo",
