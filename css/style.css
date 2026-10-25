@@ -143,6 +143,14 @@ img {
   display: block;
 }
 
+/* O atributo "hidden" sempre vence. Sem isso, qualquer regra de autor com
+   display (ex.: ".cartao-produto { display: flex }") ganha do estilo padrão
+   do navegador e o elemento "escondido" aparece — foi o que deixou os cards
+   "TROCAR" visíveis no site publicado. */
+[hidden] {
+  display: none !important;
+}
+
 a {
   color: inherit;
   text-decoration: none;
