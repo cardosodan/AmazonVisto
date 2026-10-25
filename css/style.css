@@ -275,6 +275,31 @@ p {
   background: var(--cor-fundo-alt);
 }
 
+/* Guilhochê de fundo em todas as seções claras — as linhas onduladas de
+   segurança de uma página de passaporte, em azul-marinho bem fraco. O SVG
+   entra como MÁSCARA (a cor vem do background-color), combinado com um
+   degradê que apaga as bordas de cima e de baixo. Estático: é papel, não
+   efeito. O mesmo padrão vai no pin dos serviços (ver seção 10), que tem
+   fundo próprio e cobriria este. */
+.secao::before,
+.servicos-scroll__pin::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-color: rgba(15, 24, 98, 0.075);
+  -webkit-mask-image: url("../images/guilloche-faixa.svg"),
+    linear-gradient(180deg, transparent 0%, #000 14%, #000 86%, transparent 100%);
+  -webkit-mask-size: 520px 130px, 100% 100%;
+  -webkit-mask-repeat: repeat, no-repeat;
+  -webkit-mask-composite: source-in;
+  mask-image: url("../images/guilloche-faixa.svg"),
+    linear-gradient(180deg, transparent 0%, #000 14%, #000 86%, transparent 100%);
+  mask-size: 520px 130px, 100% 100%;
+  mask-repeat: repeat, no-repeat;
+  mask-composite: intersect;
+  pointer-events: none;
+}
+
 .secao > * {
   position: relative;
   z-index: 1;
@@ -1399,15 +1424,24 @@ p {
   height: auto !important;
 }
 
+/* No modo simples o pin não é mais sticky: fica transparente e sem padrão
+   próprio, deixando aparecer o guilhochê da própria seção. */
 .servicos-scroll--simples .servicos-scroll__pin {
   position: static;
   height: auto;
   padding: 1rem 0 4rem;
+  background: transparent;
+}
+
+.servicos-scroll--simples .servicos-scroll__pin::before {
+  display: none;
 }
 
 /* padding-inline = margem do .container: o primeiro card começa alinhado
    com o título da seção, em qualquer largura de tela. */
 .servicos-scroll__trilha {
+  position: relative;
+  z-index: 1;
   display: flex;
   align-items: stretch;
   gap: 1.75rem;
