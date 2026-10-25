@@ -38,19 +38,26 @@ por âncoras, em vez de `sobre.html`, `contato.html` separados. Motivos:
 ```
 site-institucional-estatico/
 ├── index.html          → todo o conteúdo do site (seções comentadas)
+├── es.html             → versão em espanhol, GERADA do index.html (ver seção 4b)
+├── PRODUCT.md          → o que é verdade sobre a empresa (público, provas, limites)
+├── DESIGN.md           → o sistema visual do site (cores, letra, o balão, regras)
 ├── css/
 │   └── style.css        → TODO o visual: cores, fontes, layout, animações
 ├── js/
-│   └── main.js           → menu, entradas ao rolar, pastas, status e relógios
+│   └── main.js           → menu, entradas, conversa da capa, fichas, dúvidas, cupom
+├── fonts/
+│   └── chillax-400/500/600.woff2 → a fonte do site, servida do próprio site
 ├── images/
-│   ├── guilhoche-roseta.svg / guilhoche-faixa.svg → impressão de segurança de fundo
-│   ├── logo.png            → logomarca (cabeçalho + rodapé)
+│   ├── logo.webp           → logomarca (barra, conversa, quadro comparativo)
 │   ├── favicon.png          → ícone da aba do navegador
-│   ├── banner.jpg            → imagem de fundo do topo (hero)
-│   ├── sobre.jpg               → foto da seção "Sobre"
-│   ├── produto-1.jpg a produto-6.jpg → fotos da vitrine de produtos/serviços
-│   ├── depoimento-1.jpg a depoimento-3.jpg → "fotos" dos clientes nos depoimentos
-│   └── og-image.jpg           → imagem que aparece ao compartilhar o link
+│   ├── sobre.webp           → foto da sala (seção "Quem somos")
+│   ├── produto-1.webp a produto-6.webp → fotos dos seis serviços
+│   ├── produto-7.webp a produto-12.webp → reservas para serviços novos
+│   └── og-image.jpg         → imagem que aparece ao compartilhar o link
+├── assets/              → fotos e vídeo de coleções abertas, com crédito
+├── scripts/
+│   ├── gerar-es.mjs       → gera o es.html (traduções na lista TEXTOS)
+│   └── gerar-diagrama.mjs → desenha o diagrama "Da papelada ao visto"
 └── README.md            → este arquivo
 ```
 
@@ -108,33 +115,27 @@ Abra `css/style.css`, vá até o bloco `:root` bem no topo do arquivo:
 
 ```css
 :root {
-  --cor-primaria: #1b6b5a; /* cor de destaque: botões, links, título do hero */
-  --cor-primaria-escura: #124a3d;
-  --cor-secundaria: #e8a33d; /* cor de contraste, usada com moderação */
+  --noite: #070b2e;    /* fundo: a conversa à noite */
+  --tinta: #0f1862;    /* azul-marinho: campos de seção e texto no papel */
+  --papel: #f3f4f1;    /* papel: campos claros e texto no escuro */
+  --ouro: #c9a45c;     /* dourado: a voz da Amazon Visto (o balão) */
+  --vermelho: #b3121f; /* vermelho: só nos botões de enviar e conversar */
   ...
 }
 ```
 
-Troque só esses valores hexadecimais pelas cores da marca do cliente — o
-resto do site (botões, ícones, sombras, hover) se ajusta sozinho, porque tudo
-referencia essas variáveis.
-
-> Dica: para gerar uma versão "escura" de uma cor rapidamente (usada em
-> `--cor-primaria-escura`/`--cor-secundaria-escura`), qualquer ferramenta de
-> paleta de cores online ("shade generator") resolve em segundos.
+Troque só esses valores e o resto do site se ajusta, porque tudo referencia
+essas variáveis. As regras de uso de cada cor estão no `DESIGN.md`.
 
 ### 2.3. Fontes
 
-Duas mudanças, sempre juntas:
+A fonte (Chillax, da Indian Type Foundry, via Fontshare, de uso livre) é
+servida do próprio site, em `fonts/`. Para trocar:
 
-1. No `index.html`, troque o link do Google Fonts no `<head>`:
-   ```html
-   <link href="https://fonts.googleapis.com/css2?family=SUA_FONTE..." rel="stylesheet" />
-   ```
-   (em [fonts.google.com](https://fonts.google.com), escolha a fonte, marque
-   os pesos que for usar, e copie o link `<link>` que o próprio site gera)
-2. No `css/style.css`, troque as variáveis `--fonte-titulo` e `--fonte-corpo`
-   no `:root` para o nome exato da fonte nova.
+1. Coloque os arquivos `.woff2` da fonte nova em `fonts/` e ajuste os
+   `@font-face` no começo do `css/style.css`.
+2. Troque o nome na variável `--fonte` do `:root` e os dois
+   `<link rel="preload">` do `<head>` do `index.html`.
 
 ### 2.4. Textos
 
@@ -143,12 +144,10 @@ precisa virar conteúdo real do cliente está marcado com um comentário
 `<!-- TROCAR: ... -->` explicando o que colocar ali. Principais pontos:
 
 - Nome da empresa (aparece várias vezes: cabeçalho, hero, rodapé, meta tags)
-- Frase de efeito do hero (`hero__frase`)
-- Textos da seção "Sobre" (história, missão, diferenciais)
-- Nome/descrição de cada produto ou serviço (seção "Serviços")
-- Depoimentos (texto, nome, "cargo" de cada cliente — ou apague a seção
-  inteira se o cliente não tiver depoimentos ainda; ela é opcional)
-- Endereço, telefone, WhatsApp, e-mail e horário (seção "Contato")
+- O título da capa (`h1`) e as falas da conversa (`.conversa__roteiro`)
+- Textos da seção "Quem somos"
+- Nome, ficha e "O que está incluso" de cada serviço (seção "Serviços")
+- Endereço, WhatsApp e horário (rodapé e presença da conversa)
 - Meta tags de SEO e Open Graph, no `<head>` (ver seção 2.7 abaixo)
 
 ### 2.5. Imagens
@@ -158,41 +157,38 @@ já usa a imagem nova automaticamente (não precisa editar o HTML):
 
 | Arquivo | Onde aparece | Tamanho recomendado |
 |---|---|---|
-| `logo.png` | Cabeçalho e rodapé | Quadrado, ~160×160px, fundo pode ser transparente |
+| `logo.webp` | Barra, conversa da capa | Quadrado, ~160×160px |
 | `favicon.png` | Aba do navegador | Quadrado, 64×64px |
-| `banner.jpg` | Fundo da seção inicial (hero) | 1600×900px (paisagem) |
-| `sobre.jpg` | Seção "Sobre" | 900×1100px (retrato) |
-| `produto-1.jpg` … `produto-6.jpg` | Vitrine de produtos/serviços | 800×800px (quadrado) |
-| `depoimento-1.jpg` … `depoimento-3.jpg` | Avatar nos depoimentos | 300×300px (quadrado, vira círculo via CSS) |
+| `sobre.webp` | Seção "Quem somos" (recortada no balão) | 900×1100px (retrato) |
+| `produto-1.webp` … `produto-6.webp` | Ladrilhos e fichas dos serviços | 800×800px (quadrado) |
 | `og-image.jpg` | Preview ao compartilhar o link (WhatsApp etc.) | 1200×630px |
 
-**Serviços ("Escolha o seu destino").** É um arquivo de pastas: cada
-serviço tem duas peças no `index.html`, ligadas pelo mesmo nome (ex.:
-`visto-americano`): a aba (`<button class="arquivo__aba" role="tab"
-aria-controls="pasta-...">`) e a pasta (`<article class="pasta-servico"
-id="pasta-...">`). Dentro da pasta ficam a capa que abre
-(`pasta-servico__capa`), a foto com o carimbo, a ficha de dados
-(`pasta-servico__dados`: país, modalidade, atendimento, pagamento), "O que
-está incluso", o preço (com `hidden` até ter o valor), o botão de WhatsApp
-com o serviço na mensagem e a linha MRZ do pé. Para incluir um serviço,
-copie a aba e a pasta de um existente e troque o nome, a cor
-(`arquivo__aba--...` / `pasta-servico--...`), a foto (`produto-7.webp` em
-diante já existem como reserva) e os textos; para tirar, apague as duas.
+**A conversa da capa.** O balão dourado é uma conversa de verdade. Cada
+botão de resposta (`<button class="resposta" data-servico="...">`) tem, no
+bloco escondido `.conversa__roteiro`, um parágrafo com o mesmo nome em
+`data-resposta`: o texto dele é o que a Amazon Visto "responde", e o
+`data-mensagem` é a mensagem que fica pronta para o WhatsApp. A linha de
+presença ("online agora" ou "visto por último … às 18:00") usa a hora de
+Manaus e o horário de atendimento escrito no `main.js` (função
+`ativarConversa`); ao mudar o horário, mude lá e no texto do rodapé.
 
-**Detalhes de documento.** O guilhoche de fundo (`images/guilhoche-*.svg`)
-entra como máscara no CSS, então a cor vem do CSS (`--roseta` e `--faixa`
-no `:root`). As linhas MRZ (as fileiras de `<` do pé do passaporte) são SVG
-com `textLength`, que esticam sempre na largura certa. O painel de horários
-da capa (`#relogios`) funciona como o painel de embarque: Manaus em cima,
-com a data, e uma linha por destino (`relogios__linha`) com o código, a
-cidade, o visto, a diferença de fuso (calculada na hora, com horário de
-verão) e a hora local. Para trocar um destino, mude esses textos e o
-`data-fuso` (nome IANA, ex.: `Europe/Lisbon`).
+**Serviços ("Para onde você vai?").** Cada serviço tem duas peças ligadas
+pelo mesmo nome (ex.: `visto-americano`): o ladrilho (`<a class="destino"
+href="#visto-americano" data-servico="visto-americano">`) e a ficha
+(`<article class="ficha" id="visto-americano">`), com país, modalidade,
+atendimento, pagamento, "O que está incluso", o preço (com `hidden` até ter
+o valor) e o botão de WhatsApp com o serviço na mensagem. Para incluir um
+serviço, copie um ladrilho e a ficha dele e troque o nome, a foto
+(`produto-7.webp` em diante já existem como reserva) e os textos; lembre de
+criar também o botão de resposta e a fala dele na conversa da capa.
 
-Fotos das coleções abertas (Teatro Amazonas, Ponte Rio Negro, carimbo,
-passaporte e o vídeo das nuvens) ficam em `assets/`, com fonte e licença em
-`assets/credits.json` e o crédito no rodapé. Se trocar ou tirar uma delas,
-atualize o crédito do rodapé também.
+**O diagrama "Da papelada ao visto"** é desenhado por
+`node scripts/gerar-diagrama.mjs`, que escreve o SVG dentro do
+`<figure class="caminho__diagrama">`. Rode de novo se mudar o desenho.
+
+O vídeo das nuvens (`assets/`) vem de uma coleção aberta, com fonte e
+licença em `assets/credits.json` e o crédito no rodapé. As outras fotos de
+`assets/` ficaram de reserva; se voltar a usar alguma, credite no rodapé.
 
 ### 2.6. Links de WhatsApp, redes sociais e mapa
 

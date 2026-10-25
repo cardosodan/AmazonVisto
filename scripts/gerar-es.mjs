@@ -2,10 +2,11 @@
 //
 // Uso (na pasta do projeto):  node scripts/gerar-es.mjs
 //
-// Rode de novo sempre que mudar o index.html — assim as duas versões nunca
+// Rode de novo sempre que mudar o index.html; assim as duas versões nunca
 // saem de sincronia. Se aparecer um texto novo em português, adicione o par
-// [português, espanhol] na lista TEXTOS abaixo. No fim, o script avisa se
-// sobrou algum trecho que parece português no es.html.
+// [português, espanhol] na lista TEXTOS abaixo. No fim, o script avisa as
+// traduções que não acharam o texto e os trechos que ainda parecem
+// português no es.html.
 import { readFileSync, writeFileSync } from "node:fs";
 
 const raiz = new URL("..", import.meta.url);
@@ -14,8 +15,8 @@ const nl = h.includes("\r\n") ? "\r\n" : "\n";
 h = h.replace(/\r\n/g, "\n");
 
 // --------------------------------------------------------------------------
-// Nomes dos serviços (usados em títulos, legendas, alt, mensagens).
-// Os mais longos primeiro, pra "Intercâmbio" não pegar antes do nome completo.
+// Nomes dos serviços dentro das mensagens prontas do WhatsApp. Os mais
+// longos primeiro, para "Intercâmbio" não pegar antes do nome completo.
 // --------------------------------------------------------------------------
 const SERVICOS = [
   ["Intercâmbio: Estudo e Trabalho", "Intercambio: Estudio y Trabajo"],
@@ -28,8 +29,8 @@ const SERVICOS = [
 ];
 
 // --------------------------------------------------------------------------
-// Mensagens prontas do WhatsApp — na versão em espanhol todos os botões vão
-// pro número do Peru (+51), com a mensagem traduzida.
+// Links de WhatsApp com mensagem: na versão em espanhol todos vão para o
+// número do Peru (+51), com a mensagem traduzida.
 // --------------------------------------------------------------------------
 const WHATSAPP_PT = "5592981265897";
 const WHATSAPP_ES = "51939125188";
@@ -39,15 +40,12 @@ function traduzirMensagem(pt) {
   for (const [a, b] of SERVICOS) m = m.split(a).join(b);
   const mapa = [
     ["Olá! Vim pelo site e gostaria de mais informações sobre visto.", "¡Hola! Vengo del sitio web y me gustaría más información sobre visas."],
-    ["Olá! Vim pelo site e gostaria de mais informações sobre os serviços.", "¡Hola! Vengo del sitio web y me gustaría más información sobre los servicios."],
     ["Olá! Vim pelo site e quero fazer a consulta inicial gratuita.", "¡Hola! Vengo del sitio web y quiero hacer la consulta inicial gratuita."],
     ["Olá! Vim pelo site e tenho uma dúvida.", "¡Hola! Vengo del sitio web y tengo una duda."],
   ];
   for (const [a, b] of mapa) if (m === a) return b;
-  let r = m.match(/^Olá! Vim pelo site e gostaria de mais informações sobre (.+)\.$/);
+  const r = m.match(/^Olá! Vim pelo site e gostaria de mais informações sobre (.+)\.$/);
   if (r) return `¡Hola! Vengo del sitio web y me gustaría más información sobre ${r[1]}.`;
-  r = m.match(/^Olá! Vim pelo site e quero contratar: (.+)\.$/);
-  if (r) return `¡Hola! Vengo del sitio web y quiero contratar: ${r[1]}.`;
   throw new Error(`Mensagem de WhatsApp sem tradução: "${pt}"`);
 }
 
@@ -57,13 +55,13 @@ h = h.replace(new RegExp(`https://wa\\.me/${WHATSAPP_PT}\\?text=([^"]+)`, "g"), 
 });
 
 // --------------------------------------------------------------------------
-// Trocas de estrutura (atributos, seletor de idioma, meta tags).
+// Trocas de estrutura (atributos, idioma, números dos formulários).
 // --------------------------------------------------------------------------
 const ESTRUTURA = [
   [`<html lang="pt-BR">`, `<html lang="es">`],
   [`<meta property="og:locale" content="pt_BR" />`, `<meta property="og:locale" content="es_LA" />`],
   [`<meta property="og:url" content="https://www.amazonvisto.com.br/" />`, `<meta property="og:url" content="https://www.amazonvisto.com.br/es.html" />`],
-  // Seletor de idioma: no topo e no rodapé, o link passa a levar ao português.
+  // O seletor de idioma, na barra e no rodapé, passa a levar ao português.
   [
     `<a class="barra__idioma" href="es.html" hreflang="es" lang="es">Español</a>`,
     `<a class="barra__idioma" href="index.html" hreflang="pt-BR" lang="pt-BR">Português</a>`,
@@ -72,46 +70,31 @@ const ESTRUTURA = [
     `<li><a href="es.html" hreflang="es" lang="es">Versión en español</a></li>`,
     `<li><a href="index.html" hreflang="pt-BR" lang="pt-BR">Versão em português</a></li>`,
   ],
-  [
-    `aria-label="Abrir menu"`,
-    `aria-label="Abrir menú"
-        data-rotulo-abrir="Abrir menú"
-        data-rotulo-fechar="Cerrar menú"`,
-  ],
+  // Os formulários (conversa da capa e cupom) enviam para o número do Peru.
+  [`action="https://wa.me/${WHATSAPP_PT}"`, `action="https://wa.me/${WHATSAPP_ES}"`],
+  [`data-whatsapp="${WHATSAPP_PT}"`, `data-whatsapp="${WHATSAPP_ES}"`],
+  [`data-rotulo-abrir="Abrir menu"`, `data-rotulo-abrir="Abrir menú"`],
+  [`data-rotulo-fechar="Fechar menu"`, `data-rotulo-fechar="Cerrar menú"`],
   [`aria-label="Navegação principal"`, `aria-label="Navegación principal"`],
-  [`aria-label="Seções do site"`, `aria-label="Secciones del sitio"`],
   [`aria-label="Falar no WhatsApp"`, `aria-label="Hablar por WhatsApp"`],
-  [`aria-label="Vista das nuvens pela janela do avião"`, `aria-label="Vista de las nubes desde la ventana del avión"`],
+  [`aria-label="Escolha o seu caso"`, `aria-label="Elige tu caso"`],
+  [`<nav aria-label="Serviços">`, `<nav aria-label="Servicios">`],
+  [`<nav aria-label="A empresa">`, `<nav aria-label="La empresa">`],
+  // A presença no topo da conversa, com a abreviação do próprio WhatsApp em espanhol ("últ. vez").
+  [`data-online="online agora"`, `data-online="en línea ahora"`],
+  [`data-visto="visto por último {dia} às 18:00"`, `data-visto="últ. vez {dia} a las 18:00"`],
+  [`data-hoje="hoje"`, `data-hoje="hoy"`],
+  [`data-ontem="ontem"`, `data-ontem="ayer"`],
+  [`data-sexta="sexta"`, `data-sexta="el viernes"`],
   [`<strong>R$ TROCAR</strong>`, `<strong>TROCAR</strong>`],
-  [`<!-- TROCAR: valor "a partir de" deste serviço -->`, `<!-- TROCAR: valor "desde" y moneda de este servicio -->`],
-  [`data-aberto="Aberto agora" data-fechado="Fechado agora"`, `data-aberto="Abierto ahora" data-fechado="Cerrado ahora"`],
-  [`aria-label="Atalhos"`, `aria-label="Atajos"`],
-  [`data-mesma="mesma hora"`, `data-mesma="misma hora"`],
-  [
-    `data-destinos="JFK:Para Nova York|YYZ:Para Toronto|PEK:Para Pequim|LIM:Para Lima"`,
-    `data-destinos="JFK:A Nueva York|YYZ:A Toronto|PEK:A Pekín|LIM:A Lima"`,
-  ],
 ];
 
 // --------------------------------------------------------------------------
-// Textos visíveis. Espaços no português casam com qualquer quebra de linha
-// ou indentação do HTML, então dá pra colar o texto "corrido".
-// Frases que CONTÊM outros trechos da lista vêm antes deles (senão o trecho
-// menor é traduzido primeiro e a frase inteira não casa mais).
+// Textos. Espaços no português casam com qualquer quebra de linha ou
+// indentação do HTML, então dá para colar o texto "corrido". Frases que
+// CONTÊM trechos menores da lista vêm antes deles.
 // --------------------------------------------------------------------------
 const TEXTOS = [
-  // Contêm trechos traduzidos mais abaixo ("em até 10x sem juros no cartão",
-  // "Como funciona"), por isso vêm primeiro.
-  [
-    "Resolvemos tudo pelo WhatsApp, com total segurança dos seus dados, e você parcela em até 10x sem juros no cartão, em português ou español.",
-    "Resolvemos todo por WhatsApp, con total seguridad de tus datos, y pagas en hasta 10 cuotas sin intereses con tarjeta, en portugués o español.",
-  ],
-  [
-    "Os honorários podem ser parcelados em até 10x sem juros no cartão.",
-    "Los honorarios se pueden pagar en hasta 10 cuotas sin intereses con tarjeta.",
-  ],
-  ["Como funciona o pagamento?", "¿Cómo funciona el pago?"],
-
   // <head>
   ["Amazon Visto | Visto Americano, Canadense, Chinês e Passaporte", "Amazon Visto | Visa Americana, Canadiense, China y Pasaporte"],
   [
@@ -124,57 +107,104 @@ const TEXTOS = [
   ],
   ["Amazon Visto | Turismo, Estudo e Trabalho", "Amazon Visto | Turismo, Estudio y Trabajo"],
   [
-    "Visto Americano, Canadense, Chinês, Peruano e Passaporte — sem sair de casa, parcelado em até 10x. Líder de mercado no Norte.",
+    "Visto Americano, Canadense, Chinês, Peruano e Passaporte, sem sair de casa, parcelado em até 10x. Líder de mercado no Norte.",
     "Visa americana, canadiense, china, peruana y pasaporte, sin salir de casa y en hasta 10 cuotas. Líder del mercado en el Norte de Brasil.",
   ],
 
-  // Barra e menu
+  // Barra
   ["Pular para o conteúdo", "Saltar al contenido"],
-  [`<span class="barra__menu-texto">Menu</span>`, `<span class="barra__menu-texto">Menú</span>`],
-  [">Fale conosco</a>", ">Hablemos</a>"],
-  [`class="navegacao__link">Serviços</a>`, `class="navegacao__link">Servicios</a>`],
-  [`class="navegacao__link">Sobre nós</a>`, `class="navegacao__link">Nosotros</a>`],
-  [`class="navegacao__link">Dúvidas</a>`, `class="navegacao__link">Preguntas</a>`],
-  [`class="navegacao__link">Contato</a>`, `class="navegacao__link">Contacto</a>`],
-  ["Fale com um especialista", "Habla con un especialista"],
-
-  // Capa
-  ["Vistos e passaporte sem burocracia", "Visas y pasaporte sin burocracia"],
-  [
-    "Assessoria em Manaus, Brasília e 100% online: visto americano, canadense, chinês e peruano, passaporte e intercâmbio, em até 10x sem juros.",
-    "Asesoría en Manaus, Brasilia y 100% en línea: visa americana, canadiense, china y peruana, pasaporte e intercambio, en hasta 10 cuotas sin intereses.",
-  ],
-  ["Atendimento de segunda a sexta, das 9h às 18h", "Atención de lunes a viernes, de 9 a 18 h"],
-  ["<strong>Empresa do Ano</strong> 2025", "<strong>Empresa del Año</strong> 2025"],
-  ["<strong>Empresa Destaque</strong> 2026", "<strong>Empresa Destacada</strong> 2026"],
-  ["<strong>Até 10x</strong> sem juros", "<strong>Hasta 10 cuotas</strong> sin intereses"],
   [`<a href="#servicos">Serviços</a>`, `<a href="#servicos">Servicios</a>`],
+  [`<a href="#como-funciona">Como funciona</a>`, `<a href="#como-funciona">Cómo funciona</a>`],
   [`<a href="#duvidas">Dúvidas</a>`, `<a href="#duvidas">Preguntas</a>`],
-  ["Avião na pista do aeroporto ao entardecer", "Avión en la pista del aeropuerto al atardecer"],
-  // Painel de horários
-  ["<span>Visto</span>", "<span>Visa</span>"],
-  ["<span>Diferença</span>", "<span>Diferencia</span>"],
-  [`<span class="relogios__servico">Visto americano</span>`, `<span class="relogios__servico">Visa americana</span>`],
-  [`<span class="relogios__servico">Visto canadense</span>`, `<span class="relogios__servico">Visa canadiense</span>`],
-  [`<span class="relogios__servico">Visto chinês</span>`, `<span class="relogios__servico">Visa china</span>`],
-  [`<span class="relogios__servico">Visto peruano</span>`, `<span class="relogios__servico">Visa peruana</span>`],
-  [`<span class="relogios__cidade">Nova York</span>`, `<span class="relogios__cidade">Nueva York</span>`],
-  [`<span class="relogios__cidade">Pequim</span>`, `<span class="relogios__cidade">Pekín</span>`],
-  ["Como funciona", "Cómo funciona"],
+  [`<a href="#sobre">Quem somos</a>`, `<a href="#sobre">Quiénes somos</a>`],
+  [">Menu</button>", ">Menú</button>"],
 
-  // Rodapé (vem antes porque contém "Empresa do Ano 2025 e Empresa Destaque 2026")
+  // Capa e conversa
+  ["Seu visto, visto por nós", "Tu visa, vista por nosotros"],
   [
-    "Assessoria completa em vistos, passaporte e intercâmbio. Líder de mercado no Norte do Brasil, Empresa do Ano 2025 e Empresa Destaque 2026, com atendimento 100% online para todo o país.",
-    "Asesoría completa en visas, pasaporte e intercambio. Líder del mercado en el Norte de Brasil, Empresa del Año 2025 y Empresa Destacada 2026, con atención 100% en línea.",
+    "Assessoria de visto americano, canadense, chinês e peruano, passaporte e intercâmbio. Em Manaus, Brasília ou 100% online, em até 10x sem juros.",
+    "Asesoría de visa americana, canadiense, china y peruana, pasaporte e intercambio. En Manaus, Brasilia o 100% en línea, en hasta 10 cuotas sin intereses.",
   ],
+  ["Conversar no WhatsApp", "Conversar por WhatsApp"],
+  ["Empresa do Ano 2025 · Empresa Destaque 2026", "Empresa del Año 2025 · Empresa Destacada 2026"],
+  ["Atendimento de segunda a sexta, das 9h às 18h", "Atención de lunes a viernes, de 9 a 18 h"],
+  [
+    "Olá! Qual visto você quer tirar? A primeira análise é por nossa conta.",
+    "¡Hola! ¿Qué visa quieres tramitar? El primer análisis corre por nuestra cuenta.",
+  ],
+  [">Renovação do americano</button>", ">Renovación de la americana</button>"],
+  [">Peru</button>", ">Perú</button>"],
+  [
+    "Ótimo! No visto americano a gente monta a sua lista de documentos, preenche o formulário com você, cuida dos agendamentos e prepara você para a entrevista.",
+    "¡Genial! En la visa americana armamos tu lista de documentos, llenamos el formulario contigo, nos encargamos de las citas y te preparamos para la entrevista.",
+  ],
+  [
+    "Dá para renovar sem complicação. A gente confere o que muda no seu caso e cuida do processo do começo ao fim.",
+    "Se puede renovar sin complicaciones. Revisamos qué cambia en tu caso y nos encargamos del trámite de principio a fin.",
+  ],
+  [
+    "No visto canadense a gente organiza o pedido online, os documentos e o agendamento da biometria.",
+    "En la visa canadiense organizamos la solicitud en línea, los documentos y la cita de biometría.",
+  ],
+  [
+    "No visto chinês a gente prepara o formulário e os documentos e acompanha o pedido até o passaporte voltar.",
+    "En la visa china preparamos el formulario y los documentos y acompañamos la solicitud hasta que el pasaporte vuelva.",
+  ],
+  [
+    "No visto peruano a gente orienta cada documento e acompanha o pedido, em português ou español.",
+    "En la visa peruana te orientamos con cada documento y acompañamos la solicitud, en portugués o español.",
+  ],
+  [
+    "No passaporte a gente cuida do agendamento na Polícia Federal e da lista do que levar no dia.",
+    "En el pasaporte brasileño nos encargamos de la cita en la Policía Federal y de la lista de lo que hay que llevar ese día.",
+  ],
+  [
+    "No intercâmbio a gente ajuda a escolher o caminho para estudar ou trabalhar fora e cuida do visto.",
+    "En el intercambio te ayudamos a elegir el camino para estudiar o trabajar en el exterior y nos encargamos de la visa.",
+  ],
+  ["Olá! Vim pelo site e quero tirar o visto americano.", "¡Hola! Vengo del sitio web y quiero tramitar la visa americana."],
+  ["Olá! Vim pelo site e quero renovar o meu visto americano.", "¡Hola! Vengo del sitio web y quiero renovar mi visa americana."],
+  ["Olá! Vim pelo site e quero tirar o visto canadense.", "¡Hola! Vengo del sitio web y quiero tramitar la visa canadiense."],
+  ["Olá! Vim pelo site e quero tirar o visto chinês.", "¡Hola! Vengo del sitio web y quiero tramitar la visa china."],
+  ["Olá! Vim pelo site e quero tirar o visto peruano.", "¡Hola! Vengo del sitio web y quiero tramitar la visa peruana."],
+  ["Olá! Vim pelo site e quero tirar ou renovar o meu passaporte.", "¡Hola! Vengo del sitio web y quiero tramitar o renovar mi pasaporte."],
+  ["Olá! Vim pelo site e quero saber sobre intercâmbio.", "¡Hola! Vengo del sitio web y quiero saber sobre intercambio."],
+  ["digitando…", "escribiendo…"],
+  ["Sua mensagem para a Amazon Visto", "Tu mensaje para Amazon Visto"],
+  [
+    "Olá! Vim pelo site e gostaria de mais informações sobre visto.",
+    "¡Hola! Vengo del sitio web y me gustaría más información sobre visas.",
+  ],
+  ["Enviar pelo WhatsApp", "Enviar por WhatsApp"],
 
-  // Serviços
-  ["Escolha o seu destino", "Elige tu destino"],
+  // Serviços: ladrilhos e fichas
+  ["Para onde você vai?", "¿A dónde vas?"],
   [
-    "Seis serviços e um processo só: análise gratuita, documentos sob medida e acompanhamento até a aprovação.",
-    "Seis servicios y un solo proceso: análisis gratuito, documentos a medida y acompañamiento hasta la aprobación.",
+    "Seis serviços e um jeito só de fazer: análise gratuita, documentos sob medida e acompanhamento até o passaporte voltar.",
+    "Seis servicios y una sola forma de hacerlo: análisis gratuito, documentos a medida y acompañamiento hasta que el pasaporte vuelva.",
   ],
-  [">Passaporte<", ">Pasaporte<"],
+  ["Visto americano: primeiro visto e renovação", "Visa americana: primera visa y renovación"],
+  ["Visto canadense: visitante, com a biometria agendada", "Visa canadiense: visitante, con la biometría agendada"],
+  ["Visto chinês: turismo e negócios", "Visa china: turismo y negocios"],
+  ["Visto peruano: em português ou español", "Visa peruana: en portugués o español"],
+  ["Brasileiro: emissão e renovação", "Brasileño: emisión y renovación"],
+  [`<span class="destino__nome">Peru</span>`, `<span class="destino__nome">Perú</span>`],
+  ["Estudo e trabalho fora do Brasil", "Estudio y trabajo fuera de Brasil"],
+  ["Passaporte e cartão de embarque sobre a mesa", "Pasaporte y tarjeta de embarque sobre la mesa"],
+  ["Toronto ao entardecer, com a CN Tower", "Toronto al atardecer, con la CN Tower"],
+  ["A Grande Muralha da China entre montanhas", "La Gran Muralla China entre montañas"],
+  ["Machu Picchu, no Peru, entre as montanhas", "Machu Picchu, en Perú, entre las montañas"],
+  ["O Rio de Janeiro visto do alto, com as montanhas ao fundo", "Río de Janeiro visto desde lo alto, con las montañas al fondo"],
+  ["Estudantes numa sala de aula", "Estudiantes en un aula"],
+  ["Novo visto ou renovação, para turismo ou negócios, sem sair de casa.", "Visa nueva o renovación, para turismo o negocios, sin salir de casa."],
+  ["Visto de turista para o Canadá, com assessoria completa do início ao fim.", "Visa de turista para Canadá, con asesoría completa de principio a fin."],
+  ["Turismo e negócios na China, com parcelamento em até 10x sem juros.", "Turismo y negocios en China, en hasta 10 cuotas sin intereses."],
+  [
+    "Assessoria para o visto de entrada no Peru, com atendimento em português e español.",
+    "Asesoría para la visa de entrada a Perú, con atención en portugués y español.",
+  ],
+  ["Emissão e renovação pelo WhatsApp: zero burocracia, rapidez e comodidade.", "Emisión y renovación por WhatsApp: cero burocracia, rapidez y comodidad."],
+  ["Orientação completa para quem quer estudar ou trabalhar fora do Brasil.", "Orientación completa para quien quiere estudiar o trabajar fuera de Brasil."],
   ["<dt>Modalidade</dt>", "<dt>Modalidad</dt>"],
   ["<dt>Atendimento</dt>", "<dt>Atención</dt>"],
   ["<dt>Pagamento</dt>", "<dt>Pago</dt>"],
@@ -185,156 +215,102 @@ const TEXTOS = [
   ["<dd>Visto de visitante (TRV)</dd>", "<dd>Visa de visitante (TRV)</dd>"],
   ["<dd>Turismo (L) e negócios (M)</dd>", "<dd>Turismo (L) y negocios (M)</dd>"],
   ["<dd>Visto de entrada</dd>", "<dd>Visa de entrada</dd>"],
-  ["<dd>Emissão e renovação</dd>", "<dd>Emisión y renovación</dd>"],
   ["<dd>Estudo e trabalho no exterior</dd>", "<dd>Estudio y trabajo en el exterior</dd>"],
   ["<dd>Online ou presencial</dd>", "<dd>En línea o presencial</dd>"],
-  ["<dd>Em português ou español</dd>", "<dd>En portugués o español</dd>"],
   ["<dd>Pelo WhatsApp</dd>", "<dd>Por WhatsApp</dd>"],
-  ["Análise inicial gratuita e até 10x sem juros.", "Análisis inicial gratuito y hasta 10 cuotas sin intereses."],
-  [
-    "Novo visto ou renovação, para turismo ou negócios, sem sair de casa.",
-    "Visa nueva o renovación, para turismo o negocios, sin salir de casa.",
-  ],
-  [
-    "Visto de turista para o Canadá, com assessoria completa do início ao fim.",
-    "Visa de turista para Canadá, con asesoría completa de principio a fin.",
-  ],
-  [
-    "Turismo e negócios na China, com parcelamento em até 10x sem juros.",
-    "Turismo y negocios en China, en hasta 10 cuotas sin intereses.",
-  ],
-  [
-    "Assessoria para o visto de entrada no Peru, com atendimento em português e español.",
-    "Asesoría para la visa de entrada a Perú, con atención en portugués y español.",
-  ],
-  [
-    "Emissão e renovação pelo WhatsApp: zero burocracia, rapidez e comodidade.",
-    "Emisión y renovación por WhatsApp: cero burocracia, rapidez y comodidad.",
-  ],
-  [
-    "Orientação completa para quem quer estudar ou trabalhar fora do Brasil.",
-    "Orientación completa para quien quiere estudiar o trabajar fuera de Brasil.",
-  ],
-  ["Consultar no WhatsApp", "Consultar por WhatsApp"],
+  [">Em português ou español<", ">En portugués o español<"],
+  [">Emissão e renovação<", ">Emisión y renovación<"],
+  ["O caminho, com a gente", "El camino, con nosotros"],
+  ["<strong>Formulário DS-160</strong> Preenchemos com você, em português.", "<strong>Formulario DS-160</strong> Lo llenamos contigo, en tu idioma."],
+  ["<strong>Taxa consular</strong> Explicamos o valor e como pagar.", "<strong>Tasa consular</strong> Te explicamos el valor y cómo pagarla."],
+  ["<strong>Fotos e digitais no CASV</strong> Agendamos e dizemos o que levar.", "<strong>Fotos y huellas en el CASV</strong> Agendamos la cita y te decimos qué llevar."],
+  ["<strong>Entrevista no consulado</strong> Preparamos você para o dia.", "<strong>Entrevista en el consulado</strong> Te preparamos para ese día."],
   [">O que está incluso<", ">Qué incluye<"],
-
-  // Painel "o que está incluso"
-  ["A partir de <strong>", "Desde <strong>"],
-  ["em até 10x sem juros no cartão", "en hasta 10 cuotas sin intereses con tarjeta"],
-  ["Lista exata de documentos para o seu caso", "Lista exacta de documentos para tu caso"],
   ["Consulta inicial gratuita para entender o seu objetivo", "Consulta inicial gratuita para entender tu objetivo"],
+  ["Lista exata de documentos para o seu caso", "Lista exacta de documentos para tu caso"],
   ["Acompanhamento do processo junto ao consulado ou embaixada", "Acompañamiento del trámite ante el consulado o la embajada"],
   ["Acompanhamento de cada etapa da emissão ou renovação", "Acompañamiento de cada etapa de la emisión o renovación"],
   ["Orientação completa para estudar ou trabalhar fora do Brasil", "Orientación completa para estudiar o trabajar fuera de Brasil"],
   ["Atualizações a cada etapa, pelo WhatsApp", "Novedades en cada etapa, por WhatsApp"],
   ["TROCAR: itens específicos deste serviço", "TROCAR: ítems específicos de este servicio"],
+  ["A partir de <strong>", "Desde <strong>"],
+  ["Conversar sobre o visto americano", "Conversar sobre la visa americana"],
+  ["Conversar sobre o visto canadense", "Conversar sobre la visa canadiense"],
+  ["Conversar sobre o visto chinês", "Conversar sobre la visa china"],
+  ["Conversar sobre o visto peruano", "Conversar sobre la visa peruana"],
+  ["Conversar sobre o passaporte", "Conversar sobre el pasaporte"],
+  ["Conversar sobre intercâmbio", "Conversar sobre intercambio"],
+  [">Passaporte brasileiro<", ">Pasaporte brasileño<"],
 
   // Como funciona
-  ["Primeiro, a conversa", "Primero, la conversación"],
+  ["Da papelada ao visto", "Del papeleo a la visa"],
   [
-    "Você conta o seu objetivo (turismo, estudo ou trabalho) e recebe uma análise gratuita pelo WhatsApp.",
-    "Nos cuentas tu objetivo (turismo, estudio o trabajo) y recibes un análisis gratuito por WhatsApp.",
+    "Sozinho, o visto é uma pilha de formulários, taxas e agendamentos, muitas vezes em outro idioma. Com a gente, vira uma conversa só.",
+    "Solo, la visa es una pila de formularios, tasas y citas, muchas veces en otro idioma. Con nosotros, se vuelve una sola conversación.",
   ],
+  ["<h3>Sozinho</h3>", "<h3>Solo</h3>"],
+  ["<h3>Com a gente</h3>", "<h3>Con nosotros</h3>"],
+  ["<h3>Visto <svg", "<h3>Visa <svg"],
+  [
+    "Formulário, taxa, agendamento, documentos e entrevista, cada um num site diferente.",
+    "Formulario, tasa, citas, documentos y entrevista, cada uno en un sitio distinto.",
+  ],
+  [
+    "Uma conversa no WhatsApp: a gente organiza tudo e avisa você a cada etapa.",
+    "Una conversación por WhatsApp: organizamos todo y te avisamos en cada etapa.",
+  ],
+  [
+    "Passaporte de volta e viagem marcada. Quem decide é o consulado; o caminho fica leve.",
+    "Pasaporte de vuelta y viaje programado. Quien decide es el consulado; el camino se vuelve liviano.",
+  ],
+
+  // Provas (a Amazon Visto conta)
+  ["Por que confiar", "Por qué confiar"],
+  [
+    "Fomos <strong>Empresa do Ano em 2025</strong> e <strong>Empresa Destaque em 2026</strong>.",
+    "Fuimos <strong>Empresa del Año en 2025</strong> y <strong>Empresa Destacada en 2026</strong>.",
+  ],
+  ["O Teatro Amazonas, no Centro de Manaus", "El Teatro Amazonas, en el Centro de Manaus"],
+  ["Daqui do Centro de Manaus, atendemos o Brasil inteiro.", "Desde el Centro de Manaus atendemos a todo Brasil y a América Latina."],
+  [
+    "Já ajudamos milhares de clientes, e <strong><span data-contar>55,7 mil</span> pessoas</strong> acompanham a gente no Instagram.",
+    "Ya ayudamos a miles de clientes, y <strong><span data-contar>55,7 mil</span> personas</strong> nos siguen en Instagram.",
+  ],
+  ["Atendemos em Manaus, em Brasília e 100% online, em português ou español.", "Atendemos en Manaus, en Brasilia y 100% en línea, en portugués o español."],
+  ["E você parcela em até <strong>10x sem juros</strong> no cartão.", "Y pagas en hasta <strong>10 cuotas sin intereses</strong> con tarjeta."],
+
+  // Sobre
+  ["Líder de mercado no Norte do Brasil", "Líder en el Norte de Brasil"],
   ["A sala da Amazon Visto no Centro de Manaus", "La oficina de Amazon Visto en el Centro de Manaus"],
-  ["Depois, os documentos", "Después, los documentos"],
+  ["No Centro de Manaus", "En el Centro de Manaus"],
   [
-    "A nossa equipe monta a lista exata de documentos para o seu caso, sem enrolação.",
-    "Nuestro equipo arma la lista exacta de documentos para tu caso, sin rodeos.",
+    "Atendemos na Rua Costa Azevedo, 9, sala 901, no Centro de Manaus, e em Brasília. Quem preferir faz tudo 100% online, de qualquer lugar do Brasil.",
+    "Atendemos en la Rua Costa Azevedo, 9, sala 901, en el Centro de Manaus, y en Brasilia. Quien prefiera lo hace todo 100% en línea, desde cualquier lugar de Brasil o de América Latina.",
   ],
-  ["Carimbo de entrada numa página de passaporte", "Sello de entrada en una página de pasaporte"],
-  ["Então, o consulado", "Luego, el consulado"],
+  ["Tudo pela conversa", "Todo por la conversación"],
   [
-    "Cuidamos do processo junto ao consulado ou à embaixada e avisamos você a cada etapa.",
-    "Nos encargamos del trámite ante el consulado o la embajada y te avisamos en cada etapa.",
+    "Já ajudamos milhares de clientes a estudar, trabalhar ou conhecer o mundo, com total segurança dos seus dados. Entrevista e biometria, quando o consulado pede, são feitas por você, no posto consular.",
+    "Ya ayudamos a miles de clientes a estudiar, trabajar o conocer el mundo, con total seguridad de tus datos. La entrevista y la biometría, cuando el consulado las pide, las haces tú, en la oficina consular.",
   ],
-  ["Passaporte e cartão de embarque sobre a mesa", "Pasaporte y tarjeta de embarque sobre la mesa"],
-  ["Por fim, o embarque", "Por último, el embarque"],
-  // Carimbos dos momentos (texto do SVG)
-  [">CONVERSA</text>", ">CONVERSACIÓN</text>"],
-  [">SOB MEDIDA</text>", ">A MEDIDA</text>"],
-  [">ACOMPANHADO</text>", ">ACOMPAÑADO</text>"],
-  [">BOA VIAGEM</text>", ">BUEN VIAJE</text>"],
-  [
-    "Visto ou passaporte em mãos, pronto para a viagem que você planejou.",
-    "Visa o pasaporte en mano, listo para el viaje que planeaste.",
-  ],
+  ["Falar com a equipe", "Hablar con el equipo"],
 
-  // Sobre nós (carta)
-  ["Líder de mercado no Norte do Brasil", "Líder del mercado en el Norte de Brasil"],
-  [
-    "Somos a Amazon Visto, uma assessoria de vistos, passaporte e intercâmbio. Atendemos presencialmente em Manaus, na Rua Costa Azevedo, 9, sala 901, e em Brasília. E atendemos 100% online todo o Brasil e clientes de língua espanhola em toda a América Latina.",
-    "Somos Amazon Visto, una asesoría de visas, pasaporte e intercambio. Atendemos presencialmente en Manaus, en la Rua Costa Azevedo, 9, sala 901, y en Brasilia. Y atendemos 100% en línea a todo Brasil y a clientes de habla hispana en toda América Latina.",
-  ],
-  [
-    "Já ajudamos milhares de clientes a fazer a viagem dos sonhos: para estudar, trabalhar ou simplesmente conhecer o mundo. Com processos descomplicados, seguros e sem burocracia.",
-    "Ya ayudamos a miles de clientes a hacer el viaje de sus sueños: para estudiar, trabajar o simplemente conocer el mundo. Con procesos simples, seguros y sin burocracia.",
-  ],
-  [
-    "Fomos reconhecidos como <mark>Empresa do Ano em 2025</mark> e Empresa Destaque em 2026.",
-    "Fuimos reconocidos como <mark>Empresa del Año en 2025</mark> y Empresa Destacada en 2026.",
-  ],
-  [`<span translate="no">Equipe Amazon Visto</span>`, `<span translate="no">Equipo Amazon Visto</span>`],
-  ["<span>Manaus e Brasília</span>", "<span>Manaus y Brasilia</span>"],
-
-  // Reconhecimento
-  [">Reconhecimento</h2>", ">Reconocimiento</h2>"],
-  ["PRÊMIO • EMPRESA DO ANO • PRÊMIO •", "PREMIO • EMPRESA DEL AÑO • PREMIO •"],
-  ["EMPRESA DESTAQUE • EMPRESA DESTAQUE •", "EMPRESA DESTACADA • EMPRESA DESTACADA •"],
-  ["PARCELAMENTO • SEM JUROS • NO CARTÃO •", "CUOTAS • SIN INTERESES • CON TARJETA •"],
-  ["Empresa do Ano 2025&nbsp;·", "Empresa del Año 2025&nbsp;·"],
-  ["Empresa Destaque 2026&nbsp;·", "Empresa Destacada 2026&nbsp;·"],
-  ["seguidores no Instagram", "seguidores en Instagram"],
-  ["Atendimento presencial em Manaus e Brasília&nbsp;·", "Atención presencial en Manaus y Brasilia&nbsp;·"],
-  ["Português e español&nbsp;·", "Portugués y español&nbsp;·"],
-  ["Até 10x sem juros no cartão", "Hasta 10 cuotas sin intereses con tarjeta"],
-
-  // Sozinho x com a gente (depois de "Como funciona", que tem frases
-  // mais longas começando igual, como "Cuidamos do processo junto ao...")
-  ["Sozinho ou com a gente", "Solo o con nosotros"],
-  [
-    "Dá para tirar o visto por conta própria. A diferença está no caminho até lá.",
-    "Puedes tramitar tu visa por tu cuenta. La diferencia está en el camino hasta allí.",
-  ],
-  [
-    "Nenhuma assessoria pode garantir a aprovação: a decisão é sempre do consulado. O que fazemos é tirar o peso do caminho.",
-    "Ninguna asesoría puede garantizar la aprobación: la decisión es siempre del consulado. Lo que hacemos es quitarte el peso del camino.",
-  ],
-  ["Começar pela consulta gratuita", "Empezar con la consulta gratuita"],
-  ["Tirar o visto por conta própria ou com a Amazon Visto, etapa por etapa", "Tramitar la visa por tu cuenta o con Amazon Visto, etapa por etapa"],
-  [`<th scope="col">Por conta própria</th>`, `<th scope="col">Por tu cuenta</th>`],
-  [`<span>Com a <span translate="no">Amazon Visto</span></span>`, `<span>Con <span translate="no">Amazon Visto</span></span>`],
-  [`<th scope="row">Primeiro passo</th>`, `<th scope="row">Primer paso</th>`],
-  [`<th scope="row">No consulado</th>`, `<th scope="row">En el consulado</th>`],
-  [`<th scope="row">No meio do caminho</th>`, `<th scope="row">En el camino</th>`],
-  [`<th scope="row">Atendimento</th>`, `<th scope="row">Atención</th>`],
-  ["Horas de pesquisa antes mesmo de começar", "Horas de investigación antes incluso de empezar"],
-  ["Consulta inicial gratuita, pelo WhatsApp", "Consulta inicial gratuita, por WhatsApp"],
-  ["Descobrir sozinho o que cada consulado exige", "Averiguar por tu cuenta lo que exige cada consulado"],
-  ["Lista exata para o seu caso", "Lista exacta para tu caso"],
-  ["Sites, formulários e agendamentos, muitas vezes em outro idioma", "Sitios web, formularios y citas, muchas veces en otro idioma"],
-  ["Cuidamos do processo junto ao consulado", "Nos encargamos del trámite ante el consulado"],
-  ["Ninguém para tirar dúvidas quando algo trava", "Nadie a quien preguntar cuando algo se traba"],
-  ["Atualização a cada etapa, pelo WhatsApp", "Novedades en cada etapa, por WhatsApp"],
-  ["Vídeos e fóruns genéricos", "Videos y foros genéricos"],
-  ["Presencial em Manaus e Brasília ou 100% online", "Presencial en Manaus y Brasilia o 100% en línea"],
-
-  // Perguntas frequentes
-  ["Perguntas frequentes", "Preguntas frecuentes"],
-  ["Segunda a sexta, das 9h às 18h", "De lunes a viernes, de 9 a 18 h"],
+  // Dúvidas
+  [">Dúvidas</h2>", ">Preguntas</h2>"],
   ["Vocês garantem a aprovação do visto?", "¿Garantizan la aprobación de la visa?"],
   [
-    "Não, e desconfie de quem garante. A decisão é sempre do consulado ou da embaixada de cada país. O nosso trabalho é reduzir os riscos do caminho: montar a documentação certa para o seu caso e acompanhar cada etapa do processo.",
-    "No, y desconfía de quien lo garantice. La decisión es siempre del consulado o de la embajada de cada país. Nuestro trabajo es reducir los riesgos del camino: armar la documentación correcta para tu caso y acompañar cada etapa del trámite.",
+    "Não, e desconfie de quem garante. A decisão é sempre do consulado ou da embaixada de cada país. O nosso trabalho é montar a documentação certa para o seu caso e acompanhar cada etapa do processo, para você chegar preparado.",
+    "No, y desconfía de quien lo garantice. La decisión es siempre del consulado o de la embajada de cada país. Nuestro trabajo es armar la documentación correcta para tu caso y acompañar cada etapa del trámite, para que llegues preparado.",
   ],
   ["A primeira consulta é paga?", "¿La primera consulta tiene costo?"],
   [
-    "Não. Você conta o seu objetivo (turismo, estudo ou trabalho) e recebe uma análise inicial sem custo, pelo WhatsApp.",
-    "No. Nos cuentas tu objetivo (turismo, estudio o trabajo) y recibes un análisis inicial sin costo, por WhatsApp.",
+    "Não. Você conta o seu objetivo (turismo, estudo ou trabalho) e recebe uma análise inicial sem custo, pelo WhatsApp. Os honorários podem ser parcelados em até 10x sem juros no cartão.",
+    "No. Nos cuentas tu objetivo (turismo, estudio o trabajo) y recibes un análisis inicial sin costo, por WhatsApp. Los honorarios se pueden pagar en hasta 10 cuotas sin intereses con tarjeta.",
   ],
-  ["Preciso ir até Manaus ou Brasília?", "¿Tengo que ir a Manaus o Brasilia?"],
+  ["em até 10x sem juros no cartão", "en hasta 10 cuotas sin intereses con tarjeta"],
+  ["Vocês fazem renovação de visto?", "¿Hacen renovación de visa?"],
   [
-    "Não. Temos atendimento presencial em Manaus-AM e Brasília-DF, mas todo o processo com a gente pode ser feito 100% online, de qualquer lugar do Brasil. Quando o consulado exige entrevista ou coleta de biometria, essa etapa é feita pessoalmente pelo solicitante, no posto consular.",
-    "No. Tenemos atención presencial en Manaus-AM y Brasilia-DF, pero todo el proceso con nosotros se puede hacer 100% en línea, desde cualquier lugar de Brasil o de América Latina. Cuando el consulado exige entrevista o toma de datos biométricos, esa etapa la hace personalmente el solicitante, en la oficina consular.",
+    "Sim. No visto americano atendemos tanto o primeiro visto quanto a renovação, para turismo ou negócios.",
+    "Sí. En la visa americana atendemos tanto la primera visa como la renovación, para turismo o negocios.",
   ],
   ["A taxa consular está incluída no valor?", "¿La tasa consular está incluida en el precio?"],
   [
@@ -346,64 +322,67 @@ const TEXTOS = [
     "Depende do tipo de visto e da agenda de cada consulado, que muda ao longo do ano. Na consulta inicial passamos a estimativa atualizada para o seu caso.",
     "Depende del tipo de visa y de la agenda de cada consulado, que cambia a lo largo del año. En la consulta inicial te damos la estimación actualizada para tu caso.",
   ],
-  ["Vocês fazem renovação de visto?", "¿Hacen renovación de visa?"],
-  [
-    "Sim. No visto americano atendemos tanto o primeiro visto quanto a renovação, para turismo ou negócios.",
-    "Sí. En la visa americana atendemos tanto la primera visa como la renovación, para turismo o negocios.",
-  ],
   ["Vocês atendem em espanhol?", "¿Atienden en español?"],
   [
     "Sí. Para clientes de língua espanhola, o atendimento é pelo WhatsApp",
     "Sí. Para clientes de habla hispana, la atención es por WhatsApp al",
   ],
-  ["Pergunte no WhatsApp", "Pregunta por WhatsApp"],
-  [">Ver no mapa</a>", ">Ver en el mapa</a>"],
 
-  // Contato
-  ["Manaus vista do alto, com a Ponte Rio Negro ao fundo", "Manaus vista desde lo alto, con el Puente Río Negro al fondo"],
-  ["Visite a gente", "Visítanos"],
-  ["Também em Brasília-DF e 100% online.", "También en Brasilia-DF y 100% en línea."],
-  ["<dt>Segunda a sexta</dt>", "<dt>Lunes a viernes</dt>"],
-  ["<dd>9h às 18h</dd>", "<dd>9 a 18 h</dd>"],
-  ["</a> em português", "</a> en portugués"],
-  ["</a> no Instagram", "</a> en Instagram"],
-  [">Abrir no mapa</a>", ">Abrir en el mapa</a>"],
-  ["Chamar no WhatsApp", "Escribir por WhatsApp"],
-
-  // Cartão de embarque
+  // Contato (cupom)
+  ["Comece a conversa", "Empieza a conversar"],
   [
-    "Sua próxima viagem começa com uma conversa. A análise inicial é gratuita, pelo WhatsApp.",
-    "Tu próximo viaje empieza con una conversación. El análisis inicial es gratuito, por WhatsApp.",
+    "Preencha e a mensagem sai pronta para o nosso WhatsApp. A análise inicial é gratuita.",
+    "Completa los datos y el mensaje sale listo para nuestro WhatsApp. El análisis inicial es gratuito.",
   ],
-  ["Cartão de embarque", "Tarjeta de embarque"],
-  [`<span class="embarque__cidade">De Manaus</span>`, `<span class="embarque__cidade">Desde Manaus</span>`],
-  [`id="cidadeDestino" aria-hidden="true">Para Nova York</span>`, `id="cidadeDestino" aria-hidden="true">A Nueva York</span>`],
-  ["Seu próximo destino", "Tu próximo destino"],
-  ["<dt>Passageiro</dt>", "<dt>Pasajero</dt>"],
-  ["<dd>Você</dd>", "<dd>Tú</dd>"],
-  ["<dt>Portão</dt>", "<dt>Puerta</dt>"],
-  ["<dd>Agora</dd>", "<dd>Ahora</dd>"],
-  ["<dt>Assento</dt>", "<dt>Asiento</dt>"],
-  ["<dd>Janela</dd>", "<dd>Ventana</dd>"],
-  ["MAO <span>para o mundo</span>", "MAO <span>al mundo</span>"],
-  ["Classe <strong>Assessoria completa</strong>", "Clase <strong>Asesoría completa</strong>"],
+  [
+    "Olá! Meu nome é {nome}, sou de {cidade} e quero ajuda com: {servico} ({situacao}).",
+    "¡Hola! Me llamo {nome}, soy de {cidade} y quiero ayuda con: {servico} ({situacao}).",
+  ],
+  [`placeholder="Seu nome"`, `placeholder="Tu nombre"`],
+  [`placeholder="Sua cidade"`, `placeholder="Tu ciudad"`],
+  [">Seu nome</label>", ">Tu nombre</label>"],
+  [">Serviço</label>", ">Servicio</label>"],
+  [">Situação</label>", ">Situación</label>"],
+  [">Sua cidade</label>", ">Tu ciudad</label>"],
+  ["<option>Renovação do visto americano</option>", "<option>Renovación de la visa americana</option>"],
+  ["<option value=\"primeira vez\">Primeira vez</option>", "<option value=\"primera vez\">Primera vez</option>"],
+  ["<option value=\"já tive antes\">Já tive antes</option>", "<option value=\"ya la tuve antes\">Ya la tuve antes</option>"],
+  ["<option value=\"ainda não sei\">Ainda não sei</option>", "<option value=\"todavía no sé\">Todavía no sé</option>"],
 
   // Rodapé
-  ["Boa viagem.", "Buen viaje."],
+  ["<h2>Serviços</h2>", "<h2>Servicios</h2>"],
+  ["<h2>A empresa</h2>", "<h2>La empresa</h2>"],
+  ["<h2>Fale com a gente</h2>", "<h2>Habla con nosotros</h2>"],
+  ["<h2>Onde estamos</h2>", "<h2>Dónde estamos</h2>"],
+  ["Também em Brasília-DF", "También en Brasilia-DF"],
+  ["Segunda a sexta, das 9h às 18h", "De lunes a viernes, de 9 a 18 h"],
   ["Reputação no Reclame Aqui", "Reputación en Reclame Aqui"],
   ["Todos os direitos reservados.", "Todos los derechos reservados."],
   ["Desenvolvido por", "Desarrollado por"],
   ["Fotos e vídeo:", "Fotos y video:"],
-  [">Ponte Rio Negro</a>", ">Puente Río Negro</a>"],
-  [">carimbo de passaporte</a>", ">sello de pasaporte</a>"],
   [">passaporte e cartão de embarque</a>", ">pasaporte y tarjeta de embarque</a>"],
   [">nuvens pela janela do avião</a>", ">nubes desde la ventana del avión</a>"],
+  ["Fonte Chillax, da Indian Type Foundry, via Fontshare.", "Fuente Chillax, de Indian Type Foundry, vía Fontshare."],
+  ["Voltar ao início", "Volver al inicio"],
+
+  // Nomes curtos dos serviços (ladrilhos, botões da conversa, títulos das
+  // fichas, opções do cupom, rodapé): por último, depois das frases que os
+  // contêm.
+  [">Visto americano<", ">Visa americana<"],
+  [">Visto canadense<", ">Visa canadiense<"],
+  [">Visto chinês<", ">Visa china<"],
+  [">Visto peruano<", ">Visa peruana<"],
+  [">Passaporte<", ">Pasaporte<"],
+  [">Intercâmbio<", ">Intercambio<"],
 ];
 
 const escapar = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 const comoRegex = (s) => new RegExp(escapar(s).replace(/ +/g, "\\s+"), "g");
 
-for (const [pt, es] of ESTRUTURA) h = h.split(pt).join(es);
+for (const [pt, es] of ESTRUTURA) {
+  if (!h.includes(pt)) console.log("Estrutura sem correspondência: " + pt.slice(0, 80));
+  h = h.split(pt).join(es);
+}
 
 const naoUsados = [];
 for (const [pt, es] of TEXTOS) {
@@ -412,38 +391,11 @@ for (const [pt, es] of TEXTOS) {
   h = h.replace(comoRegex(pt), es);
 }
 
-// Linhas MRZ (SVG class="mrz ..."): troca palavra por palavra e completa
-// de novo até 44 caracteres, como no documento de verdade.
-const MRZ = {
-  VISTOS: "VISAS", VISTO: "VISA", PASSAPORTE: "PASAPORTE", SEM: "SIN", JUROS: "INTERESES",
-  AMERICANO: "AMERICANA", CANADENSE: "CANADIENSE", CHINES: "CHINA", PERUANO: "PERUANA",
-  BRASILEIRO: "BRASILENO", EMISSAO: "EMISION", ESTUDO: "ESTUDIO", TRABALHO: "TRABAJO",
-  PORTAO: "PUERTA", AGORA: "AHORA", ONLINE: "ENLINEA",
-};
-h = h.replace(/(<svg class="mrz[^"]*"[^>]*>)([\s\S]*?)(<\/svg>)/g, (m, ini, meio, fim) =>
-  ini +
-  meio.replace(/>([A-Z0-9&;lt]+)<\/text>/g, (t, linha) => {
-    const bruta = linha.replace(/&lt;/g, "<");
-    const nova = bruta
-      .split(/(<+)/)
-      // "USAVISTO": o código do país vem colado na primeira palavra
-      .map((p) => MRZ[p] || (p.length > 3 && MRZ[p.slice(3)] ? p.slice(0, 3) + MRZ[p.slice(3)] : p))
-      .join("")
-      .padEnd(44, "<")
-      .slice(0, 44);
-    return ">" + nova.replace(/</g, "&lt;") + "</text>";
-  }) +
-  fim
-);
-
-// Nomes de serviço por último (títulos, alt, legendas, faixa, rodapé).
-for (const [pt, es] of SERVICOS) h = h.split(pt).join(es);
-
 // Aviso no topo: este arquivo é gerado.
 h = h.replace(
   "<head>",
   `<head>
-  <!-- ARQUIVO GERADO — não edite à mão. É a versão em espanhol do
+  <!-- ARQUIVO GERADO, não edite à mão. É a versão em espanhol do
        index.html, gerada por "node scripts/gerar-es.mjs". Mude o index.html
        (e, se preciso, as traduções no script) e rode o script de novo. -->`
 );
@@ -460,14 +412,14 @@ const visivel = h
   .replace(/<!--[\s\S]*?-->/g, "")
   .replace(/<script[\s\S]*?<\/script>/g, "")
   .replace(/<svg[\s\S]*?<\/svg>/g, "")
-  .replace(/<a [^>]*lang="pt-BR"[^>]*>[\s\S]*?<\/a>/g, "") // links pro português, de propósito
+  .replace(/<a [^>]*lang="pt-BR"[^>]*>[\s\S]*?<\/a>/g, "") // links para o português, de propósito
   .replace(/<[^>]+>/g, "\n");
 const suspeitos = visivel
   .split("\n")
   .map((l) => l.trim())
   // Marcas típicas do português que não existem em espanhol (\b não serve
-  // pra palavras acentuadas, por isso os espaços explícitos).
-  .filter((l) => /ção|ções|ã|õ|você| não | do | da | em | é | para o /i.test(` ${l} `));
+  // para palavras acentuadas, por isso os espaços explícitos).
+  .filter((l) => /ção|ções|ã|õ|você| não | do | da | em | é | para o | ou | com | pelo | seu | sua /i.test(` ${l} `));
 if (suspeitos.length) {
   console.log("Trechos que parecem português no es.html:");
   for (const s of [...new Set(suspeitos)]) console.log("  - " + s.slice(0, 100));

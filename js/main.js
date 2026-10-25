@@ -1,14 +1,14 @@
 /* ==========================================================================
-   AMAZON VISTO — JAVASCRIPT
+   AMAZON VISTO: JAVASCRIPT
    ==========================================================================
    JS puro, sem dependências. Cada responsabilidade numa função separada:
-   se uma falhar, o resto do site continua funcionando — e nada fica
+   se uma falhar, o resto do site continua funcionando: e nada fica
    escondido sem JS (o conteúdo só é escondido para entrar quando a classe
-   "js" está no <html>, que este arquivo e o <head> colocam).
+   "js" está no <html>, que o <head> coloca).
 
-   O momento da página é o arquivo de pastas ("Escolha o seu destino"):
-   tocar numa aba abre a pasta do destino ali mesmo, a ficha desliza para
-   fora e o carimbo bate na foto.
+   O momento da página é a conversa da capa: escolher o caso faz a Amazon
+   Visto "digitar" e responder, o tique duplo da mensagem do visitante fica "visto"
+   e a mensagem sai pronta para o WhatsApp.
    ========================================================================== */
 
 document.documentElement.classList.add("js");
@@ -17,21 +17,32 @@ document.addEventListener("DOMContentLoaded", () => {
   ativarMenu();
   ativarEntradas();
   atualizarAnoDoRodape();
-  ativarDestinos();
-  ativarStatus();
-  ativarRelogios();
+  ativarConversa();
+  ativarServicos();
+  ativarDuvidas();
+  ativarCupom();
+  ativarContadores();
+  ativarObturador();
+  ativarVideos();
   ativarBotaoFlutuante();
   ativarFotosSuaves();
-  ativarContadores();
-  ativarPainelDeDestino();
-  ativarVideos();
 });
 
 const prefereMenosMovimento = () => window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-// Roda "fn" na virada de cada minuto do relógio (não a cada 60s a partir de
-// agora, que atrasaria até um minuto) e de novo quando a aba volta a ficar
-// visível, já que o navegador congela os timers de abas escondidas.
+// Hora de Manaus agora: dia da semana (0 = domingo), hora, minuto e "HH:MM".
+function horaDeManaus() {
+  const partes = Object.fromEntries(
+    new Intl.DateTimeFormat("en-US", { timeZone: "America/Manaus", weekday: "short", hour: "2-digit", minute: "2-digit", hourCycle: "h23" })
+      .formatToParts(new Date())
+      .map((p) => [p.type, p.value])
+  );
+  const dia = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].indexOf(partes.weekday);
+  return { dia, hora: Number(partes.hour), minuto: Number(partes.minute), texto: `${partes.hour}:${partes.minute}` };
+}
+
+// Roda "fn" na virada de cada minuto do relógio e de novo quando a aba volta
+// a ficar visível (o navegador congela os timers de abas escondidas).
 function aCadaMinuto(fn) {
   const agendar = () => setTimeout(() => {
     fn();
@@ -43,30 +54,31 @@ function aCadaMinuto(fn) {
   });
 }
 
+function abrirWhatsApp(numero, texto) {
+  window.open(`https://wa.me/${numero}?text=${encodeURIComponent(texto)}`, "_blank", "noopener");
+}
+
 /* --------------------------------------------------------------------------
-   1. MENU
-   O botão "Menu" abre o painel com as seções (em qualquer largura). Fecha
-   ao clicar num link ou com Esc. Os rótulos vêm do HTML (data-rotulo-*)
-   pra versão em espanhol não ficar com "Abrir menu" em português.
+   1. MENU (celular)
+   O botão "Menu" abre o painel com as seções. Fecha ao tocar num link ou
+   com Esc. Os rótulos vêm do HTML (data-rotulo-*), para a versão em
+   espanhol não ficar com "Abrir menu" em português.
    -------------------------------------------------------------------------- */
 function ativarMenu() {
-  const botao = document.getElementById("botaoMenuMobile");
-  const navegacao = document.getElementById("navegacao");
-  if (!botao || !navegacao) return;
-
-  const rotuloAbrir = botao.dataset.rotuloAbrir || "Abrir menu";
-  const rotuloFechar = botao.dataset.rotuloFechar || "Fechar menu";
+  const botao = document.getElementById("botaoMenu");
+  const painel = document.getElementById("navegacao");
+  if (!botao || !painel) return;
 
   const definir = (aberto) => {
-    navegacao.classList.toggle("navegacao--aberta", aberto);
+    painel.classList.toggle("e-aberta", aberto);
     botao.setAttribute("aria-expanded", String(aberto));
-    botao.setAttribute("aria-label", aberto ? rotuloFechar : rotuloAbrir);
+    botao.setAttribute("aria-label", aberto ? botao.dataset.rotuloFechar : botao.dataset.rotuloAbrir);
   };
 
-  botao.addEventListener("click", () => definir(!navegacao.classList.contains("navegacao--aberta")));
-  navegacao.querySelectorAll("a").forEach((link) => link.addEventListener("click", () => definir(false)));
+  botao.addEventListener("click", () => definir(!painel.classList.contains("e-aberta")));
+  painel.querySelectorAll("a").forEach((link) => link.addEventListener("click", () => definir(false)));
   document.addEventListener("keydown", (evento) => {
-    if (evento.key === "Escape" && navegacao.classList.contains("navegacao--aberta")) {
+    if (evento.key === "Escape" && painel.classList.contains("e-aberta")) {
       definir(false);
       botao.focus();
     }
@@ -75,9 +87,8 @@ function ativarMenu() {
 
 /* --------------------------------------------------------------------------
    2. ENTRADA AO ROLAR
-   Cada ".entrada" sobe e aparece uma vez quando entra na tela. Dentro da
-   mesma seção, as partes entram em cascata (título, texto, figura) com
-   75ms entre uma e outra.
+   Cada ".entrada" sobe e aparece uma vez quando entra na tela; dentro da
+   mesma seção, as partes entram em cascata (75ms entre uma e outra).
    -------------------------------------------------------------------------- */
 function ativarEntradas() {
   const elementos = document.querySelectorAll(".entrada");
@@ -88,7 +99,6 @@ function ativarEntradas() {
     return;
   }
 
-  // Atraso de cada parte = posição dela entre as ".entrada" da seção.
   document.querySelectorAll("section, footer").forEach((secao) => {
     secao.querySelectorAll(".entrada").forEach((el, i) => {
       el.style.transitionDelay = `${Math.min(i * 0.075, 0.45)}s`;
@@ -118,254 +128,213 @@ function atualizarAnoDoRodape() {
 }
 
 /* --------------------------------------------------------------------------
-   4. ARQUIVO DE PASTAS ("Escolha o seu destino")
-   Cada aba é um destino. Escolher (clique, toque ou setas do teclado) abre
-   a pasta dele ali mesmo: a aba sobe, a capa da pasta tomba para a frente,
-   a ficha de papel desliza para fora e o carimbo do destino bate na foto.
-   A primeira pasta abre sozinha quando o arquivo aparece na tela. Abas
-   acessíveis no padrão WAI-ARIA (setas, Home/End, tabindex móvel). Sem JS,
-   todas as pastas ficam abertas.
+   4. A CONVERSA DA CAPA
+   - Presença: "online agora" no horário de atendimento (segunda a sexta,
+     9h às 18h, hora de Manaus); fora dele, "visto por último … às 18:00".
+     Os textos vêm dos data-* do HTML (a versão em espanhol traduz lá).
+   - As mensagens mostram a hora de Manaus.
+   - Escolher um caso: a mensagem do visitante sai com o tique duplo, a Amazon Visto
+     "digita", o tique duplo fica "visto" e chega a resposta daquele caso; o texto
+     do compositor vira a mensagem pronta para o WhatsApp.
+   - Enviar abre o WhatsApp com o texto do compositor (sem JS, o formulário
+     faz o mesmo sozinho).
    -------------------------------------------------------------------------- */
-function ativarDestinos() {
-  const raiz = document.getElementById("destinos");
-  if (!raiz) return;
+function ativarConversa() {
+  const conversa = document.getElementById("conversa");
+  if (!conversa || !window.Intl) return;
 
-  const abas = Array.from(raiz.querySelectorAll('[role="tab"]'));
-  if (!abas.length) return;
+  const presenca = document.getElementById("presenca");
+  const lista = document.getElementById("mensagens");
+  const compositor = document.getElementById("compositor");
+  const campo = document.getElementById("mensagem");
+  const respostas = Array.from(conversa.querySelectorAll(".resposta"));
+  const roteiro = conversa.querySelector(".conversa__roteiro");
+  const digitando = roteiro ? roteiro.querySelector("[data-digitando]") : null;
+  const iconeVisto = '<svg aria-hidden="true" focusable="false"><use href="#visto" /></svg>';
 
-  // "puxando": a cerimônia inteira (capa, ficha, carimbo), só na primeira
-  // vez. "trocando": a troca rápida de aba (~0,3s). Sem modo: instantâneo,
-  // para as setas do teclado, que a pessoa aperta em sequência.
-  const animar = (pasta, modo) => {
-    pasta.classList.remove("puxando", "trocando");
-    if (!modo || prefereMenosMovimento()) return;
-    void pasta.offsetWidth; // reinicia a animação
-    pasta.classList.add(modo);
-  };
-
-  let primeiraVez = true;
-  let observador = null;
-
-  const abrir = (aba, modo, focar) => {
-    if (aba.getAttribute("aria-selected") === "true" && !focar) return;
-    primeiraVez = false;
-    if (observador) observador.disconnect();
-    abas.forEach((a) => {
-      const ativa = a === aba;
-      a.setAttribute("aria-selected", String(ativa));
-      a.tabIndex = ativa ? 0 : -1;
-      const pasta = document.getElementById(a.getAttribute("aria-controls"));
-      if (!pasta) return;
-      pasta.classList.toggle("e-aberta", ativa);
-      animar(pasta, ativa ? modo : null);
-    });
-    if (focar) aba.focus();
-  };
-
-  if ("IntersectionObserver" in window) {
-    observador = new IntersectionObserver(
-      ([entrada]) => {
-        if (!entrada.isIntersecting || !primeiraVez) return;
-        const aberta = raiz.querySelector(".pasta-servico.e-aberta");
-        if (aberta) animar(aberta, "puxando");
-        primeiraVez = false;
-        observador.disconnect();
-      },
-      { threshold: 0.35 }
-    );
-    observador.observe(raiz.querySelector(".arquivo__pastas") || raiz);
-  }
-
-  abas.forEach((aba, i) => {
-    aba.addEventListener("click", () => abrir(aba, "trocando", false));
-    aba.addEventListener("keydown", (evento) => {
-      const mapa = { ArrowRight: i + 1, ArrowDown: i + 1, ArrowLeft: i - 1, ArrowUp: i - 1, Home: 0, End: abas.length - 1 };
-      if (!(evento.key in mapa)) return;
-      evento.preventDefault();
-      abrir(abas[(mapa[evento.key] + abas.length) % abas.length], null, true);
-    });
-  });
-}
-
-/* --------------------------------------------------------------------------
-   4b. STATUS DO ATENDIMENTO NA CAPA
-   "Aberto agora" ou "Fechado agora", pela hora de Manaus, com o horário
-   escrito no HTML (segunda a sexta, 9h às 18h). Atualiza a cada minuto.
-   Os textos vêm de data-aberto / data-fechado (a versão em espanhol traduz
-   lá). Sem JS, fica a frase fixa com o horário.
-   -------------------------------------------------------------------------- */
-function ativarStatus() {
-  const status = document.getElementById("statusAtendimento");
-  if (!status || !window.Intl) return;
-
-  const partes = new Intl.DateTimeFormat("pt-BR", {
-    timeZone: "America/Manaus",
-    weekday: "short",
-    hour: "2-digit",
-    minute: "2-digit",
-    hourCycle: "h23",
-  });
-  const fixo = status.textContent.trim();
-
-  const atualizar = () => {
-    const p = Object.fromEntries(partes.formatToParts(new Date()).map((x) => [x.type, x.value]));
-    const dia = p.weekday.toLowerCase().replace(".", "");
-    const util = !["sáb", "dom"].includes(dia);
-    const hora = Number(p.hour) + Number(p.minute) / 60;
-    const aberto = util && hora >= 9 && hora < 18;
-    status.classList.toggle("e-aberto", aberto);
-    // A hora de Manaus está no painel de horários; aqui só o estado.
-    status.textContent = `${aberto ? status.dataset.aberto : status.dataset.fechado} · ${fixo}`;
-  };
-
-  atualizar();
-  aCadaMinuto(atualizar);
-}
-
-/* --------------------------------------------------------------------------
-   4c. PAINEL DE HORÁRIOS DA CAPA
-   Como o painel de embarque: a hora de Manaus em destaque, com a data, e
-   cada destino em uma linha com a hora local e a diferença para Manaus
-   (calculada agora, então respeita horário de verão). Ao aparecer, as
-   plaquetas giram até assentar; depois só vira a que mudou, na virada do
-   minuto. Sem JS (ou sem Intl), o painel continua escondido.
-   -------------------------------------------------------------------------- */
-function ativarRelogios() {
-  const painel = document.getElementById("relogios");
-  if (!painel || !window.Intl) return;
-
-  const idioma = document.documentElement.lang || "pt-BR";
-  const origem = "America/Manaus";
-  const mesmaHora = painel.dataset.mesma || "mesma hora";
-  const numero = new Intl.NumberFormat(idioma, { maximumFractionDigits: 1 });
-
-  // Minutos "de parede" num fuso, para comparar dois fusos no mesmo instante.
-  const minutosNoFuso = (fuso, data) => {
-    const p = Object.fromEntries(
-      new Intl.DateTimeFormat("en-US", { timeZone: fuso, hourCycle: "h23", year: "numeric", month: "numeric", day: "numeric", hour: "numeric", minute: "numeric" })
-        .formatToParts(data)
-        .map((x) => [x.type, x.value])
-    );
-    return Date.UTC(+p.year, +p.month - 1, +p.day, +p.hour, +p.minute) / 60000;
-  };
-  const diferenca = (fuso, data) => {
-    const horas = (minutosNoFuso(fuso, data) - minutosNoFuso(origem, data)) / 60;
-    if (!horas) return mesmaHora;
-    return `${horas > 0 ? "+" : "−"}${numero.format(Math.abs(horas))} h`;
-  };
-
-  let formatoData = null;
-  try {
-    formatoData = new Intl.DateTimeFormat(idioma, { timeZone: origem, weekday: "long", day: "numeric", month: "long" });
-  } catch {}
-  const data = painel.querySelector(".relogios__data");
-
-  const linhas = Array.from(painel.querySelectorAll("[data-fuso]")).map((linha) => {
-    const fuso = linha.dataset.fuso;
-    let formato;
-    try {
-      formato = new Intl.DateTimeFormat("pt-BR", { timeZone: fuso, hour: "2-digit", minute: "2-digit", hourCycle: "h23" });
-    } catch {
-      return null;
-    }
-    const hora = linha.querySelector(".relogios__hora");
-    hora.textContent = "";
-    // 5 plaquetas: H H : M M
-    const placas = Array.from({ length: 5 }, (_, i) => {
-      const placa = document.createElement("span");
-      placa.className = i === 2 ? "placa relogios__sep" : "placa";
-      // pisca alinhado ao segundo de verdade, não ao carregamento da página
-      if (i === 2) placa.style.animationDelay = `-${Date.now() % 1000}ms`;
-      placa.setAttribute("aria-hidden", "true");
-      hora.appendChild(placa);
-      return placa;
-    });
-    const leitura = document.createElement("span");
-    leitura.className = "visualmente-oculto";
-    hora.appendChild(leitura);
-    return { fuso, formato, placas, leitura, rotuloFuso: linha.querySelector(".relogios__fuso") };
-  }).filter(Boolean);
-  if (!linhas.length) return;
-
-  const virar = (placa, texto, atraso) => {
-    if (placa.textContent === texto) return;
-    if (prefereMenosMovimento()) {
-      placa.textContent = texto;
+  const atualizarPresenca = () => {
+    if (!presenca) return;
+    const agora = horaDeManaus();
+    const util = agora.dia >= 1 && agora.dia <= 5;
+    if (util && agora.hora >= 9 && agora.hora < 18) {
+      presenca.textContent = presenca.dataset.online;
       return;
     }
-    setTimeout(() => {
-      placa.classList.remove("virando");
-      void placa.offsetWidth;
-      placa.classList.add("virando");
-      setTimeout(() => (placa.textContent = texto), 170);
-    }, atraso);
+    // Último dia de atendimento: hoje (depois das 18h), ontem ou sexta.
+    let dia = presenca.dataset.ontem;
+    if (util && agora.hora >= 18) dia = presenca.dataset.hoje;
+    else if (agora.dia === 0 || (agora.dia === 1 && agora.hora < 9)) dia = presenca.dataset.sexta;
+    presenca.textContent = presenca.dataset.visto.replace("{dia}", dia);
   };
 
-  const atualizar = (assentar) => {
-    const agora = new Date();
-    if (data && formatoData) data.textContent = formatoData.format(agora);
-    linhas.forEach(({ fuso, formato, placas, leitura, rotuloFuso }, l) => {
-      const texto = formato.format(agora).replace(/\D/g, "").padStart(4, "0");
-      const chars = [texto[0], texto[1], ":", texto[2], texto[3]];
-      leitura.textContent = `${chars[0]}${chars[1]}:${chars[3]}${chars[4]}`;
-      if (rotuloFuso) rotuloFuso.textContent = diferenca(fuso, agora);
-      placas.forEach((placa, i) => {
-        if (i === 2) return void (placa.textContent = ":");
-        if (assentar && !prefereMenosMovimento()) {
-          // gira por alguns números antes de parar no certo, linha a linha
-          for (let k = 0; k < 3; k++) virar(placa, String((Number(chars[i]) + 7 + k * 3) % 10), l * 110 + i * 60 + k * 260);
-          setTimeout(() => virar(placa, chars[i], 0), l * 110 + i * 60 + 3 * 260);
-        } else {
-          virar(placa, chars[i], i * 80);
-        }
-      });
+  const carimbarHora = (el) => {
+    const hora = el.querySelector(".msg__hora");
+    if (hora && !hora.firstChild) hora.textContent = horaDeManaus().texto;
+  };
+
+  atualizarPresenca();
+  aCadaMinuto(atualizarPresenca);
+  lista.querySelectorAll(".msg").forEach(carimbarHora);
+
+  const novaMensagem = (classe, html) => {
+    const li = document.createElement("li");
+    li.className = `msg ${classe}`;
+    li.innerHTML = html;
+    if (!prefereMenosMovimento()) li.classList.add("chegando");
+    lista.appendChild(li);
+    return li;
+  };
+
+  let rodada = 0;
+  respostas.forEach((botao) => {
+    botao.setAttribute("aria-pressed", "false");
+    botao.addEventListener("click", () => {
+      const fala = roteiro && roteiro.querySelector(`[data-resposta="${botao.dataset.servico}"]`);
+      if (!fala) return;
+      const esta = ++rodada;
+
+      respostas.forEach((b) => b.setAttribute("aria-pressed", String(b === botao)));
+      // Fica só a saudação e a conversa desta escolha.
+      lista.querySelectorAll(".msg:not(:first-child)").forEach((m) => m.remove());
+
+      const hora = horaDeManaus().texto;
+      const minha = novaMensagem("msg--minha", `<p></p><span class="msg__hora">${hora} ${iconeVisto}</span>`);
+      minha.querySelector("p").textContent = botao.textContent.trim();
+      campo.value = fala.dataset.mensagem;
+
+      const responder = () => {
+        if (esta !== rodada) return;
+        minha.classList.add("e-vista");
+        lista.querySelectorAll(".msg--digitando").forEach((m) => m.remove());
+        const dela = novaMensagem("msg--deles", `<p></p><span class="msg__hora" aria-hidden="true">${hora}</span>`);
+        dela.querySelector("p").textContent = fala.textContent.trim();
+      };
+
+      if (prefereMenosMovimento()) {
+        responder();
+        return;
+      }
+      setTimeout(() => {
+        if (esta !== rodada) return;
+        minha.classList.add("e-vista");
+        const pontos = novaMensagem("msg--deles msg--digitando", "<p><span></span><span></span><span></span></p>");
+        pontos.setAttribute("aria-label", digitando ? digitando.textContent : "");
+        setTimeout(responder, 1100);
+      }, 450);
     });
+  });
+
+  if (compositor && campo) {
+    compositor.addEventListener("submit", (evento) => {
+      evento.preventDefault();
+      const texto = campo.value.trim();
+      if (!texto) {
+        campo.focus();
+        return;
+      }
+      abrirWhatsApp(compositor.dataset.whatsapp, texto);
+    });
+  }
+}
+
+/* --------------------------------------------------------------------------
+   5. SERVIÇOS: OS LADRILHOS ABREM A FICHA
+   Cada ladrilho é um link para a ficha do serviço (#visto-americano). Com
+   JS, só a ficha escolhida aparece: tocar num ladrilho troca a ficha (num
+   fade curto de 0,3s), marca o ladrilho e leva até ela. Links do rodapé e o
+   endereço na barra (#visto-canadense) abrem a ficha certa.
+   -------------------------------------------------------------------------- */
+function ativarServicos() {
+  const fichas = Array.from(document.querySelectorAll(".ficha"));
+  if (!fichas.length) return;
+  const ladrilhos = Array.from(document.querySelectorAll(".destino[data-servico]"));
+
+  const abrir = (id, { animar = true, rolar = false } = {}) => {
+    const alvo = fichas.find((f) => f.id === id) || fichas[0];
+    fichas.forEach((f) => {
+      const esta = f === alvo;
+      f.classList.toggle("e-aberta", esta);
+      f.classList.remove("trocando");
+    });
+    if (animar && !prefereMenosMovimento()) {
+      void alvo.offsetWidth; // reinicia a animação
+      alvo.classList.add("trocando");
+    }
+    ladrilhos.forEach((l) => l.setAttribute("aria-current", String(l.dataset.servico === alvo.id)));
+    // Trocar de ficha à mão mostra a foto já aberta (o obturador é só da
+    // primeira vez que a vitrine aparece ao rolar).
+    if (animar) alvo.querySelector(".obturador")?.classList.add("e-aberto");
+    if (rolar) alvo.scrollIntoView({ behavior: prefereMenosMovimento() ? "auto" : "smooth", block: "start" });
+    return alvo;
   };
 
-  painel.hidden = false;
-  atualizar(true);
-  aCadaMinuto(() => atualizar(false));
-}
+  const doEndereco = () => location.hash.slice(1);
+  abrir(doEndereco(), { animar: false });
 
-/* --------------------------------------------------------------------------
-   4d. BOTÃO FLUTUANTE DE WHATSAPP
-   Fica escondido enquanto a capa (que já tem o botão principal) está na
-   tela, e entra quando a pessoa começa a descer. Sem JS, aparece sempre.
-   -------------------------------------------------------------------------- */
-function ativarBotaoFlutuante() {
-  const botao = document.querySelector(".whatsapp-flutuante");
-  const capa = document.querySelector(".capa");
-  if (!botao || !capa || !("IntersectionObserver" in window)) return;
+  ladrilhos.forEach((ladrilho) => {
+    ladrilho.addEventListener("click", (evento) => {
+      evento.preventDefault();
+      const alvo = abrir(ladrilho.dataset.servico, { rolar: true });
+      history.replaceState(null, "", `#${alvo.id}`);
+    });
+  });
 
-  botao.classList.add("e-escondido");
-  new IntersectionObserver(([entrada]) => botao.classList.toggle("e-escondido", entrada.isIntersecting), {
-    rootMargin: "0px 0px -35% 0px",
-  }).observe(capa);
-}
-
-/* --------------------------------------------------------------------------
-   4e. FOTOS QUE CARREGAM DEPOIS
-   As fotos com loading="lazy" chegam num fade quando terminam de baixar,
-   em vez de aparecerem de repente. A classe "fotos-suaves" só entra aqui,
-   então se este arquivo não carregar nenhuma foto fica escondida.
-   -------------------------------------------------------------------------- */
-function ativarFotosSuaves() {
-  const fotos = document.querySelectorAll('img[loading="lazy"]');
-  if (!fotos.length || prefereMenosMovimento()) return;
-
-  document.documentElement.classList.add("fotos-suaves");
-  fotos.forEach((foto) => {
-    const marcar = () => foto.classList.add("carregou");
-    if (foto.complete) marcar();
-    else {
-      foto.addEventListener("load", marcar, { once: true });
-      foto.addEventListener("error", marcar, { once: true });
-    }
+  window.addEventListener("hashchange", () => {
+    if (fichas.some((f) => f.id === doEndereco())) abrir(doEndereco(), { rolar: true });
   });
 }
 
 /* --------------------------------------------------------------------------
-   5. CONTADOR (seguidores no Instagram)
+   6. DÚVIDAS: A CONVERSA DAS PERGUNTAS
+   Tocar numa pergunta (o balão do cliente) abre a resposta da Amazon Visto
+   e o tique duplo fica "visto". Uma aberta por vez; a primeira começa
+   aberta. Sem JS, todas aparecem.
+   -------------------------------------------------------------------------- */
+function ativarDuvidas() {
+  const abas = Array.from(document.querySelectorAll(".pergunta__balao"));
+  if (!abas.length) return;
+
+  const definir = (aba) => {
+    abas.forEach((a) => {
+      const aberta = a === aba;
+      a.setAttribute("aria-expanded", String(aberta));
+      const resposta = document.getElementById(a.getAttribute("aria-controls"));
+      if (resposta) resposta.hidden = !aberta;
+    });
+  };
+
+  definir(abas.find((a) => a.getAttribute("aria-expanded") === "true") || abas[0]);
+  abas.forEach((aba) =>
+    aba.addEventListener("click", () => definir(aba.getAttribute("aria-expanded") === "true" ? null : aba))
+  );
+}
+
+/* --------------------------------------------------------------------------
+   7. CUPOM DO CONTATO
+   Monta a mensagem com nome, cidade, serviço e situação (o modelo fica no
+   data-modelo do HTML) e abre o WhatsApp.
+   -------------------------------------------------------------------------- */
+function ativarCupom() {
+  const cupom = document.getElementById("cupom");
+  if (!cupom) return;
+
+  cupom.addEventListener("submit", (evento) => {
+    evento.preventDefault();
+    const valor = (nome) => (cupom.elements[nome] ? cupom.elements[nome].value.trim() : "");
+    const cidade = valor("cidade");
+    let texto = cupom.dataset.modelo;
+    if (!cidade) texto = texto.replace(/,[^,{]*\{cidade\}/, "");
+    texto = texto
+      .replace("{nome}", valor("nome"))
+      .replace("{cidade}", cidade)
+      .replace("{servico}", valor("servico"))
+      .replace("{situacao}", valor("situacao"));
+    abrirWhatsApp(cupom.dataset.whatsapp, texto);
+  });
+}
+
+/* --------------------------------------------------------------------------
+   8. CONTADOR (seguidores no Instagram)
    Conta de 0 até o valor escrito no HTML, uma vez, quando entra na tela.
    O texto no HTML já é o valor final, então sem JS aparece certo.
    -------------------------------------------------------------------------- */
@@ -395,7 +364,7 @@ function contarAte(elemento) {
   const final = parseFloat(numero[1].replace(/\./g, "").replace(",", "."));
   if (Number.isNaN(final)) return;
 
-  const formato = new Intl.NumberFormat("pt-BR", {
+  const formato = new Intl.NumberFormat(document.documentElement.lang || "pt-BR", {
     minimumFractionDigits: temDecimal ? 1 : 0,
     maximumFractionDigits: temDecimal ? 1 : 0,
   });
@@ -409,56 +378,35 @@ function contarAte(elemento) {
 }
 
 /* --------------------------------------------------------------------------
-   6. PAINEL DE AEROPORTO NO CARTÃO DE EMBARQUE
-   O código do destino troca a cada poucos segundos (JFK → YYZ → PEK →
-   LIM), virando letra por letra. Destinos e cidades vêm do HTML
-   (data-destinos="JFK:Nova York|..."). Só gira enquanto está na tela.
+   9. OBTURADOR
+   A foto-vitrine (a ficha do visto americano) abre de baixo para cima uma
+   vez, quando aparece na tela. Observa a ficha, não a foto: um elemento
+   recortado por clip-path não conta como visível.
    -------------------------------------------------------------------------- */
-function ativarPainelDeDestino() {
-  const painel = document.getElementById("painelDestino");
-  const cidade = document.getElementById("cidadeDestino");
-  if (!painel || !cidade || !("IntersectionObserver" in window) || prefereMenosMovimento()) return;
-
-  const destinos = (painel.dataset.destinos || "")
-    .split("|")
-    .map((par) => par.split(":"))
-    .filter((par) => par.length === 2);
-  const letras = painel.querySelectorAll("span");
-  if (destinos.length < 2 || !letras.length) return;
-
-  let atual = 0;
-  const trocar = () => {
-    atual = (atual + 1) % destinos.length;
-    const [codigo, nome] = destinos[atual];
-    letras.forEach((letra, i) => {
-      setTimeout(() => {
-        letra.classList.remove("virando");
-        void letra.offsetWidth;
-        letra.classList.add("virando");
-        setTimeout(() => (letra.textContent = codigo[i] || ""), 170);
-      }, i * 110);
-    });
-    cidade.style.opacity = "0";
-    setTimeout(() => {
-      cidade.textContent = nome;
-      cidade.style.opacity = "1";
-    }, 320);
-  };
-
-  let intervalo = null;
-  new IntersectionObserver(([entrada]) => {
-    if (entrada.isIntersecting && !intervalo) intervalo = setInterval(trocar, 2800);
-    else if (!entrada.isIntersecting && intervalo) {
-      clearInterval(intervalo);
-      intervalo = null;
-    }
-  }).observe(painel);
+function ativarObturador() {
+  const fotos = document.querySelectorAll(".obturador");
+  if (!fotos.length) return;
+  if (prefereMenosMovimento() || !("IntersectionObserver" in window)) {
+    fotos.forEach((f) => f.classList.add("e-aberto"));
+    return;
+  }
+  const observador = new IntersectionObserver(
+    (entradas, obs) => {
+      entradas.forEach((entrada) => {
+        if (!entrada.isIntersecting) return;
+        entrada.target.querySelector(".obturador")?.classList.add("e-aberto");
+        obs.unobserve(entrada.target);
+      });
+    },
+    { threshold: 0.2 }
+  );
+  fotos.forEach((f) => observador.observe(f.parentElement));
 }
 
 /* --------------------------------------------------------------------------
-   7. VÍDEO (nuvens pela janela do avião)
-   Loop mudo que só toca enquanto está na tela; quem prefere menos
-   movimento vê só o quadro parado (poster).
+   10. VÍDEO (as nuvens do contato)
+   Loop mudo que só toca enquanto está na tela; quem prefere menos movimento
+   vê só o quadro parado.
    -------------------------------------------------------------------------- */
 function ativarVideos() {
   const videos = document.querySelectorAll("video[muted]");
@@ -476,10 +424,45 @@ function ativarVideos() {
         }
       });
     },
-    { threshold: 0.25 }
+    { threshold: 0.15 }
   );
   videos.forEach((v) => {
     v.muted = true;
     observador.observe(v);
+  });
+}
+
+/* --------------------------------------------------------------------------
+   11. BOTÃO FLUTUANTE DE WHATSAPP
+   Escondido enquanto a capa (que já tem a conversa) está na tela.
+   -------------------------------------------------------------------------- */
+function ativarBotaoFlutuante() {
+  const botao = document.querySelector(".flutuante");
+  const capa = document.querySelector(".capa");
+  if (!botao || !capa || !("IntersectionObserver" in window)) return;
+
+  botao.classList.add("e-escondido");
+  new IntersectionObserver(([entrada]) => botao.classList.toggle("e-escondido", entrada.isIntersecting), {
+    rootMargin: "0px 0px -35% 0px",
+  }).observe(capa);
+}
+
+/* --------------------------------------------------------------------------
+   12. FOTOS QUE CARREGAM DEPOIS
+   As fotos com loading="lazy" chegam num fade. A classe "fotos-suaves" só
+   entra aqui, então se este arquivo não carregar nenhuma foto fica escondida.
+   -------------------------------------------------------------------------- */
+function ativarFotosSuaves() {
+  const fotos = document.querySelectorAll('img[loading="lazy"]');
+  if (!fotos.length || prefereMenosMovimento()) return;
+
+  document.documentElement.classList.add("fotos-suaves");
+  fotos.forEach((foto) => {
+    const marcar = () => foto.classList.add("carregou");
+    if (foto.complete) marcar();
+    else {
+      foto.addEventListener("load", marcar, { once: true });
+      foto.addEventListener("error", marcar, { once: true });
+    }
   });
 }
