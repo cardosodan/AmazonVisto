@@ -37,14 +37,27 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@500;600;700;800&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..800;1,9..144,400..700&family=IBM+Plex+Mono:wght@500&family=Inter:wght@400;500;600;700&display=swap"
     rel="stylesheet"
   />
 
-  <link rel="stylesheet" href="css/style.css?v=22" />
+  <link rel="stylesheet" href="css/style.css?v=23" />
 </head>
 <body>
   <a class="pular-conteudo" href="#inicio">Pular para o conteúdo</a>
+
+  <!-- Filtro "tinta de carimbo": desgasta levemente as bordas dos carimbos
+       (selo do hero e faixa de reconhecimento), como tinta real no papel. -->
+  <svg width="0" height="0" style="position: absolute" aria-hidden="true" focusable="false">
+    <filter id="tintaCarimbo" x="-5%" y="-5%" width="110%" height="110%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="7" result="ruido" />
+      <feDisplacementMap in="SourceGraphic" in2="ruido" scale="2.2" result="tremido" />
+      <feComponentTransfer in="ruido" result="falhas">
+        <feFuncA type="discrete" tableValues="1 1 1 1 1 0.35 1 1" />
+      </feComponentTransfer>
+      <feComposite in="tremido" in2="falhas" operator="in" />
+    </filter>
+  </svg>
 
   <!-- ==========================================================================
        CABEÇALHO / MENU
@@ -100,6 +113,10 @@
       <div class="hero__foto" aria-hidden="true"></div>
       <div class="hero__aurora" aria-hidden="true"></div>
       <div class="hero__overlay" aria-hidden="true"></div>
+      <!-- Roseta guilhochê (padrão de segurança de passaporte/cédula) — gerada
+           em SVG (images/guilloche-roseta.svg) e usada como máscara, então a
+           cor vem do CSS. Decorativa. -->
+      <div class="hero__guilloche" aria-hidden="true"></div>
       <div class="container hero__grade">
         <div class="hero__conteudo reveal">
           <p class="hero__eyebrow">
@@ -107,7 +124,7 @@
             <span class="hero__eyebrow-typewriter" id="typewriterServico" aria-hidden="true"></span>
             <span class="visualmente-oculto">Visto Americano, Visto Canadense, Visto Chinês, Visto Peruano, Passaporte Brasileiro e Intercâmbio</span>
           </p>
-          <h1 class="hero__titulo" id="heroTitulo">Amazon Visto</h1>
+          <h1 class="hero__titulo" id="heroTitulo">Amazon <em>Visto</em></h1>
           <p class="hero__frase">
             Visto Americano, Canadense, Chinês, Peruano e Passaporte — sem sair de
             casa, parcelado em até 10x. Nunca foi tão fácil realizar a viagem dos
@@ -138,13 +155,13 @@
             <svg class="icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true">
               <path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round" />
             </svg>
-            Parcele em até <strong>10x sem juros</strong> no cartão
+            <span>Parcele em até <strong>10x sem juros</strong> no cartão</span>
           </p>
           <p class="hero__nota">
             <svg class="icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true">
               <path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round" />
             </svg>
-            <strong>Empresa do Ano 2025</strong> e Empresa Destaque 2026
+            <span><strong>Empresa do Ano 2025</strong> e Empresa Destaque 2026</span>
           </p>
         </div>
 
@@ -233,8 +250,7 @@
           />
         </div>
         <div class="sobre__texto reveal">
-          <p class="secao__eyebrow">Sobre a Amazon Visto</p>
-          <h2 class="secao__titulo texto-brilho">Líder de mercado no Norte do Brasil</h2>
+          <h2 class="secao__titulo">Líder de mercado no <em>Norte do Brasil</em></h2>
           <p>
             A Amazon Visto é referência em assessoria de vistos, passaporte e
             intercâmbio, com atendimento presencial em Manaus-AM e Brasília-DF,
@@ -248,16 +264,36 @@
           </p>
           <ul class="sobre__diferenciais">
             <li class="reveal">
-              <strong>Prêmios reconhecidos</strong>
-              <span>Empresa do Ano 2025 e Empresa Destaque 2026 — líder de mercado no Norte.</span>
+              <svg class="sobre__icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+                <circle cx="12" cy="9" r="6" />
+                <path d="M8.5 13.9 7 22l5-2.6 5 2.6-1.5-8.1" stroke-linejoin="round" />
+                <path d="m9.6 9 1.7 1.7 3.1-3.2" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+              <div>
+                <strong>Prêmios reconhecidos</strong>
+                <span>Empresa do Ano 2025 e Empresa Destaque 2026 — líder de mercado no Norte.</span>
+              </div>
             </li>
             <li class="reveal">
-              <strong>100% online</strong>
-              <span>Resolva tudo pelo WhatsApp, sem sair de casa e com total segurança dos seus dados.</span>
+              <svg class="sobre__icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+                <rect x="6" y="2.5" width="12" height="19" rx="2.5" />
+                <path d="M10.5 18.5h3" stroke-linecap="round" />
+                <path d="m9.5 10.5 1.8 1.8 3.2-3.3" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+              <div>
+                <strong>100% online</strong>
+                <span>Resolva tudo pelo WhatsApp, sem sair de casa e com total segurança dos seus dados.</span>
+              </div>
             </li>
             <li class="reveal">
-              <strong>Parcelamento facilitado</strong>
-              <span>Parcele em até 10x sem juros no cartão, em português ou español.</span>
+              <svg class="sobre__icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+                <rect x="2.5" y="5" width="19" height="14" rx="2.5" />
+                <path d="M2.5 9.5h19M6 15h4" stroke-linecap="round" />
+              </svg>
+              <div>
+                <strong>Parcelamento facilitado</strong>
+                <span>Parcele em até 10x sem juros no cartão, em português ou español.</span>
+              </div>
             </li>
           </ul>
         </div>
@@ -272,11 +308,17 @@
     <section class="secao processo" id="processo">
       <div class="container">
         <div class="secao__cabecalho reveal">
-          <p class="secao__eyebrow">Como funciona</p>
-          <h2 class="secao__titulo">Do primeiro contato à aprovação</h2>
+          <h2 class="secao__titulo">Do primeiro contato <em>à aprovação</em></h2>
           <p class="secao__subtitulo">Um processo claro, sem burocracia escondida.</p>
         </div>
 
+        <!-- O avião percorre a linha do processo conforme a rolagem (ver
+             main.js, "ativarLinhaDoProcesso") e cada passo "acende" quando
+             ele passa. Só desktop, onde os passos ficam em linha. -->
+        <div class="processo__percurso" id="percursoProcesso">
+        <svg class="processo__aviao" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path d="M21.5 15.2v-1.9l-8.1-5V3.4C13.4 2.6 12.8 2 12 2s-1.4.6-1.4 1.4v4.9l-8.1 5v1.9l8.1-2.5v4.9L8.6 19v1.5L12 19.6l3.4.9V19l-2-1.5v-4.9l8.1 2.6Z" />
+        </svg>
         <ol class="processo__lista">
           <li class="processo__passo reveal">
             <span class="processo__numero" aria-hidden="true">01</span>
@@ -299,30 +341,54 @@
             <p>Visto ou passaporte em mãos — prontos para a viagem que você planejou.</p>
           </li>
         </ol>
+        </div>
       </div>
     </section>
 
     <!-- ==========================================================================
-         NÚMEROS / RECONHECIMENTO — faixa escura entre o processo e Serviços,
-         quebra o branco da página e dá mais destaque aos prêmios/números
+         RECONHECIMENTO — faixa escura entre o processo e Serviços. Cada dado
+         vira um carimbo de passaporte (anel com texto em curva + valor no
+         centro), na mesma linguagem do selo "Visto aprovado" do hero. O
+         texto em curva é decorativo (aria-hidden); a legenda real fica no
+         .visualmente-oculto de cada carimbo.
          ========================================================================== -->
-    <section class="faixa-numeros">
+    <section class="faixa-numeros" aria-label="Reconhecimento">
       <div class="container faixa-numeros__grade">
-        <div class="faixa-numeros__item reveal">
-          <span class="faixa-numeros__valor texto-brilho texto-brilho--claro" data-contar>55,7 mil</span>
-          <span class="faixa-numeros__legenda">Seguidores no Instagram</span>
+        <div class="carimbo reveal">
+          <svg class="carimbo__anel" viewBox="0 0 200 200" aria-hidden="true">
+            <defs><path id="anelCarimbo1" d="M 30,100 a 70,70 0 1,1 140,0 a 70,70 0 1,1 -140,0" /></defs>
+            <circle cx="100" cy="100" r="94" /><circle cx="100" cy="100" r="56" />
+            <text><textPath href="#anelCarimbo1">SEGUIDORES • INSTAGRAM • @AMAZONVISTO •</textPath></text>
+          </svg>
+          <span class="carimbo__valor" data-contar>55,7 mil</span>
+          <span class="visualmente-oculto">seguidores no Instagram</span>
         </div>
-        <div class="faixa-numeros__item reveal">
-          <span class="faixa-numeros__valor texto-brilho texto-brilho--claro" data-contar>2025</span>
-          <span class="faixa-numeros__legenda">Prêmio Empresa do Ano</span>
+        <div class="carimbo carimbo--vermelho reveal">
+          <svg class="carimbo__anel" viewBox="0 0 200 200" aria-hidden="true">
+            <defs><path id="anelCarimbo2" d="M 30,100 a 70,70 0 1,1 140,0 a 70,70 0 1,1 -140,0" /></defs>
+            <circle cx="100" cy="100" r="94" /><circle cx="100" cy="100" r="56" />
+            <text><textPath href="#anelCarimbo2">PRÊMIO • EMPRESA DO ANO • PRÊMIO •</textPath></text>
+          </svg>
+          <span class="carimbo__valor">2025</span>
+          <span class="visualmente-oculto">Prêmio Empresa do Ano</span>
         </div>
-        <div class="faixa-numeros__item reveal">
-          <span class="faixa-numeros__valor texto-brilho texto-brilho--claro" data-contar>2026</span>
-          <span class="faixa-numeros__legenda">Empresa Destaque</span>
+        <div class="carimbo reveal">
+          <svg class="carimbo__anel" viewBox="0 0 200 200" aria-hidden="true">
+            <defs><path id="anelCarimbo3" d="M 30,100 a 70,70 0 1,1 140,0 a 70,70 0 1,1 -140,0" /></defs>
+            <circle cx="100" cy="100" r="94" /><circle cx="100" cy="100" r="56" />
+            <text><textPath href="#anelCarimbo3">EMPRESA DESTAQUE • EMPRESA DESTAQUE •</textPath></text>
+          </svg>
+          <span class="carimbo__valor">2026</span>
+          <span class="visualmente-oculto">Empresa Destaque</span>
         </div>
-        <div class="faixa-numeros__item reveal">
-          <span class="faixa-numeros__valor texto-brilho texto-brilho--claro" data-contar>10x</span>
-          <span class="faixa-numeros__legenda">Parcelamento sem juros</span>
+        <div class="carimbo carimbo--vermelho reveal">
+          <svg class="carimbo__anel" viewBox="0 0 200 200" aria-hidden="true">
+            <defs><path id="anelCarimbo4" d="M 30,100 a 70,70 0 1,1 140,0 a 70,70 0 1,1 -140,0" /></defs>
+            <circle cx="100" cy="100" r="94" /><circle cx="100" cy="100" r="56" />
+            <text><textPath href="#anelCarimbo4">PARCELAMENTO • SEM JUROS • NO CARTÃO •</textPath></text>
+          </svg>
+          <span class="carimbo__valor">10x</span>
+          <span class="visualmente-oculto">Parcelamento sem juros</span>
         </div>
       </div>
     </section>
@@ -333,8 +399,7 @@
     <section class="secao servicos-scroll" id="servicos">
       <div class="container">
         <div class="secao__cabecalho reveal">
-          <p class="secao__eyebrow">O que oferecemos</p>
-          <h2 class="secao__titulo">Nossos serviços</h2>
+          <h2 class="secao__titulo">Nossos <em>serviços</em></h2>
           <p class="secao__subtitulo">
             Assessoria completa, do primeiro passo até a aprovação — arraste para o lado para ver todos.
           </p>
@@ -351,6 +416,10 @@
             <div class="cartao-produto__corpo">
               <h3>Visto Americano</h3>
               <p>Novo visto ou renovação, para turismo ou negócios — sem sair de casa.</p>
+              <a class="cartao-produto__cta" href="https://wa.me/5592981265897?text=Ol%C3%A1!%20Vim%20pelo%20site%20e%20gostaria%20de%20mais%20informa%C3%A7%C3%B5es%20sobre%20Visto%20Americano." target="_blank" rel="noopener">
+                Consultar<span class="visualmente-oculto"> Visto Americano</span>
+                <svg class="icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round" /></svg>
+              </a>
             </div>
           </article>
 
@@ -361,6 +430,10 @@
             <div class="cartao-produto__corpo">
               <h3>Visto Canadense</h3>
               <p>Visto de turista para o Canadá, com assessoria completa do início ao fim.</p>
+              <a class="cartao-produto__cta" href="https://wa.me/5592981265897?text=Ol%C3%A1!%20Vim%20pelo%20site%20e%20gostaria%20de%20mais%20informa%C3%A7%C3%B5es%20sobre%20Visto%20Canadense." target="_blank" rel="noopener">
+                Consultar<span class="visualmente-oculto"> Visto Canadense</span>
+                <svg class="icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round" /></svg>
+              </a>
             </div>
           </article>
 
@@ -371,6 +444,10 @@
             <div class="cartao-produto__corpo">
               <h3>Visto Chinês</h3>
               <p>Turismo e negócios na China, com parcelamento em até 10x sem juros.</p>
+              <a class="cartao-produto__cta" href="https://wa.me/5592981265897?text=Ol%C3%A1!%20Vim%20pelo%20site%20e%20gostaria%20de%20mais%20informa%C3%A7%C3%B5es%20sobre%20Visto%20Chin%C3%AAs." target="_blank" rel="noopener">
+                Consultar<span class="visualmente-oculto"> Visto Chinês</span>
+                <svg class="icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round" /></svg>
+              </a>
             </div>
           </article>
 
@@ -381,6 +458,10 @@
             <div class="cartao-produto__corpo">
               <h3>Visto Peruano</h3>
               <p>Assessoria para visto de entrada no Peru, com atendimento em português e español.</p>
+              <a class="cartao-produto__cta" href="https://wa.me/5592981265897?text=Ol%C3%A1!%20Vim%20pelo%20site%20e%20gostaria%20de%20mais%20informa%C3%A7%C3%B5es%20sobre%20Visto%20Peruano." target="_blank" rel="noopener">
+                Consultar<span class="visualmente-oculto"> Visto Peruano</span>
+                <svg class="icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round" /></svg>
+              </a>
             </div>
           </article>
 
@@ -391,6 +472,10 @@
             <div class="cartao-produto__corpo">
               <h3>Passaporte Brasileiro</h3>
               <p>Emissão e renovação pelo WhatsApp — zero burocracia, rapidez e comodidade.</p>
+              <a class="cartao-produto__cta" href="https://wa.me/5592981265897?text=Ol%C3%A1!%20Vim%20pelo%20site%20e%20gostaria%20de%20mais%20informa%C3%A7%C3%B5es%20sobre%20Passaporte%20Brasileiro." target="_blank" rel="noopener">
+                Consultar<span class="visualmente-oculto"> Passaporte Brasileiro</span>
+                <svg class="icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round" /></svg>
+              </a>
             </div>
           </article>
 
@@ -401,6 +486,10 @@
             <div class="cartao-produto__corpo">
               <h3>Intercâmbio: Estudo e Trabalho</h3>
               <p>Orientação completa para quem quer estudar ou trabalhar fora do Brasil.</p>
+              <a class="cartao-produto__cta" href="https://wa.me/5592981265897?text=Ol%C3%A1!%20Vim%20pelo%20site%20e%20gostaria%20de%20mais%20informa%C3%A7%C3%B5es%20sobre%20Interc%C3%A2mbio%3A%20Estudo%20e%20Trabalho." target="_blank" rel="noopener">
+                Consultar<span class="visualmente-oculto"> Intercâmbio: Estudo e Trabalho</span>
+                <svg class="icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round" /></svg>
+              </a>
             </div>
           </article>
 
@@ -415,6 +504,10 @@
             <div class="cartao-produto__corpo">
               <h3>TROCAR: Nome do serviço 7</h3>
               <p>TROCAR: descrição curta sobre esse serviço.</p>
+              <a class="cartao-produto__cta" href="https://wa.me/5592981265897?text=Ol%C3%A1!%20Vim%20pelo%20site%20e%20gostaria%20de%20mais%20informa%C3%A7%C3%B5es%20sobre%20os%20servi%C3%A7os." target="_blank" rel="noopener">
+                Consultar
+                <svg class="icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round" /></svg>
+              </a>
             </div>
           </article>
 
@@ -425,6 +518,10 @@
             <div class="cartao-produto__corpo">
               <h3>TROCAR: Nome do serviço 8</h3>
               <p>TROCAR: descrição curta sobre esse serviço.</p>
+              <a class="cartao-produto__cta" href="https://wa.me/5592981265897?text=Ol%C3%A1!%20Vim%20pelo%20site%20e%20gostaria%20de%20mais%20informa%C3%A7%C3%B5es%20sobre%20os%20servi%C3%A7os." target="_blank" rel="noopener">
+                Consultar
+                <svg class="icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round" /></svg>
+              </a>
             </div>
           </article>
 
@@ -435,6 +532,10 @@
             <div class="cartao-produto__corpo">
               <h3>TROCAR: Nome do serviço 9</h3>
               <p>TROCAR: descrição curta sobre esse serviço.</p>
+              <a class="cartao-produto__cta" href="https://wa.me/5592981265897?text=Ol%C3%A1!%20Vim%20pelo%20site%20e%20gostaria%20de%20mais%20informa%C3%A7%C3%B5es%20sobre%20os%20servi%C3%A7os." target="_blank" rel="noopener">
+                Consultar
+                <svg class="icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round" /></svg>
+              </a>
             </div>
           </article>
 
@@ -445,6 +546,10 @@
             <div class="cartao-produto__corpo">
               <h3>TROCAR: Nome do serviço 10</h3>
               <p>TROCAR: descrição curta sobre esse serviço.</p>
+              <a class="cartao-produto__cta" href="https://wa.me/5592981265897?text=Ol%C3%A1!%20Vim%20pelo%20site%20e%20gostaria%20de%20mais%20informa%C3%A7%C3%B5es%20sobre%20os%20servi%C3%A7os." target="_blank" rel="noopener">
+                Consultar
+                <svg class="icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round" /></svg>
+              </a>
             </div>
           </article>
 
@@ -455,6 +560,10 @@
             <div class="cartao-produto__corpo">
               <h3>TROCAR: Nome do serviço 11</h3>
               <p>TROCAR: descrição curta sobre esse serviço.</p>
+              <a class="cartao-produto__cta" href="https://wa.me/5592981265897?text=Ol%C3%A1!%20Vim%20pelo%20site%20e%20gostaria%20de%20mais%20informa%C3%A7%C3%B5es%20sobre%20os%20servi%C3%A7os." target="_blank" rel="noopener">
+                Consultar
+                <svg class="icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round" /></svg>
+              </a>
             </div>
           </article>
 
@@ -465,6 +574,10 @@
             <div class="cartao-produto__corpo">
               <h3>TROCAR: Nome do serviço 12</h3>
               <p>TROCAR: descrição curta sobre esse serviço.</p>
+              <a class="cartao-produto__cta" href="https://wa.me/5592981265897?text=Ol%C3%A1!%20Vim%20pelo%20site%20e%20gostaria%20de%20mais%20informa%C3%A7%C3%B5es%20sobre%20os%20servi%C3%A7os." target="_blank" rel="noopener">
+                Consultar
+                <svg class="icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round" /></svg>
+              </a>
             </div>
           </article>
         </div>
@@ -478,8 +591,7 @@
     <section class="secao secao--alt contato" id="contato">
       <div class="container secao__grade contato__grade">
         <div class="contato__info reveal">
-          <p class="secao__eyebrow">Contato</p>
-          <h2 class="secao__titulo">Fale com um especialista</h2>
+          <h2 class="secao__titulo">Fale com um <em>especialista</em></h2>
           <p>
             Atendimento presencial em Manaus-AM e Brasília-DF, e 100% online
             para todo o Brasil e para clientes de língua espanhola.
@@ -557,10 +669,7 @@
          Reaproveita o mesmo botão/estilo do resto do site, nada novo pra manter
          consistente. -->
     <div class="container rodape__cta">
-      <div>
-        <p class="rodape__cta-eyebrow">Pronto pra começar?</p>
-        <h2 class="rodape__cta-titulo">Sua próxima viagem começa com uma conversa</h2>
-      </div>
+      <h2 class="rodape__cta-titulo">Sua próxima viagem começa com <em>uma conversa</em></h2>
       <a
         href="https://wa.me/5592981265897?text=Ol%C3%A1!%20Vim%20pelo%20site%20e%20gostaria%20de%20mais%20informa%C3%A7%C3%B5es%20sobre%20visto."
         target="_blank"
@@ -638,6 +747,15 @@
       </div>
     </div>
 
+    <!-- Zona de leitura mecânica (MRZ) — as duas linhas de "<<<" que fecham
+         a página de dados de todo passaporte. Decorativa (aria-hidden). -->
+    <div class="rodape__mrz" aria-hidden="true">
+      <div class="container">
+        <p>P&lt;BRAAMAZON&lt;&lt;VISTO&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;</p>
+        <p>AV2025MAO7BRA2610249F3012317&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;06</p>
+      </div>
+    </div>
+
     <div class="container rodape__base">
       <p class="rodape__copyright">&copy; <span id="anoAtual"></span> Amazon Visto. Todos os direitos reservados.</p>
       <p class="rodape__creditos">
@@ -673,6 +791,6 @@
     </svg>
   </a>
 
-  <script src="js/main.js?v=22"></script>
+  <script src="js/main.js?v=23"></script>
 </body>
 </html>

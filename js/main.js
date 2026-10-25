@@ -390,19 +390,35 @@ function ativarTituloEmLetras() {
 
   const texto = titulo.textContent;
   titulo.setAttribute("aria-label", texto);
-  titulo.textContent = "";
 
   const wrapperLetras = document.createElement("span");
   wrapperLetras.setAttribute("aria-hidden", "true");
 
-  texto.split("").forEach((caractere, indice) => {
-    const letra = document.createElement("span");
-    letra.className = "hero__titulo-letra";
-    letra.textContent = caractere === " " ? " " : caractere;
-    letra.style.transitionDelay = `${0.5 + indice * 0.035}s`;
-    wrapperLetras.appendChild(letra);
+  // Percorre os nós do título (texto solto e o <em> de "Visto") pra manter
+  // o itálico da segunda palavra depois de dividir em letras.
+  let indice = 0;
+  const dividir = (trecho, destino) => {
+    trecho.split("").forEach((caractere) => {
+      const letra = document.createElement("span");
+      letra.className = "hero__titulo-letra";
+      letra.textContent = caractere === " " ? " " : caractere;
+      letra.style.transitionDelay = `${0.5 + indice * 0.035}s`;
+      destino.appendChild(letra);
+      indice++;
+    });
+  };
+
+  Array.from(titulo.childNodes).forEach((no) => {
+    if (no.nodeType === Node.TEXT_NODE) {
+      dividir(no.textContent, wrapperLetras);
+    } else {
+      const copia = no.cloneNode(false);
+      dividir(no.textContent, copia);
+      wrapperLetras.appendChild(copia);
+    }
   });
 
+  titulo.textContent = "";
   titulo.appendChild(wrapperLetras);
 
   // Força o navegador a "registrar" o estado inicial (opacity:0) antes de
@@ -495,22 +511,33 @@ function ativarBrilhoNosCards() {
    Só existe dentro da própria seção — não afeta o resto do scroll da página.
    -------------------------------------------------------------------------- */
 function ativarLinhaDoProcesso() {
-  const lista = document.querySelector(".processo__lista");
-  if (!lista) return;
+  // A variável fica no wrapper (.processo__percurso), não na <ol>: assim ela
+  // chega tanto à linha (::after da lista) quanto ao avião, que é irmão da
+  // lista. Cada passo ganha "--alcancado" quando o avião passa por ele.
+  const percurso = document.getElementById("percursoProcesso");
+  if (!percurso) return;
+  const passos = percurso.querySelectorAll(".processo__passo");
 
   const prefereMenosMovimento = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   if (prefereMenosMovimento) {
-    lista.style.setProperty("--progresso-processo", "1");
+    percurso.style.setProperty("--progresso-processo", "1");
+    passos.forEach((passo) => passo.classList.add("processo__passo--alcancado"));
     return;
   }
 
   const atualizar = () => {
-    const caixa = lista.getBoundingClientRect();
+    const caixa = percurso.getBoundingClientRect();
     const alturaJanela = window.innerHeight;
-    // 0 quando o topo da lista encosta na base da tela, 1 quando a base da
-    // lista passa pelo topo — a linha desenha enquanto a seção atravessa.
-    const progresso = (alturaJanela - caixa.top) / (alturaJanela + caixa.height);
-    lista.style.setProperty("--progresso-processo", String(Math.min(1, Math.max(0, progresso))));
+    // 0 quando o topo da lista chega a 85% da tela, 1 quando ela chega a
+    // 35% — a viagem acontece enquanto a seção está bem à vista, em vez de
+    // terminar só quando ela já saiu pelo topo.
+    const progresso = (alturaJanela * 0.85 - caixa.top) / (alturaJanela * 0.5);
+    const limitado = Math.min(1, Math.max(0, progresso));
+    percurso.style.setProperty("--progresso-processo", String(limitado));
+    passos.forEach((passo, i) => {
+      const marco = passos.length > 1 ? i / (passos.length - 1) : 0;
+      passo.classList.toggle("processo__passo--alcancado", limitado >= marco - 0.001);
+    });
   };
 
   atualizar();

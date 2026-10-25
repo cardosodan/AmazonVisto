@@ -10,12 +10,13 @@
    mexer no bloco ":root" logo abaixo (cores e fontes). O resto do arquivo
    raramente precisa ser tocado.
 
-   Linguagem visual (reescrita): "documento oficial / painel técnico" — grade
-   precisa, seções numeradas (como um contrato ou formulário de visto de
-   verdade), números tabulares, pouquíssimo movimento decorativo. Nada de
-   cursor customizado, ímã em botão, tilt 3D ou entrada saltitante — pra uma
-   assessoria de visto, a confiança vem de parecer precisa e séria, não
-   "divertida".
+   Linguagem visual: "passaporte". Papel levemente quente, tinta azul-marinho
+   e vermelho de carimbo, padrões guilhochê (as linhas finas de segurança de
+   passaporte e cédula, em images/guilloche-*.svg), carimbos circulares e a
+   zona de leitura mecânica (MRZ) no rodapé. Títulos numa serifada editorial
+   (Fraunces) com a palavra-chave em itálico vermelho. Nada de cursor
+   customizado, ímã em botão ou tilt 3D — pra uma assessoria de visto, a
+   confiança vem de parecer precisa e cuidada, não "divertida".
    ========================================================================== */
 
 /* ==========================================================================
@@ -32,30 +33,68 @@
   --cor-primaria-clara: #e8e9f3;
   --cor-secundaria: #df0112;
   --cor-secundaria-escura: #a3020e;
+  /* Vermelho clareado pra texto/traço sobre o azul-marinho — o #df0112 puro
+     não passa contraste ali (fica ~2,6:1). */
+  --cor-secundaria-clara: #ff6b74;
 
-  /* Cores neutras (texto e fundo) — normalmente não precisa trocar */
+  /* Cores neutras (texto e fundo) — normalmente não precisa trocar.
+     Fundo levemente quente, como o papel de uma página de passaporte. */
   --cor-texto: #1e2130;
-  --cor-texto-claro: #5c6072;
-  --cor-fundo: #ffffff;
-  --cor-fundo-alt: #e7e9f3;
-  --cor-borda: #e2e4ef;
+  --cor-texto-claro: #575b6e;
+  --cor-fundo: #fbfaf7;
+  --cor-fundo-alt: #f3f0e7;
+  --cor-borda: #e4e1d8;
   --cor-branco: #ffffff;
 
   /* Fontes — troque o nome aqui E no link do Google Fonts, no <head> do
      index.html, se quiser usar outras fontes. */
-  --fonte-titulo: "Poppins", "Segoe UI", Arial, sans-serif;
+  --fonte-titulo: "Fraunces", Georgia, "Times New Roman", serif;
   --fonte-corpo: "Inter", "Segoe UI", Arial, sans-serif;
-  /* Só pra números/índices — reforça a leitura "documento técnico" nos
-     chips de seção numerada, no processo e nos números da faixa de prova. */
-  --fonte-mono: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  /* Só pra sequência dos passos e pra MRZ do rodapé (que num passaporte
+     real é impressa numa fonte monoespaçada). */
+  --fonte-mono: "IBM Plex Mono", Consolas, "Liberation Mono", Menlo, monospace;
 
   /* Espaçamento, sombra e cantos — controla o "estilo" geral do site */
-  --raio-borda: 16px;
+  --raio-borda: 18px;
   --raio-borda-pequeno: 10px;
-  --sombra-suave: 0 4px 18px rgba(18, 74, 61, 0.08);
-  --sombra-media: 0 14px 34px rgba(18, 74, 61, 0.14);
+  --sombra-suave: 0 4px 18px rgba(15, 24, 98, 0.07);
+  --sombra-media: 0 18px 40px -12px rgba(15, 24, 98, 0.22);
+  --ease-saida: cubic-bezier(0.16, 1, 0.3, 1);
   --transicao: 0.25s ease;
   --largura-max: 1180px;
+}
+
+/* Superfícies do navegador também levam a marca: seleção de texto, barra de
+   rolagem, cursor de texto e anel de foco do teclado. */
+::selection {
+  background: var(--cor-secundaria);
+  color: var(--cor-branco);
+}
+
+html {
+  scrollbar-color: var(--cor-primaria) var(--cor-fundo-alt);
+  accent-color: var(--cor-secundaria);
+  caret-color: var(--cor-secundaria);
+}
+
+::-webkit-scrollbar {
+  width: 11px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--cor-fundo-alt);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--cor-primaria);
+  border-radius: 999px;
+  border: 3px solid var(--cor-fundo-alt);
+}
+
+:focus-visible {
+  outline: 2px solid var(--cor-secundaria);
+  outline-offset: 3px;
+  border-radius: 4px;
 }
 
 /* ==========================================================================
@@ -95,13 +134,6 @@ body {
   overflow-wrap: break-word;
 }
 
-/* Contador nativo de CSS pro sistema de numeração das seções (ver ".secao"
-   mais abaixo) — cada ".secao" dentro de <main> ganha um índice sequencial
-   automático (01, 02, 03...) sem precisar escrever o número no HTML. */
-main {
-  counter-reset: secao;
-}
-
 img {
   max-width: 100%;
   display: block;
@@ -128,10 +160,30 @@ h1,
 h2,
 h3 {
   font-family: var(--fonte-titulo);
-  line-height: 1.15;
-  font-weight: 700;
-  letter-spacing: -0.01em;
+  font-optical-sizing: auto;
+  line-height: 1.1;
+  font-weight: 600;
+  letter-spacing: -0.02em;
   color: var(--cor-primaria-escura);
+  text-wrap: balance;
+}
+
+/* A palavra-chave de cada título vai em itálico vermelho — é a ênfase do
+   site inteiro (no lugar do antigo texto com gradiente animado). */
+h1 em,
+h2 em {
+  font-style: italic;
+  font-weight: 500;
+  color: var(--cor-secundaria);
+}
+
+h3 {
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+p {
+  text-wrap: pretty;
 }
 
 /* Respeita quem prefere menos animação (acessibilidade) */
@@ -191,7 +243,6 @@ h3 {
 
 .secao {
   padding: 4.5rem 0;
-  counter-increment: secao;
   position: relative;
 }
 
@@ -199,18 +250,25 @@ h3 {
   background: var(--cor-fundo-alt);
 }
 
-/* Textura de pontos — reforça o lado "painel técnico" nas seções claras
-   (que antes ficavam totalmente lisas). Radial-gradient repetido, estático
-   (sem animação: é textura de fundo, não efeito), opacidade bem baixa —
-   dá profundidade sem disputar atenção com o conteúdo. */
+/* Guilhochê de fundo — as linhas onduladas de segurança de uma página de
+   passaporte, em azul-marinho bem fraco. O SVG entra como MÁSCARA (a cor
+   vem do background-color), combinado com um degradê que apaga as bordas
+   de cima e de baixo. Estático: é papel, não efeito. */
 .secao::before {
   content: "";
   position: absolute;
   inset: 0;
-  background-image: radial-gradient(rgba(15, 24, 98, 0.08) 1px, transparent 1px);
-  background-size: 22px 22px;
-  -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 12%, #000 88%, transparent 100%);
-  mask-image: linear-gradient(180deg, transparent 0%, #000 12%, #000 88%, transparent 100%);
+  background-color: rgba(15, 24, 98, 0.075);
+  -webkit-mask-image: url("../images/guilloche-faixa.svg"),
+    linear-gradient(180deg, transparent 0%, #000 18%, #000 82%, transparent 100%);
+  -webkit-mask-size: 520px 130px, 100% 100%;
+  -webkit-mask-repeat: repeat, no-repeat;
+  -webkit-mask-composite: source-in;
+  mask-image: url("../images/guilloche-faixa.svg"),
+    linear-gradient(180deg, transparent 0%, #000 18%, #000 82%, transparent 100%);
+  mask-size: 520px 130px, 100% 100%;
+  mask-repeat: repeat, no-repeat;
+  mask-composite: intersect;
   pointer-events: none;
 }
 
@@ -248,43 +306,15 @@ h3 {
     radial-gradient(30% 40% at 0% 100%, rgba(223, 1, 18, 0.12) 0%, transparent 70%);
 }
 
-/* Chip numerado (01, 02, 03...) antes do rótulo — o mesmo índice usado nas
-   abas de um formulário oficial. Gerado por counter(), então nunca fica
-   fora de sincronia se uma seção for adicionada/removida/reordenada. */
-.secao__eyebrow {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.55rem;
-  font-family: var(--fonte-titulo);
-  font-weight: 600;
-  color: var(--cor-secundaria-escura);
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  font-size: 0.85rem;
-  margin-bottom: 0.9rem;
-}
-
-.secao__eyebrow::before {
-  content: counter(secao, decimal-leading-zero);
-  font-family: var(--fonte-mono);
-  font-weight: 700;
-  font-size: 0.72rem;
-  letter-spacing: 0;
-  color: var(--cor-branco);
-  background: linear-gradient(135deg, var(--cor-primaria), var(--cor-primaria-escura));
-  padding: 0.25rem 0.55rem;
-  border-radius: 5px;
-  box-shadow: 0 4px 14px rgba(15, 24, 98, 0.35);
-}
-
 .secao__titulo {
-  font-size: clamp(1.9rem, 4.4vw, 2.85rem);
-  letter-spacing: -0.015em;
-  margin-bottom: 1rem;
+  font-size: clamp(2.1rem, 5vw, 3.4rem);
+  letter-spacing: -0.025em;
+  margin-bottom: 1.1rem;
 }
 
 .secao__subtitulo {
   color: var(--cor-texto-claro);
+  font-size: 1.08rem;
   max-width: 46ch;
 }
 
@@ -345,6 +375,11 @@ h3 {
 
 .botao:active {
   transform: scale(0.97);
+}
+
+.botao:focus-visible {
+  outline-offset: 4px;
+  border-radius: 999px;
 }
 
 .botao .icone {
@@ -416,17 +451,18 @@ h3 {
   left: 0;
   right: 0;
   z-index: 100;
-  background: rgba(255, 255, 255, 0.9);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  transition: box-shadow var(--transicao), background-color var(--transicao);
+  background: rgba(251, 250, 247, 0.94);
+  backdrop-filter: blur(14px) saturate(1.4);
+  -webkit-backdrop-filter: blur(14px) saturate(1.4);
+  border-bottom: 1px solid transparent;
+  transition: box-shadow var(--transicao), background-color var(--transicao), border-color var(--transicao);
 }
-
 
 /* Classe adicionada via JS quando a página é rolada — dá uma sombra sutil */
 .cabecalho--rolado {
-  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.08);
-  background: rgba(255, 255, 255, 0.98);
+  box-shadow: 0 8px 24px -16px rgba(15, 24, 98, 0.35);
+  background: rgba(251, 250, 247, 0.94);
+  border-bottom-color: var(--cor-borda);
 }
 
 .cabecalho__conteudo {
@@ -458,8 +494,9 @@ h3 {
 
 .cabecalho__nome {
   font-family: var(--fonte-titulo);
-  font-weight: 700;
-  font-size: 1.05rem;
+  font-weight: 600;
+  font-size: 1.2rem;
+  letter-spacing: -0.015em;
   color: var(--cor-primaria-escura);
   white-space: nowrap;
   overflow: hidden;
@@ -507,15 +544,44 @@ h3 {
 }
 
 .navegacao__link {
+  position: relative;
   font-weight: 500;
   font-size: 1.05rem;
   color: var(--cor-texto);
   transition: color var(--transicao);
 }
 
+/* Fio vermelho que "desenha" embaixo do link no hover e fica no link da
+   seção atual — só no desktop, onde o menu é horizontal. */
+@media (min-width: 1024px) {
+  .navegacao__link {
+    font-size: 0.95rem;
+  }
+
+  .navegacao__link::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -6px;
+    height: 2px;
+    border-radius: 2px;
+    background: var(--cor-secundaria);
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.4s var(--ease-saida);
+  }
+
+  .navegacao__link:hover::after,
+  .navegacao__link--ativo::after {
+    transform: scaleX(1);
+    transform-origin: left;
+  }
+}
+
 .navegacao__link:hover,
 .navegacao__link--ativo {
-  color: var(--cor-primaria);
+  color: var(--cor-primaria-escura);
 }
 
 .navegacao__cta {
@@ -706,16 +772,17 @@ h3 {
   }
 }
 
-/* Textura técnica sutil por cima da foto — linhas finas tipo grade de
-   planta baixa/carta náutica, reforça o lado "tecnológico" do negócio sem
-   competir com o texto (opacidade bem baixa, só se nota de perto). */
+/* Faixa guilhochê fina por cima da foto — as linhas de segurança da capa
+   de um passaporte, em branco bem fraco (máscara SVG, mesma técnica do
+   fundo das seções claras). */
 .hero::before {
   content: "";
   position: absolute;
   inset: 0;
   z-index: 3;
-  background-image: repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.05) 0 1px, transparent 1px 88px),
-    repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.05) 0 1px, transparent 1px 88px);
+  background-color: rgba(255, 255, 255, 0.07);
+  -webkit-mask: url("../images/guilloche-faixa.svg") 0 0 / 640px 160px repeat;
+  mask: url("../images/guilloche-faixa.svg") 0 0 / 640px 160px repeat;
   pointer-events: none;
 }
 
@@ -723,10 +790,35 @@ h3 {
   position: absolute;
   inset: 0;
   z-index: 4;
-  /* Mais claro no topo (deixa a foto aparecer com mais cor/energia logo de
-     cara — pedido explícito do cliente, "está pouco chamativo") e ainda
-     escuro o bastante embaixo, onde o texto fica, pra manter legibilidade. */
-  background: linear-gradient(180deg, rgba(9, 15, 66, 0.18) 0%, rgba(9, 15, 66, 0.62) 100%);
+  /* Mais claro no topo e à direita (deixa a foto e a vitrine aparecerem com
+     cor — pedido do cliente, "está pouco chamativo") e escuro à esquerda e
+     embaixo, onde fica o texto, pra manter a leitura. */
+  background: linear-gradient(90deg, rgba(9, 15, 66, 0.72) 0%, rgba(9, 15, 66, 0.35) 55%, rgba(9, 15, 66, 0.1) 100%),
+    linear-gradient(180deg, rgba(9, 15, 66, 0.1) 0%, rgba(9, 15, 66, 0.55) 100%);
+}
+
+/* Roseta guilhochê girando bem devagar atrás da vitrine — o "selo-d'água"
+   de um documento oficial. Só transform animado (barato), e para pra quem
+   prefere menos movimento (ver bloco reduced-motion do hero). */
+.hero__guilloche {
+  position: absolute;
+  z-index: 4;
+  width: min(980px, 140vw);
+  aspect-ratio: 1;
+  right: -22%;
+  top: 50%;
+  margin-top: calc(min(980px, 140vw) / -2);
+  background: radial-gradient(closest-side, rgba(255, 255, 255, 0.2), rgba(255, 107, 116, 0.16) 70%, rgba(255, 255, 255, 0.08));
+  -webkit-mask: url("../images/guilloche-roseta.svg") center / contain no-repeat;
+  mask: url("../images/guilloche-roseta.svg") center / contain no-repeat;
+  animation: rosetaGirar 140s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes rosetaGirar {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .hero__grade {
@@ -745,7 +837,8 @@ h3 {
 
 @media (prefers-reduced-motion: reduce) {
   .hero__foto,
-  .hero__aurora {
+  .hero__aurora,
+  .hero__guilloche {
     animation: none;
   }
 }
@@ -798,14 +891,14 @@ h3 {
   position: absolute;
   left: 10px;
   right: 10px;
-  bottom: 10px;
+  bottom: 9px;
   font-family: var(--fonte-titulo);
-  font-weight: 700;
-  font-size: 0.72rem;
+  font-style: italic;
+  font-weight: 500;
+  font-size: 0.95rem;
   color: var(--cor-primaria-escura);
   text-align: center;
-  text-transform: uppercase;
-  letter-spacing: 0.03em;
+  letter-spacing: -0.01em;
 }
 
 .hero__selo--1 {
@@ -878,10 +971,10 @@ h3 {
   right: -6px;
   width: 128px;
   height: 128px;
-  color: var(--cor-secundaria);
+  color: var(--cor-secundaria-clara);
   opacity: 0;
   transform: translate(var(--px), var(--py)) rotate(-16deg) scale(1.8);
-  filter: drop-shadow(0 12px 22px rgba(0, 0, 0, 0.4));
+  filter: url(#tintaCarimbo) drop-shadow(0 12px 22px rgba(0, 0, 0, 0.4));
   z-index: 6;
   transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease;
   transition-delay: 0.85s;
@@ -918,7 +1011,7 @@ h3 {
   display: inline-flex;
   align-items: center;
   gap: 0.55rem;
-  font-family: var(--fonte-titulo);
+  font-family: var(--fonte-corpo);
   text-transform: uppercase;
   letter-spacing: 0.12em;
   font-size: 0.75rem;
@@ -975,9 +1068,18 @@ h3 {
 
 .hero__titulo {
   color: var(--cor-branco);
-  font-size: clamp(2.2rem, 7vw, 3.75rem);
+  font-size: clamp(3rem, 9vw, 5.6rem);
+  font-weight: 600;
+  line-height: 0.98;
+  letter-spacing: -0.035em;
+  margin-bottom: 1.4rem;
+  text-shadow: 0 6px 30px rgba(4, 8, 40, 0.35);
+}
+
+.hero__titulo em {
+  color: var(--cor-secundaria-clara);
+  font-weight: 400;
   letter-spacing: -0.02em;
-  margin-bottom: 1.25rem;
 }
 
 /* Cada letra entra separada (ver main.js, "ativarTituloEmLetras") — some
@@ -986,13 +1088,15 @@ h3 {
 .hero__titulo-letra {
   display: inline-block;
   opacity: 0;
-  transform: translateY(0.35em);
-  transition: opacity 0.5s ease, transform 0.5s ease;
+  transform: translateY(0.4em) rotate(4deg);
+  filter: blur(6px);
+  transition: opacity 0.7s var(--ease-saida), transform 0.9s var(--ease-saida), filter 0.7s var(--ease-saida);
 }
 
 .hero__titulo--revelado .hero__titulo-letra {
   opacity: 1;
-  transform: translateY(0);
+  transform: none;
+  filter: none;
 }
 
 .hero__frase {
@@ -1036,7 +1140,8 @@ h3 {
 
 .hero__nota {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
+  line-height: 1.45;
   gap: 0.5rem;
   margin-top: 1.1rem;
   font-size: 0.88rem;
@@ -1051,6 +1156,7 @@ h3 {
   border-radius: 50%;
   padding: 2px;
   flex-shrink: 0;
+  margin-top: 0.1em;
 }
 
 .hero__nota strong {
@@ -1142,20 +1248,24 @@ h3 {
   display: inline-flex;
   align-items: center;
   font-family: var(--fonte-titulo);
-  font-weight: 700;
-  font-size: clamp(1.05rem, 2.2vw, 1.5rem);
-  letter-spacing: 0.01em;
+  font-style: italic;
+  font-weight: 400;
+  font-size: clamp(1.2rem, 2.4vw, 1.75rem);
+  letter-spacing: -0.01em;
   color: rgba(255, 255, 255, 0.92);
   white-space: nowrap;
 }
 
+/* Separador: estrela de 4 pontas em vermelho (máscara CSS, sem glifo
+   unicode), como os ornamentos impressos numa página de passaporte. */
 .ticker__item::after {
   content: "";
-  width: 7px;
-  height: 7px;
-  margin: 0 1.75rem;
-  border-radius: 50%;
-  background: var(--cor-secundaria);
+  width: 14px;
+  height: 14px;
+  margin: 0 2rem;
+  background: var(--cor-secundaria-clara);
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 0c.8 6.4 5.6 11.2 12 12-6.4.8-11.2 5.6-12 12-.8-6.4-5.6-11.2-12-12C6.4 11.2 11.2 6.4 12 0Z'/%3E%3C/svg%3E") center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 0c.8 6.4 5.6 11.2 12 12-6.4.8-11.2 5.6-12 12-.8-6.4-5.6-11.2-12-12C6.4 11.2 11.2 6.4 12 0Z'/%3E%3C/svg%3E") center / contain no-repeat;
   flex-shrink: 0;
 }
 
@@ -1179,7 +1289,7 @@ h3 {
    ========================================================================== */
 .sobre__imagem img {
   border-radius: var(--raio-borda);
-  box-shadow: var(--sombra-media);
+  box-shadow: 0 30px 60px -24px rgba(15, 24, 98, 0.45);
   /* No celular a imagem ocupa a LARGURA TODA da tela (a grade vira 1
      coluna) — com a proporção vertical (9/11) pensada pro desktop, isso
      virava uma foto gigante e comprida. Mais baixa/larga aqui; volta pra
@@ -1193,28 +1303,77 @@ h3 {
   width: 100%;
 }
 
+/* Moldura fina branca por dentro da foto + roseta guilhochê atrás, saindo
+   pelo canto — lê como a foto de uma página de passaporte. */
+.sobre__imagem {
+  position: relative;
+}
+
+.sobre__imagem::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  width: 70%;
+  aspect-ratio: 1;
+  left: -18%;
+  bottom: -16%;
+  background-color: rgba(223, 1, 18, 0.22);
+  -webkit-mask: url("../images/guilloche-roseta.svg") center / contain no-repeat;
+  mask: url("../images/guilloche-roseta.svg") center / contain no-repeat;
+  pointer-events: none;
+}
+
+.sobre__imagem::after {
+  content: "";
+  position: absolute;
+  inset: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  border-radius: calc(var(--raio-borda) - 8px);
+  pointer-events: none;
+}
+
 .sobre__texto p {
   color: var(--cor-texto-claro);
   margin-bottom: 1rem;
+  max-width: 62ch;
 }
 
 .sobre__diferenciais {
-  margin-top: 1.75rem;
+  margin-top: 2rem;
   display: flex;
   flex-direction: column;
-  gap: 1.1rem;
+  border-top: 1px solid var(--cor-borda);
 }
 
 .sobre__diferenciais li {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 1rem;
+  align-items: start;
+  padding: 1.1rem 0;
+  border-bottom: 1px solid var(--cor-borda);
+}
+
+.sobre__diferenciais li div {
   display: flex;
   flex-direction: column;
-  gap: 0.2rem;
-  padding-left: 1.2rem;
-  border-left: 3px solid var(--cor-secundaria);
+  gap: 0.15rem;
+}
+
+.sobre__icone {
+  width: 44px;
+  height: 44px;
+  padding: 10px;
+  border-radius: 50%;
+  color: var(--cor-secundaria);
+  background: var(--cor-branco);
+  box-shadow: 0 0 0 1px var(--cor-borda), 0 6px 14px -6px rgba(15, 24, 98, 0.25);
 }
 
 .sobre__diferenciais strong {
   font-family: var(--fonte-titulo);
+  font-size: 1.12rem;
+  font-weight: 600;
   color: var(--cor-primaria-escura);
 }
 
@@ -1251,15 +1410,32 @@ h3 {
   align-items: center;
   justify-content: center;
   border-radius: 50%;
-  background: var(--cor-primaria-clara);
+  background: var(--cor-branco);
   color: var(--cor-primaria);
-  font-family: var(--fonte-mono);
-  font-weight: 700;
-  font-size: 0.85rem;
+  box-shadow: inset 0 0 0 1.5px rgba(15, 24, 98, 0.22);
+  font-family: var(--fonte-titulo);
+  font-weight: 600;
+  font-size: 0.95rem;
+  font-variant-numeric: lining-nums;
+  transition: background-color 0.5s var(--ease-saida), color 0.5s var(--ease-saida),
+    box-shadow 0.5s var(--ease-saida), transform 0.5s var(--ease-saida);
+}
+
+/* Passo "alcançado" (o avião já passou por ele, ver main.js) — o círculo
+   enche de azul-marinho, como um carimbo de entrada no passaporte. */
+.processo__passo--alcancado .processo__numero {
+  background: var(--cor-primaria);
+  color: var(--cor-branco);
+  box-shadow: inset 0 0 0 1.5px var(--cor-primaria), 0 8px 18px -6px rgba(15, 24, 98, 0.55);
+  transform: scale(1.06);
+}
+
+.processo__aviao {
+  display: none;
 }
 
 .processo__passo h3 {
-  font-size: 1.05rem;
+  font-size: 1.25rem;
   margin-bottom: 0.4rem;
 }
 
@@ -1276,8 +1452,9 @@ h3 {
    ========================================================================== */
 .faixa-numeros {
   position: relative;
-  background: linear-gradient(135deg, var(--cor-primaria-escura), var(--cor-primaria));
-  padding: 3.5rem 0;
+  background: radial-gradient(60% 120% at 50% 0%, #1a2580 0%, transparent 70%),
+    linear-gradient(160deg, var(--cor-primaria-escura), var(--cor-primaria));
+  padding: 4rem 0;
   overflow: hidden;
 }
 
@@ -1285,9 +1462,9 @@ h3 {
   content: "";
   position: absolute;
   inset: 0;
-  background-image: radial-gradient(45% 80% at 15% 50%, rgba(223, 1, 18, 0.16) 0%, transparent 70%),
-    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.05) 0 1px, transparent 1px 64px),
-    repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.05) 0 1px, transparent 1px 64px);
+  background-color: rgba(255, 255, 255, 0.06);
+  -webkit-mask: url("../images/guilloche-faixa.svg") 0 50% / 560px 140px repeat;
+  mask: url("../images/guilloche-faixa.svg") 0 50% / 560px 140px repeat;
   pointer-events: none;
 }
 
@@ -1295,36 +1472,104 @@ h3 {
   position: relative;
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 0;
-  text-align: center;
+  gap: 2rem 1rem;
+  justify-items: center;
 }
 
-.faixa-numeros__item {
-  display: flex;
-  flex-direction: column;
-  gap: 0.4rem;
-  padding: 0.75rem;
-  border-left: 1px solid rgba(255, 255, 255, 0.14);
+/* Carimbo circular: anel duplo + texto em curva (SVG) com o valor no
+   centro. Cada um levemente torto, como carimbos batidos à mão, e com o
+   filtro "tinta de carimbo" (definido no topo do index.html). */
+.carimbo {
+  --giro: -6deg;
+  position: relative;
+  width: min(190px, 40vw);
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+  color: rgba(255, 255, 255, 0.92);
+  transform: rotate(var(--giro));
+  transition: transform 0.5s var(--ease-saida);
 }
 
-.faixa-numeros__item:nth-child(odd) {
-  border-left: none;
+.carimbo:nth-child(2) {
+  --giro: 5deg;
 }
 
-.faixa-numeros__valor {
+.carimbo:nth-child(3) {
+  --giro: -3deg;
+}
+
+.carimbo:nth-child(4) {
+  --giro: 8deg;
+}
+
+.carimbo--vermelho {
+  color: var(--cor-secundaria-clara);
+}
+
+/* "55,7 mil" é bem mais largo que um ano de 4 dígitos — menor pra caber
+   dentro do anel interno. */
+.carimbo:first-child .carimbo__valor {
+  font-size: clamp(1.05rem, 3vw, 1.5rem);
+}
+
+.carimbo__anel {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  filter: url(#tintaCarimbo);
+}
+
+.carimbo__anel circle {
+  fill: none;
+  stroke: currentColor;
+}
+
+.carimbo__anel circle:first-of-type {
+  stroke-width: 3.5;
+}
+
+.carimbo__anel circle:last-of-type {
+  stroke-width: 1.5;
+}
+
+.carimbo__anel text {
+  fill: currentColor;
+  font-family: var(--fonte-corpo);
+  font-size: 14.5px;
+  font-weight: 700;
+  letter-spacing: 2.4px;
+}
+
+.carimbo__valor {
+  position: relative;
   font-family: var(--fonte-titulo);
-  font-weight: 800;
-  font-variant-numeric: tabular-nums;
-  font-size: clamp(1.7rem, 5vw, 2.5rem);
-  letter-spacing: -0.02em;
-  color: var(--cor-branco);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums lining-nums;
+  font-size: clamp(1.2rem, 3.6vw, 1.8rem);
+  letter-spacing: -0.03em;
+  white-space: nowrap;
 }
 
-.faixa-numeros__legenda {
-  font-size: 0.78rem;
-  color: rgba(255, 255, 255, 0.7);
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
+/* Entrada de carimbo: começa maior e invisível e "bate" no lugar — o único
+   reveal do site que não é o fade padrão, porque aqui o gesto é o próprio
+   conteúdo. Duas classes pra vencer o .reveal genérico, que vem depois no
+   arquivo (seção 14). */
+.carimbo.reveal {
+  opacity: 0;
+  transform: rotate(var(--giro)) scale(1.4);
+  transition: opacity 0.3s ease, transform 0.6s var(--ease-saida);
+}
+
+.carimbo.reveal--visivel {
+  opacity: 1;
+  transform: rotate(var(--giro)) scale(1);
+}
+
+.carimbo.reveal--visivel:hover {
+  transform: rotate(0deg) scale(1.05);
 }
 
 /* ==========================================================================
@@ -1370,9 +1615,7 @@ h3 {
   /* Fundo suave (estático, sem animação) só pra dar profundidade ao vidro
      dos cards — sem isso o "liquid glass" não tem nada de variado atrás
      pra desfocar/refletir. */
-  background: radial-gradient(120% 140% at 12% 0%, var(--cor-primaria-clara) 0%, transparent 55%),
-    radial-gradient(90% 120% at 100% 100%, rgba(223, 1, 18, 0.1) 0%, transparent 55%),
-    linear-gradient(160deg, var(--cor-fundo-alt) 0%, var(--cor-fundo) 70%);
+  background: linear-gradient(180deg, var(--cor-fundo) 0%, var(--cor-fundo-alt) 100%);
 }
 
 .servicos-scroll--simples .servicos-scroll__pista {
@@ -1390,7 +1633,6 @@ h3 {
   align-items: stretch;
   gap: 1.5rem;
   padding: 0 1.25rem;
-  counter-reset: servico;
   will-change: transform;
 }
 
@@ -1405,128 +1647,96 @@ h3 {
   -webkit-overflow-scrolling: touch;
 }
 
+.servicos-scroll__trilha--nativa {
+  scroll-padding-inline: 1.25rem;
+  padding-top: 0.75rem;
+  scrollbar-width: thin;
+}
+
 .servicos-scroll__trilha--nativa .cartao-produto {
   scroll-snap-align: start;
 }
 
-/* Cartão "liquid glass" — vidro fosco claro (translúcido, não escuro): tom
-   alto de opacidade branca + saturação no blur, senão em fundo claro o
-   glassmorphism costuma ficar ilegível (ver checklist de contraste). Usado
-   em QUALQUER card do site (o mesmo bloco vale se reaproveitado em outras
-   seções). */
+/* Cartão de serviço — papel branco sólido (o antigo vidro fosco não tinha
+   nada atrás pra desfocar), cantos generosos, sombra com deslocamento. A
+   foto ganha uma margem interna, como a foto colada numa página de
+   passaporte, e o card termina num link de WhatsApp com o serviço já
+   escrito na mensagem. */
 .cartao-produto {
   position: relative;
   display: flex;
   flex-direction: column;
-  flex: 0 0 clamp(230px, 78vw, 300px);
-  background: rgba(255, 255, 255, 0.72);
-  backdrop-filter: blur(18px) saturate(1.6);
-  -webkit-backdrop-filter: blur(18px) saturate(1.6);
-  border: 1px solid rgba(255, 255, 255, 0.85);
+  flex: 0 0 clamp(250px, 78vw, 310px);
+  background: var(--cor-branco);
+  border: 1px solid var(--cor-borda);
   border-radius: var(--raio-borda);
-  overflow: hidden;
-  box-shadow: var(--sombra-media);
-  transition: transform var(--transicao), box-shadow var(--transicao);
-  border-top: 4px solid var(--cor-primaria);
-  counter-increment: servico;
-}
-
-/* Fio de luz no topo do vidro — reforça a leitura de "superfície de
-   vidro" sem precisar de mais nenhum elemento animado. Estático (custa
-   bem menos que o blur já usado no background do card). */
-.cartao-produto::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  padding: 1px;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0) 40%);
-  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  -webkit-mask-composite: xor;
-  mask-composite: exclude;
-  pointer-events: none;
+  padding: 10px;
+  box-shadow: 0 1px 2px rgba(15, 24, 98, 0.06), 0 16px 32px -18px rgba(15, 24, 98, 0.3);
+  transition: transform 0.5s var(--ease-saida), box-shadow 0.5s var(--ease-saida), border-color 0.3s ease;
 }
 
 /* Brilho que segue o mouse — contido DENTRO do card (não é um cursor de
    página inteira). --mx/--my são atualizados via JS só enquanto o mouse
-   está em cima deste card específico (ver main.js); o glow correspondente
-   à cor do card (azul nos ímpares, vermelho nos pares — ver nth-child
-   abaixo) aparece só no hover, então nunca compete com o resto da página. */
+   está em cima deste card específico (ver main.js); aparece só no hover. */
 .cartao-produto::after {
   content: "";
   position: absolute;
   inset: 0;
-  background: radial-gradient(240px circle at var(--mx, 50%) var(--my, 0%), rgba(15, 24, 98, 0.16), transparent 70%);
+  border-radius: inherit;
+  background: radial-gradient(260px circle at var(--mx, 50%) var(--my, 0%), rgba(223, 1, 18, 0.07), transparent 70%);
   opacity: 0;
   transition: opacity 0.3s ease;
   pointer-events: none;
-}
-
-.cartao-produto:nth-child(even)::after {
-  background: radial-gradient(240px circle at var(--mx, 50%) var(--my, 0%), rgba(223, 1, 18, 0.14), transparent 70%);
 }
 
 .cartao-produto:hover::after {
   opacity: 1;
 }
 
-/* Alterna a cor de destaque entre os cards — dá ritmo visual à vitrine em
-   vez de repetir a mesma cor o tempo todo. */
-.cartao-produto:nth-child(even) {
-  border-top-color: var(--cor-secundaria);
-}
-
 .cartao-produto:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 20px 40px rgba(15, 24, 98, 0.18);
+  transform: translateY(-8px);
+  border-color: rgba(15, 24, 98, 0.18);
+  box-shadow: 0 1px 2px rgba(15, 24, 98, 0.06), 0 32px 48px -22px rgba(15, 24, 98, 0.45);
 }
 
 .cartao-produto__imagem {
+  position: relative;
   width: 100%;
   /* 4/3 em vez de quadrada — card mais baixo, cabe inteiro dentro da
      "janela" de altura fixa do pin de serviços (ver ".servicos-scroll__pin")
      mesmo em telas mais baixas, sem cortar o rodapé do card. */
   aspect-ratio: 4 / 3;
   overflow: hidden;
+  border-radius: calc(var(--raio-borda) - 8px);
 }
 
 .cartao-produto__imagem img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.4s ease;
+  transition: transform 0.8s var(--ease-saida);
 }
 
 .cartao-produto:hover .cartao-produto__imagem img {
-  transform: scale(1.06);
+  transform: scale(1.07);
 }
 
 .cartao-produto__corpo {
-  padding: 1.1rem 1.25rem 1.35rem;
+  padding: 1rem 0.65rem 0.4rem;
   display: flex;
   flex-direction: column;
   flex: 1;
 }
 
 .cartao-produto__corpo h3 {
-  display: flex;
-  align-items: baseline;
-  gap: 0.45rem;
-  font-size: 1.05rem;
+  font-size: 1.3rem;
   margin-bottom: 0.4rem;
-}
-
-.cartao-produto__corpo h3::before {
-  content: counter(servico, decimal-leading-zero);
-  font-family: var(--fonte-mono);
-  font-weight: 700;
-  font-size: 0.72rem;
-  color: var(--cor-texto-claro);
 }
 
 .cartao-produto__corpo p {
   color: var(--cor-texto-claro);
-  font-size: 0.9rem;
+  font-size: 0.92rem;
+  margin-bottom: 1rem;
   /* Trava em 3 linhas — mantém os cards com a mesma altura na trilha,
      mesmo quando uma descrição é mais longa que as outras. */
   display: -webkit-box;
@@ -1535,53 +1745,35 @@ h3 {
   overflow: hidden;
 }
 
-/* ==========================================================================
-   10b. TEXTO COM BRILHO (gradiente "shiny")
-   Aplicado com moderação, só em 2 pontos de destaque (ver index.html): o
-   título "Líder de mercado..." da seção Sobre e os números da faixa de
-   prova. Gradiente animado + background-clip:text — estático o bastante
-   (sem blur, sem blend-mode) pra não repetir os problemas de performance
-   já encontrados neste arquivo no fundo do hero. Duas variantes porque o
-   contraste de base é diferente: texto escuro sobre fundo claro (Sobre) e
-   texto branco sobre fundo escuro (faixa de números).
-   ========================================================================== */
-.texto-brilho {
-  background-image: linear-gradient(
-    100deg,
-    var(--cor-primaria-escura) 0%,
-    var(--cor-primaria-escura) 38%,
-    var(--cor-secundaria) 50%,
-    var(--cor-primaria-escura) 62%,
-    var(--cor-primaria-escura) 100%
-  );
-  background-size: 250% 100%;
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  -webkit-text-fill-color: transparent;
-  animation: brilhoVarrer 6s ease-in-out infinite;
+.cartao-produto__cta {
+  margin-top: auto;
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--cor-primaria);
+  padding: 0.45rem 0;
+  border-bottom: 1.5px solid rgba(15, 24, 98, 0.18);
+  transition: color 0.25s ease, border-color 0.25s ease;
 }
 
-.texto-brilho--claro {
-  background-image: linear-gradient(
-    100deg,
-    rgba(255, 255, 255, 0.7) 0%,
-    rgba(255, 255, 255, 0.7) 38%,
-    #ffffff 50%,
-    rgba(255, 255, 255, 0.7) 62%,
-    rgba(255, 255, 255, 0.7) 100%
-  );
-  animation-duration: 4.5s;
+.cartao-produto__cta .icone {
+  width: 1em;
+  height: 1em;
+  transition: transform 0.4s var(--ease-saida);
 }
 
-@keyframes brilhoVarrer {
-  0% {
-    background-position: 200% 0;
-  }
-  100% {
-    background-position: -100% 0;
-  }
+.cartao-produto__cta:hover {
+  color: var(--cor-secundaria);
+  border-color: var(--cor-secundaria);
 }
+
+.cartao-produto:hover .cartao-produto__cta .icone {
+  transform: translateX(4px);
+}
+
 
 /* ==========================================================================
    11. CONTATO
@@ -1603,22 +1795,36 @@ h3 {
 .contato__lista .icone {
   width: 18px;
   height: 18px;
-  padding: 10px;
+  padding: 11px;
   box-sizing: content-box;
-  background: var(--cor-primaria-clara);
-  color: var(--cor-primaria);
+  background: var(--cor-branco);
+  color: var(--cor-secundaria);
+  box-shadow: 0 0 0 1px var(--cor-borda), 0 6px 14px -6px rgba(15, 24, 98, 0.25);
   border-radius: 50%;
   flex-shrink: 0;
 }
 
-.contato__lista a:hover {
-  color: var(--cor-primaria);
+.contato__lista a {
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  text-underline-offset: 4px;
+  transition: color var(--transicao), text-decoration-color var(--transicao);
 }
 
+.contato__lista a:hover {
+  color: var(--cor-primaria-escura);
+  text-decoration-color: var(--cor-secundaria);
+}
+
+/* Mapa numa moldura de papel (borda + margem interna), com cor levemente
+   dessaturada pra não brigar com a paleta — volta à cor cheia no hover. */
 .contato__mapa {
   border-radius: var(--raio-borda);
   overflow: hidden;
-  box-shadow: var(--sombra-suave);
+  background: var(--cor-branco);
+  border: 1px solid var(--cor-borda);
+  padding: 8px;
+  box-shadow: 0 30px 60px -30px rgba(15, 24, 98, 0.4);
   /* Altura fixa (não só min-height): o iframe usa height:100% do pai, e
      percentual de altura só funciona corretamente contra um pai com altura
      definida — com só min-height, o iframe podia cair no tamanho padrão do
@@ -1629,9 +1835,16 @@ h3 {
 .contato__mapa iframe {
   width: 100%;
   height: 100%;
-  min-height: 320px;
+  min-height: 300px;
   border: 0;
   display: block;
+  border-radius: calc(var(--raio-borda) - 8px);
+  filter: saturate(0.6) contrast(1.05);
+  transition: filter 0.5s ease;
+}
+
+.contato__mapa:hover iframe {
+  filter: none;
 }
 
 /* ==========================================================================
@@ -1652,26 +1865,59 @@ h3 {
   flex-direction: column;
   gap: 1.5rem;
   align-items: flex-start;
-  padding: 3.5rem 0;
+  /* padding-block (não "padding: X 0"): mantém o respiro lateral do
+     .container, senão o texto encosta na borda da tela no celular. */
+  padding-block: 3.5rem;
   border-bottom: 1px solid rgba(255, 255, 255, 0.12);
-}
-
-.rodape__cta-eyebrow {
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  font-size: 0.8rem;
-  font-weight: 700;
-  color: var(--cor-secundaria);
-  margin-bottom: 0.5rem;
 }
 
 .rodape__cta-titulo {
   font-family: var(--fonte-titulo);
-  font-weight: 700;
+  font-weight: 600;
   color: var(--cor-branco);
-  font-size: clamp(1.5rem, 3.6vw, 2.2rem);
-  max-width: 32ch;
-  letter-spacing: -0.01em;
+  font-size: clamp(1.9rem, 4.6vw, 3.1rem);
+  line-height: 1.05;
+  max-width: 20ch;
+  letter-spacing: -0.03em;
+}
+
+.rodape__cta-titulo em {
+  color: var(--cor-secundaria-clara);
+}
+
+/* Roseta guilhochê enorme e fraca atrás do CTA final — fecha a página com
+   o mesmo "selo-d'água" que abre o hero. */
+.rodape::before {
+  content: "";
+  position: absolute;
+  width: 760px;
+  aspect-ratio: 1;
+  right: -320px;
+  top: -420px;
+  background-color: rgba(255, 255, 255, 0.06);
+  -webkit-mask: url("../images/guilloche-roseta.svg") center / contain no-repeat;
+  mask: url("../images/guilloche-roseta.svg") center / contain no-repeat;
+  pointer-events: none;
+}
+
+/* Zona de leitura mecânica (MRZ) — duas linhas de 44 caracteres, como na
+   página de dados do passaporte. A fonte escala com a largura da tela pra
+   linha caber inteira sem quebrar. */
+.rodape__mrz {
+  position: relative;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  padding: 1.4rem 0;
+  overflow: hidden;
+}
+
+.rodape__mrz p {
+  font-family: var(--fonte-mono);
+  font-weight: 500;
+  font-size: clamp(0.6rem, 2.05vw, 1.45rem);
+  letter-spacing: 0.12em;
+  line-height: 1.5;
+  white-space: nowrap;
+  color: rgba(255, 255, 255, 0.28);
 }
 
 .rodape__grade {
@@ -1679,7 +1925,7 @@ h3 {
   display: grid;
   grid-template-columns: 1fr;
   gap: 2.5rem;
-  padding: 3rem 0;
+  padding-block: 3rem;
 }
 
 .rodape__marca {
@@ -1687,8 +1933,8 @@ h3 {
   align-items: center;
   gap: 0.6rem;
   font-family: var(--fonte-titulo);
-  font-weight: 700;
-  font-size: 1.05rem;
+  font-weight: 600;
+  font-size: 1.2rem;
   color: var(--cor-branco);
   margin-bottom: 0.9rem;
 }
@@ -1733,9 +1979,9 @@ h3 {
 }
 
 .rodape__titulo-coluna {
-  font-family: var(--fonte-titulo);
+  font-family: var(--fonte-corpo);
   font-weight: 700;
-  font-size: 0.82rem;
+  font-size: 0.78rem;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: var(--cor-branco);
@@ -1779,7 +2025,7 @@ h3 {
   gap: 0.5rem;
   align-items: center;
   text-align: center;
-  padding: 1.5rem 0 2rem;
+  padding-block: 1.5rem 2rem;
   border-top: 1px solid rgba(255, 255, 255, 0.12);
 }
 
@@ -1940,13 +2186,6 @@ h3 {
     padding: 6rem 0;
   }
 
-  /* Cards de serviço (trilha horizontal) ganham mais respiro nesse
-     breakpoint — o resto do layout (coluna, largura fixa) já é o mesmo
-     desde o celular, ver ".cartao-produto" na seção 10. */
-  .cartao-produto__corpo h3 {
-    font-size: 1.1rem;
-  }
-
   .cartao-produto__corpo p {
     font-size: 0.95rem;
   }
@@ -1964,16 +2203,6 @@ h3 {
 
   .rodape__grade {
     grid-template-columns: 1.2fr 1fr;
-  }
-
-  /* Em 1 linha só (4 colunas), a divisória some da primeira célula, não
-     mais das ímpares (que faziam sentido só no layout de 2 colunas/linha). */
-  .faixa-numeros__item {
-    border-left: 1px solid rgba(255, 255, 255, 0.14);
-  }
-
-  .faixa-numeros__item:first-child {
-    border-left: none;
   }
 
   .processo__lista {
@@ -2084,15 +2313,41 @@ h3 {
     position: relative;
   }
 
+  /* Linha pontilhada de rota de voo, do centro do 1º círculo ao centro do
+     último. Com 4 colunas e gap de 2.5rem, o centro da 1ª coluna fica em
+     12.5% - 0.9375rem (3 gaps / 8). */
   .processo__lista::before {
     content: "";
     position: absolute;
     top: 1.25rem;
-    left: calc(12.5% + 1.25rem);
-    right: calc(12.5% + 1.25rem);
-    height: 1px;
-    background: var(--cor-borda);
+    left: calc(12.5% - 0.9375rem);
+    right: calc(12.5% - 0.9375rem);
+    height: 0;
+    border-top: 1.5px dashed rgba(15, 24, 98, 0.25);
     z-index: 0;
+  }
+
+  .processo__percurso {
+    position: relative;
+  }
+
+  /* Avião na ponta da linha preenchida — mesma variável de progresso da
+     linha, então anda junto com ela. */
+  .processo__aviao {
+    display: block;
+    position: absolute;
+    z-index: 2;
+    top: calc(1.25rem - 13px);
+    left: calc(12.5% - 0.9375rem + (75% + 1.875rem) * var(--progresso-processo, 0));
+    width: 26px;
+    height: 26px;
+    margin-left: -13px;
+    color: var(--cor-secundaria);
+    transform: rotate(90deg);
+    filter: drop-shadow(0 4px 6px rgba(15, 24, 98, 0.35));
+    /* Aparece logo que a viagem começa e "pousa" (some) ao chegar no
+       último passo, pra não ficar parado em cima do número 04. */
+    opacity: min(calc(var(--progresso-processo, 0) * 40), calc((1 - var(--progresso-processo, 0)) * 25));
   }
 
   /* Linha de preenchimento por cima da linha cinza acima — mesma posição
@@ -2103,27 +2358,36 @@ h3 {
   .processo__lista::after {
     content: "";
     position: absolute;
-    top: 1.25rem;
-    left: calc(12.5% + 1.25rem);
-    right: calc(12.5% + 1.25rem);
-    height: 2px;
+    top: calc(1.25rem - 0.5px);
+    left: calc(12.5% - 0.9375rem);
+    right: calc(12.5% - 0.9375rem);
+    height: 2.5px;
+    border-radius: 2px;
     background: linear-gradient(to right, var(--cor-primaria), var(--cor-secundaria));
     transform: scaleX(var(--progresso-processo, 0));
     transform-origin: left;
     z-index: 0;
   }
 
+  /* z-index 1: cada passo vira um contexto de empilhamento (o .reveal usa
+     transform), então precisa ficar acima da linha (::after, z-index 0) —
+     senão a linha risca o número dentro do círculo. */
   .processo__passo {
+    z-index: 1;
     padding-left: 0;
-    padding-top: 3.75rem;
+    padding-top: 4rem;
+    text-align: center;
   }
 
   .processo__numero {
-    position: absolute;
     top: 0;
-    left: 0;
+    left: 50%;
+    margin-left: -1.25rem;
     z-index: 1;
-    background: var(--cor-fundo);
-    box-shadow: 0 0 0 6px var(--cor-fundo);
+  }
+
+  .processo__passo p {
+    max-width: 26ch;
+    margin: 0 auto;
   }
 }
