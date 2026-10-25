@@ -10,13 +10,18 @@
    mexer no bloco ":root" logo abaixo (cores e fontes). O resto do arquivo
    raramente precisa ser tocado.
 
-   Linguagem visual: "passaporte". Papel levemente quente, tinta azul-marinho
-   e vermelho de carimbo, padrões guilhochê (as linhas finas de segurança de
-   passaporte e cédula, em images/guilloche-*.svg), carimbos circulares e a
-   zona de leitura mecânica (MRZ) no rodapé. Títulos numa serifada editorial
-   (Fraunces) com a palavra-chave em itálico vermelho. Nada de cursor
-   customizado, ímã em botão ou tilt 3D — pra uma assessoria de visto, a
-   confiança vem de parecer precisa e cuidada, não "divertida".
+   Linguagem visual: "passaporte de luxo". A capa do passaporte brasileiro
+   é azul-marinho com o brasão em dourado — daí a paleta: tinta
+   azul-marinho, papel marfim e dourado só em fios, ícones e detalhes sobre
+   o escuro. O vermelho vira tinta de carimbo: aparece pouco (o selo
+   "Visto aprovado", a ênfase dos títulos). Padrões guilhochê (as linhas de
+   segurança de passaporte e cédula, em images/guilloche-*.svg), carimbos
+   circulares e a zona de leitura mecânica (MRZ) no rodapé fecham o tema.
+
+   Premium = contenção: muito respiro, serifa editorial (Newsreader) nos
+   títulos, botões de cantos retos como papelaria, e um único momento de
+   movimento (o carimbo batendo). Nada de gradiente brilhante, brilho
+   seguindo o mouse, texto digitando ou elementos pulando.
    ========================================================================== */
 
 /* ==========================================================================
@@ -26,55 +31,97 @@
   /* Cores principais — extraídas por amostragem de pixel direto no logo real
      da Amazon Visto (não é aproximação): azul-marinho #0f1862 e vermelho
      #df0112, as mesmas cores do escudo EUA/Canadá e do texto "Amazon Visto".
-     --cor-primaria  = cor de destaque (botões, links, ícones, título do hero)
-     --cor-secundaria = cor de contraste (usada com moderação, em detalhes) */
+     --cor-primaria  = tinta principal (títulos, botões, faixas escuras)
+     --cor-secundaria = tinta de carimbo (usada com moderação) */
   --cor-primaria: #0f1862;
   --cor-primaria-escura: #090f42;
   --cor-primaria-clara: #e8e9f3;
   --cor-secundaria: #df0112;
   --cor-secundaria-escura: #a3020e;
-  /* Vermelho clareado pra texto/traço sobre o azul-marinho — o #df0112 puro
-     não passa contraste ali (fica ~2,6:1). */
+  /* Vermelho clareado pra traço sobre o azul-marinho — o #df0112 puro não
+     passa contraste ali (fica ~2,6:1). */
   --cor-secundaria-clara: #ff6b74;
 
-  /* Cores neutras (texto e fundo) — normalmente não precisa trocar.
-     Fundo levemente quente, como o papel de uma página de passaporte. */
-  --cor-texto: #1e2130;
-  --cor-texto-claro: #575b6e;
-  --cor-fundo: #fbfaf7;
-  --cor-fundo-alt: #f3f0e7;
-  --cor-borda: #e4e1d8;
+  /* Dourado "de brasão" — fios, ícones e ênfase SOBRE O ESCURO. No fundo
+     claro ele não tem contraste pra texto; lá só aparece em detalhes. */
+  --cor-dourado: #b8955a;
+  --cor-dourado-claro: #e3cc9c;
+
+  /* Cores neutras (texto e fundo) — branco frio e um azul-acinzentado bem
+     claro, o tom das páginas internas do passaporte (não o creme "de bom
+     gosto" padrão). */
+  --cor-texto: #171a2b;
+  --cor-texto-claro: #535a6e;
+  --cor-fundo: #fcfcfd;
+  --cor-fundo-alt: #eef1f6;
+  --cor-borda: #e1e5ee;
   --cor-branco: #ffffff;
 
   /* Fontes — troque o nome aqui E no link do Google Fonts, no <head> do
      index.html, se quiser usar outras fontes. */
-  --fonte-titulo: "Fraunces", Georgia, "Times New Roman", serif;
-  --fonte-corpo: "Inter", "Segoe UI", Arial, sans-serif;
-  /* Só pra sequência dos passos e pra MRZ do rodapé (que num passaporte
-     real é impressa numa fonte monoespaçada). */
+  --fonte-titulo: "Newsreader", Georgia, "Times New Roman", serif;
+  --fonte-corpo: "Hanken Grotesk", "Segoe UI", Arial, sans-serif;
+  /* Só pra MRZ do rodapé (que num passaporte real é monoespaçada). */
   --fonte-mono: "IBM Plex Mono", Consolas, "Liberation Mono", Menlo, monospace;
 
-  /* Espaçamento, sombra e cantos — controla o "estilo" geral do site */
-  --raio-borda: 18px;
-  --raio-borda-pequeno: 10px;
-  --sombra-suave: 0 4px 18px rgba(15, 24, 98, 0.07);
-  --sombra-media: 0 18px 40px -12px rgba(15, 24, 98, 0.22);
+  /* Cantos, movimento e largura */
+  --raio-borda: 12px;
+  --raio-borda-pequeno: 4px;
   --ease-saida: cubic-bezier(0.16, 1, 0.3, 1);
   --transicao: 0.25s ease;
   --largura-max: 1180px;
+  /* Margem lateral que alinha qualquer coisa de largura total (a trilha de
+     serviços) com o .container. Em % (não vw) de propósito: usada como
+     padding, o % é da largura do pai — sem contar a barra de rolagem, que
+     o 100vw inclui e desalinharia uns pixels. */
+  --margem-container: max(1.25rem, calc((100% - var(--largura-max)) / 2 + 1.25rem));
 }
 
-/* Superfícies do navegador também levam a marca: seleção de texto, barra de
-   rolagem, cursor de texto e anel de foco do teclado. */
-::selection {
-  background: var(--cor-secundaria);
-  color: var(--cor-branco);
+/* ==========================================================================
+   2. RESET BÁSICO + SUPERFÍCIES DO NAVEGADOR
+   ========================================================================== */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
 html {
+  scroll-behavior: smooth;
+  /* Compensa a altura do cabeçalho fixo ao clicar em links de âncora (#sobre etc) */
+  scroll-padding-top: 84px;
+  /* Rede de segurança: se algum texto/elemento acabar um pouco mais largo
+     que a tela, isso vira corte em vez de "esticar" o layout pro lado.
+     Só no <html>, não no <body>: declarar "overflow-x" nos dois força o
+     navegador a computar "overflow-y" como "auto" em AMBOS (regra do CSS
+     Overflow — um eixo não-visible "puxa" o outro pra auto), o que faz o
+     <body> virar um scroll-container próprio e quebra QUALQUER
+     "position: sticky" da página (ver ".servicos-scroll__pin"). */
+  overflow-x: hidden;
+  max-width: 100%;
+  color-scheme: light;
   scrollbar-color: var(--cor-primaria) var(--cor-fundo-alt);
-  accent-color: var(--cor-secundaria);
+  accent-color: var(--cor-primaria);
   caret-color: var(--cor-secundaria);
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  max-width: 100%;
+  font-family: var(--fonte-corpo);
+  font-size: 1.0625rem;
+  color: var(--cor-texto);
+  background: var(--cor-fundo);
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  overflow-wrap: break-word;
+}
+
+::selection {
+  background: var(--cor-primaria);
+  color: var(--cor-fundo);
 }
 
 ::-webkit-scrollbar {
@@ -91,49 +138,6 @@ html {
   border: 3px solid var(--cor-fundo-alt);
 }
 
-:focus-visible {
-  outline: 2px solid var(--cor-secundaria);
-  outline-offset: 3px;
-  border-radius: 4px;
-}
-
-/* ==========================================================================
-   2. RESET BÁSICO
-   ========================================================================== */
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-html {
-  scroll-behavior: smooth;
-  /* Compensa a altura do cabeçalho fixo ao clicar em links de âncora (#sobre etc) */
-  scroll-padding-top: 84px;
-  /* Rede de segurança: se algum texto/elemento acabar um pouco mais largo
-     que a tela (nome de e-mail comprido, etc), isso vira barra de rolagem
-     horizontal em vez de "esticar"/empurrar o layout inteiro para o lado —
-     sintoma que costuma ser confundido com "site bugado" no celular.
-     Só no <html>, não no <body>: declarar "overflow-x" nos dois força o
-     navegador a computar "overflow-y" como "auto" em AMBOS (regra do CSS
-     Overflow — um eixo não-visible "puxa" o outro pra auto), o que faz o
-     <body> virar um scroll-container próprio e quebra QUALQUER
-     "position: sticky" da página (ver ".servicos-scroll__pin"). Só no
-     html isso não acontece porque ele já é o scroller raiz do documento. */
-  overflow-x: hidden;
-  max-width: 100%;
-}
-
-body {
-  max-width: 100%;
-  font-family: var(--fonte-corpo);
-  color: var(--cor-texto);
-  background: var(--cor-fundo);
-  line-height: 1.65;
-  -webkit-font-smoothing: antialiased;
-  overflow-wrap: break-word;
-}
-
 img {
   max-width: 100%;
   display: block;
@@ -144,6 +148,11 @@ a {
   text-decoration: none;
 }
 
+a,
+button {
+  touch-action: manipulation;
+}
+
 ul,
 ol {
   list-style: none;
@@ -151,6 +160,7 @@ ol {
 
 button {
   font: inherit;
+  color: inherit;
   cursor: pointer;
   border: none;
   background: none;
@@ -161,29 +171,44 @@ h2,
 h3 {
   font-family: var(--fonte-titulo);
   font-optical-sizing: auto;
-  line-height: 1.1;
-  font-weight: 600;
+  font-weight: 400;
+  line-height: 1.05;
   letter-spacing: -0.02em;
   color: var(--cor-primaria-escura);
   text-wrap: balance;
 }
 
-/* A palavra-chave de cada título vai em itálico vermelho — é a ênfase do
-   site inteiro (no lugar do antigo texto com gradiente animado). */
-h1 em,
-h2 em {
-  font-style: italic;
+h3 {
   font-weight: 500;
-  color: var(--cor-secundaria);
+  letter-spacing: -0.01em;
+  line-height: 1.15;
 }
 
-h3 {
-  font-weight: 600;
-  letter-spacing: -0.01em;
+/* A palavra-chave de cada título muda só de TINTA — vermelho de carimbo no
+   papel, dourado sobre o azul-marinho (ver hero e rodapé). Sem itálico:
+   título serifado com palavra em itálico virou o clichê das landing pages
+   feitas em série. */
+h1 em,
+h2 em {
+  font-style: normal;
+  color: var(--cor-secundaria-escura);
 }
 
 p {
   text-wrap: pretty;
+}
+
+:focus-visible {
+  outline: 2px solid var(--cor-secundaria-escura);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* No escuro o anel de foco vira dourado (o vermelho escuro some ali). */
+.hero :focus-visible,
+.faixa-numeros :focus-visible,
+.rodape :focus-visible {
+  outline-color: var(--cor-dourado-claro);
 }
 
 /* Respeita quem prefere menos animação (acessibilidade) */
@@ -227,8 +252,8 @@ p {
 }
 
 /* Esconde visualmente mas mantém acessível a leitor de tela — usado onde um
-   efeito decorativo (ex.: o typewriter do hero) é aria-hidden e precisa de
-   um texto completo "de verdade" ao lado pra quem usa leitor de tela. */
+   elemento decorativo é aria-hidden e precisa de um texto "de verdade" ao
+   lado pra quem usa leitor de tela (ex.: legenda dos carimbos). */
 .visualmente-oculto {
   position: absolute;
   width: 1px;
@@ -242,7 +267,7 @@ p {
 }
 
 .secao {
-  padding: 4.5rem 0;
+  padding: 5rem 0;
   position: relative;
 }
 
@@ -250,200 +275,151 @@ p {
   background: var(--cor-fundo-alt);
 }
 
-/* Guilhochê de fundo — as linhas onduladas de segurança de uma página de
-   passaporte, em azul-marinho bem fraco. O SVG entra como MÁSCARA (a cor
-   vem do background-color), combinado com um degradê que apaga as bordas
-   de cima e de baixo. Estático: é papel, não efeito. */
-.secao::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background-color: rgba(15, 24, 98, 0.075);
-  -webkit-mask-image: url("../images/guilloche-faixa.svg"),
-    linear-gradient(180deg, transparent 0%, #000 18%, #000 82%, transparent 100%);
-  -webkit-mask-size: 520px 130px, 100% 100%;
-  -webkit-mask-repeat: repeat, no-repeat;
-  -webkit-mask-composite: source-in;
-  mask-image: url("../images/guilloche-faixa.svg"),
-    linear-gradient(180deg, transparent 0%, #000 18%, #000 82%, transparent 100%);
-  mask-size: 520px 130px, 100% 100%;
-  mask-repeat: repeat, no-repeat;
-  mask-composite: intersect;
-  pointer-events: none;
-}
-
 .secao > * {
   position: relative;
   z-index: 1;
 }
 
-/* Manchas de luz decorativas — pras seções que ficavam totalmente lisas
-   (Sobre, Como funciona, Contato). Puro radial-gradient parado (sem
-   filter:blur nem mix-blend-mode animado — a mesma lição de performance já
-   aprendida no fundo do hero), então custa bem pouco pra desenhar. */
-.sobre::after,
-.processo::after,
-.contato::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-}
-
-.sobre::after {
-  background: radial-gradient(46% 60% at 92% -10%, rgba(15, 24, 98, 0.2) 0%, transparent 70%),
-    radial-gradient(40% 52% at -6% 110%, rgba(223, 1, 18, 0.16) 0%, transparent 70%);
-}
-
-.processo::after {
-  background: radial-gradient(50% 64% at 4% -8%, rgba(223, 1, 18, 0.16) 0%, transparent 70%),
-    radial-gradient(44% 56% at 102% 108%, rgba(15, 24, 98, 0.2) 0%, transparent 70%);
-}
-
-.contato::after {
-  background: radial-gradient(55% 68% at 90% 6%, rgba(15, 24, 98, 0.18) 0%, transparent 70%),
-    radial-gradient(30% 40% at 0% 100%, rgba(223, 1, 18, 0.12) 0%, transparent 70%);
-}
-
 .secao__titulo {
-  font-size: clamp(2.1rem, 5vw, 3.4rem);
+  font-size: clamp(2.4rem, 5.6vw, 4rem);
+  line-height: 1.02;
   letter-spacing: -0.025em;
-  margin-bottom: 1.1rem;
+  margin-bottom: 1.25rem;
 }
 
 .secao__subtitulo {
   color: var(--cor-texto-claro);
-  font-size: 1.08rem;
-  max-width: 46ch;
+  font-size: 1.1rem;
+  max-width: 42ch;
 }
 
+/* Cabeçalho de seção alinhado à esquerda (no desktop vira duas colunas:
+   título à esquerda, subtítulo à direita, com um fio embaixo — ver
+   @media 1024px). Nada de bloco centralizado repetido em toda seção. */
 .secao__cabecalho {
-  text-align: center;
-  max-width: 640px;
-  margin: 0 auto 3rem;
-}
-
-.secao__cabecalho .secao__subtitulo {
-  margin: 0 auto;
+  margin-bottom: 3rem;
 }
 
 .secao__grade {
   display: grid;
-  gap: 2.5rem;
+  gap: 3rem;
 }
 
 /* ==========================================================================
    4. BOTÕES
+   Cantos quase retos (papelaria/documento), sem gradiente, sem brilho
+   varrendo, sem "pulo" no hover. O verde do WhatsApp fica só no ÍCONE —
+   reconhecível sem transformar o botão num adesivo verde.
    ========================================================================== */
 .botao {
   position: relative;
-  overflow: hidden;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
-  padding: 0.85rem 1.6rem;
-  border-radius: 999px;
-  font-weight: 700;
+  gap: 0.65rem;
+  padding: 0.95rem 1.45rem;
+  border: 1px solid transparent;
+  border-radius: var(--raio-borda-pequeno);
+  font-family: var(--fonte-corpo);
+  font-weight: 600;
   font-size: 0.95rem;
-  letter-spacing: 0.01em;
+  line-height: 1.2;
+  letter-spacing: 0.005em;
   text-align: center;
   cursor: pointer;
-  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease, background-color 0.25s ease,
-    border-color 0.25s ease, color 0.25s ease;
-}
-
-/* Brilho diagonal que varre o botão no hover — reforço de "isso é
-   clicável" sem depender de nenhuma animação contínua/piscando (o tipo de
-   movimento que já foi tirado do site por deixar tudo infantilizado). Só
-   ativa no :hover, então nunca compete com o resto da página. Puro
-   transform, sem custo de layout. */
-.botao::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(115deg, transparent 30%, rgba(255, 255, 255, 0.4) 50%, transparent 70%);
-  transform: translateX(-120%);
-  pointer-events: none;
-}
-
-.botao:hover::before {
-  transform: translateX(120%);
-  transition: transform 0.7s ease;
+  transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease, box-shadow 0.35s ease,
+    transform 0.2s ease;
 }
 
 .botao:active {
-  transform: scale(0.97);
+  transform: scale(0.98);
 }
 
 .botao:focus-visible {
   outline-offset: 4px;
-  border-radius: 999px;
 }
 
 .botao .icone {
-  width: 1.1em;
-  height: 1.1em;
+  width: 1.15em;
+  height: 1.15em;
   flex-shrink: 0;
 }
 
 .botao__seta {
-  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform 0.4s var(--ease-saida);
 }
 
 .botao:hover .botao__seta {
-  transform: translateX(4px);
+  transform: translateX(3px);
 }
 
-.botao--primario {
-  background: var(--cor-primaria);
-  color: var(--cor-branco);
-  box-shadow: var(--sombra-suave);
-}
-
-.botao--primario:hover {
-  background: var(--cor-primaria-escura);
-  transform: translateY(-3px);
-  box-shadow: var(--sombra-media);
-}
-
-/* Verde oficial do WhatsApp — usado nos botões que abrem conversa no
-   WhatsApp (todos os "botao--primario" deste site levam pro WhatsApp, então
-   ficou mais consistente um verde reconhecível do que a cor da marca).
-   Gradiente sutil (não é chapado) + sombra colorida — dá mais profundidade
-   sem depender de mais nenhum efeito animado. */
+/* Primário — tinta azul-marinho. Todos os botões do site levam ao
+   WhatsApp, por isso "botao--whatsapp" é o primário de fato. */
+.botao--primario,
 .botao--whatsapp {
-  background: linear-gradient(135deg, #2fe27a 0%, #1da851 100%);
-  color: #ffffff;
-  box-shadow: 0 6px 20px rgba(29, 168, 85, 0.38);
+  background: var(--cor-primaria);
+  color: var(--cor-fundo);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 12px 24px -14px rgba(15, 24, 98, 0.75);
 }
 
+.botao--primario:hover,
 .botao--whatsapp:hover {
-  background: linear-gradient(135deg, #37ec84 0%, #1a9548 100%);
-  transform: translateY(-3px);
-  box-shadow: 0 16px 34px rgba(29, 168, 85, 0.48);
+  background: var(--cor-primaria-escura);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 18px 32px -16px rgba(15, 24, 98, 0.9);
+}
+
+.botao--whatsapp .icone {
+  color: #25d366;
+}
+
+/* Sobre o escuro (hero, rodapé) o primário inverte: papel com tinta. */
+.hero .botao--whatsapp,
+.rodape .botao--whatsapp {
+  background: var(--cor-fundo);
+  color: var(--cor-primaria-escura);
+  box-shadow: 0 16px 34px -18px rgba(0, 0, 0, 0.7);
+}
+
+.hero .botao--whatsapp .icone,
+.rodape .botao--whatsapp .icone {
+  color: #1d9e4f;
+}
+
+.hero .botao--whatsapp:hover,
+.rodape .botao--whatsapp:hover {
+  background: var(--cor-branco);
+  box-shadow: 0 22px 40px -18px rgba(0, 0, 0, 0.8);
 }
 
 .botao--fantasma {
   background: transparent;
   color: var(--cor-primaria-escura);
-  border: 1.5px solid var(--cor-borda);
+  border-color: rgba(15, 24, 98, 0.25);
 }
 
 .botao--fantasma:hover {
   border-color: var(--cor-primaria);
-  background: var(--cor-primaria-clara);
-  transform: translateY(-3px);
+}
+
+.hero .botao--fantasma {
+  color: var(--cor-branco);
+  border-color: rgba(255, 255, 255, 0.32);
+}
+
+.hero .botao--fantasma:hover {
+  border-color: var(--cor-branco);
+  background: rgba(255, 255, 255, 0.06);
 }
 
 .botao--grande {
-  padding: 1.05rem 2.1rem;
+  padding: 1.1rem 1.75rem;
   font-size: 1rem;
 }
 
 /* ==========================================================================
    5. CABEÇALHO / NAVEGAÇÃO
+   Transparente por cima do hero (texto claro); ao rolar — ou com o menu do
+   celular aberto — ganha fundo de papel e texto escuro.
    ========================================================================== */
 .cabecalho {
   position: fixed;
@@ -451,18 +427,18 @@ p {
   left: 0;
   right: 0;
   z-index: 100;
-  background: rgba(251, 250, 247, 0.94);
-  backdrop-filter: blur(14px) saturate(1.4);
-  -webkit-backdrop-filter: blur(14px) saturate(1.4);
-  border-bottom: 1px solid transparent;
-  transition: box-shadow var(--transicao), background-color var(--transicao), border-color var(--transicao);
+  background: transparent;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  transition: background-color 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease;
 }
 
-/* Classe adicionada via JS quando a página é rolada — dá uma sombra sutil */
-.cabecalho--rolado {
-  box-shadow: 0 8px 24px -16px rgba(15, 24, 98, 0.35);
-  background: rgba(251, 250, 247, 0.94);
+.cabecalho--rolado,
+.cabecalho:has(.navegacao--aberta) {
+  background: rgba(252, 252, 253, 0.97);
+  backdrop-filter: blur(14px) saturate(1.3);
+  -webkit-backdrop-filter: blur(14px) saturate(1.3);
   border-bottom-color: var(--cor-borda);
+  box-shadow: 0 10px 30px -24px rgba(15, 24, 98, 0.5);
 }
 
 .cabecalho__conteudo {
@@ -475,7 +451,7 @@ p {
 .cabecalho__marca {
   display: flex;
   align-items: center;
-  gap: 0.6rem;
+  gap: 0.7rem;
   min-width: 0;
   flex-shrink: 1;
 }
@@ -483,50 +459,58 @@ p {
 .cabecalho__logo {
   width: 40px;
   height: 40px;
-  border-radius: var(--raio-borda-pequeno);
+  border-radius: 8px;
   object-fit: cover;
   flex-shrink: 0;
-  /* Fundo cinza claro sólido atrás do PNG transparente — qualquer resquício
-     de anti-aliasing nas bordas se mistura nele em vez de aparecer como
-     pontinho branco contra um fundo escuro. */
-  background: #e7e9f0;
+  /* Fundo claro sólido atrás do PNG transparente — qualquer resquício de
+     anti-aliasing nas bordas se mistura nele em vez de aparecer como
+     pontinho contra o fundo escuro do hero. */
+  background: #eef0f4;
 }
 
 .cabecalho__nome {
   font-family: var(--fonte-titulo);
-  font-weight: 600;
-  font-size: 1.2rem;
+  font-weight: 500;
+  font-size: 1.3rem;
   letter-spacing: -0.015em;
-  color: var(--cor-primaria-escura);
+  color: var(--cor-branco);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   /* Sem isso, um filho flex com white-space:nowrap se recusa a encolher
-     abaixo do tamanho total do texto (o "min-width:auto" padrão do flexbox
-     usa o conteúdo sem quebra como largura mínima) — o nome da empresa
-     nunca encolhia de verdade, só o pai (.cabecalho__marca) tentava, e
-     sobrava menos espaço que o previsto pro botão de menu no celular. */
+     abaixo do tamanho do texto ("min-width:auto" do flexbox) e sobra menos
+     espaço pro botão de menu no celular. */
   min-width: 0;
+  transition: color 0.35s ease;
 }
 
-/* Navegação — em telas pequenas vira um painel deslizando do topo,
-   controlado pela classe .navegacao--aberta (adicionada via JS) */
+.cabecalho--rolado .cabecalho__nome,
+.cabecalho:has(.navegacao--aberta) .cabecalho__nome {
+  color: var(--cor-primaria-escura);
+}
+
+/* Navegação — no celular vira um painel de altura total deslizando do
+   topo, com os links grandes em serifa; controlado pela classe
+   .navegacao--aberta (adicionada via JS). */
 .navegacao {
   position: fixed;
   top: 72px;
   left: 0;
   right: 0;
-  background: var(--cor-branco);
-  border-bottom: 1px solid var(--cor-borda);
-  padding: 1.5rem 1.25rem 2rem;
+  height: calc(100dvh - 72px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  background: var(--cor-fundo);
+  padding: 1.5rem 1.5rem calc(2rem + env(safe-area-inset-bottom, 0px));
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  justify-content: space-between;
+  gap: 2rem;
   transform: translateY(-8px);
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
-  transition: opacity var(--transicao), transform var(--transicao), visibility var(--transicao);
+  transition: opacity var(--transicao), transform 0.4s var(--ease-saida), visibility var(--transicao);
 }
 
 .navegacao--aberta {
@@ -539,59 +523,39 @@ p {
 .navegacao__lista {
   display: flex;
   flex-direction: column;
-  gap: 1.1rem;
-  text-align: center;
 }
 
 .navegacao__link {
   position: relative;
-  font-weight: 500;
-  font-size: 1.05rem;
-  color: var(--cor-texto);
+  display: block;
+  padding: 0.85rem 0;
+  border-bottom: 1px solid var(--cor-borda);
+  font-family: var(--fonte-titulo);
+  font-size: 2rem;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  color: var(--cor-primaria-escura);
   transition: color var(--transicao);
 }
 
-/* Fio vermelho que "desenha" embaixo do link no hover e fica no link da
-   seção atual — só no desktop, onde o menu é horizontal. */
-@media (min-width: 1024px) {
-  .navegacao__link {
-    font-size: 0.95rem;
-  }
-
-  .navegacao__link::after {
-    content: "";
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: -6px;
-    height: 2px;
-    border-radius: 2px;
-    background: var(--cor-secundaria);
-    transform: scaleX(0);
-    transform-origin: right;
-    transition: transform 0.4s var(--ease-saida);
-  }
-
-  .navegacao__link:hover::after,
-  .navegacao__link--ativo::after {
-    transform: scaleX(1);
-    transform-origin: left;
-  }
-}
-
-.navegacao__link:hover,
 .navegacao__link--ativo {
-  color: var(--cor-primaria-escura);
+  color: var(--cor-secundaria-escura);
 }
 
 .navegacao__cta {
-  align-self: center;
+  background: var(--cor-primaria);
+  color: var(--cor-fundo);
+  padding: 1.05rem 1.5rem;
+  font-size: 1rem;
 }
 
-/* Botão hambúrguer (só aparece no mobile) — mesma linguagem visual dos
-   outros botões do site (borda + fundo + sombra suave, ghost-button), em
-   vez de 3 linhas soltas flutuando sem nenhum contêiner. 44x44 pelo
-   mínimo de área de toque recomendado (a caixa antiga era 40x40). */
+.navegacao__cta:hover {
+  background: var(--cor-primaria-escura);
+}
+
+/* Botão hambúrguer (só aparece no mobile). 44x44 pelo mínimo de área de
+   toque recomendado. Contorno claro por cima do hero, papel depois de
+   rolar. */
 .menu-mobile {
   display: flex;
   flex-direction: column;
@@ -603,86 +567,83 @@ p {
   height: 44px;
   flex-shrink: 0;
   border-radius: var(--raio-borda-pequeno);
-  border: 1.5px solid var(--cor-borda);
-  background: var(--cor-branco);
-  box-shadow: var(--sombra-suave);
-  transition: border-color var(--transicao), background-color var(--transicao), box-shadow var(--transicao),
-    transform 0.2s ease;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  background: transparent;
+  transition: border-color var(--transicao), background-color var(--transicao), transform 0.2s ease;
   /* Reforço: sempre gruda na borda direita do cabeçalho, sem depender só do
-     justify-content:space-between do container (a <nav> do meio é
-     position:fixed e não deveria interferir, mas isso garante o
-     posicionamento mesmo assim). */
+     justify-content:space-between (a <nav> do meio é position:fixed). */
   margin-left: auto;
 }
 
-.menu-mobile:hover {
-  border-color: var(--cor-primaria);
-  background: var(--cor-primaria-clara);
-  box-shadow: var(--sombra-media);
+.menu-mobile:active {
+  transform: scale(0.94);
 }
 
-.menu-mobile:active {
-  transform: scale(0.92);
+.cabecalho--rolado .menu-mobile,
+.cabecalho:has(.navegacao--aberta) .menu-mobile {
+  border-color: var(--cor-borda);
+  background: var(--cor-branco);
 }
 
 .menu-mobile span {
   display: block;
-  height: 2.5px;
+  height: 1.5px;
   width: 20px;
-  background: var(--cor-primaria-escura);
+  background: var(--cor-branco);
   border-radius: 999px;
   transition: background-color var(--transicao);
 }
 
-/* Barra do meio um pouco mais curta e na cor de destaque — um toque de
-   marca discreto no ícone mais "genérico" do site; some (opacity/width)
-   assim que o menu abre, sobrando só as duas barras formando o X. */
-.menu-mobile span:nth-child(2) {
+.cabecalho--rolado .menu-mobile span,
+.cabecalho:has(.navegacao--aberta) .menu-mobile span {
+  background: var(--cor-primaria-escura);
+}
+
+/* Barra do meio mais curta e dourada — um toque de marca discreto no ícone
+   mais "genérico" do site; some (opacity + scaleX, só transform) assim que
+   o menu abre, sobrando as duas barras formando o X. */
+.menu-mobile span:nth-child(2),
+.cabecalho--rolado .menu-mobile span:nth-child(2),
+.cabecalho:has(.navegacao--aberta) .menu-mobile span:nth-child(2) {
   width: 13px;
-  background: var(--cor-secundaria);
+  background: var(--cor-dourado);
 }
 
 /* ABRIR é a mesma animação de FECHAR tocada de trás pra frente — os atrasos
-   abaixo são o espelho matemático exato um do outro, não números ajustados
-   a olho (por isso a abertura tinha uma leve mistura dos 2 símbolos antes:
-   o atraso das barras de fora ao abrir, 0.13s, não era o inverso exato do
-   atraso da barra do meio ao fechar, 0.16s).
+   abaixo são o espelho matemático exato um do outro.
 
-   FECHANDO (X -> hambúrguer, já confirmado correto): as duas barras de fora
-   giram de volta primeiro (atraso 0s, duração 0.22s => ativas de 0 a 0.22s),
-   só depois (atraso 0.16s, duração 0.15s => ativa de 0.16 a 0.31s) a barra
-   do meio reaparece. Duração total da sequência: 0.31s.
+   FECHANDO (X -> hambúrguer): as duas barras de fora giram de volta
+   primeiro (atraso 0s, duração 0.22s => ativas de 0 a 0.22s), só depois
+   (atraso 0.16s, duração 0.15s => ativa de 0.16 a 0.31s) a barra do meio
+   reaparece. Duração total da sequência: 0.31s.
 
-   ABRINDO (hambúrguer -> X): pra ser o inverso exato, cada trecho precisa
-   come far no instante espelhado (T - fim_original) e com a MESMA duração:
+   ABRINDO (hambúrguer -> X): cada trecho começa no instante espelhado
+   (T - fim_original) e com a MESMA duração:
    - barra do meio: espelho de [0.16, 0.31] => [0, 0.15]  (atraso 0s)
-   - barras de fora: espelho de [0, 0.22] => [0.09, 0.31] (atraso 0.09s)
-   Isso é literalmente tocar o fechamento de trás pra frente. */
+   - barras de fora: espelho de [0, 0.22] => [0.09, 0.31] (atraso 0.09s) */
 .menu-mobile span:nth-child(1),
 .menu-mobile span:nth-child(3) {
-  transition: transform 0.22s ease 0s;
+  transition: transform 0.22s ease 0s, background-color var(--transicao);
 }
 
 .menu-mobile span:nth-child(2) {
-  transition: opacity 0.15s ease 0.16s, width 0.15s ease 0.16s;
+  transition: opacity 0.15s ease 0.16s, transform 0.15s ease 0.16s;
 }
 
 .menu-mobile[aria-expanded="true"] span:nth-child(1) {
-  transform: translateY(7px) rotate(45deg);
-  transition: transform 0.22s ease 0.09s;
+  transform: translateY(6.5px) rotate(45deg);
+  transition: transform 0.22s ease 0.09s, background-color var(--transicao);
 }
 
 .menu-mobile[aria-expanded="true"] span:nth-child(3) {
-  transform: translateY(-7px) rotate(-45deg);
-  transition: transform 0.22s ease 0.09s;
+  transform: translateY(-6.5px) rotate(-45deg);
+  transition: transform 0.22s ease 0.09s, background-color var(--transicao);
 }
 
 .menu-mobile[aria-expanded="true"] span:nth-child(2) {
   opacity: 0;
-  width: 0;
-  margin-left: auto;
-  margin-right: auto;
-  transition: opacity 0.15s ease 0s, width 0.15s ease 0s;
+  transform: scaleX(0);
+  transition: opacity 0.15s ease 0s, transform 0.15s ease 0s;
 }
 
 /* ==========================================================================
@@ -690,97 +651,55 @@ p {
    ========================================================================== */
 .hero {
   position: relative;
-  /* Altura em PIXEL FIXO no celular, não em vh/dvh — depois de testar as
-     duas (vh trocava de valor dependendo se a página tinha sido rolada
-     antes; dvh também recalculava ao vivo durante a rolagem, causando um
-     "salto"/linha visível na transição), pixel fixo é a única opção que
-     não depende de o navegador calcular "quanto é a tela" — é sempre o
-     mesmo número, sem recálculo nenhum, sem susto. Calibrado acima da
-     altura real do conteúdo do hero (~490px com título+frase+2 botões)
-     pra nunca cortar nada, mas abaixo da tela de qualquer celular comum
-     (mesmo o menor, tipo iPhone SE, tem mais de 600px de altura visível),
-     pra sempre sobrar uma faixa da próxpima seção visível. Cresce de novo
-     a partir do tablet (ver @media 768px). */
-  min-height: 540px;
+  isolation: isolate;
+  /* Altura em PIXEL FIXO no celular, não em vh/dvh — vh trocava de valor
+     dependendo se a página tinha sido rolada antes, e dvh recalculava ao
+     vivo durante a rolagem, causando um "salto" visível. Pixel fixo não
+     depende do navegador calcular "quanto é a tela". Calibrado acima da
+     altura real do conteúdo, mas abaixo da tela de qualquer celular comum,
+     pra sempre sobrar uma faixa da próxima seção visível. Cresce de novo a
+     partir do tablet (ver @media 768px). */
+  min-height: 620px;
   display: flex;
-  /* flex-end (não center): ancora o texto perto da base, junto da onda —
-     com o conteúdo centralizado no meio de um hero tão alto, sobrava vazio
-     simétrico em cima E embaixo, dando a impressão de "só o meio tem
-     coisa". Empurrar pra base usa aquele espaço de verdade, sem precisar
-     mexer na altura do hero (min-height acima já foi calibrado e mexida
-     nisso causou problema antes, ver histórico de commits). */
+  /* Ancora o texto perto da base: usa o espaço de verdade em vez de deixar
+     vazio simétrico em cima e embaixo. */
   align-items: flex-end;
   padding-top: 72px;
-  /* O degradê de marca fica só no elemento .hero (a foto virou um elemento
-     próprio, .hero__foto, logo abaixo) — assim dá pra animar o zoom da
-     foto isolado, sem mexer no resto. */
-  background: linear-gradient(160deg, var(--cor-primaria-escura), var(--cor-primaria) 60%);
+  background: linear-gradient(160deg, var(--cor-primaria-escura), var(--cor-primaria) 65%);
   color: var(--cor-branco);
   overflow: hidden;
 }
 
-/* Foto do banner com "respiração" lenta (efeito Ken Burns) — zoom contínuo
-   e muito lento (20s) que nunca se repete de forma perceptível, dá vida ao
-   hero sem ser uma animação "notada". mix-blend-mode faz o mesmo papel do
-   antigo background-blend-mode: multiply (mistura a foto com o degradê da
-   marca por trás dela). */
+/* Foto do banner misturada ao azul da marca (multiply). Entra com um zoom
+   que "assenta" uma única vez — sem o antigo Ken Burns infinito. */
 .hero__foto {
   position: absolute;
   inset: 0;
-  z-index: 1;
+  z-index: -3;
   background: url("../images/banner.webp") center 22% / cover no-repeat;
   mix-blend-mode: multiply;
-  transform: scale(1.1);
-  animation: heroZoomFoto 20s ease-in-out infinite alternate;
+  opacity: 0.9;
+  animation: fotoAssentar 2.6s var(--ease-saida) both;
 }
 
-@keyframes heroZoomFoto {
+@keyframes fotoAssentar {
   from {
-    transform: scale(1.1);
+    transform: scale(1.08);
   }
   to {
-    transform: scale(1.22);
-  }
-}
-
-/* Luz ambiente lenta atrás da foto — dois brilhos (vermelho da marca +
-   azul claro) que derivam devagar (14s) em loop, tipo "aurora" contida.
-   mix-blend-mode: screen só clareia, nunca escurece — fica sempre sutil. */
-.hero__aurora {
-  position: absolute;
-  inset: -15%;
-  z-index: 2;
-  /* Sem filter:blur() E sem mix-blend-mode — medimos os dois: cada um
-     sozinho já é caro o bastante, animado numa área deste tamanho, pra
-     derrubar a página a ~1 frame por segundo neste ambiente (achamos isso
-     na prática, não é teórico). Opacidade simples nas próprias cores
-     rgba() já dá o efeito de brilho sutil sem entrar no caminho caro de
-     composição que blend-mode/blur exigem a cada frame. */
-  background: radial-gradient(40% 40% at 22% 26%, rgba(223, 1, 18, 0.28) 0%, rgba(223, 1, 18, 0.12) 40%, transparent 72%),
-    radial-gradient(36% 36% at 80% 74%, rgba(93, 166, 214, 0.24) 0%, rgba(93, 166, 214, 0.1) 40%, transparent 72%),
-    radial-gradient(30% 30% at 50% 100%, rgba(223, 1, 18, 0.16) 0%, transparent 70%);
-  animation: auroraFluir 14s ease-in-out infinite alternate;
-  pointer-events: none;
-}
-
-@keyframes auroraFluir {
-  from {
-    transform: translate(-3%, -2%);
-  }
-  to {
-    transform: translate(3%, 3%);
+    transform: scale(1);
   }
 }
 
 /* Faixa guilhochê fina por cima da foto — as linhas de segurança da capa
-   de um passaporte, em branco bem fraco (máscara SVG, mesma técnica do
-   fundo das seções claras). */
+   de um passaporte, em branco bem fraco. O SVG entra como MÁSCARA (a cor
+   vem do background-color). */
 .hero::before {
   content: "";
   position: absolute;
   inset: 0;
-  z-index: 3;
-  background-color: rgba(255, 255, 255, 0.07);
+  z-index: -1;
+  background-color: rgba(255, 255, 255, 0.05);
   -webkit-mask: url("../images/guilloche-faixa.svg") 0 0 / 640px 160px repeat;
   mask: url("../images/guilloche-faixa.svg") 0 0 / 640px 160px repeat;
   pointer-events: none;
@@ -789,71 +708,152 @@ p {
 .hero__overlay {
   position: absolute;
   inset: 0;
-  z-index: 4;
-  /* Mais claro no topo e à direita (deixa a foto e a vitrine aparecerem com
-     cor — pedido do cliente, "está pouco chamativo") e escuro à esquerda e
-     embaixo, onde fica o texto, pra manter a leitura. */
-  background: linear-gradient(90deg, rgba(9, 15, 66, 0.72) 0%, rgba(9, 15, 66, 0.35) 55%, rgba(9, 15, 66, 0.1) 100%),
-    linear-gradient(180deg, rgba(9, 15, 66, 0.1) 0%, rgba(9, 15, 66, 0.55) 100%);
+  z-index: -2;
+  /* Escuro à esquerda e embaixo (onde fica o texto), mais aberto à direita
+     e no topo, onde a foto e a vitrine respiram. */
+  background: linear-gradient(90deg, rgba(9, 15, 66, 0.85) 0%, rgba(9, 15, 66, 0.5) 50%, rgba(9, 15, 66, 0.2) 100%),
+    linear-gradient(180deg, rgba(9, 15, 66, 0.35) 0%, rgba(9, 15, 66, 0.1) 40%, rgba(9, 15, 66, 0.75) 100%);
 }
 
-/* Roseta guilhochê girando bem devagar atrás da vitrine — o "selo-d'água"
-   de um documento oficial. Só transform animado (barato), e para pra quem
-   prefere menos movimento (ver bloco reduced-motion do hero). */
+/* Roseta guilhochê dourada atrás da vitrine — o "selo-d'água" de um
+   documento oficial. Parada: é impressão, não efeito. */
 .hero__guilloche {
   position: absolute;
-  z-index: 4;
-  width: min(980px, 140vw);
+  z-index: -1;
+  width: min(1000px, 150vw);
   aspect-ratio: 1;
-  right: -22%;
+  right: -24%;
   top: 50%;
-  margin-top: calc(min(980px, 140vw) / -2);
-  background: radial-gradient(closest-side, rgba(255, 255, 255, 0.2), rgba(255, 107, 116, 0.16) 70%, rgba(255, 255, 255, 0.08));
+  transform: translateY(-50%);
+  background: radial-gradient(closest-side, rgba(227, 204, 156, 0.26), rgba(227, 204, 156, 0.12) 75%, rgba(227, 204, 156, 0.05));
   -webkit-mask: url("../images/guilloche-roseta.svg") center / contain no-repeat;
   mask: url("../images/guilloche-roseta.svg") center / contain no-repeat;
-  animation: rosetaGirar 140s linear infinite;
   pointer-events: none;
-}
-
-@keyframes rosetaGirar {
-  to {
-    transform: rotate(360deg);
-  }
 }
 
 .hero__grade {
   position: relative;
-  z-index: 5;
   display: grid;
   grid-template-columns: 1fr;
   align-items: center;
 }
 
 .hero__conteudo {
-  max-width: 720px;
-  padding-top: 3rem;
-  padding-bottom: 3rem;
+  max-width: 640px;
+  padding-block: 4rem 3rem;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .hero__foto,
-  .hero__aurora,
-  .hero__guilloche {
-    animation: none;
+/* Entrada do hero ao carregar — título, frase, botões e credenciais sobem
+   em sequência, uma vez. CSS puro: sem JS, sem dividir letras. */
+.hero__titulo,
+.hero__frase,
+.hero__acoes,
+.hero__credenciais {
+  animation: entrarSuave 1.1s var(--ease-saida) both;
+}
+
+.hero__frase {
+  animation-delay: 0.15s;
+}
+
+.hero__acoes {
+  animation-delay: 0.28s;
+}
+
+.hero__credenciais {
+  animation-delay: 0.4s;
+}
+
+@keyframes entrarSuave {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
   }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.hero__titulo {
+  color: var(--cor-branco);
+  font-size: clamp(3rem, 12.5vw, 6.5rem);
+  font-weight: 400;
+  line-height: 0.95;
+  letter-spacing: -0.03em;
+  margin-bottom: 1.5rem;
+}
+
+/* "Visto" sempre na segunda linha, recuado — composição de capa (masthead),
+   não uma palavra que quebrou por acaso. */
+.hero__titulo em {
+  display: block;
+  padding-left: 0.55em;
+  color: var(--cor-dourado-claro);
+}
+
+.hero__frase {
+  font-size: clamp(1.05rem, 1.7vw, 1.22rem);
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.8);
+  max-width: 44ch;
+  margin-bottom: 2.25rem;
+}
+
+.hero__acoes {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+/* No celular os botões ficam empilhados e com largura total — evita o texto
+   longo do botão forçar o layout a "estourar" para o lado. A partir do
+   tablet (ver @media) voltam a ficar lado a lado. */
+.hero__acoes .botao {
+  width: 100%;
+}
+
+/* Credenciais — fio dourado em cima, ícones de traço dourados. */
+.hero__credenciais {
+  display: grid;
+  gap: 0.8rem;
+  margin-top: 2.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(227, 204, 156, 0.3);
+}
+
+.hero__credenciais li {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.65rem;
+  font-size: 0.92rem;
+  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.hero__credenciais .icone {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  margin-top: 0.05em;
+  color: var(--cor-dourado-claro);
+}
+
+.hero__credenciais strong {
+  color: var(--cor-branco);
+  font-weight: 600;
 }
 
 /* ==========================================================================
    VITRINE DE DESTINOS — leque de fotos reais (as mesmas dos cards de
-   Serviços) estilo carimbo/foto de passaporte, com um selo de "aprovado"
-   por cima. Só desktop (≥1024px, ver media query lá embaixo): é o
-   elemento que dá o "uau" que faltava na tela inicial — específico do
-   negócio (visto/passaporte), não um efeito genérico de landing page.
+   Serviços) estilo foto impressa de passaporte, com o selo de "aprovado"
+   por cima. Só desktop (≥1024px): é o momento autoral da página — o leque
+   abre e o carimbo bate.
    ========================================================================== */
 .hero__vitrine {
   display: none;
   position: relative;
-  height: 480px;
+  height: 500px;
 }
 
 .hero__selo {
@@ -861,29 +861,26 @@ p {
   --px: 0px;
   --py: 0px;
   position: absolute;
-  width: 190px;
+  width: 196px;
   margin: 0;
-  padding: 10px 10px 34px;
-  background: var(--cor-branco);
-  border-radius: 10px;
-  box-shadow: 0 20px 45px rgba(4, 8, 40, 0.4);
+  padding: 10px 10px 40px;
+  background: #fdfdfb;
+  border-radius: 3px;
+  box-shadow: 0 2px 6px rgba(2, 6, 30, 0.25), 0 34px 60px -24px rgba(2, 6, 30, 0.7);
   opacity: 0;
-  transform: translate(var(--px), var(--py)) rotate(var(--rot)) scale(0.7) translateY(40px);
-  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.5s ease, box-shadow 0.3s ease;
+  transform: translate(var(--px), var(--py)) rotate(var(--rot)) scale(0.8) translateY(36px);
+  transition: transform 0.9s var(--ease-saida), opacity 0.6s ease, box-shadow 0.4s ease;
   cursor: default;
 }
 
 .hero__selo img {
   width: 100%;
   /* "height: auto" é essencial aqui: sem isso, o atributo height="800" do
-     HTML (bom pra evitar layout-shift, mas pensado pro card quadrado da
-     seção Serviços) vence e ignora o aspect-ratio abaixo — o card fica
-     gigante (a altura real da imagem, 800px, em vez de 4:5 proporcional
-     à largura). */
+     HTML (bom pra evitar layout-shift) vence e ignora o aspect-ratio. */
   height: auto;
   aspect-ratio: 4 / 5;
   object-fit: cover;
-  border-radius: 4px;
+  border-radius: 1px;
   display: block;
 }
 
@@ -891,40 +888,40 @@ p {
   position: absolute;
   left: 10px;
   right: 10px;
-  bottom: 9px;
+  bottom: 10px;
   font-family: var(--fonte-titulo);
   font-style: italic;
-  font-weight: 500;
-  font-size: 0.95rem;
+  font-weight: 400;
+  font-size: 1.02rem;
   color: var(--cor-primaria-escura);
   text-align: center;
   letter-spacing: -0.01em;
 }
 
 .hero__selo--1 {
-  --rot: -8deg;
+  --rot: -7deg;
   top: 0;
   left: 6%;
   z-index: 3;
 }
 
 .hero__selo--2 {
-  --rot: 6deg;
-  top: 18px;
-  left: 46%;
+  --rot: 5deg;
+  top: 22px;
+  left: 47%;
   z-index: 4;
 }
 
 .hero__selo--3 {
-  --rot: 5deg;
-  top: 208px;
+  --rot: 4deg;
+  top: 218px;
   left: 0%;
   z-index: 2;
 }
 
 .hero__selo--4 {
-  --rot: -7deg;
-  top: 224px;
+  --rot: -6deg;
+  top: 236px;
   left: 42%;
   z-index: 1;
 }
@@ -935,376 +932,143 @@ p {
 }
 
 .hero__vitrine--revelada .hero__selo--1 {
-  transition-delay: 0.15s;
+  transition-delay: 0.1s;
 }
 
 .hero__vitrine--revelada .hero__selo--2 {
-  transition-delay: 0.32s;
+  transition-delay: 0.24s;
 }
 
 .hero__vitrine--revelada .hero__selo--3 {
-  transition-delay: 0.49s;
+  transition-delay: 0.38s;
 }
 
 .hero__vitrine--revelada .hero__selo--4 {
-  transition-delay: 0.66s;
+  transition-delay: 0.52s;
 }
 
 /* Ordem no arquivo importa aqui: precisa vir DEPOIS de ".hero__vitrine--revelada
-   .hero__selo" pra vencer no empate de especificidade (as duas regras têm
-   0,2,0) e "endireitar"/aproximar o card do mouse no hover. */
+   .hero__selo" pra vencer no empate de especificidade e "endireitar" o card
+   no hover. */
 .hero__selo:hover {
   --rot: 0deg;
-  transform: translate(var(--px), var(--py)) rotate(var(--rot)) scale(1.07) translateY(-10px);
-  box-shadow: 0 30px 60px rgba(4, 8, 40, 0.48);
+  transform: translate(var(--px), var(--py)) rotate(var(--rot)) scale(1.04) translateY(-8px);
+  box-shadow: 0 2px 6px rgba(2, 6, 30, 0.25), 0 44px 70px -26px rgba(2, 6, 30, 0.8);
   z-index: 10;
 }
 
-/* Selo circular "VISTO APROVADO" — SVG puro (sem imagem/lib nenhuma),
-   texto seguindo um path circular. "Bate" no leque com um pequeno impacto
-   de escala, como um carimbo de verdade sendo aplicado. */
+/* Selo circular "VISTO APROVADO" — SVG puro, texto seguindo um path
+   circular, com o filtro "tinta de carimbo" (definido no topo do
+   index.html). Bate no leque por último, como um carimbo de verdade. */
 .hero__carimbo {
   --px: 0px;
   --py: 0px;
   position: absolute;
-  top: -20px;
-  right: -6px;
-  width: 128px;
-  height: 128px;
+  top: -22px;
+  right: -8px;
+  width: 132px;
+  height: 132px;
   color: var(--cor-secundaria-clara);
   opacity: 0;
-  transform: translate(var(--px), var(--py)) rotate(-16deg) scale(1.8);
-  filter: url(#tintaCarimbo) drop-shadow(0 12px 22px rgba(0, 0, 0, 0.4));
+  transform: translate(var(--px), var(--py)) rotate(-16deg) scale(1.9);
+  filter: url(#tintaCarimbo) drop-shadow(0 10px 18px rgba(0, 0, 0, 0.35));
   z-index: 6;
-  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease;
-  transition-delay: 0.85s;
+  transition: transform 0.45s cubic-bezier(0.5, 0, 0.2, 1), opacity 0.3s ease;
+  transition-delay: 1.1s;
 }
 
 .hero__vitrine--revelada .hero__carimbo {
-  opacity: 0.96;
+  opacity: 0.95;
   transform: translate(var(--px), var(--py)) rotate(-16deg) scale(1);
 }
 
-@media (min-width: 1024px) {
-  .hero__grade {
-    grid-template-columns: 1.05fr 0.95fr;
-    gap: 2.5rem;
-  }
-
-  .hero__vitrine {
-    display: block;
-  }
-}
-
 @media (prefers-reduced-motion: reduce) {
+  .hero__foto,
+  .hero__titulo,
+  .hero__frase,
+  .hero__acoes,
+  .hero__credenciais {
+    animation: none;
+  }
+
   .hero__selo,
   .hero__carimbo {
     transition: none;
   }
 }
 
-/* Selo do hero — reescrito como indicador de status ("badge" com ponto),
-   não mais um carimbo saltitante. Vidro fosco sutil (glassmorphism
-   discreto) em vez de vermelho sólido: lê como "informação verificada",
-   não como chamada de brinquedo. */
-.hero__eyebrow {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.55rem;
-  font-family: var(--fonte-corpo);
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-  font-size: 0.75rem;
-  color: var(--cor-branco);
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.25);
-  padding: 0.55rem 1.1rem;
-  border-radius: 999px;
-  margin-bottom: 1.4rem;
-  font-weight: 700;
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
-}
-
-.hero__eyebrow::before {
-  content: "";
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--cor-secundaria);
-  flex-shrink: 0;
-}
-
-/* Nome do serviço digitado/apagado em loop (ver main.js,
-   "ativarTypewriterDeServicos") — largura mínima evita o resto do texto
-   "pulando" de lugar a cada letra digitada/apagada. */
-.hero__eyebrow-typewriter {
-  display: inline-block;
-  min-width: 9.5ch;
-  font-weight: 800;
-}
-
-.hero__eyebrow-typewriter::after {
-  content: "";
-  display: inline-block;
-  width: 2px;
-  height: 0.85em;
-  margin-left: 0.15em;
-  background: var(--cor-branco);
-  vertical-align: -0.1em;
-  animation: caretPiscar 1s step-end infinite;
-}
-
-@keyframes caretPiscar {
-  0%,
-  49% {
-    opacity: 1;
-  }
-  50%,
-  100% {
-    opacity: 0;
-  }
-}
-
-.hero__titulo {
-  color: var(--cor-branco);
-  font-size: clamp(3rem, 9vw, 5.6rem);
-  font-weight: 600;
-  line-height: 0.98;
-  letter-spacing: -0.035em;
-  margin-bottom: 1.4rem;
-  text-shadow: 0 6px 30px rgba(4, 8, 40, 0.35);
-}
-
-.hero__titulo em {
-  color: var(--cor-secundaria-clara);
-  font-weight: 400;
-  letter-spacing: -0.02em;
-}
-
-/* Cada letra entra separada (ver main.js, "ativarTituloEmLetras") — some
-   junto com o texto normal se o JS não rodar (progressive enhancement: sem
-   JS, o <h1> simplesmente mostra "Amazon Visto" direto, sem quebrar nada). */
-.hero__titulo-letra {
-  display: inline-block;
-  opacity: 0;
-  transform: translateY(0.4em) rotate(4deg);
-  filter: blur(6px);
-  transition: opacity 0.7s var(--ease-saida), transform 0.9s var(--ease-saida), filter 0.7s var(--ease-saida);
-}
-
-.hero__titulo--revelado .hero__titulo-letra {
-  opacity: 1;
-  transform: none;
-  filter: none;
-}
-
-.hero__frase {
-  font-size: clamp(1rem, 2.4vw, 1.25rem);
-  color: rgba(255, 255, 255, 0.92);
-  max-width: 52ch;
-  margin-bottom: 2rem;
-}
-
-.hero__acoes {
-  display: flex;
-  flex-direction: column;
-  flex-wrap: wrap;
-  gap: 1rem;
-}
-
-/* No celular os botões ficam empilhados e com largura total — evita o texto
-   longo do botão de WhatsApp forçar o layout a "estourar" para o lado
-   (era a causa do conteúdo parecendo esticado horizontalmente no celular).
-   A partir do tablet (ver @media mais abaixo) voltam a ficar lado a lado. */
-.hero__acoes .botao {
-  width: 100%;
-}
-
-.hero .botao--fantasma {
-  color: var(--cor-branco);
-  border: 2px solid rgba(255, 255, 255, 0.55);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
-}
-
-/* Inverte pra branco sólido no hover (em vez de um leve tint) — no fundo
-   escuro do hero, esse contraste forte é o que faz o botão realmente
-   "chamar", sem precisar de nenhuma cor fora da paleta. */
-.hero .botao--fantasma:hover {
-  background: var(--cor-branco);
-  border-color: var(--cor-branco);
-  color: var(--cor-primaria-escura);
-  box-shadow: 0 16px 34px rgba(0, 0, 0, 0.25);
-}
-
-.hero__nota {
-  display: flex;
-  align-items: flex-start;
-  line-height: 1.45;
-  gap: 0.5rem;
-  margin-top: 1.1rem;
-  font-size: 0.88rem;
-  color: rgba(255, 255, 255, 0.85);
-}
-
-.hero__nota .icone {
-  width: 17px;
-  height: 17px;
-  color: var(--cor-secundaria);
-  background: var(--cor-branco);
-  border-radius: 50%;
-  padding: 2px;
-  flex-shrink: 0;
-  margin-top: 0.1em;
-}
-
-.hero__nota strong {
-  color: var(--cor-branco);
-  font-weight: 700;
-}
-
-.hero__seta {
-  /* Escondida no celular: o hero ali é mais baixo (74vh) e o conteúdo
-     (título + frase + 2 botões empilhados) já ocupa quase todo o espaço —
-     sobrava pouco lugar pra essa setinha sem encavalar no botão "Ver
-     serviços". Num touchscreen "role pra baixo" já é intuitivo mesmo sem
-     dica visual, então some no mobile e volta a partir do tablet. */
-  display: none;
-  position: absolute;
-  /* Levantado pra ficar acima da onda decorativa (.hero__onda) no rodapé
-     do hero, em vez de ficar por trás/cortado por ela. */
-  bottom: 4.5rem;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  align-items: center;
-  justify-content: center;
-  color: var(--cor-branco);
-  border: 1.5px solid rgba(255, 255, 255, 0.5);
-  animation: flutuar 2.4s ease-in-out infinite;
-  z-index: 6;
-}
-
-/* Onda decorativa na base do hero — transição suave pra seção seguinte em
-   vez de um corte reto, dá mais dinamismo sem perder a sobriedade. */
-.hero__onda {
-  position: absolute;
-  bottom: -1px;
-  left: 0;
-  width: 100%;
-  height: 56px;
-  z-index: 5;
-}
-
-.hero__onda-path {
-  fill: var(--cor-fundo);
-}
-
-.hero__seta svg {
-  width: 20px;
-  height: 20px;
-}
-
-@keyframes flutuar {
-  0%,
-  100% {
-    transform: translate(-50%, 0);
-  }
-  50% {
-    transform: translate(-50%, 8px);
-  }
-}
-
 /* ==========================================================================
-   6b. FAIXA "TICKER" — rolagem infinita com os serviços
-   Lista duplicada uma vez (ver HTML) + translateX(-50%): quando a primeira
-   cópia sai totalmente da tela, a segunda está exatamente onde a primeira
-   começou — loop perfeito sem "pulo". Só transform animado (sem
-   layout/paint caro), custa bem pouco mesmo rodando o tempo todo.
+   6b. FAIXA DE DESTINOS
+   Os serviços em caixa-alta espaçada, como a linha de destinos de um
+   cartão de embarque. Parada de propósito — a antiga faixa rolando sem fim
+   pedia atenção sem ter nada novo pra mostrar. No celular vira uma grade
+   de 2 colunas (sem separadores, que ficariam soltos na quebra de linha);
+   a partir do tablet, uma linha só com estrelas douradas entre os itens.
    ========================================================================== */
-.ticker {
-  position: relative;
-  overflow: hidden;
+.faixa-destinos {
   background: var(--cor-primaria-escura);
-  padding: 1.1rem 0;
+  border-top: 1px solid rgba(227, 204, 156, 0.22);
+  padding: 1.4rem 0;
 }
 
-.ticker__trilha {
-  display: flex;
-  align-items: center;
-  width: max-content;
-  animation: tickerRolar 30s linear infinite;
-  will-change: transform;
+.faixa-destinos__lista {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.75rem 1rem;
+  text-align: center;
 }
 
-.ticker:hover .ticker__trilha {
-  animation-play-state: paused;
+.faixa-destinos__item {
+  font-family: var(--fonte-corpo);
+  font-weight: 600;
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: rgba(255, 255, 255, 0.78);
 }
 
-.ticker__item {
-  display: inline-flex;
-  align-items: center;
-  font-family: var(--fonte-titulo);
-  font-style: italic;
-  font-weight: 400;
-  font-size: clamp(1.2rem, 2.4vw, 1.75rem);
-  letter-spacing: -0.01em;
-  color: rgba(255, 255, 255, 0.92);
-  white-space: nowrap;
-}
-
-/* Separador: estrela de 4 pontas em vermelho (máscara CSS, sem glifo
-   unicode), como os ornamentos impressos numa página de passaporte. */
-.ticker__item::after {
-  content: "";
-  width: 14px;
-  height: 14px;
-  margin: 0 2rem;
-  background: var(--cor-secundaria-clara);
-  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 0c.8 6.4 5.6 11.2 12 12-6.4.8-11.2 5.6-12 12-.8-6.4-5.6-11.2-12-12C6.4 11.2 11.2 6.4 12 0Z'/%3E%3C/svg%3E") center / contain no-repeat;
-  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 0c.8 6.4 5.6 11.2 12 12-6.4.8-11.2 5.6-12 12-.8-6.4-5.6-11.2-12-12C6.4 11.2 11.2 6.4 12 0Z'/%3E%3C/svg%3E") center / contain no-repeat;
-  flex-shrink: 0;
-}
-
-@keyframes tickerRolar {
-  from {
-    transform: translateX(0);
+@media (min-width: 768px) {
+  .faixa-destinos__item {
+    font-size: 0.72rem;
+    letter-spacing: 0.2em;
+    white-space: nowrap;
   }
-  to {
-    transform: translateX(-50%);
-  }
-}
 
-@media (prefers-reduced-motion: reduce) {
-  .ticker__trilha {
-    animation: none;
+  .faixa-destinos__lista {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 0.75rem 0;
+  }
+
+  /* Separador: estrela de 4 pontas dourada (máscara CSS, sem glifo
+     unicode), como os ornamentos impressos numa página de passaporte. */
+  .faixa-destinos__item + .faixa-destinos__item::before {
+    content: "";
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    margin: 0 1.6rem;
+    vertical-align: 0.15em;
+    background: var(--cor-dourado-claro);
+    -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 0c.8 6.4 5.6 11.2 12 12-6.4.8-11.2 5.6-12 12-.8-6.4-5.6-11.2-12-12C6.4 11.2 11.2 6.4 12 0Z'/%3E%3C/svg%3E") center / contain no-repeat;
+    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 0c.8 6.4 5.6 11.2 12 12-6.4.8-11.2 5.6-12 12-.8-6.4-5.6-11.2-12-12C6.4 11.2 11.2 6.4 12 0Z'/%3E%3C/svg%3E") center / contain no-repeat;
   }
 }
+
 
 /* ==========================================================================
    7. SOBRE
    ========================================================================== */
-.sobre__imagem img {
-  border-radius: var(--raio-borda);
-  box-shadow: 0 30px 60px -24px rgba(15, 24, 98, 0.45);
-  /* No celular a imagem ocupa a LARGURA TODA da tela (a grade vira 1
-     coluna) — com a proporção vertical (9/11) pensada pro desktop, isso
-     virava uma foto gigante e comprida. Mais baixa/larga aqui; volta pra
-     vertical só no desktop (ver @media 1024px), onde ela divide espaço
-     com o texto ao lado, não a largura toda.
-     max-height é um limite duro em pixels — trava o tamanho de vez,
-     independente de qualquer cálculo de proporção/largura de viewport. */
-  aspect-ratio: 4 / 3;
-  max-height: 260px;
-  object-fit: cover;
-  width: 100%;
+/* Corta a roseta atrás da foto na borda da seção — senão ela vaza por cima
+   do título de "Como funciona". */
+.sobre {
+  overflow: hidden;
 }
 
-/* Moldura fina branca por dentro da foto + roseta guilhochê atrás, saindo
-   pelo canto — lê como a foto de uma página de passaporte. */
+/* Moldura fina por dentro da foto + roseta guilhochê dourada atrás, saindo
+   pelo canto — lê como a foto colada numa página de passaporte. */
 .sobre__imagem {
   position: relative;
 }
@@ -1313,11 +1077,11 @@ p {
   content: "";
   position: absolute;
   z-index: -1;
-  width: 70%;
+  width: 72%;
   aspect-ratio: 1;
-  left: -18%;
-  bottom: -16%;
-  background-color: rgba(223, 1, 18, 0.22);
+  left: -20%;
+  bottom: -18%;
+  background-color: rgba(184, 149, 90, 0.45);
   -webkit-mask: url("../images/guilloche-roseta.svg") center / contain no-repeat;
   mask: url("../images/guilloche-roseta.svg") center / contain no-repeat;
   pointer-events: none;
@@ -1326,20 +1090,39 @@ p {
 .sobre__imagem::after {
   content: "";
   position: absolute;
-  inset: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.6);
+  inset: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.55);
   border-radius: calc(var(--raio-borda) - 8px);
   pointer-events: none;
+}
+
+.sobre__imagem img {
+  border-radius: var(--raio-borda);
+  box-shadow: 0 40px 80px -40px rgba(15, 24, 98, 0.55);
+  /* No celular a imagem ocupa a LARGURA TODA da tela (a grade vira 1
+     coluna) — com a proporção vertical do desktop ela virava uma foto
+     gigante. Mais baixa/larga aqui; volta pra vertical só no desktop. */
+  aspect-ratio: 4 / 3;
+  max-height: 280px;
+  object-fit: cover;
+  width: 100%;
 }
 
 .sobre__texto p {
   color: var(--cor-texto-claro);
   margin-bottom: 1rem;
-  max-width: 62ch;
+  max-width: 60ch;
+}
+
+.sobre__texto .sobre__lead {
+  font-size: 1.2rem;
+  line-height: 1.6;
+  color: var(--cor-texto);
+  margin-bottom: 1.1rem;
 }
 
 .sobre__diferenciais {
-  margin-top: 2rem;
+  margin-top: 2.25rem;
   display: flex;
   flex-direction: column;
   border-top: 1px solid var(--cor-borda);
@@ -1348,74 +1131,82 @@ p {
 .sobre__diferenciais li {
   display: grid;
   grid-template-columns: auto 1fr;
-  gap: 1rem;
+  gap: 1.1rem;
   align-items: start;
-  padding: 1.1rem 0;
+  padding: 1.3rem 0;
   border-bottom: 1px solid var(--cor-borda);
 }
 
 .sobre__diferenciais li div {
   display: flex;
   flex-direction: column;
-  gap: 0.15rem;
+  gap: 0.2rem;
 }
 
 .sobre__icone {
-  width: 44px;
-  height: 44px;
-  padding: 10px;
-  border-radius: 50%;
-  color: var(--cor-secundaria);
-  background: var(--cor-branco);
-  box-shadow: 0 0 0 1px var(--cor-borda), 0 6px 14px -6px rgba(15, 24, 98, 0.25);
+  width: 26px;
+  height: 26px;
+  margin-top: 3px;
+  color: var(--cor-secundaria-escura);
 }
 
 .sobre__diferenciais strong {
   font-family: var(--fonte-titulo);
-  font-size: 1.12rem;
-  font-weight: 600;
+  font-size: 1.3rem;
+  font-weight: 500;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
   color: var(--cor-primaria-escura);
 }
 
 .sobre__diferenciais span {
   color: var(--cor-texto-claro);
-  font-size: 0.95rem;
+  font-size: 0.97rem;
 }
 
 /* ==========================================================================
    8. COMO FUNCIONA (processo em passos)
-   Numeração própria (não usa o counter() das seções, esses números são o
-   CONTEÚDO da seção, não um índice de navegação) — círculo com o mesmo
-   tratamento monoespaçado do chip do eyebrow, pra soar como o mesmo
-   "sistema de numeração" em todo o site.
+   No celular: lista vertical com um pontilhado ligando os círculos. No
+   desktop: 4 colunas com a rota de voo na horizontal e o avião percorrendo
+   conforme a rolagem (ver @media 1024px e main.js).
    ========================================================================== */
 .processo__lista {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 2.25rem;
+  gap: 2.5rem;
 }
 
 .processo__passo {
   position: relative;
-  padding-left: 3.5rem;
+  padding-left: 4.25rem;
+}
+
+/* Pontilhado vertical entre um círculo e o próximo (só celular/tablet). */
+.processo__passo:not(:last-child)::before {
+  content: "";
+  position: absolute;
+  left: 1.375rem;
+  top: 3.25rem;
+  bottom: -2rem;
+  border-left: 1px dashed rgba(15, 24, 98, 0.25);
 }
 
 .processo__numero {
   position: absolute;
   left: 0;
   top: 0;
-  width: 2.5rem;
-  height: 2.5rem;
+  width: 2.75rem;
+  height: 2.75rem;
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: 50%;
   background: var(--cor-branco);
   color: var(--cor-primaria);
-  box-shadow: inset 0 0 0 1.5px rgba(15, 24, 98, 0.22);
+  box-shadow: inset 0 0 0 1px rgba(15, 24, 98, 0.22);
   font-family: var(--fonte-titulo);
-  font-weight: 600;
-  font-size: 0.95rem;
+  font-weight: 500;
+  font-size: 1.05rem;
   font-variant-numeric: lining-nums;
   transition: background-color 0.5s var(--ease-saida), color 0.5s var(--ease-saida),
     box-shadow 0.5s var(--ease-saida), transform 0.5s var(--ease-saida);
@@ -1425,9 +1216,9 @@ p {
    enche de azul-marinho, como um carimbo de entrada no passaporte. */
 .processo__passo--alcancado .processo__numero {
   background: var(--cor-primaria);
-  color: var(--cor-branco);
-  box-shadow: inset 0 0 0 1.5px var(--cor-primaria), 0 8px 18px -6px rgba(15, 24, 98, 0.55);
-  transform: scale(1.06);
+  color: var(--cor-fundo);
+  box-shadow: inset 0 0 0 1px var(--cor-primaria), 0 10px 20px -8px rgba(15, 24, 98, 0.6);
+  transform: scale(1.05);
 }
 
 .processo__aviao {
@@ -1435,26 +1226,27 @@ p {
 }
 
 .processo__passo h3 {
-  font-size: 1.25rem;
-  margin-bottom: 0.4rem;
+  font-size: 1.4rem;
+  margin-bottom: 0.5rem;
 }
 
 .processo__passo p {
   color: var(--cor-texto-claro);
-  font-size: 0.92rem;
+  font-size: 0.97rem;
+  max-width: 34ch;
 }
 
 /* ==========================================================================
-   9. FAIXA DE NÚMEROS (prova/credibilidade)
-   Reescrita como painel de dados — divisórias finas entre células, números
-   com espaçamento tabular (não "dançam" de largura ao contar), textura de
-   grade técnica de fundo. Ainda conta de 0 até o valor real (ver main.js).
+   9. FAIXA DE RECONHECIMENTO (carimbos)
+   Cada dado vira um carimbo de passaporte: anel duplo + texto em curva
+   (SVG) com o valor no centro, levemente torto como carimbo batido à mão,
+   com o filtro "tinta de carimbo". Papel e dourado alternados.
    ========================================================================== */
 .faixa-numeros {
   position: relative;
-  background: radial-gradient(60% 120% at 50% 0%, #1a2580 0%, transparent 70%),
+  background: radial-gradient(60% 120% at 50% 0%, #18237a 0%, transparent 70%),
     linear-gradient(160deg, var(--cor-primaria-escura), var(--cor-primaria));
-  padding: 4rem 0;
+  padding: 4.5rem 0;
   overflow: hidden;
 }
 
@@ -1462,7 +1254,7 @@ p {
   content: "";
   position: absolute;
   inset: 0;
-  background-color: rgba(255, 255, 255, 0.06);
+  background-color: rgba(227, 204, 156, 0.08);
   -webkit-mask: url("../images/guilloche-faixa.svg") 0 50% / 560px 140px repeat;
   mask: url("../images/guilloche-faixa.svg") 0 50% / 560px 140px repeat;
   pointer-events: none;
@@ -1476,9 +1268,6 @@ p {
   justify-items: center;
 }
 
-/* Carimbo circular: anel duplo + texto em curva (SVG) com o valor no
-   centro. Cada um levemente torto, como carimbos batidos à mão, e com o
-   filtro "tinta de carimbo" (definido no topo do index.html). */
 .carimbo {
   --giro: -6deg;
   position: relative;
@@ -1486,7 +1275,7 @@ p {
   aspect-ratio: 1;
   display: grid;
   place-items: center;
-  color: rgba(255, 255, 255, 0.92);
+  color: rgba(250, 248, 243, 0.92);
   transform: rotate(var(--giro));
   transition: transform 0.5s var(--ease-saida);
 }
@@ -1503,14 +1292,8 @@ p {
   --giro: 8deg;
 }
 
-.carimbo--vermelho {
-  color: var(--cor-secundaria-clara);
-}
-
-/* "55,7 mil" é bem mais largo que um ano de 4 dígitos — menor pra caber
-   dentro do anel interno. */
-.carimbo:first-child .carimbo__valor {
-  font-size: clamp(1.05rem, 3vw, 1.5rem);
+.carimbo--dourado {
+  color: var(--cor-dourado-claro);
 }
 
 .carimbo__anel {
@@ -1546,20 +1329,25 @@ p {
 .carimbo__valor {
   position: relative;
   font-family: var(--fonte-titulo);
-  font-weight: 600;
+  font-weight: 500;
   font-variant-numeric: tabular-nums lining-nums;
-  font-size: clamp(1.2rem, 3.6vw, 1.8rem);
-  letter-spacing: -0.03em;
+  font-size: clamp(1.25rem, 3.8vw, 1.9rem);
+  letter-spacing: -0.02em;
   white-space: nowrap;
 }
 
-/* Entrada de carimbo: começa maior e invisível e "bate" no lugar — o único
-   reveal do site que não é o fade padrão, porque aqui o gesto é o próprio
-   conteúdo. Duas classes pra vencer o .reveal genérico, que vem depois no
-   arquivo (seção 14). */
+/* "55,7 mil" é bem mais largo que um ano de 4 dígitos — menor pra caber
+   dentro do anel interno. */
+.carimbo:first-child .carimbo__valor {
+  font-size: clamp(1.05rem, 3vw, 1.55rem);
+}
+
+/* Entrada de carimbo: começa maior e invisível e "bate" no lugar — o mesmo
+   gesto do selo do hero. Duas classes pra vencer o .reveal genérico, que
+   vem depois no arquivo (seção 14). */
 .carimbo.reveal {
   opacity: 0;
-  transform: rotate(var(--giro)) scale(1.4);
+  transform: rotate(var(--giro)) scale(1.35);
   transition: opacity 0.3s ease, transform 0.6s var(--ease-saida);
 }
 
@@ -1569,52 +1357,41 @@ p {
 }
 
 .carimbo.reveal--visivel:hover {
-  transform: rotate(0deg) scale(1.05);
+  transform: rotate(0deg) scale(1.04);
 }
 
 /* ==========================================================================
    10. SERVIÇOS — TRILHA COM SCROLL HORIZONTAL "PINADO"
-   Substitui a antiga grade + botão "ver mais". A seção (.servicos-scroll)
-   ganha uma altura extra calculada via JS; enquanto essa sobra é rolada, o
-   miolo (.servicos-scroll__pin) fica grudado no topo (position:sticky) e a
-   trilha de cards desliza na horizontal (ver main.js,
-   "ativarScrollHorizontalServicos") — o resultado lembra um ScrollTrigger
-   do GSAP, só que com CSS/JS puro. Em telas menores e com menos animação
-   preferida, vira uma faixa comum de rolagem horizontal nativa (classes
-   "--simples"/"--nativa", aplicadas via JS). */
+   A seção (.servicos-scroll) ganha uma altura extra calculada via JS;
+   enquanto essa sobra é rolada, o miolo (.servicos-scroll__pin) fica
+   grudado no topo (position:sticky) e a trilha de cards desliza na
+   horizontal (ver main.js, "ativarScrollHorizontalServicos"). Em telas
+   menores e com menos animação preferida, vira uma faixa comum de rolagem
+   horizontal nativa (classes "--simples"/"--nativa", aplicadas via JS).
+   ========================================================================== */
 /* Duas classes (em vez de só ".servicos-scroll") pra especificidade bater a
-   regra ".secao { padding: 6rem 0; }" do @media de tablet, que vem DEPOIS
-   desta no arquivo — sem isso o padding do template genérico voltaria a
-   aparecer aqui e desalinharia a matemática do pin (ver main.js). Só o
-   TOPO é do template — o resto do espaçamento é da ".pista" abaixo, que
-   controla sua própria altura via JS. */
+   regra ".secao { padding: ... }" dos @media, que vêm DEPOIS desta no
+   arquivo — sem isso o padding genérico voltaria a aparecer aqui e
+   desalinharia a matemática do pin (ver main.js). Só o TOPO é da seção —
+   o resto do espaçamento é da ".pista", que controla sua altura via JS. */
 .secao.servicos-scroll {
-  padding: 4.5rem 0 0;
+  padding: 5rem 0 0;
 }
 
-/* O texto de cabeçalho (eyebrow + título + subtítulo) NÃO fica mais dentro
-   do pin — ele rola normal, como qualquer outra seção. Só a pista de
-   cards abaixo é que "prende". Isso resolve o problema de os cards
-   ficarem cortados embaixo da tela: antes o pin tinha que caber texto E
-   cards na mesma altura de viewport; agora ele é só dos cards. */
 .servicos-scroll__pista {
   position: relative;
-  /* Altura calculada via JS (ativarScrollHorizontalServicos) igual à
-     distância horizontal que a trilha precisa percorrer — é essa sobra
-     de altura, rolada verticalmente, que "pilota" o deslocamento
-     horizontal dos cards. */
+  /* Altura calculada via JS igual à distância horizontal que a trilha
+     precisa percorrer — é essa sobra de altura, rolada verticalmente, que
+     "pilota" o deslocamento horizontal dos cards. */
 }
 
 .servicos-scroll__pin {
   position: sticky;
-  top: 72px; /* altura do cabeçalho fixo — ver main.js, "alturaCabecalho" */
+  top: 72px; /* altura do cabeçalho fixo */
   height: calc(100vh - 72px);
   display: flex;
   align-items: center;
   overflow: hidden;
-  /* Fundo suave (estático, sem animação) só pra dar profundidade ao vidro
-     dos cards — sem isso o "liquid glass" não tem nada de variado atrás
-     pra desfocar/refletir. */
   background: linear-gradient(180deg, var(--cor-fundo) 0%, var(--cor-fundo-alt) 100%);
 }
 
@@ -1625,120 +1402,94 @@ p {
 .servicos-scroll--simples .servicos-scroll__pin {
   position: static;
   height: auto;
-  padding: 2.5rem 0;
+  padding: 1rem 0 4rem;
 }
 
+/* padding-inline = margem do .container: o primeiro card começa alinhado
+   com o título da seção, em qualquer largura de tela. */
 .servicos-scroll__trilha {
   display: flex;
   align-items: stretch;
-  gap: 1.5rem;
-  padding: 0 1.25rem;
+  gap: 1.75rem;
+  padding-inline: var(--margem-container);
   will-change: transform;
 }
 
-/* Fallback: celular/tablet e "prefers-reduced-motion" — em vez de pin +
-   JS calculando translateX a cada scroll, é só uma faixa com rolagem
-   horizontal nativa do próprio navegador (mais previsível no touch, e sem
-   nenhum "sequestro" de scroll pra quem pediu menos movimento). */
+/* Fallback: celular/tablet e "prefers-reduced-motion" — faixa com rolagem
+   horizontal nativa do próprio navegador (previsível no touch, sem nenhum
+   "sequestro" de scroll pra quem pediu menos movimento). */
 .servicos-scroll__trilha--nativa {
   overflow-x: auto;
   scroll-snap-type: x proximity;
-  padding-bottom: 1.5rem;
-  -webkit-overflow-scrolling: touch;
-}
-
-.servicos-scroll__trilha--nativa {
-  scroll-padding-inline: 1.25rem;
-  padding-top: 0.75rem;
+  scroll-padding-inline: var(--margem-container);
+  padding-block: 0.75rem 1.5rem;
+  overscroll-behavior-x: contain;
   scrollbar-width: thin;
+  will-change: auto;
 }
 
 .servicos-scroll__trilha--nativa .cartao-produto {
   scroll-snap-align: start;
 }
 
-/* Cartão de serviço — papel branco sólido (o antigo vidro fosco não tinha
-   nada atrás pra desfocar), cantos generosos, sombra com deslocamento. A
-   foto ganha uma margem interna, como a foto colada numa página de
-   passaporte, e o card termina num link de WhatsApp com o serviço já
-   escrito na mensagem. */
+/* Cartão de serviço — papel branco, fio fino, foto com margem interna
+   (como a foto colada numa página de passaporte) e um link de WhatsApp com
+   o serviço já escrito na mensagem. Sem brilho seguindo o mouse. */
 .cartao-produto {
   position: relative;
   display: flex;
   flex-direction: column;
-  flex: 0 0 clamp(250px, 78vw, 310px);
+  flex: 0 0 clamp(260px, 80vw, 340px);
   background: var(--cor-branco);
   border: 1px solid var(--cor-borda);
   border-radius: var(--raio-borda);
   padding: 10px;
-  box-shadow: 0 1px 2px rgba(15, 24, 98, 0.06), 0 16px 32px -18px rgba(15, 24, 98, 0.3);
-  transition: transform 0.5s var(--ease-saida), box-shadow 0.5s var(--ease-saida), border-color 0.3s ease;
-}
-
-/* Brilho que segue o mouse — contido DENTRO do card (não é um cursor de
-   página inteira). --mx/--my são atualizados via JS só enquanto o mouse
-   está em cima deste card específico (ver main.js); aparece só no hover. */
-.cartao-produto::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  background: radial-gradient(260px circle at var(--mx, 50%) var(--my, 0%), rgba(223, 1, 18, 0.07), transparent 70%);
-  opacity: 0;
-  transition: opacity 0.3s ease;
-  pointer-events: none;
-}
-
-.cartao-produto:hover::after {
-  opacity: 1;
+  box-shadow: 0 1px 2px rgba(15, 24, 98, 0.05), 0 24px 40px -30px rgba(15, 24, 98, 0.45);
+  transition: border-color 0.3s ease, box-shadow 0.5s var(--ease-saida);
 }
 
 .cartao-produto:hover {
-  transform: translateY(-8px);
-  border-color: rgba(15, 24, 98, 0.18);
-  box-shadow: 0 1px 2px rgba(15, 24, 98, 0.06), 0 32px 48px -22px rgba(15, 24, 98, 0.45);
+  border-color: rgba(15, 24, 98, 0.22);
+  box-shadow: 0 1px 2px rgba(15, 24, 98, 0.05), 0 34px 56px -32px rgba(15, 24, 98, 0.6);
 }
 
 .cartao-produto__imagem {
-  position: relative;
   width: 100%;
   /* 4/3 em vez de quadrada — card mais baixo, cabe inteiro dentro da
-     "janela" de altura fixa do pin de serviços (ver ".servicos-scroll__pin")
-     mesmo em telas mais baixas, sem cortar o rodapé do card. */
+     "janela" de altura fixa do pin mesmo em telas mais baixas. */
   aspect-ratio: 4 / 3;
   overflow: hidden;
-  border-radius: calc(var(--raio-borda) - 8px);
+  border-radius: 6px;
 }
 
 .cartao-produto__imagem img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.8s var(--ease-saida);
+  transition: transform 1s var(--ease-saida);
 }
 
 .cartao-produto:hover .cartao-produto__imagem img {
-  transform: scale(1.07);
+  transform: scale(1.04);
 }
 
 .cartao-produto__corpo {
-  padding: 1rem 0.65rem 0.4rem;
+  padding: 1.2rem 0.65rem 0.5rem;
   display: flex;
   flex-direction: column;
   flex: 1;
 }
 
 .cartao-produto__corpo h3 {
-  font-size: 1.3rem;
-  margin-bottom: 0.4rem;
+  font-size: 1.5rem;
+  margin-bottom: 0.45rem;
 }
 
 .cartao-produto__corpo p {
   color: var(--cor-texto-claro);
-  font-size: 0.92rem;
-  margin-bottom: 1rem;
-  /* Trava em 3 linhas — mantém os cards com a mesma altura na trilha,
-     mesmo quando uma descrição é mais longa que as outras. */
+  font-size: 0.95rem;
+  margin-bottom: 1.1rem;
+  /* Trava em 3 linhas — mantém os cards com a mesma altura na trilha. */
   display: -webkit-box;
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
@@ -1750,12 +1501,12 @@ p {
   align-self: flex-start;
   display: inline-flex;
   align-items: center;
-  gap: 0.4rem;
+  gap: 0.45rem;
   font-weight: 600;
-  font-size: 0.9rem;
+  font-size: 0.92rem;
   color: var(--cor-primaria);
   padding: 0.45rem 0;
-  border-bottom: 1.5px solid rgba(15, 24, 98, 0.18);
+  border-bottom: 1px solid rgba(15, 24, 98, 0.22);
   transition: color 0.25s ease, border-color 0.25s ease;
 }
 
@@ -1766,29 +1517,33 @@ p {
 }
 
 .cartao-produto__cta:hover {
-  color: var(--cor-secundaria);
-  border-color: var(--cor-secundaria);
+  color: var(--cor-secundaria-escura);
+  border-color: var(--cor-secundaria-escura);
 }
 
 .cartao-produto:hover .cartao-produto__cta .icone {
-  transform: translateX(4px);
+  transform: translateX(3px);
 }
-
 
 /* ==========================================================================
    11. CONTATO
    ========================================================================== */
+.contato__info > p {
+  color: var(--cor-texto-claro);
+  max-width: 46ch;
+}
+
 .contato__lista {
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  margin: 1.75rem 0;
+  margin: 2rem 0 2.25rem;
 }
 
 .contato__lista li {
   display: flex;
   align-items: center;
-  gap: 0.85rem;
+  gap: 0.9rem;
   color: var(--cor-texto-claro);
 }
 
@@ -1798,8 +1553,8 @@ p {
   padding: 11px;
   box-sizing: content-box;
   background: var(--cor-branco);
-  color: var(--cor-secundaria);
-  box-shadow: 0 0 0 1px var(--cor-borda), 0 6px 14px -6px rgba(15, 24, 98, 0.25);
+  color: var(--cor-secundaria-escura);
+  box-shadow: inset 0 0 0 1px var(--cor-borda);
   border-radius: 50%;
   flex-shrink: 0;
 }
@@ -1807,28 +1562,27 @@ p {
 .contato__lista a {
   text-decoration: underline;
   text-decoration-color: transparent;
+  text-decoration-thickness: 1px;
   text-underline-offset: 4px;
   transition: color var(--transicao), text-decoration-color var(--transicao);
 }
 
 .contato__lista a:hover {
   color: var(--cor-primaria-escura);
-  text-decoration-color: var(--cor-secundaria);
+  text-decoration-color: var(--cor-dourado);
 }
 
-/* Mapa numa moldura de papel (borda + margem interna), com cor levemente
-   dessaturada pra não brigar com a paleta — volta à cor cheia no hover. */
+/* Mapa numa moldura de papel (fio + margem interna), levemente
+   dessaturado pra não brigar com a paleta — volta à cor cheia no hover. */
 .contato__mapa {
   border-radius: var(--raio-borda);
   overflow: hidden;
   background: var(--cor-branco);
   border: 1px solid var(--cor-borda);
   padding: 8px;
-  box-shadow: 0 30px 60px -30px rgba(15, 24, 98, 0.4);
+  box-shadow: 0 40px 70px -44px rgba(15, 24, 98, 0.5);
   /* Altura fixa (não só min-height): o iframe usa height:100% do pai, e
-     percentual de altura só funciona corretamente contra um pai com altura
-     definida — com só min-height, o iframe podia cair no tamanho padrão do
-     navegador (150px) em vez de preencher o quadro. */
+     percentual de altura só funciona contra um pai com altura definida. */
   height: 320px;
 }
 
@@ -1838,8 +1592,8 @@ p {
   min-height: 300px;
   border: 0;
   display: block;
-  border-radius: calc(var(--raio-borda) - 8px);
-  filter: saturate(0.6) contrast(1.05);
+  border-radius: 6px;
+  filter: saturate(0.55) contrast(1.04);
   transition: filter 0.5s ease;
 }
 
@@ -1853,40 +1607,21 @@ p {
 .rodape {
   position: relative;
   background: var(--cor-primaria-escura);
-  color: rgba(255, 255, 255, 0.85);
+  color: rgba(255, 255, 255, 0.8);
   overflow: hidden;
 }
 
-/* CTA final — última chance de conversão antes do rodapé "administrativo",
-   reaproveitando o mesmo botão do resto do site. */
-.rodape__cta {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-  align-items: flex-start;
-  /* padding-block (não "padding: X 0"): mantém o respiro lateral do
-     .container, senão o texto encosta na borda da tela no celular. */
-  padding-block: 3.5rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+/* No rodapé os fios (bordas) ficam na caixa do container — sem o padding
+   lateral, a largura encolhe no lugar, pros fios terminarem alinhados com
+   o texto em vez de 20px além dele. */
+.rodape .container {
+  width: calc(100% - 2.5rem);
+  max-width: calc(var(--largura-max) - 2.5rem);
+  padding-inline: 0;
 }
 
-.rodape__cta-titulo {
-  font-family: var(--fonte-titulo);
-  font-weight: 600;
-  color: var(--cor-branco);
-  font-size: clamp(1.9rem, 4.6vw, 3.1rem);
-  line-height: 1.05;
-  max-width: 20ch;
-  letter-spacing: -0.03em;
-}
-
-.rodape__cta-titulo em {
-  color: var(--cor-secundaria-clara);
-}
-
-/* Roseta guilhochê enorme e fraca atrás do CTA final — fecha a página com
-   o mesmo "selo-d'água" que abre o hero. */
+/* Roseta guilhochê dourada, enorme e fraca, atrás do CTA final — fecha a
+   página com o mesmo "selo-d'água" que abre o hero. */
 .rodape::before {
   content: "";
   position: absolute;
@@ -1894,10 +1629,128 @@ p {
   aspect-ratio: 1;
   right: -320px;
   top: -420px;
-  background-color: rgba(255, 255, 255, 0.06);
+  background-color: rgba(227, 204, 156, 0.08);
   -webkit-mask: url("../images/guilloche-roseta.svg") center / contain no-repeat;
   mask: url("../images/guilloche-roseta.svg") center / contain no-repeat;
   pointer-events: none;
+}
+
+/* CTA final — última chance de conversão antes do rodapé "administrativo".
+   padding-block (não "padding: X 0"): mantém o respiro lateral do
+   .container, senão o texto encosta na borda da tela no celular. */
+.rodape__cta {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  align-items: flex-start;
+  padding-block: 5rem 4rem;
+  border-bottom: 1px solid rgba(227, 204, 156, 0.2);
+}
+
+.rodape__cta-titulo {
+  font-family: var(--fonte-titulo);
+  font-weight: 400;
+  color: var(--cor-branco);
+  font-size: clamp(2.2rem, 5.2vw, 3.9rem);
+  line-height: 1.02;
+  max-width: 17ch;
+  letter-spacing: -0.03em;
+}
+
+.rodape__cta-titulo em {
+  color: var(--cor-dourado-claro);
+}
+
+.rodape__grade {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2.5rem;
+  padding-block: 3.5rem;
+}
+
+.rodape__marca {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  font-family: var(--fonte-titulo);
+  font-weight: 500;
+  font-size: 1.35rem;
+  letter-spacing: -0.015em;
+  color: var(--cor-branco);
+  margin-bottom: 0.9rem;
+}
+
+.rodape__marca img {
+  border-radius: 6px;
+}
+
+.rodape__tagline {
+  font-size: 0.93rem;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.6);
+  max-width: 32ch;
+  margin-bottom: 1.5rem;
+}
+
+.rodape__redes {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.rodape__redes a {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color var(--transicao), border-color var(--transicao), background-color var(--transicao);
+}
+
+.rodape__redes svg {
+  width: 18px;
+  height: 18px;
+}
+
+.rodape__redes a:hover {
+  color: var(--cor-dourado-claro);
+  border-color: var(--cor-dourado-claro);
+  background: rgba(227, 204, 156, 0.06);
+}
+
+.rodape__titulo-coluna {
+  font-family: var(--fonte-corpo);
+  font-weight: 600;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--cor-dourado-claro);
+  margin-bottom: 1.15rem;
+}
+
+.rodape__lista-links {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+
+.rodape__lista-links a {
+  font-size: 0.92rem;
+  color: rgba(255, 255, 255, 0.65);
+  transition: color var(--transicao);
+}
+
+.rodape__lista-links a:hover {
+  color: var(--cor-branco);
+}
+
+.rodape__lista-links--contato li {
+  font-size: 0.92rem;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.65);
 }
 
 /* Zona de leitura mecânica (MRZ) — duas linhas de 44 caracteres, como na
@@ -1905,8 +1758,8 @@ p {
    linha caber inteira sem quebrar. */
 .rodape__mrz {
   position: relative;
-  border-top: 1px solid rgba(255, 255, 255, 0.12);
-  padding: 1.4rem 0;
+  border-top: 1px solid rgba(227, 204, 156, 0.18);
+  padding: 1.5rem 0;
   overflow: hidden;
 }
 
@@ -1917,105 +1770,7 @@ p {
   letter-spacing: 0.12em;
   line-height: 1.5;
   white-space: nowrap;
-  color: rgba(255, 255, 255, 0.28);
-}
-
-.rodape__grade {
-  position: relative;
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 2.5rem;
-  padding-block: 3rem;
-}
-
-.rodape__marca {
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-  font-family: var(--fonte-titulo);
-  font-weight: 600;
-  font-size: 1.2rem;
-  color: var(--cor-branco);
-  margin-bottom: 0.9rem;
-}
-
-.rodape__marca img {
-  border-radius: 6px;
-}
-
-.rodape__tagline {
-  font-size: 0.9rem;
-  line-height: 1.6;
-  color: rgba(255, 255, 255, 0.62);
-  max-width: 32ch;
-  margin-bottom: 1.4rem;
-}
-
-.rodape__redes {
-  display: flex;
-  gap: 0.75rem;
-}
-
-.rodape__redes a {
-  width: 38px;
-  height: 38px;
-  border-radius: 50%;
-  border: 1.5px solid rgba(255, 255, 255, 0.25);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: background var(--transicao), border-color var(--transicao), transform var(--transicao);
-}
-
-.rodape__redes svg {
-  width: 18px;
-  height: 18px;
-}
-
-.rodape__redes a:hover {
-  background: var(--cor-secundaria);
-  border-color: var(--cor-secundaria);
-  transform: translateY(-3px);
-}
-
-.rodape__titulo-coluna {
-  font-family: var(--fonte-corpo);
-  font-weight: 700;
-  font-size: 0.78rem;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: var(--cor-branco);
-  margin-bottom: 1.1rem;
-}
-
-.rodape__lista-links {
-  display: flex;
-  flex-direction: column;
-  gap: 0.7rem;
-}
-
-.rodape__lista-links a {
-  font-size: 0.88rem;
-  color: rgba(255, 255, 255, 0.62);
-  transition: color var(--transicao);
-}
-
-.rodape__lista-links a:hover {
-  color: var(--cor-branco);
-}
-
-.rodape__lista-links--contato li {
-  font-size: 0.88rem;
-  line-height: 1.5;
-  color: rgba(255, 255, 255, 0.62);
-}
-
-.rodape__lista-links--contato a {
-  color: rgba(255, 255, 255, 0.62);
-}
-
-.rodape__lista-links--contato a:hover {
-  color: var(--cor-branco);
+  color: rgba(227, 204, 156, 0.3);
 }
 
 .rodape__base {
@@ -2025,8 +1780,8 @@ p {
   gap: 0.5rem;
   align-items: center;
   text-align: center;
-  padding-block: 1.5rem 2rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  padding-block: 1.5rem calc(2rem + env(safe-area-inset-bottom, 0px));
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .rodape__copyright {
@@ -2040,137 +1795,60 @@ p {
 
 .rodape__creditos a {
   text-decoration: underline;
-  text-underline-offset: 2px;
+  text-decoration-color: rgba(227, 204, 156, 0.5);
+  text-underline-offset: 3px;
 }
 
-/* ==========================================================================
-   12b. NAVEGAÇÃO LATERAL POR PONTOS
-   Só desktop — em telas menores não sobra margem lateral suficiente sem
-   sobrepor conteúdo. Preenchimento branco + anel na cor da marca (não só
-   uma cor sólida): assim o ponto continua visível tanto no hero escuro
-   quanto nas seções claras, sem precisar trocar de cor por seção.
-   ========================================================================== */
-.dot-nav {
-  display: none;
-  position: fixed;
-  right: 1.5rem;
-  top: 50%;
-  transform: translateY(-50%);
-  z-index: 90;
-  flex-direction: column;
-  gap: 1.1rem;
-}
-
-.dot-nav__item {
-  position: relative;
-  width: 14px;
-  height: 14px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.dot-nav__item span {
-  width: 9px;
-  height: 9px;
-  border-radius: 50%;
-  background: var(--cor-branco);
-  border: 1.5px solid var(--cor-primaria);
-  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.3);
-  transition: transform var(--transicao), background var(--transicao), border-color var(--transicao);
-}
-
-.dot-nav__item:hover span {
-  transform: scale(1.25);
-}
-
-/* Legenda que aparece ao lado no hover — sem depender de "title" nativo
-   (aparece devagar demais / inconsistente entre navegadores). */
-.dot-nav__item::before {
-  content: attr(aria-label);
-  position: absolute;
-  right: 24px;
-  top: 50%;
-  transform: translateY(-50%);
-  background: var(--cor-primaria-escura);
+.rodape__creditos a:hover {
   color: var(--cor-branco);
-  font-family: var(--fonte-titulo);
-  font-weight: 600;
-  font-size: 0.72rem;
-  padding: 0.35rem 0.75rem;
-  border-radius: 6px;
-  white-space: nowrap;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity var(--transicao);
-}
-
-.dot-nav__item:hover::before {
-  opacity: 1;
-}
-
-.dot-nav__item--ativo span {
-  background: var(--cor-secundaria);
-  border-color: var(--cor-secundaria);
-  transform: scale(1.35);
-}
-
-@media (min-width: 1024px) {
-  .dot-nav {
-    display: flex;
-  }
 }
 
 /* ==========================================================================
    13. BOTÃO FLUTUANTE DE WHATSAPP
+   Continua verde (é a affordance que todo mundo reconhece), mas sem pulsar:
+   sombra com deslocamento e respeito à área segura do iPhone.
    ========================================================================== */
 .whatsapp-flutuante {
   position: fixed;
-  right: 1.25rem;
-  bottom: 1.25rem;
-  width: 58px;
-  height: 58px;
+  right: calc(1.25rem + env(safe-area-inset-right, 0px));
+  bottom: calc(1.25rem + env(safe-area-inset-bottom, 0px));
+  width: 54px;
+  height: 54px;
   border-radius: 50%;
   background: #25d366;
   color: var(--cor-branco);
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 14px 30px -12px rgba(4, 8, 40, 0.55), inset 0 0 0 1px rgba(255, 255, 255, 0.2);
   z-index: 90;
-  animation: pulsar 2.6s ease-in-out infinite;
+  transition: transform 0.3s var(--ease-saida), box-shadow 0.3s ease;
 }
 
 .whatsapp-flutuante svg {
-  width: 30px;
-  height: 30px;
+  width: 28px;
+  height: 28px;
 }
 
 .whatsapp-flutuante:hover {
   transform: scale(1.06);
+  box-shadow: 0 18px 36px -12px rgba(4, 8, 40, 0.6), inset 0 0 0 1px rgba(255, 255, 255, 0.2);
 }
 
-@keyframes pulsar {
-  0%,
-  100% {
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25), 0 0 0 0 rgba(37, 211, 102, 0.45);
-  }
-  50% {
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25), 0 0 0 10px rgba(37, 211, 102, 0);
-  }
+.whatsapp-flutuante:active {
+  transform: scale(0.96);
 }
 
 /* ==========================================================================
    14. ANIMAÇÃO DE ENTRADA AO ROLAR (SCROLL REVEAL)
    Controlado via JS (main.js), que adiciona ".reveal--visivel" quando o
-   elemento entra na tela. Sutil de propósito: leve fade + deslocamento — é
-   o ÚNICO idioma de movimento do site inteiro (junto do contador de
-   números e da barra de progresso), reaproveitado em toda seção nova.
+   elemento entra na tela. Sutil de propósito: fade + deslocamento curto
+   com desaceleração longa.
    ========================================================================== */
 .reveal {
   opacity: 0;
-  transform: translateY(20px);
-  transition: opacity 0.5s ease, transform 0.5s ease;
+  transform: translateY(16px);
+  transition: opacity 0.9s var(--ease-saida), transform 1s var(--ease-saida);
 }
 
 .reveal--visivel {
@@ -2179,15 +1857,11 @@ p {
 }
 
 /* ==========================================================================
-   16. RESPONSIVO — TABLET (≥768px)
+   15. RESPONSIVO — TABLET (≥768px)
    ========================================================================== */
 @media (min-width: 768px) {
   .secao {
-    padding: 6rem 0;
-  }
-
-  .cartao-produto__corpo p {
-    font-size: 0.95rem;
+    padding: 6.5rem 0;
   }
 
   .faixa-numeros__grade {
@@ -2196,7 +1870,7 @@ p {
 
   .rodape__cta {
     flex-direction: row;
-    align-items: center;
+    align-items: flex-end;
     justify-content: space-between;
     gap: 2rem;
   }
@@ -2207,44 +1881,78 @@ p {
 
   .processo__lista {
     grid-template-columns: repeat(2, 1fr);
-    gap: 2.5rem 2rem;
+    gap: 3rem 2.5rem;
+  }
+
+  .processo__passo:not(:last-child)::before {
+    display: none;
   }
 
   .hero {
-    min-height: 92vh;
+    min-height: max(660px, 92vh);
   }
 
   .hero__conteudo {
-    padding-top: 4rem;
-    /* Folga extra embaixo (só a partir daqui, onde a setinha de rolar
-       existe de verdade — ver .hero__seta) pra ela não encostar na nota
-       de parcelamento agora que o conteúdo ficou ancorado na base. */
-    padding-bottom: 6.5rem;
+    padding-block: 5rem 4.5rem;
   }
 
   .hero__acoes {
     flex-direction: row;
+    flex-wrap: wrap;
   }
 
   .hero__acoes .botao {
     width: auto;
   }
 
-  .hero__seta {
+  .hero__credenciais {
     display: flex;
+    flex-wrap: wrap;
+    gap: 0.8rem 2rem;
   }
 }
 
 /* ==========================================================================
-   17. RESPONSIVO — DESKTOP (≥1024px)
+   16. RESPONSIVO — DESKTOP (≥1024px)
    ========================================================================== */
 @media (min-width: 1024px) {
+  .secao {
+    padding: 8rem 0;
+  }
+
+  .secao.servicos-scroll {
+    padding-top: 8rem;
+  }
+
+  /* Cabeçalho de seção em duas colunas: título à esquerda, subtítulo à
+     direita alinhado pela base, com um fio de papel embaixo. */
+  .secao__cabecalho {
+    display: grid;
+    grid-template-columns: 1.35fr 1fr;
+    align-items: end;
+    gap: 4rem;
+    margin-bottom: 4rem;
+    padding-bottom: 2.25rem;
+    border-bottom: 1px solid var(--cor-borda);
+  }
+
+  .secao__cabecalho .secao__titulo {
+    margin-bottom: 0;
+  }
+
+  .secao__cabecalho .secao__subtitulo {
+    justify-self: end;
+    margin-bottom: 0.35rem;
+  }
+
   .menu-mobile {
     display: none;
   }
 
   .navegacao {
     position: static;
+    height: auto;
+    overflow: visible;
     flex-direction: row;
     align-items: center;
     justify-content: flex-end;
@@ -2261,13 +1969,97 @@ p {
 
   .navegacao__lista {
     flex-direction: row;
-    gap: 1.75rem;
+    gap: 2rem;
+  }
+
+  .navegacao__link {
+    padding: 0.4rem 0;
+    border-bottom: 0;
+    font-family: var(--fonte-corpo);
+    font-size: 0.93rem;
+    font-weight: 500;
+    letter-spacing: 0;
+    color: rgba(255, 255, 255, 0.82);
+  }
+
+  .navegacao__link:hover {
+    color: var(--cor-branco);
+  }
+
+  .navegacao__link--ativo {
+    color: var(--cor-branco);
+  }
+
+  .cabecalho--rolado .navegacao__link {
+    color: var(--cor-texto-claro);
+  }
+
+  .cabecalho--rolado .navegacao__link:hover,
+  .cabecalho--rolado .navegacao__link--ativo {
+    color: var(--cor-primaria-escura);
+  }
+
+  /* Fio dourado que "desenha" embaixo do link no hover e fica no link da
+     seção atual. */
+  .navegacao__link::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -2px;
+    height: 1px;
+    background: var(--cor-dourado);
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.45s var(--ease-saida);
+  }
+
+  .navegacao__link:hover::after,
+  .navegacao__link--ativo::after {
+    transform: scaleX(1);
+    transform-origin: left;
+  }
+
+  .navegacao__cta {
+    background: transparent;
+    color: var(--cor-branco);
+    border-color: rgba(255, 255, 255, 0.4);
+    padding: 0.62rem 1.15rem;
+    font-size: 0.88rem;
+  }
+
+  .navegacao__cta:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: var(--cor-branco);
+  }
+
+  .cabecalho--rolado .navegacao__cta {
+    background: var(--cor-primaria);
+    color: var(--cor-fundo);
+    border-color: var(--cor-primaria);
+  }
+
+  .cabecalho--rolado .navegacao__cta:hover {
+    background: var(--cor-primaria-escura);
+  }
+
+  .hero__grade {
+    grid-template-columns: 1.05fr 0.95fr;
+    gap: 3rem;
+  }
+
+  .hero__conteudo {
+    padding-block: 6rem 5.5rem;
+  }
+
+  .hero__vitrine {
+    display: block;
   }
 
   .sobre__grade {
-    grid-template-columns: 0.85fr 1fr;
+    grid-template-columns: 0.9fr 1fr;
     align-items: center;
-    gap: 4rem;
+    gap: 5.5rem;
   }
 
   .sobre__imagem img {
@@ -2275,22 +2067,15 @@ p {
     max-height: none;
   }
 
-  /* Cards um pouco mais largos no desktop — mais espaço de leitura por
-     card na trilha (ver ".cartao-produto" na seção 10). */
-  .cartao-produto {
-    flex-basis: 320px;
-  }
-
   .contato__grade {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr 1.1fr;
     align-items: stretch;
-    gap: 4rem;
+    gap: 5rem;
   }
 
   .contato__mapa {
-    /* No desktop o grid (align-items:stretch) já define a altura real da
-       célula — volta a ser automática para acompanhar a coluna de texto
-       ao lado, em vez de ficar travado nos 320px fixos do celular. */
+    /* No desktop o grid (align-items:stretch) define a altura da célula —
+       volta a ser automática pra acompanhar a coluna de texto ao lado. */
     height: auto;
   }
 
@@ -2304,26 +2089,41 @@ p {
     text-align: left;
   }
 
-  /* Processo em passos: 4 colunas com uma linha fina conectando os
-     círculos numerados — lê como uma linha do tempo/fluxograma, reforça o
-     "como funciona" de forma visual, não só em texto. */
+  /* Processo em 4 colunas, texto alinhado à esquerda, com a rota de voo
+     pontilhada ligando os círculos. Círculo de 2.75rem (raio 1.375rem) no
+     canto esquerdo de cada coluna; com gap de 2.5rem, a coluna mede
+     25% - 1.875rem — daí o centro do último círculo fica em
+     75% + 3.25rem, e o percurso total mede 75% + 1.875rem. */
   .processo__lista {
     grid-template-columns: repeat(4, 1fr);
     gap: 2.5rem;
     position: relative;
   }
 
-  /* Linha pontilhada de rota de voo, do centro do 1º círculo ao centro do
-     último. Com 4 colunas e gap de 2.5rem, o centro da 1ª coluna fica em
-     12.5% - 0.9375rem (3 gaps / 8). */
   .processo__lista::before {
     content: "";
     position: absolute;
-    top: 1.25rem;
-    left: calc(12.5% - 0.9375rem);
-    right: calc(12.5% - 0.9375rem);
+    top: 1.375rem;
+    left: 1.375rem;
+    right: calc(25% - 3.25rem);
     height: 0;
-    border-top: 1.5px dashed rgba(15, 24, 98, 0.25);
+    border-top: 1px dashed rgba(15, 24, 98, 0.28);
+    z-index: 0;
+  }
+
+  /* Linha de preenchimento por cima do pontilhado, ligada ao scroll (JS
+     define --progresso-processo de 0 a 1 no wrapper, ver main.js). */
+  .processo__lista::after {
+    content: "";
+    position: absolute;
+    top: calc(1.375rem - 0.5px);
+    left: 1.375rem;
+    right: calc(25% - 3.25rem);
+    height: 2px;
+    border-radius: 2px;
+    background: linear-gradient(to right, var(--cor-primaria), var(--cor-secundaria-escura));
+    transform: scaleX(var(--progresso-processo, 0));
+    transform-origin: left;
     z-index: 0;
   }
 
@@ -2331,42 +2131,22 @@ p {
     position: relative;
   }
 
-  /* Avião na ponta da linha preenchida — mesma variável de progresso da
-     linha, então anda junto com ela. */
+  /* Avião na ponta da linha preenchida — mesma variável de progresso. */
   .processo__aviao {
     display: block;
     position: absolute;
     z-index: 2;
-    top: calc(1.25rem - 13px);
-    left: calc(12.5% - 0.9375rem + (75% + 1.875rem) * var(--progresso-processo, 0));
+    top: calc(1.375rem - 13px);
+    left: calc(1.375rem + (75% + 1.875rem) * var(--progresso-processo, 0));
     width: 26px;
     height: 26px;
     margin-left: -13px;
-    color: var(--cor-secundaria);
+    color: var(--cor-secundaria-escura);
     transform: rotate(90deg);
-    filter: drop-shadow(0 4px 6px rgba(15, 24, 98, 0.35));
+    filter: drop-shadow(0 4px 6px rgba(15, 24, 98, 0.3));
     /* Aparece logo que a viagem começa e "pousa" (some) ao chegar no
        último passo, pra não ficar parado em cima do número 04. */
     opacity: min(calc(var(--progresso-processo, 0) * 40), calc((1 - var(--progresso-processo, 0)) * 25));
-  }
-
-  /* Linha de preenchimento por cima da linha cinza acima — mesma posição
-     exata, mas com as cores da marca e escala ligada ao scroll (JS define
-     --progresso-processo de 0 a 1 conforme a seção passa pela tela, ver
-     main.js). "Desenha" o percurso à medida que o visitante rola, em vez
-     de aparecer pronta de uma vez. */
-  .processo__lista::after {
-    content: "";
-    position: absolute;
-    top: calc(1.25rem - 0.5px);
-    left: calc(12.5% - 0.9375rem);
-    right: calc(12.5% - 0.9375rem);
-    height: 2.5px;
-    border-radius: 2px;
-    background: linear-gradient(to right, var(--cor-primaria), var(--cor-secundaria));
-    transform: scaleX(var(--progresso-processo, 0));
-    transform-origin: left;
-    z-index: 0;
   }
 
   /* z-index 1: cada passo vira um contexto de empilhamento (o .reveal usa
@@ -2375,19 +2155,14 @@ p {
   .processo__passo {
     z-index: 1;
     padding-left: 0;
-    padding-top: 4rem;
-    text-align: center;
+    padding-top: 4.75rem;
   }
 
   .processo__numero {
-    top: 0;
-    left: 50%;
-    margin-left: -1.25rem;
     z-index: 1;
   }
 
   .processo__passo p {
-    max-width: 26ch;
-    margin: 0 auto;
+    max-width: 28ch;
   }
 }

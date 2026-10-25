@@ -5,12 +5,16 @@
    independente das outras — se algo aqui der erro, o resto do site
    continua funcionando normalmente.
 
-   Sobre o movimento do site: nada de cursor customizado, ímã em botão
-   perseguindo o mouse pela tela toda, ou tilt 3D — pra um negócio sério
-   (assessoria de visto/passaporte), isso lê como pouco confiável. Os
-   efeitos abaixo são todos CONTIDOS: o brilho do card só existe dentro do
-   próprio card, o zoom da foto é no fundo do hero, a linha do processo
-   segue o scroll da seção onde já está. Nada "solto" por cima da página.
+   Sobre o movimento do site: pouco e com intenção. O único "momento" é o
+   carimbo "Visto aprovado" batendo na vitrine do hero (e os carimbos da
+   faixa de reconhecimento, no mesmo gesto). O resto é entrada suave ao
+   rolar e a linha do processo, que segue o scroll da própria seção. Nada de
+   máquina de escrever, título letra por letra, cursor customizado ou brilho
+   seguindo o mouse — pra uma assessoria de visto, isso lê como "template",
+   não como empresa séria.
+
+   Tudo que lê layout no scroll (getBoundingClientRect) passa por
+   "porQuadro": no máximo uma leitura por frame, em vez de uma por evento.
    ========================================================================== */
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -20,13 +24,26 @@ document.addEventListener("DOMContentLoaded", () => {
   ativarLinkAtivoNaNavegacao();
   atualizarAnoDoRodape();
   ativarScrollHorizontalServicos();
-  ativarTypewriterDeServicos();
   ativarContadores();
-  ativarTituloEmLetras();
   ativarVitrineDoHero();
-  ativarBrilhoNosCards();
   ativarLinhaDoProcesso();
 });
+
+const prefereMenosMovimento = () => window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+// Agrupa chamadas repetidas (scroll, resize, mousemove) em no máximo uma por
+// frame de animação — evita ler/escrever layout dezenas de vezes por frame.
+function porQuadro(funcao) {
+  let agendado = false;
+  return (...args) => {
+    if (agendado) return;
+    agendado = true;
+    requestAnimationFrame(() => {
+      agendado = false;
+      funcao(...args);
+    });
+  };
+}
 
 /* --------------------------------------------------------------------------
    1. MENU MOBILE (hambúrguer)
@@ -65,10 +82,11 @@ function ativarMenuMobile() {
 }
 
 /* --------------------------------------------------------------------------
-   2. SOMBRA NO CABEÇALHO AO ROLAR A PÁGINA
-   Só um toque visual: dá profundidade ao cabeçalho fixo assim que o
-   visitante começa a rolar, para ele não "flutuar" sem contraste sobre o
-   conteúdo.
+   2. CABEÇALHO AO ROLAR
+   No topo da página o cabeçalho é transparente, por cima do hero escuro
+   (texto claro). Assim que o visitante rola, ganha fundo de papel, fio
+   inferior e texto escuro — a classe "cabecalho--rolado" controla tudo isso
+   no CSS.
    -------------------------------------------------------------------------- */
 function ativarSombraDoCabecalhoAoRolar() {
   const cabecalho = document.getElementById("cabecalho");
@@ -79,7 +97,7 @@ function ativarSombraDoCabecalhoAoRolar() {
   };
 
   verificarRolagem();
-  window.addEventListener("scroll", verificarRolagem, { passive: true });
+  window.addEventListener("scroll", porQuadro(verificarRolagem), { passive: true });
 }
 
 /* --------------------------------------------------------------------------
@@ -93,8 +111,7 @@ function ativarRevelacaoAoRolar() {
   if (!elementos.length) return;
 
   // Quem prefere menos animação já vê tudo visível direto, sem observer
-  const prefereMenosMovimento = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  if (prefereMenosMovimento || !("IntersectionObserver" in window)) {
+  if (prefereMenosMovimento() || !("IntersectionObserver" in window)) {
     elementos.forEach((el) => el.classList.add("reveal--visivel"));
     return;
   }
@@ -106,9 +123,8 @@ function ativarRevelacaoAoRolar() {
           const elemento = entrada.target;
 
           // Atraso extra pra quem tem outros ".reveal" irmãos (mesmo pai) —
-          // dá um efeito de cascata em grades (cards de serviço,
-          // diferenciais, passos do processo) sem precisar numerar nada
-          // manualmente no HTML.
+          // dá um efeito de cascata em grades (diferenciais, passos do
+          // processo, carimbos) sem precisar numerar nada no HTML.
           const irmaosRevelaveis = elemento.parentElement
             ? Array.from(elemento.parentElement.children).filter((el) =>
                 el.classList.contains("reveal")
@@ -116,7 +132,7 @@ function ativarRevelacaoAoRolar() {
             : [];
           const indice = irmaosRevelaveis.indexOf(elemento);
           if (indice > 0) {
-            elemento.style.transitionDelay = `${Math.min(indice * 0.08, 0.4)}s`;
+            elemento.style.transitionDelay = `${Math.min(indice * 0.09, 0.45)}s`;
           }
 
           elemento.classList.add("reveal--visivel");
@@ -137,22 +153,12 @@ function ativarRevelacaoAoRolar() {
 function ativarLinkAtivoNaNavegacao() {
   const secoes = document.querySelectorAll("main section[id]");
   const links = document.querySelectorAll(".navegacao__link");
-  // Pontinhos de navegação lateral (ver index.html, "#dotNav") — mesma
-  // ideia dos links do menu, então reaproveita o MESMO observer em vez de
-  // criar um segundo IntersectionObserver rodando em paralelo.
-  const pontos = document.querySelectorAll(".dot-nav__item");
   if (!secoes.length || !("IntersectionObserver" in window)) return;
 
   const linkPorId = new Map();
   links.forEach((link) => {
     const id = link.getAttribute("href").replace("#", "");
     linkPorId.set(id, link);
-  });
-
-  const pontoPorId = new Map();
-  pontos.forEach((ponto) => {
-    const id = ponto.getAttribute("href").replace("#", "");
-    pontoPorId.set(id, ponto);
   });
 
   const observador = new IntersectionObserver(
@@ -162,14 +168,12 @@ function ativarLinkAtivoNaNavegacao() {
 
         const link = linkPorId.get(entrada.target.id);
         if (link) {
-          links.forEach((l) => l.classList.remove("navegacao__link--ativo"));
+          links.forEach((l) => {
+            l.classList.remove("navegacao__link--ativo");
+            l.removeAttribute("aria-current");
+          });
           link.classList.add("navegacao__link--ativo");
-        }
-
-        const ponto = pontoPorId.get(entrada.target.id);
-        if (ponto) {
-          pontos.forEach((p) => p.classList.remove("dot-nav__item--ativo"));
-          ponto.classList.add("dot-nav__item--ativo");
+          link.setAttribute("aria-current", "true");
         }
       });
     },
@@ -200,22 +204,22 @@ function atualizarAnoDoRodape() {
    (ele sempre pode continuar rolando pra baixo normalmente, sem trava).
    Em telas pequenas e para quem prefere menos movimento, vira uma faixa
    comum com rolagem horizontal nativa (mais previsível no touch e sem
-   nenhum "sequestro" de scroll). -------------------------------------------------------------------------- */
+   nenhum "sequestro" de scroll).
+   -------------------------------------------------------------------------- */
 function ativarScrollHorizontalServicos() {
   const secao = document.querySelector(".servicos-scroll");
-  // A "pista" é só o miolo que cria a sobra de altura (o pin some daqui —
-  // o texto de cabeçalho da seção fica FORA dela, rolando normal; isso
-  // evita que os cards fiquem espremidos/cortados embaixo da tela, já que
-  // agora o pin só precisa caber os cards, não cabeçalho + cards juntos).
+  // A "pista" é só o miolo que cria a sobra de altura (o texto de cabeçalho
+  // da seção fica FORA dela, rolando normal; isso evita que os cards fiquem
+  // espremidos/cortados embaixo da tela, já que o pin só precisa caber os
+  // cards, não cabeçalho + cards juntos).
   const pista = document.getElementById("pistaServicos");
   const pin = document.querySelector(".servicos-scroll__pin");
   const trilha = document.getElementById("trilhaServicos");
   if (!secao || !pista || !pin || !trilha) return;
 
   const semTelaGrande = window.matchMedia("(max-width: 1023px)").matches;
-  const prefereMenosMovimento = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  if (semTelaGrande || prefereMenosMovimento) {
+  if (semTelaGrande || prefereMenosMovimento()) {
     secao.classList.add("servicos-scroll--simples");
     trilha.classList.add("servicos-scroll__trilha--nativa");
     return;
@@ -241,92 +245,30 @@ function ativarScrollHorizontalServicos() {
 
   recalcularAltura();
   atualizarPosicao();
-  window.addEventListener("scroll", atualizarPosicao, { passive: true });
-  window.addEventListener("resize", () => {
-    recalcularAltura();
-    atualizarPosicao();
-  });
+  window.addEventListener("scroll", porQuadro(atualizarPosicao), { passive: true });
+  window.addEventListener(
+    "resize",
+    porQuadro(() => {
+      recalcularAltura();
+      atualizarPosicao();
+    })
+  );
 }
 
 /* --------------------------------------------------------------------------
-   7. TYPEWRITER COM OS SERVIÇOS (eyebrow do hero)
-   Digita e apaga cada serviço em loop, letra por letra — reforça logo no
-   primeiro segundo da página que a empresa cobre vários tipos de visto,
-   sem precisar de mais espaço no layout. O texto completo (lista inteira)
-   também existe fixo e "visualmente-oculto" pra leitor de tela, já que o
-   span animado é aria-hidden. Quem prefere menos movimento vê só o
-   primeiro serviço, fixo, sem digitar/apagar.
-   -------------------------------------------------------------------------- */
-function ativarTypewriterDeServicos() {
-  const alvo = document.getElementById("typewriterServico");
-  if (!alvo) return;
-
-  const servicos = [
-    "Visto Americano",
-    "Visto Canadense",
-    "Visto Chinês",
-    "Visto Peruano",
-    "Passaporte Brasileiro",
-    "Intercâmbio",
-  ];
-
-  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-    alvo.textContent = servicos[0];
-    return;
-  }
-
-  const VELOCIDADE_DIGITACAO = 70;
-  const VELOCIDADE_APAGAR = 35;
-  const PAUSA_PALAVRA_COMPLETA = 1700;
-  const PAUSA_ENTRE_PALAVRAS = 350;
-
-  let indicePalavra = 0;
-  let indiceLetra = 0;
-  let apagando = false;
-
-  const passo = () => {
-    const palavraAtual = servicos[indicePalavra];
-
-    if (!apagando) {
-      indiceLetra++;
-      alvo.textContent = palavraAtual.slice(0, indiceLetra);
-      if (indiceLetra === palavraAtual.length) {
-        apagando = true;
-        setTimeout(passo, PAUSA_PALAVRA_COMPLETA);
-        return;
-      }
-      setTimeout(passo, VELOCIDADE_DIGITACAO);
-    } else {
-      indiceLetra--;
-      alvo.textContent = palavraAtual.slice(0, indiceLetra);
-      if (indiceLetra === 0) {
-        apagando = false;
-        indicePalavra = (indicePalavra + 1) % servicos.length;
-        setTimeout(passo, PAUSA_ENTRE_PALAVRAS);
-        return;
-      }
-      setTimeout(passo, VELOCIDADE_APAGAR);
-    }
-  };
-
-  setTimeout(passo, 900);
-}
-
-/* --------------------------------------------------------------------------
-   8. CONTADOR ANIMADO (faixa de números/prêmios)
+   7. CONTADOR ANIMADO (carimbo de seguidores)
    Conta de 0 até o valor de cada "[data-contar]" assim que ele entra na
    tela, preservando o formato original (casa decimal com vírgula, sufixo
    tipo " mil" ou "x") — o texto no HTML já é o valor final real, então
    funciona mesmo se o JS falhar ou o navegador não suportar
-   IntersectionObserver (só não anima, mostra o valor certo direto). É o
-   único efeito de "prova" do site — dado real, não decoração.
+   IntersectionObserver (só não anima, mostra o valor certo direto). Só vai
+   em quantidade de verdade — ano não "conta" (não faz sentido ver 1580).
    -------------------------------------------------------------------------- */
 function ativarContadores() {
   const elementos = document.querySelectorAll("[data-contar]");
   if (!elementos.length) return;
 
-  const prefereMenosMovimento = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  if (prefereMenosMovimento || !("IntersectionObserver" in window)) return;
+  if (prefereMenosMovimento() || !("IntersectionObserver" in window)) return;
 
   const observador = new IntersectionObserver(
     (entradas, observer) => {
@@ -354,100 +296,40 @@ function contarAte(elemento) {
   const valorFinal = parseFloat(numeroTexto.replace(/\./g, "").replace(",", "."));
   if (Number.isNaN(valorFinal)) return;
 
+  const formatador = new Intl.NumberFormat("pt-BR", {
+    minimumFractionDigits: temDecimal ? 1 : 0,
+    maximumFractionDigits: temDecimal ? 1 : 0,
+  });
+
   const duracao = 1400;
   const inicio = performance.now();
 
   const passo = (agora) => {
     const progresso = Math.min(1, (agora - inicio) / duracao);
     const suavizado = 1 - Math.pow(1 - progresso, 3); // ease-out cúbico
-    const valorAtual = valorFinal * suavizado;
-    elemento.textContent = formatarNumeroContado(valorAtual, temDecimal) + sufixo;
+    elemento.textContent = formatador.format(valorFinal * suavizado) + sufixo;
     if (progresso < 1) requestAnimationFrame(passo);
   };
   requestAnimationFrame(passo);
 }
 
-function formatarNumeroContado(valor, comDecimal) {
-  if (comDecimal) {
-    return valor.toFixed(1).replace(".", ",");
-  }
-  return Math.round(valor).toString();
-}
-
 /* --------------------------------------------------------------------------
-   9. TÍTULO DO HERO EM LETRAS
-   Divide "Amazon Visto" em uma letra por <span> e revela em cascata — texto
-   real é preservado via aria-label pra leitor de tela, os spans individuais
-   ficam aria-hidden. Sem lib nenhuma (nada de SplitText pago). Pra quem
-   prefere menos movimento, o texto nem é dividido — fica normal, direto.
-   -------------------------------------------------------------------------- */
-function ativarTituloEmLetras() {
-  const titulo = document.getElementById("heroTitulo");
-  if (!titulo) return;
-
-  const prefereMenosMovimento = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  if (prefereMenosMovimento) return;
-
-  const texto = titulo.textContent;
-  titulo.setAttribute("aria-label", texto);
-
-  const wrapperLetras = document.createElement("span");
-  wrapperLetras.setAttribute("aria-hidden", "true");
-
-  // Percorre os nós do título (texto solto e o <em> de "Visto") pra manter
-  // o itálico da segunda palavra depois de dividir em letras.
-  let indice = 0;
-  const dividir = (trecho, destino) => {
-    trecho.split("").forEach((caractere) => {
-      const letra = document.createElement("span");
-      letra.className = "hero__titulo-letra";
-      letra.textContent = caractere === " " ? " " : caractere;
-      letra.style.transitionDelay = `${0.5 + indice * 0.035}s`;
-      destino.appendChild(letra);
-      indice++;
-    });
-  };
-
-  Array.from(titulo.childNodes).forEach((no) => {
-    if (no.nodeType === Node.TEXT_NODE) {
-      dividir(no.textContent, wrapperLetras);
-    } else {
-      const copia = no.cloneNode(false);
-      dividir(no.textContent, copia);
-      wrapperLetras.appendChild(copia);
-    }
-  });
-
-  titulo.textContent = "";
-  titulo.appendChild(wrapperLetras);
-
-  // Força o navegador a "registrar" o estado inicial (opacity:0) antes de
-  // adicionar a classe que dispara a transição — sem isso as duas mudanças
-  // podem cair no mesmo frame e a transição simplesmente não roda.
-  requestAnimationFrame(() => {
-    titulo.classList.add("hero__titulo--revelado");
-  });
-}
-
-/* --------------------------------------------------------------------------
-   9b. VITRINE DE DESTINOS DO HERO (leque de fotos + selo "aprovado")
-   Revela o leque com um pequeno atraso (depois do título já ter começado a
-   entrar) e liga um paralaxe leve — cada foto se desloca um pouco conforme
-   o mouse anda pela seção, dando profundidade sem nenhum blur/blend-mode
-   animado (a mesma lição de performance já aprendida no fundo do hero:
-   só transform, nada de propriedade cara de recompor a cada frame).
+   8. VITRINE DE DESTINOS DO HERO (leque de fotos + selo "aprovado")
+   Revela o leque com um pequeno atraso (depois do título entrar) — as
+   fotos abrem em leque e, por último, o carimbo "bate" por cima. Paralaxe
+   bem leve: cada foto se desloca alguns pixels conforme o mouse anda pela
+   seção (só transform, uma vez por frame).
    -------------------------------------------------------------------------- */
 function ativarVitrineDoHero() {
   const vitrine = document.getElementById("vitrineHero");
   if (!vitrine) return;
 
-  const prefereMenosMovimento = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  if (prefereMenosMovimento) {
+  if (prefereMenosMovimento()) {
     vitrine.classList.add("hero__vitrine--revelada");
     return;
   }
 
-  setTimeout(() => vitrine.classList.add("hero__vitrine--revelada"), 350);
+  setTimeout(() => vitrine.classList.add("hero__vitrine--revelada"), 450);
   ativarParallaxDaVitrine(vitrine);
 }
 
@@ -459,67 +341,41 @@ function ativarParallaxDaVitrine(vitrine) {
   const cartoes = vitrine.querySelectorAll(".hero__selo");
   const carimbo = vitrine.querySelector(".hero__carimbo");
 
-  hero.addEventListener("mousemove", (evento) => {
-    const centroX = window.innerWidth / 2;
-    const centroY = window.innerHeight / 2;
-    const deslocamentoX = (evento.clientX - centroX) / centroX;
-    const deslocamentoY = (evento.clientY - centroY) / centroY;
+  hero.addEventListener(
+    "mousemove",
+    porQuadro((evento) => {
+      const centroX = window.innerWidth / 2;
+      const centroY = window.innerHeight / 2;
+      const deslocamentoX = (evento.clientX - centroX) / centroX;
+      const deslocamentoY = (evento.clientY - centroY) / centroY;
 
-    cartoes.forEach((cartao, indice) => {
-      const profundidade = (indice + 1) * 3.5;
-      cartao.style.setProperty("--px", `${deslocamentoX * profundidade}px`);
-      cartao.style.setProperty("--py", `${deslocamentoY * profundidade}px`);
-    });
+      cartoes.forEach((cartao, indice) => {
+        const profundidade = (indice + 1) * 3;
+        cartao.style.setProperty("--px", `${deslocamentoX * profundidade}px`);
+        cartao.style.setProperty("--py", `${deslocamentoY * profundidade}px`);
+      });
 
-    if (carimbo) {
-      carimbo.style.setProperty("--px", `${deslocamentoX * 6}px`);
-      carimbo.style.setProperty("--py", `${deslocamentoY * 6}px`);
-    }
-  });
+      if (carimbo) {
+        carimbo.style.setProperty("--px", `${deslocamentoX * 5}px`);
+        carimbo.style.setProperty("--py", `${deslocamentoY * 5}px`);
+      }
+    })
+  );
 }
 
 /* --------------------------------------------------------------------------
-   10. BRILHO NOS CARDS DE SERVIÇO (contido em cada card)
-   Atualiza duas variáveis CSS (--mx/--my) com a posição do mouse relativa
-   ao card, só enquanto o mouse está sobre ELE — o brilho (ver CSS,
-   ".cartao-produto::after") nunca existe fora do card. Sem tela inteira,
-   sem cursor customizado.
-   -------------------------------------------------------------------------- */
-function ativarBrilhoNosCards() {
-  const cartoes = document.querySelectorAll(".cartao-produto");
-  if (!cartoes.length) return;
-
-  const semMouseDeVerdade = window.matchMedia("(pointer: coarse)").matches;
-  if (semMouseDeVerdade) return;
-
-  cartoes.forEach((cartao) => {
-    cartao.addEventListener("mousemove", (evento) => {
-      const caixa = cartao.getBoundingClientRect();
-      const x = ((evento.clientX - caixa.left) / caixa.width) * 100;
-      const y = ((evento.clientY - caixa.top) / caixa.height) * 100;
-      cartao.style.setProperty("--mx", `${x}%`);
-      cartao.style.setProperty("--my", `${y}%`);
-    });
-  });
-}
-
-/* --------------------------------------------------------------------------
-   11. LINHA DO PROCESSO PREENCHENDO COM O SCROLL
-   Atualiza --progresso-processo (0 a 1) conforme a lista de passos atravessa
-   a viewport — a linha (ver CSS, ".processo__lista::after") "desenha" o
-   percurso enquanto o visitante rola, em vez de aparecer pronta de uma vez.
-   Só existe dentro da própria seção — não afeta o resto do scroll da página.
+   9. LINHA DO PROCESSO PREENCHENDO COM O SCROLL
+   A variável fica no wrapper (.processo__percurso), não na <ol>: assim ela
+   chega tanto à linha (::after da lista) quanto ao avião, que é irmão da
+   lista. Cada passo ganha "--alcancado" quando o avião passa por ele. Só
+   existe dentro da própria seção — não afeta o resto do scroll da página.
    -------------------------------------------------------------------------- */
 function ativarLinhaDoProcesso() {
-  // A variável fica no wrapper (.processo__percurso), não na <ol>: assim ela
-  // chega tanto à linha (::after da lista) quanto ao avião, que é irmão da
-  // lista. Cada passo ganha "--alcancado" quando o avião passa por ele.
   const percurso = document.getElementById("percursoProcesso");
   if (!percurso) return;
   const passos = percurso.querySelectorAll(".processo__passo");
 
-  const prefereMenosMovimento = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  if (prefereMenosMovimento) {
+  if (prefereMenosMovimento()) {
     percurso.style.setProperty("--progresso-processo", "1");
     passos.forEach((passo) => passo.classList.add("processo__passo--alcancado"));
     return;
@@ -529,8 +385,7 @@ function ativarLinhaDoProcesso() {
     const caixa = percurso.getBoundingClientRect();
     const alturaJanela = window.innerHeight;
     // 0 quando o topo da lista chega a 85% da tela, 1 quando ela chega a
-    // 35% — a viagem acontece enquanto a seção está bem à vista, em vez de
-    // terminar só quando ela já saiu pelo topo.
+    // 35% — a viagem acontece enquanto a seção está bem à vista.
     const progresso = (alturaJanela * 0.85 - caixa.top) / (alturaJanela * 0.5);
     const limitado = Math.min(1, Math.max(0, progresso));
     percurso.style.setProperty("--progresso-processo", String(limitado));
@@ -541,6 +396,6 @@ function ativarLinhaDoProcesso() {
   };
 
   atualizar();
-  window.addEventListener("scroll", atualizar, { passive: true });
-  window.addEventListener("resize", atualizar);
+  window.addEventListener("scroll", porQuadro(atualizar), { passive: true });
+  window.addEventListener("resize", porQuadro(atualizar));
 }
