@@ -33,19 +33,29 @@
   <link rel="icon" type="image/png" href="images/favicon.png" />
   <link rel="preload" href="fonts/chillax-600.woff2" as="font" type="font/woff2" crossorigin />
   <link rel="preload" href="fonts/chillax-400.woff2" as="font" type="font/woff2" crossorigin />
-  <link rel="stylesheet" href="css/style.css?v=42" />
+  <link rel="stylesheet" href="css/style.css?v=43" />
 </head>
 <body>
   <a class="pular" href="#conteudo">Pular para o conteúdo</a>
 
   <!-- O "visto": o tique duplo da conversa, desenhado uma vez e usado em
-       todo o site (marcadores, botões, rodapé). -->
+       todo o site (marcadores, botões, carimbos). -->
   <svg width="0" height="0" style="position: absolute" aria-hidden="true" focusable="false">
     <symbol id="visto" viewBox="0 0 22 14">
       <path d="M1.5 7.6 5.6 11.6 13 2.6" />
       <path d="M8.9 11.6 16.3 2.6" />
       <path d="M7.4 10.1 8.9 11.6" />
     </symbol>
+    <!-- "Tinta de carimbo": desgasta de leve as bordas dos carimbos, como tinta
+         de verdade no papel. -->
+    <filter id="tintaCarimbo" x="-5%" y="-5%" width="110%" height="110%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="7" result="ruido" />
+      <feDisplacementMap in="SourceGraphic" in2="ruido" scale="2.2" result="tremido" />
+      <feComponentTransfer in="ruido" result="falhas">
+        <feFuncA type="discrete" tableValues="1 1 1 1 1 0.35 1 1" />
+      </feComponentTransfer>
+      <feComposite in="tremido" in2="falhas" operator="in" />
+    </filter>
   </svg>
 
   <!-- ==========================================================================
@@ -59,8 +69,9 @@
     </a>
     <nav class="barra__nav" id="navegacao" aria-label="Navegação principal">
       <a href="#servicos">Serviços</a>
-      <a href="#como-funciona">Como funciona</a>
+      <a href="#sobre">Quem somos</a>
       <a href="#duvidas">Dúvidas</a>
+      <a href="#contato">Contato</a>
       <a class="barra__idioma" href="es.html" hreflang="es" lang="es">Español</a>
     </nav>
     <button
@@ -76,28 +87,53 @@
 
   <main id="conteudo">
     <!-- ==========================================================================
-         CAPA: o título à esquerda; à direita, um balão dourado gigante,
-         cortado pela tela, com a conversa viva: escolher o caso faz a Amazon
-         Visto responder e deixa a mensagem pronta para o WhatsApp
-         (main.js, "ativarConversa"). Sem JS, o compositor é um formulário
-         que abre o WhatsApp com o texto escrito.
+         CAPA: à esquerda, a página de dados do passaporte (papel com
+         guilhoche de segurança, a borda listrada do envelope de correio
+         aéreo, o chip, a zona de leitura e o carimbo do "visto"); à direita, o
+         avião na pista e, sobre o pé da foto, a conversa viva: escolher o caso
+         faz a Amazon Visto responder e deixa a mensagem pronta para o WhatsApp
+         (main.js, "ativarConversa"). Sem JS, o compositor já aparece e abre o
+         WhatsApp com o texto escrito.
          ========================================================================== -->
     <section class="capa" id="inicio">
-      <div class="capa__texto">
-        <h1 class="entrada">Seu visto, visto por nós</h1>
-        <p class="capa__apoio entrada">
-          Assessoria de visto americano, canadense, chinês e peruano,
-          passaporte e intercâmbio. Em Manaus, Brasília ou 100% online, em
-          até 10x sem juros.
-        </p>
-        <a
-          class="botao botao--acao entrada"
-          href="https://wa.me/5592981265897?text=Ol%C3%A1!%20Vim%20pelo%20site%20e%20gostaria%20de%20mais%20informa%C3%A7%C3%B5es%20sobre%20visto."
-          target="_blank"
-          rel="noopener"
-        >Conversar no WhatsApp</a>
-        <p class="capa__selos entrada">Empresa do Ano 2025 · Empresa Destaque 2026</p>
+      <div class="capa__cartao">
+        <div class="listra" aria-hidden="true"></div>
+        <!-- Símbolo do passaporte eletrônico (chip), como na capa do passaporte. -->
+        <svg class="capa__chip" viewBox="0 0 64 40" aria-hidden="true" focusable="false">
+          <rect x="2" y="2" width="60" height="36" rx="3" />
+          <circle cx="32" cy="20" r="9" />
+          <path d="M2 11h21M41 11h21M2 29h21M41 29h21" />
+        </svg>
+        <div class="capa__texto">
+          <h1 class="entrada">Seu visto, visto por nós</h1>
+          <p class="capa__apoio entrada">
+            Assessoria de visto americano, canadense, chinês e peruano,
+            passaporte e intercâmbio. Em Manaus, Brasília ou 100% online, em
+            até 10x sem juros.
+          </p>
+          <a
+            class="botao botao--acao entrada"
+            href="https://wa.me/5592981265897?text=Ol%C3%A1!%20Vim%20pelo%20site%20e%20gostaria%20de%20mais%20informa%C3%A7%C3%B5es%20sobre%20visto."
+            target="_blank"
+            rel="noopener"
+          >Conversar no WhatsApp</a>
+          <p class="capa__selos entrada">Empresa do Ano 2025 · Empresa Destaque 2026</p>
+        </div>
+        <div class="capa__pe" aria-hidden="true">
+          <svg class="mrz capa__mrz" viewBox="0 0 600 44" preserveAspectRatio="none" focusable="false"><text x="0" y="16" textLength="600" lengthAdjust="spacingAndGlyphs">P&lt;BRAAMAZON&lt;&lt;VISTO&lt;MANAUS&lt;BRASILIA&lt;ONLINE&lt;&lt;&lt;</text><text x="0" y="38" textLength="600" lengthAdjust="spacingAndGlyphs">VISTOS&lt;PASSAPORTE&lt;INTERCAMBIO&lt;&lt;10X&lt;SEM&lt;JUROS</text></svg>
+          <svg class="carimbo capa__carimbo" viewBox="0 0 120 120" focusable="false"><defs><path id="anel-capa" d="M 17,60 a 43,43 0 1,1 86,0 a 43,43 0 1,1 -86,0" /></defs><circle cx="60" cy="60" r="56" /><circle cx="60" cy="60" r="31" /><text><textPath href="#anel-capa" textLength="266" lengthAdjust="spacing">SEU VISTO · VISTO POR NÓS ·</textPath></text><use href="#visto" x="41" y="49" width="38" height="24" /></svg>
+        </div>
       </div>
+
+      <figure class="capa__foto">
+        <img
+          src="images/banner.webp"
+          alt="Avião na pista do aeroporto ao entardecer"
+          width="1920"
+          height="1281"
+          fetchpriority="high"
+        />
+      </figure>
 
       <div class="conversa" id="conversa">
         <div class="conversa__janela">
@@ -168,12 +204,13 @@
     </section>
 
     <!-- ==========================================================================
-         SERVIÇOS: à esquerda o título; à direita, os destinos em faixas de
-         letra grande (Estados Unidos primeiro e maior). Cada nome é o botão que
-         abre a ficha completa do serviço logo abaixo (main.js,
-         "ativarServicos"); cada ficha tem o próprio endereço (#visto-americano).
+         SERVIÇOS: à esquerda o título; à direita, o painel de partidas, com os
+         destinos em letra grande (Estados Unidos primeiro e maior). Cada nome
+         é o botão que abre a ficha do serviço logo abaixo, uma página de visto
+         com o carimbo e a zona de leitura (main.js, "ativarServicos"); cada
+         ficha tem o próprio endereço (#visto-americano).
          Sem JS, todas as fichas aparecem. Para incluir um serviço: copie uma
-         faixa e a ficha dela e troque o nome (images/produto-7.webp em diante
+         linha do painel e a ficha dela e troque o nome (images/produto-7.webp em diante
          estão de reserva).
          ========================================================================== -->
     <section class="servicos" id="servicos" aria-labelledby="titulo-servicos">
@@ -185,20 +222,36 @@
         </p>
       </div>
 
-      <ul class="destinos" role="list">
-        <li><a class="destino destino--principal" href="#visto-americano" data-servico="visto-americano"><span class="destino__nome">Estados Unidos</span><span class="destino__fato">Visto americano: primeiro visto e renovação</span></a></li>
-        <li><a class="destino" href="#visto-canadense" data-servico="visto-canadense"><span class="destino__nome">Canadá</span><span class="destino__fato">Visto canadense: visitante, com a biometria agendada</span></a></li>
-        <li><a class="destino" href="#visto-chines" data-servico="visto-chines"><span class="destino__nome">China</span><span class="destino__fato">Visto chinês: turismo e negócios</span></a></li>
-        <li><a class="destino" href="#visto-peruano" data-servico="visto-peruano"><span class="destino__nome">Peru</span><span class="destino__fato">Visto peruano: em português ou español</span></a></li>
-        <li><a class="destino" href="#passaporte-brasileiro" data-servico="passaporte-brasileiro"><span class="destino__nome">Passaporte</span><span class="destino__fato">Brasileiro: emissão e renovação</span></a></li>
-        <li><a class="destino" href="#intercambio" data-servico="intercambio"><span class="destino__nome">Intercâmbio</span><span class="destino__fato">Estudo e trabalho fora do Brasil</span></a></li>
-      </ul>
+      <!-- O painel de partidas: cada destino é uma linha do painel do
+           aeroporto, com o código, o nome em letra grande e a hora local de
+           lá agora; no pé, a origem: Manaus, com a data e a hora daqui
+           (main.js, "ativarPainel"; sem JS, as horas não aparecem). No
+           intercâmbio, o código gira pelos destinos. -->
+      <div class="painel" id="painel">
+        <ul class="destinos" role="list">
+          <li><a class="destino destino--principal" href="#visto-americano" data-servico="visto-americano" data-fuso="America/New_York"><span class="destino__codigo placas" aria-hidden="true"><span>J</span><span>F</span><span>K</span></span><span class="destino__nome">Estados Unidos</span><span class="destino__fato">Visto americano: primeiro visto e renovação</span><span class="destino__hora placas" aria-hidden="true"></span></a></li>
+          <li><a class="destino" href="#visto-canadense" data-servico="visto-canadense" data-fuso="America/Toronto"><span class="destino__codigo placas" aria-hidden="true"><span>Y</span><span>Y</span><span>Z</span></span><span class="destino__nome">Canadá</span><span class="destino__fato">Visto canadense: visitante, com a biometria agendada</span><span class="destino__hora placas" aria-hidden="true"></span></a></li>
+          <li><a class="destino" href="#visto-chines" data-servico="visto-chines" data-fuso="Asia/Shanghai"><span class="destino__codigo placas" aria-hidden="true"><span>P</span><span>E</span><span>K</span></span><span class="destino__nome">China</span><span class="destino__fato">Visto chinês: turismo e negócios</span><span class="destino__hora placas" aria-hidden="true"></span></a></li>
+          <li><a class="destino" href="#visto-peruano" data-servico="visto-peruano" data-fuso="America/Lima"><span class="destino__codigo placas" aria-hidden="true"><span>L</span><span>I</span><span>M</span></span><span class="destino__nome">Peru</span><span class="destino__fato">Visto peruano: em português ou español</span><span class="destino__hora placas" aria-hidden="true"></span></a></li>
+          <li><a class="destino" href="#passaporte-brasileiro" data-servico="passaporte-brasileiro" data-fuso="America/Sao_Paulo"><span class="destino__codigo placas" aria-hidden="true"><span>B</span><span>R</span><span>A</span></span><span class="destino__nome">Passaporte</span><span class="destino__fato">Brasileiro: emissão e renovação</span><span class="destino__hora placas" aria-hidden="true"></span></a></li>
+          <li><a class="destino" href="#intercambio" data-servico="intercambio"><span class="destino__codigo placas" aria-hidden="true" data-codigos="JFK|YYZ|PEK|LIM"><span>J</span><span>F</span><span>K</span></span><span class="destino__nome">Intercâmbio</span><span class="destino__fato">Estudo e trabalho fora do Brasil</span></a></li>
+        </ul>
+        <p class="painel__origem" data-fuso="America/Manaus">
+          <span class="placas" aria-hidden="true"><span>M</span><span>A</span><span>O</span></span>
+          <span class="painel__titulo">Partidas de Manaus</span>
+          <span class="painel__data"></span>
+          <span class="painel__hora placas" aria-hidden="true"></span>
+        </p>
+      </div>
 
       <div class="fichas" id="fichas">
         <article class="ficha" id="visto-americano" aria-labelledby="titulo-visto-americano">
-          <figure class="ficha__foto obturador" style="--foco: 0% 50%">
-            <img src="assets/passport-boarding-pass.webp" alt="Passaporte e cartão de embarque sobre a mesa" width="1024" height="773" loading="lazy" />
-          </figure>
+          <div class="ficha__visual">
+            <figure class="ficha__foto obturador" style="--foco: 0% 50%">
+              <img src="assets/passport-boarding-pass.webp" alt="Passaporte e cartão de embarque sobre a mesa" width="1024" height="773" loading="lazy" />
+            </figure>
+            <svg class="carimbo ficha__carimbo" viewBox="0 0 120 120" aria-hidden="true" focusable="false"><defs><path id="anel-visto-americano" d="M 17,60 a 43,43 0 1,1 86,0 a 43,43 0 1,1 -86,0" /></defs><circle cx="60" cy="60" r="56" /><circle cx="60" cy="60" r="31" /><text><textPath href="#anel-visto-americano" textLength="266" lengthAdjust="spacing">ESTADOS UNIDOS · AMAZON VISTO · MANAUS ·</textPath></text><use href="#visto" x="41" y="49" width="38" height="24" /></svg>
+          </div>
           <div class="ficha__texto">
             <h3 id="titulo-visto-americano">Visto americano</h3>
             <p class="ficha__desc">Novo visto ou renovação, para turismo ou negócios, sem sair de casa.</p>
@@ -228,13 +281,17 @@
             <!-- TROCAR: valor "a partir de" deste serviço (tire o "hidden" ao preencher) -->
             <p class="ficha__preco" hidden>A partir de <strong>R$ TROCAR</strong>, em até 10x sem juros no cartão</p>
             <a class="botao botao--acao" href="https://wa.me/5592981265897?text=Ol%C3%A1!%20Vim%20pelo%20site%20e%20gostaria%20de%20mais%20informa%C3%A7%C3%B5es%20sobre%20Visto%20Americano." target="_blank" rel="noopener">Conversar sobre o visto americano</a>
+            <svg class="mrz ficha__mrz" viewBox="0 0 600 22" preserveAspectRatio="none" aria-hidden="true" focusable="false"><text x="0" y="16" textLength="600" lengthAdjust="spacingAndGlyphs">V&lt;USAVISTO&lt;AMERICANO&lt;&lt;TURISMO&lt;NEGOCIOS&lt;&lt;&lt;&lt;&lt;&lt;</text></svg>
           </div>
         </article>
 
         <article class="ficha" id="visto-canadense" aria-labelledby="titulo-visto-canadense">
-          <figure class="ficha__foto">
-            <img src="images/produto-2.webp" alt="Toronto ao entardecer, com a CN Tower" width="800" height="800" loading="lazy" />
-          </figure>
+          <div class="ficha__visual">
+            <figure class="ficha__foto">
+              <img src="images/produto-2.webp" alt="Toronto ao entardecer, com a CN Tower" width="800" height="800" loading="lazy" />
+            </figure>
+            <svg class="carimbo ficha__carimbo" viewBox="0 0 120 120" aria-hidden="true" focusable="false"><defs><path id="anel-visto-canadense" d="M 17,60 a 43,43 0 1,1 86,0 a 43,43 0 1,1 -86,0" /></defs><circle cx="60" cy="60" r="56" /><circle cx="60" cy="60" r="31" /><text><textPath href="#anel-visto-canadense" textLength="266" lengthAdjust="spacing">CANADÁ · AMAZON VISTO · MANAUS ·</textPath></text><use href="#visto" x="41" y="49" width="38" height="24" /></svg>
+          </div>
           <div class="ficha__texto">
             <h3 id="titulo-visto-canadense">Visto canadense</h3>
             <p class="ficha__desc">Visto de turista para o Canadá, com assessoria completa do início ao fim.</p>
@@ -256,13 +313,17 @@
             <!-- TROCAR: valor "a partir de" deste serviço (tire o "hidden" ao preencher) -->
             <p class="ficha__preco" hidden>A partir de <strong>R$ TROCAR</strong>, em até 10x sem juros no cartão</p>
             <a class="botao botao--acao" href="https://wa.me/5592981265897?text=Ol%C3%A1!%20Vim%20pelo%20site%20e%20gostaria%20de%20mais%20informa%C3%A7%C3%B5es%20sobre%20Visto%20Canadense." target="_blank" rel="noopener">Conversar sobre o visto canadense</a>
+            <svg class="mrz ficha__mrz" viewBox="0 0 600 22" preserveAspectRatio="none" aria-hidden="true" focusable="false"><text x="0" y="16" textLength="600" lengthAdjust="spacingAndGlyphs">V&lt;CANVISTO&lt;CANADENSE&lt;&lt;VISITANTE&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;</text></svg>
           </div>
         </article>
 
         <article class="ficha" id="visto-chines" aria-labelledby="titulo-visto-chines">
-          <figure class="ficha__foto">
-            <img src="images/produto-3.webp" alt="A Grande Muralha da China entre montanhas" width="800" height="800" loading="lazy" />
-          </figure>
+          <div class="ficha__visual">
+            <figure class="ficha__foto">
+              <img src="images/produto-3.webp" alt="A Grande Muralha da China entre montanhas" width="800" height="800" loading="lazy" />
+            </figure>
+            <svg class="carimbo ficha__carimbo" viewBox="0 0 120 120" aria-hidden="true" focusable="false"><defs><path id="anel-visto-chines" d="M 17,60 a 43,43 0 1,1 86,0 a 43,43 0 1,1 -86,0" /></defs><circle cx="60" cy="60" r="56" /><circle cx="60" cy="60" r="31" /><text><textPath href="#anel-visto-chines" textLength="266" lengthAdjust="spacing">CHINA · AMAZON VISTO · MANAUS ·</textPath></text><use href="#visto" x="41" y="49" width="38" height="24" /></svg>
+          </div>
           <div class="ficha__texto">
             <h3 id="titulo-visto-chines">Visto chinês</h3>
             <p class="ficha__desc">Turismo e negócios na China, com parcelamento em até 10x sem juros.</p>
@@ -284,13 +345,17 @@
             <!-- TROCAR: valor "a partir de" deste serviço (tire o "hidden" ao preencher) -->
             <p class="ficha__preco" hidden>A partir de <strong>R$ TROCAR</strong>, em até 10x sem juros no cartão</p>
             <a class="botao botao--acao" href="https://wa.me/5592981265897?text=Ol%C3%A1!%20Vim%20pelo%20site%20e%20gostaria%20de%20mais%20informa%C3%A7%C3%B5es%20sobre%20Visto%20Chin%C3%AAs." target="_blank" rel="noopener">Conversar sobre o visto chinês</a>
+            <svg class="mrz ficha__mrz" viewBox="0 0 600 22" preserveAspectRatio="none" aria-hidden="true" focusable="false"><text x="0" y="16" textLength="600" lengthAdjust="spacingAndGlyphs">V&lt;CHNVISTO&lt;CHINES&lt;&lt;TURISMO&lt;NEGOCIOS&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;</text></svg>
           </div>
         </article>
 
         <article class="ficha" id="visto-peruano" aria-labelledby="titulo-visto-peruano">
-          <figure class="ficha__foto">
-            <img src="images/produto-4.webp" alt="Machu Picchu, no Peru, entre as montanhas" width="800" height="800" loading="lazy" />
-          </figure>
+          <div class="ficha__visual">
+            <figure class="ficha__foto">
+              <img src="images/produto-4.webp" alt="Machu Picchu, no Peru, entre as montanhas" width="800" height="800" loading="lazy" />
+            </figure>
+            <svg class="carimbo ficha__carimbo" viewBox="0 0 120 120" aria-hidden="true" focusable="false"><defs><path id="anel-visto-peruano" d="M 17,60 a 43,43 0 1,1 86,0 a 43,43 0 1,1 -86,0" /></defs><circle cx="60" cy="60" r="56" /><circle cx="60" cy="60" r="31" /><text><textPath href="#anel-visto-peruano" textLength="266" lengthAdjust="spacing">PERU · AMAZON VISTO · MANAUS ·</textPath></text><use href="#visto" x="41" y="49" width="38" height="24" /></svg>
+          </div>
           <div class="ficha__texto">
             <h3 id="titulo-visto-peruano">Visto peruano</h3>
             <p class="ficha__desc">Assessoria para o visto de entrada no Peru, com atendimento em português e español.</p>
@@ -312,13 +377,17 @@
             <!-- TROCAR: valor "a partir de" deste serviço (tire o "hidden" ao preencher) -->
             <p class="ficha__preco" hidden>A partir de <strong>R$ TROCAR</strong>, em até 10x sem juros no cartão</p>
             <a class="botao botao--acao" href="https://wa.me/5592981265897?text=Ol%C3%A1!%20Vim%20pelo%20site%20e%20gostaria%20de%20mais%20informa%C3%A7%C3%B5es%20sobre%20Visto%20Peruano." target="_blank" rel="noopener">Conversar sobre o visto peruano</a>
+            <svg class="mrz ficha__mrz" viewBox="0 0 600 22" preserveAspectRatio="none" aria-hidden="true" focusable="false"><text x="0" y="16" textLength="600" lengthAdjust="spacingAndGlyphs">V&lt;PERVISTO&lt;PERUANO&lt;&lt;ENTRADA&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;</text></svg>
           </div>
         </article>
 
         <article class="ficha" id="passaporte-brasileiro" aria-labelledby="titulo-passaporte-brasileiro">
-          <figure class="ficha__foto">
-            <img src="images/produto-5.webp" alt="O Rio de Janeiro visto do alto, com as montanhas ao fundo" width="800" height="800" loading="lazy" />
-          </figure>
+          <div class="ficha__visual">
+            <figure class="ficha__foto">
+              <img src="images/produto-5.webp" alt="O Rio de Janeiro visto do alto, com as montanhas ao fundo" width="800" height="800" loading="lazy" />
+            </figure>
+            <svg class="carimbo ficha__carimbo" viewBox="0 0 120 120" aria-hidden="true" focusable="false"><defs><path id="anel-passaporte-brasileiro" d="M 17,60 a 43,43 0 1,1 86,0 a 43,43 0 1,1 -86,0" /></defs><circle cx="60" cy="60" r="56" /><circle cx="60" cy="60" r="31" /><text><textPath href="#anel-passaporte-brasileiro" textLength="266" lengthAdjust="spacing">BRASIL · PASSAPORTE · MANAUS ·</textPath></text><use href="#visto" x="41" y="49" width="38" height="24" /></svg>
+          </div>
           <div class="ficha__texto">
             <h3 id="titulo-passaporte-brasileiro">Passaporte brasileiro</h3>
             <p class="ficha__desc">Emissão e renovação pelo WhatsApp: zero burocracia, rapidez e comodidade.</p>
@@ -340,13 +409,17 @@
             <!-- TROCAR: valor "a partir de" deste serviço (tire o "hidden" ao preencher) -->
             <p class="ficha__preco" hidden>A partir de <strong>R$ TROCAR</strong>, em até 10x sem juros no cartão</p>
             <a class="botao botao--acao" href="https://wa.me/5592981265897?text=Ol%C3%A1!%20Vim%20pelo%20site%20e%20gostaria%20de%20mais%20informa%C3%A7%C3%B5es%20sobre%20Passaporte%20Brasileiro." target="_blank" rel="noopener">Conversar sobre o passaporte</a>
+            <svg class="mrz ficha__mrz" viewBox="0 0 600 22" preserveAspectRatio="none" aria-hidden="true" focusable="false"><text x="0" y="16" textLength="600" lengthAdjust="spacingAndGlyphs">P&lt;BRAPASSAPORTE&lt;BRASILEIRO&lt;&lt;EMISSAO&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;</text></svg>
           </div>
         </article>
 
         <article class="ficha" id="intercambio" aria-labelledby="titulo-intercambio">
-          <figure class="ficha__foto">
-            <img src="images/produto-6.webp" alt="Estudantes numa sala de aula" width="800" height="800" loading="lazy" />
-          </figure>
+          <div class="ficha__visual">
+            <figure class="ficha__foto">
+              <img src="images/produto-6.webp" alt="Estudantes numa sala de aula" width="800" height="800" loading="lazy" />
+            </figure>
+            <svg class="carimbo ficha__carimbo" viewBox="0 0 120 120" aria-hidden="true" focusable="false"><defs><path id="anel-intercambio" d="M 17,60 a 43,43 0 1,1 86,0 a 43,43 0 1,1 -86,0" /></defs><circle cx="60" cy="60" r="56" /><circle cx="60" cy="60" r="31" /><text><textPath href="#anel-intercambio" textLength="266" lengthAdjust="spacing">INTERCÂMBIO · AMAZON VISTO · MANAUS ·</textPath></text><use href="#visto" x="41" y="49" width="38" height="24" /></svg>
+          </div>
           <div class="ficha__texto">
             <h3 id="titulo-intercambio">Intercâmbio</h3>
             <p class="ficha__desc">Orientação completa para quem quer estudar ou trabalhar fora do Brasil.</p>
@@ -368,43 +441,10 @@
             <!-- TROCAR: valor "a partir de" deste serviço (tire o "hidden" ao preencher) -->
             <p class="ficha__preco" hidden>A partir de <strong>R$ TROCAR</strong>, em até 10x sem juros no cartão</p>
             <a class="botao botao--acao" href="https://wa.me/5592981265897?text=Ol%C3%A1!%20Vim%20pelo%20site%20e%20gostaria%20de%20mais%20informa%C3%A7%C3%B5es%20sobre%20Interc%C3%A2mbio%3A%20Estudo%20e%20Trabalho." target="_blank" rel="noopener">Conversar sobre intercâmbio</a>
+            <svg class="mrz ficha__mrz" viewBox="0 0 600 22" preserveAspectRatio="none" aria-hidden="true" focusable="false"><text x="0" y="16" textLength="600" lengthAdjust="spacingAndGlyphs">V&lt;&lt;&lt;&lt;INTERCAMBIO&lt;&lt;ESTUDO&lt;TRABALHO&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;</text></svg>
           </div>
         </article>
       </div>
-    </section>
-
-    <!-- ==========================================================================
-         COMO FUNCIONA: "muitos em um": à esquerda a papelada solta, no meio a
-         conversa que junta tudo, à direita os vistos (o tique duplo) em fila. O diagrama é
-         o comparativo (sozinho x com a gente); as três colunas embaixo dizem o
-         que cada terço mostra.
-         ========================================================================== -->
-    <section class="caminho" id="como-funciona" aria-labelledby="titulo-caminho">
-      <div class="caminho__topo">
-        <h2 id="titulo-caminho" class="entrada">Da papelada ao visto</h2>
-        <p class="entrada">
-          Sozinho, o visto é uma pilha de formulários, taxas e agendamentos,
-          muitas vezes em outro idioma. Com a gente, vira uma conversa só.
-        </p>
-      </div>
-      <figure class="caminho__diagrama entrada" aria-hidden="true">
-        <svg class="diagrama diagrama--deitado" viewBox="0 0 1800 400" preserveAspectRatio="xMidYMid meet" focusable="false"><defs><path id="dgB" d="M0 0H8A6 6 0 0 1 14 6V8A6 6 0 0 1 8 14H6A6 6 0 0 1 0 8Z" /></defs><use href="#dgB" class="dg-claro" transform="translate(140.2 279.8) rotate(29.2 7 7)" /><use href="#dgB" class="dg-medio" transform="translate(81.5 82.3) rotate(25.2 7 7)" /><use href="#dgB" class="dg-medio" transform="translate(296.2 193.2) rotate(-14.3 7 7)" /><use href="#dgB" class="dg-medio" transform="translate(522.4 176.1) rotate(2.2 7 7)" /><use href="#dgB" class="dg-medio" transform="translate(304 277.1) rotate(3.5 7 7)" /><use href="#dgB" class="dg-claro" transform="translate(336.9 258.5) rotate(-8.2 7 7)" /><use href="#dgB" class="dg-medio" transform="translate(447.4 236.2) rotate(-4 7 7)" /><use href="#dgB" class="dg-claro" transform="translate(280.8 264.9) rotate(30.7 7 7)" /><use href="#dgB" class="dg-claro" transform="translate(549.4 186.2) rotate(-0.8 7 7)" /><use href="#dgB" class="dg-claro" transform="translate(365.5 132) rotate(-0.1 7 7)" /><use href="#dgB" class="dg-claro" transform="translate(476.3 211.4) rotate(2.5 7 7)" /><use href="#dgB" class="dg-claro" transform="translate(533.6 225.9) rotate(-3.1 7 7)" /><use href="#dgB" class="dg-medio" transform="translate(409.3 235.1) rotate(-9.2 7 7)" /><use href="#dgB" class="dg-medio" transform="translate(147.3 95.3) rotate(-2.7 7 7)" /><use href="#dgB" class="dg-claro" transform="translate(313.2 188.2) rotate(-8.5 7 7)" /><use href="#dgB" class="dg-medio" transform="translate(122 76) rotate(-8.2 7 7)" /><use href="#dgB" class="dg-claro" transform="translate(326.9 204) rotate(12.3 7 7)" /><use href="#dgB" class="dg-claro" transform="translate(149.7 197.8) rotate(34.6 7 7)" /><use href="#dgB" class="dg-claro" transform="translate(155.6 261.7) rotate(44.3 7 7)" /><use href="#dgB" class="dg-claro" transform="translate(476.6 177.4) rotate(-1.9 7 7)" /><use href="#dgB" class="dg-medio" transform="translate(121 283.7) rotate(-18.9 7 7)" /><use href="#dgB" class="dg-claro" transform="translate(519.2 224.8) rotate(-3.3 7 7)" /><use href="#dgB" class="dg-claro" transform="translate(45.3 191.5) rotate(-9.5 7 7)" /><use href="#dgB" class="dg-medio" transform="translate(284.5 159.9) rotate(10.5 7 7)" /><use href="#dgB" class="dg-claro" transform="translate(65.8 177) rotate(57.5 7 7)" /><use href="#dgB" class="dg-claro" transform="translate(552.9 213.1) rotate(-1.1 7 7)" /><use href="#dgB" class="dg-claro" transform="translate(572.1 202.7) rotate(0 7 7)" /><use href="#dgB" class="dg-medio" transform="translate(130.9 266.1) rotate(-55.3 7 7)" /><use href="#dgB" class="dg-claro" transform="translate(521.6 188.9) rotate(4.8 7 7)" /><use href="#dgB" class="dg-claro" transform="translate(307.2 186.7) rotate(6.3 7 7)" /><use href="#dgB" class="dg-medio" transform="translate(407.2 224.4) rotate(10.7 7 7)" /><use href="#dgB" class="dg-claro" transform="translate(207.7 214.3) rotate(-13.3 7 7)" /><use href="#dgB" class="dg-medio" transform="translate(236.8 198.4) rotate(-4.5 7 7)" /><use href="#dgB" class="dg-medio" transform="translate(298.2 287.7) rotate(-26 7 7)" /><use href="#dgB" class="dg-medio" transform="translate(198.4 249.4) rotate(-36.9 7 7)" /><use href="#dgB" class="dg-claro" transform="translate(217.8 319.5) rotate(1.4 7 7)" /><use href="#dgB" class="dg-medio" transform="translate(537.9 223.2) rotate(5.2 7 7)" /><use href="#dgB" class="dg-claro" transform="translate(489.7 233.7) rotate(-9.5 7 7)" /><use href="#dgB" class="dg-claro" transform="translate(195 143.5) rotate(-36.3 7 7)" /><use href="#dgB" class="dg-claro" transform="translate(66 213.4) rotate(27.3 7 7)" /><use href="#dgB" class="dg-claro" transform="translate(62.7 104.8) rotate(-65 7 7)" /><use href="#dgB" class="dg-claro" transform="translate(397.3 240.1) rotate(23 7 7)" /><use href="#dgB" class="dg-claro" transform="translate(361 159.8) rotate(11 7 7)" /><use href="#dgB" class="dg-claro" transform="translate(388.3 226.3) rotate(-18.9 7 7)" /><use href="#dgB" class="dg-claro" transform="translate(416.9 149.4) rotate(5.5 7 7)" /><use href="#dgB" class="dg-claro" transform="translate(173.6 208.4) rotate(44.7 7 7)" /><use href="#dgB" class="dg-faixa" x="604" y="176" style="--i:0" /><use href="#dgB" class="dg-faixa" x="604" y="193" style="--i:0" /><use href="#dgB" class="dg-faixa" x="604" y="210" style="--i:0" /><use href="#dgB" class="dg-faixa" x="626" y="176" style="--i:1" /><use href="#dgB" class="dg-faixa" x="626" y="193" style="--i:1" /><use href="#dgB" class="dg-faixa" x="626" y="210" style="--i:1" /><use href="#dgB" class="dg-faixa" x="648" y="176" style="--i:2" /><use href="#dgB" class="dg-faixa" x="648" y="193" style="--i:2" /><use href="#dgB" class="dg-faixa" x="648" y="210" style="--i:2" /><use href="#dgB" class="dg-faixa" x="670" y="176" style="--i:3" /><use href="#dgB" class="dg-faixa" x="670" y="193" style="--i:3" /><use href="#dgB" class="dg-faixa" x="670" y="210" style="--i:3" /><use href="#dgB" class="dg-faixa" x="692" y="176" style="--i:4" /><use href="#dgB" class="dg-faixa" x="692" y="193" style="--i:4" /><use href="#dgB" class="dg-faixa" x="692" y="210" style="--i:4" /><use href="#dgB" class="dg-faixa" x="714" y="176" style="--i:5" /><use href="#dgB" class="dg-faixa" x="714" y="193" style="--i:5" /><use href="#dgB" class="dg-faixa" x="714" y="210" style="--i:5" /><use href="#dgB" class="dg-faixa" x="736" y="176" style="--i:6" /><use href="#dgB" class="dg-faixa" x="736" y="193" style="--i:6" /><use href="#dgB" class="dg-faixa" x="736" y="210" style="--i:6" /><use href="#dgB" class="dg-faixa" x="758" y="176" style="--i:7" /><use href="#dgB" class="dg-faixa" x="758" y="193" style="--i:7" /><use href="#dgB" class="dg-faixa" x="758" y="210" style="--i:7" /><use href="#dgB" class="dg-faixa" x="780" y="176" style="--i:8" /><use href="#dgB" class="dg-faixa" x="780" y="193" style="--i:8" /><use href="#dgB" class="dg-faixa" x="780" y="210" style="--i:8" /><use href="#dgB" class="dg-faixa" x="802" y="176" style="--i:9" /><use href="#dgB" class="dg-faixa" x="802" y="193" style="--i:9" /><use href="#dgB" class="dg-faixa" x="802" y="210" style="--i:9" /><use href="#dgB" class="dg-faixa" x="824" y="176" style="--i:10" /><use href="#dgB" class="dg-faixa" x="824" y="193" style="--i:10" /><use href="#dgB" class="dg-faixa" x="824" y="210" style="--i:10" /><use href="#dgB" class="dg-faixa" x="846" y="176" style="--i:11" /><use href="#dgB" class="dg-faixa" x="846" y="193" style="--i:11" /><use href="#dgB" class="dg-faixa" x="846" y="210" style="--i:11" /><use href="#dgB" class="dg-faixa" x="868" y="176" style="--i:12" /><use href="#dgB" class="dg-faixa" x="868" y="193" style="--i:12" /><use href="#dgB" class="dg-faixa" x="868" y="210" style="--i:12" /><use href="#dgB" class="dg-faixa" x="890" y="176" style="--i:13" /><use href="#dgB" class="dg-faixa" x="890" y="193" style="--i:13" /><use href="#dgB" class="dg-faixa" x="890" y="210" style="--i:13" /><use href="#dgB" class="dg-faixa" x="912" y="176" style="--i:14" /><use href="#dgB" class="dg-faixa" x="912" y="193" style="--i:14" /><use href="#dgB" class="dg-faixa" x="912" y="210" style="--i:14" /><use href="#dgB" class="dg-faixa" x="934" y="176" style="--i:15" /><use href="#dgB" class="dg-faixa" x="934" y="193" style="--i:15" /><use href="#dgB" class="dg-faixa" x="934" y="210" style="--i:15" /><use href="#dgB" class="dg-faixa" x="956" y="176" style="--i:16" /><use href="#dgB" class="dg-faixa" x="956" y="193" style="--i:16" /><use href="#dgB" class="dg-faixa" x="956" y="210" style="--i:16" /><use href="#dgB" class="dg-faixa" x="978" y="176" style="--i:17" /><use href="#dgB" class="dg-faixa" x="978" y="193" style="--i:17" /><use href="#dgB" class="dg-faixa" x="978" y="210" style="--i:17" /><use href="#dgB" class="dg-faixa" x="1000" y="176" style="--i:18" /><use href="#dgB" class="dg-faixa" x="1000" y="193" style="--i:18" /><use href="#dgB" class="dg-faixa" x="1000" y="210" style="--i:18" /><use href="#dgB" class="dg-faixa" x="1022" y="176" style="--i:19" /><use href="#dgB" class="dg-faixa" x="1022" y="193" style="--i:19" /><use href="#dgB" class="dg-faixa" x="1022" y="210" style="--i:19" /><use href="#dgB" class="dg-faixa" x="1044" y="176" style="--i:20" /><use href="#dgB" class="dg-faixa" x="1044" y="193" style="--i:20" /><use href="#dgB" class="dg-faixa" x="1044" y="210" style="--i:20" /><use href="#dgB" class="dg-faixa" x="1066" y="176" style="--i:21" /><use href="#dgB" class="dg-faixa" x="1066" y="193" style="--i:21" /><use href="#dgB" class="dg-faixa" x="1066" y="210" style="--i:21" /><use href="#dgB" class="dg-faixa" x="1088" y="176" style="--i:22" /><use href="#dgB" class="dg-faixa" x="1088" y="193" style="--i:22" /><use href="#dgB" class="dg-faixa" x="1088" y="210" style="--i:22" /><use href="#dgB" class="dg-faixa" x="1110" y="176" style="--i:23" /><use href="#dgB" class="dg-faixa" x="1110" y="193" style="--i:23" /><use href="#dgB" class="dg-faixa" x="1110" y="210" style="--i:23" /><use href="#dgB" class="dg-faixa" x="1132" y="176" style="--i:24" /><use href="#dgB" class="dg-faixa" x="1132" y="193" style="--i:24" /><use href="#dgB" class="dg-faixa" x="1132" y="210" style="--i:24" /><use href="#dgB" class="dg-faixa" x="1154" y="176" style="--i:25" /><use href="#dgB" class="dg-faixa" x="1154" y="193" style="--i:25" /><use href="#dgB" class="dg-faixa" x="1154" y="210" style="--i:25" /><use href="#dgB" class="dg-faixa" x="1176" y="176" style="--i:26" /><use href="#dgB" class="dg-faixa" x="1176" y="193" style="--i:26" /><use href="#dgB" class="dg-faixa" x="1176" y="210" style="--i:26" /><use href="#visto" class="dg-visto" x="1222" y="146.8" width="31" height="20" style="--i:0" /><use href="#visto" class="dg-visto" x="1286" y="140.2" width="31" height="20" style="--i:4" /><use href="#visto" class="dg-visto" x="1350" y="133.6" width="31" height="20" style="--i:8" /><use href="#visto" class="dg-visto" x="1414" y="127" width="31" height="20" style="--i:12" /><use href="#visto" class="dg-visto" x="1478" y="120.4" width="31" height="20" style="--i:16" /><use href="#visto" class="dg-visto" x="1542" y="113.8" width="31" height="20" style="--i:20" /><use href="#visto" class="dg-visto" x="1606" y="107.2" width="31" height="20" style="--i:24" /><use href="#visto" class="dg-visto" x="1670" y="100.6" width="31" height="20" style="--i:28" /><use href="#visto" class="dg-visto" x="1734" y="94" width="31" height="20" style="--i:32" /><use href="#visto" class="dg-visto" x="1222" y="175.6" width="31" height="20" style="--i:1" /><use href="#visto" class="dg-visto" x="1286" y="173.4" width="31" height="20" style="--i:5" /><use href="#visto" class="dg-visto" x="1350" y="171.2" width="31" height="20" style="--i:9" /><use href="#visto" class="dg-visto" x="1414" y="169" width="31" height="20" style="--i:13" /><use href="#visto" class="dg-visto" x="1478" y="166.8" width="31" height="20" style="--i:17" /><use href="#visto" class="dg-visto" x="1542" y="164.6" width="31" height="20" style="--i:21" /><use href="#visto" class="dg-visto" x="1606" y="162.4" width="31" height="20" style="--i:25" /><use href="#visto" class="dg-visto" x="1670" y="160.2" width="31" height="20" style="--i:29" /><use href="#visto" class="dg-visto" x="1734" y="158" width="31" height="20" style="--i:33" /><use href="#visto" class="dg-visto" x="1222" y="204.4" width="31" height="20" style="--i:2" /><use href="#visto" class="dg-visto" x="1286" y="206.6" width="31" height="20" style="--i:6" /><use href="#visto" class="dg-visto" x="1350" y="208.8" width="31" height="20" style="--i:10" /><use href="#visto" class="dg-visto" x="1414" y="211" width="31" height="20" style="--i:14" /><use href="#visto" class="dg-visto" x="1478" y="213.2" width="31" height="20" style="--i:18" /><use href="#visto" class="dg-visto" x="1542" y="215.4" width="31" height="20" style="--i:22" /><use href="#visto" class="dg-visto" x="1606" y="217.6" width="31" height="20" style="--i:26" /><use href="#visto" class="dg-visto" x="1670" y="219.8" width="31" height="20" style="--i:30" /><use href="#visto" class="dg-visto" x="1734" y="222" width="31" height="20" style="--i:34" /><use href="#visto" class="dg-visto" x="1222" y="233.2" width="31" height="20" style="--i:3" /><use href="#visto" class="dg-visto" x="1286" y="239.8" width="31" height="20" style="--i:7" /><use href="#visto" class="dg-visto" x="1350" y="246.4" width="31" height="20" style="--i:11" /><use href="#visto" class="dg-visto" x="1414" y="253" width="31" height="20" style="--i:15" /><use href="#visto" class="dg-visto" x="1478" y="259.6" width="31" height="20" style="--i:19" /><use href="#visto" class="dg-visto" x="1542" y="266.2" width="31" height="20" style="--i:23" /><use href="#visto" class="dg-visto" x="1606" y="272.8" width="31" height="20" style="--i:27" /><use href="#visto" class="dg-visto" x="1670" y="279.4" width="31" height="20" style="--i:31" /><use href="#visto" class="dg-visto" x="1734" y="286" width="31" height="20" style="--i:35" /></svg>
-        <svg class="diagrama diagrama--empe" viewBox="0 0 600 800" preserveAspectRatio="xMidYMid meet" focusable="false"><defs><path id="dgB2" d="M0 0H8A6 6 0 0 1 14 6V8A6 6 0 0 1 8 14H6A6 6 0 0 1 0 8Z" /></defs><use href="#dgB2" class="dg-medio" transform="translate(423.2 145.4) rotate(-4.8 7 7)" /><use href="#dgB2" class="dg-claro" transform="translate(223 101.2) rotate(3 7 7)" /><use href="#dgB2" class="dg-medio" transform="translate(287 165.1) rotate(4.6 7 7)" /><use href="#dgB2" class="dg-medio" transform="translate(338.1 63) rotate(42.9 7 7)" /><use href="#dgB2" class="dg-medio" transform="translate(275.3 160.5) rotate(10.2 7 7)" /><use href="#dgB2" class="dg-medio" transform="translate(504.8 40.2) rotate(-11.6 7 7)" /><use href="#dgB2" class="dg-claro" transform="translate(298.4 179.6) rotate(-18.2 7 7)" /><use href="#dgB2" class="dg-claro" transform="translate(158 83.9) rotate(-4 7 7)" /><use href="#dgB2" class="dg-medio" transform="translate(167.8 123.4) rotate(-0.9 7 7)" /><use href="#dgB2" class="dg-claro" transform="translate(309.8 25.1) rotate(33.8 7 7)" /><use href="#dgB2" class="dg-claro" transform="translate(320.6 152.4) rotate(-20 7 7)" /><use href="#dgB2" class="dg-medio" transform="translate(399.8 73.8) rotate(52.4 7 7)" /><use href="#dgB2" class="dg-medio" transform="translate(382.1 148.3) rotate(30.5 7 7)" /><use href="#dgB2" class="dg-claro" transform="translate(289.1 200.3) rotate(12.6 7 7)" /><use href="#dgB2" class="dg-claro" transform="translate(420.9 112.3) rotate(40.9 7 7)" /><use href="#dgB2" class="dg-medio" transform="translate(296.9 216.5) rotate(-8.6 7 7)" /><use href="#dgB2" class="dg-medio" transform="translate(404 25.7) rotate(-60.9 7 7)" /><use href="#dgB2" class="dg-claro" transform="translate(201.6 65.5) rotate(18.5 7 7)" /><use href="#dgB2" class="dg-claro" transform="translate(128.4 75.7) rotate(27.3 7 7)" /><use href="#dgB2" class="dg-claro" transform="translate(195.8 115) rotate(17.1 7 7)" /><use href="#dgB2" class="dg-medio" transform="translate(296.5 226.1) rotate(3.7 7 7)" /><use href="#dgB2" class="dg-medio" transform="translate(205.8 162.7) rotate(-17 7 7)" /><use href="#dgB2" class="dg-medio" transform="translate(321.6 238.9) rotate(-3.5 7 7)" /><use href="#dgB2" class="dg-medio" transform="translate(152.6 105.2) rotate(-23.5 7 7)" /><use href="#dgB2" class="dg-medio" transform="translate(139.1 31.8) rotate(16.4 7 7)" /><use href="#dgB2" class="dg-medio" transform="translate(228.6 112.9) rotate(-12.6 7 7)" /><use href="#dgB2" class="dg-claro" transform="translate(68.6 38.3) rotate(-62.5 7 7)" /><use href="#dgB2" class="dg-claro" transform="translate(362.6 194.9) rotate(4.1 7 7)" /><use href="#dgB2" class="dg-medio" transform="translate(355.8 99.2) rotate(31.6 7 7)" /><use href="#dgB2" class="dg-medio" transform="translate(356.7 173.7) rotate(-1.8 7 7)" /><use href="#dgB2" class="dg-medio" transform="translate(299.5 250) rotate(-0.9 7 7)" /><use href="#dgB2" class="dg-medio" transform="translate(211 114) rotate(26.5 7 7)" /><use href="#dgB2" class="dg-claro" transform="translate(251.4 92.8) rotate(-40.7 7 7)" /><use href="#dgB2" class="dg-claro" transform="translate(282.7 215.2) rotate(-4.1 7 7)" /><use href="#dgB2" class="dg-claro" transform="translate(295 136.3) rotate(-5.6 7 7)" /><use href="#dgB2" class="dg-claro" transform="translate(325.1 173.6) rotate(13 7 7)" /><use href="#dgB2" class="dg-claro" transform="translate(240.2 194.5) rotate(11.5 7 7)" /><use href="#dgB2" class="dg-medio" transform="translate(299.5 253.9) rotate(0 7 7)" /><use href="#dgB2" class="dg-claro" transform="translate(317.5 246.7) rotate(0.6 7 7)" /><use href="#dgB2" class="dg-claro" transform="translate(291.3 103) rotate(20.2 7 7)" /><use href="#dgB2" class="dg-faixa" x="276" y="270" style="--i:0" /><use href="#dgB2" class="dg-faixa" x="293" y="270" style="--i:0" /><use href="#dgB2" class="dg-faixa" x="310" y="270" style="--i:0" /><use href="#dgB2" class="dg-faixa" x="276" y="292" style="--i:1" /><use href="#dgB2" class="dg-faixa" x="293" y="292" style="--i:1" /><use href="#dgB2" class="dg-faixa" x="310" y="292" style="--i:1" /><use href="#dgB2" class="dg-faixa" x="276" y="314" style="--i:2" /><use href="#dgB2" class="dg-faixa" x="293" y="314" style="--i:2" /><use href="#dgB2" class="dg-faixa" x="310" y="314" style="--i:2" /><use href="#dgB2" class="dg-faixa" x="276" y="336" style="--i:3" /><use href="#dgB2" class="dg-faixa" x="293" y="336" style="--i:3" /><use href="#dgB2" class="dg-faixa" x="310" y="336" style="--i:3" /><use href="#dgB2" class="dg-faixa" x="276" y="358" style="--i:4" /><use href="#dgB2" class="dg-faixa" x="293" y="358" style="--i:4" /><use href="#dgB2" class="dg-faixa" x="310" y="358" style="--i:4" /><use href="#dgB2" class="dg-faixa" x="276" y="380" style="--i:5" /><use href="#dgB2" class="dg-faixa" x="293" y="380" style="--i:5" /><use href="#dgB2" class="dg-faixa" x="310" y="380" style="--i:5" /><use href="#dgB2" class="dg-faixa" x="276" y="402" style="--i:6" /><use href="#dgB2" class="dg-faixa" x="293" y="402" style="--i:6" /><use href="#dgB2" class="dg-faixa" x="310" y="402" style="--i:6" /><use href="#dgB2" class="dg-faixa" x="276" y="424" style="--i:7" /><use href="#dgB2" class="dg-faixa" x="293" y="424" style="--i:7" /><use href="#dgB2" class="dg-faixa" x="310" y="424" style="--i:7" /><use href="#dgB2" class="dg-faixa" x="276" y="446" style="--i:8" /><use href="#dgB2" class="dg-faixa" x="293" y="446" style="--i:8" /><use href="#dgB2" class="dg-faixa" x="310" y="446" style="--i:8" /><use href="#dgB2" class="dg-faixa" x="276" y="468" style="--i:9" /><use href="#dgB2" class="dg-faixa" x="293" y="468" style="--i:9" /><use href="#dgB2" class="dg-faixa" x="310" y="468" style="--i:9" /><use href="#dgB2" class="dg-faixa" x="276" y="490" style="--i:10" /><use href="#dgB2" class="dg-faixa" x="293" y="490" style="--i:10" /><use href="#dgB2" class="dg-faixa" x="310" y="490" style="--i:10" /><use href="#dgB2" class="dg-faixa" x="276" y="512" style="--i:11" /><use href="#dgB2" class="dg-faixa" x="293" y="512" style="--i:11" /><use href="#dgB2" class="dg-faixa" x="310" y="512" style="--i:11" /><use href="#visto" class="dg-visto" x="198.6" y="566" width="31" height="20" style="--i:0" /><use href="#visto" class="dg-visto" x="241.8" y="566" width="31" height="20" style="--i:1" /><use href="#visto" class="dg-visto" x="285" y="566" width="31" height="20" style="--i:2" /><use href="#visto" class="dg-visto" x="328.2" y="566" width="31" height="20" style="--i:3" /><use href="#visto" class="dg-visto" x="371.4" y="566" width="31" height="20" style="--i:4" /><use href="#visto" class="dg-visto" x="177.5" y="604" width="31" height="20" style="--i:5" /><use href="#visto" class="dg-visto" x="231.2" y="604" width="31" height="20" style="--i:6" /><use href="#visto" class="dg-visto" x="285" y="604" width="31" height="20" style="--i:7" /><use href="#visto" class="dg-visto" x="338.8" y="604" width="31" height="20" style="--i:8" /><use href="#visto" class="dg-visto" x="392.5" y="604" width="31" height="20" style="--i:9" /><use href="#visto" class="dg-visto" x="156.4" y="642" width="31" height="20" style="--i:10" /><use href="#visto" class="dg-visto" x="220.7" y="642" width="31" height="20" style="--i:11" /><use href="#visto" class="dg-visto" x="285" y="642" width="31" height="20" style="--i:12" /><use href="#visto" class="dg-visto" x="349.3" y="642" width="31" height="20" style="--i:13" /><use href="#visto" class="dg-visto" x="413.6" y="642" width="31" height="20" style="--i:14" /><use href="#visto" class="dg-visto" x="135.2" y="680" width="31" height="20" style="--i:15" /><use href="#visto" class="dg-visto" x="210.1" y="680" width="31" height="20" style="--i:16" /><use href="#visto" class="dg-visto" x="285" y="680" width="31" height="20" style="--i:17" /><use href="#visto" class="dg-visto" x="359.9" y="680" width="31" height="20" style="--i:18" /><use href="#visto" class="dg-visto" x="434.8" y="680" width="31" height="20" style="--i:19" /><use href="#visto" class="dg-visto" x="114.1" y="718" width="31" height="20" style="--i:20" /><use href="#visto" class="dg-visto" x="199.6" y="718" width="31" height="20" style="--i:21" /><use href="#visto" class="dg-visto" x="285" y="718" width="31" height="20" style="--i:22" /><use href="#visto" class="dg-visto" x="370.4" y="718" width="31" height="20" style="--i:23" /><use href="#visto" class="dg-visto" x="455.9" y="718" width="31" height="20" style="--i:24" /><use href="#visto" class="dg-visto" x="93" y="756" width="31" height="20" style="--i:25" /><use href="#visto" class="dg-visto" x="189" y="756" width="31" height="20" style="--i:26" /><use href="#visto" class="dg-visto" x="285" y="756" width="31" height="20" style="--i:27" /><use href="#visto" class="dg-visto" x="381" y="756" width="31" height="20" style="--i:28" /><use href="#visto" class="dg-visto" x="477" y="756" width="31" height="20" style="--i:29" /></svg>
-      </figure>
-      <ol class="caminho__colunas">
-        <li class="entrada">
-          <h3>Sozinho</h3>
-          <p>Formulário, taxa, agendamento, documentos e entrevista, cada um num site diferente.</p>
-        </li>
-        <li class="entrada">
-          <h3>Com a gente</h3>
-          <p>Uma conversa no WhatsApp: a gente organiza tudo e avisa você a cada etapa.</p>
-        </li>
-        <li class="entrada">
-          <h3>Visto <svg class="icone-visto" aria-hidden="true" focusable="false"><use href="#visto" /></svg></h3>
-          <p>Passaporte de volta e viagem marcada. Quem decide é o consulado; o caminho fica leve.</p>
-        </li>
-      </ol>
     </section>
 
     <!-- ==========================================================================
@@ -428,7 +468,7 @@
     <!-- ==========================================================================
          SOBRE: um campo azul-marinho inteiro: a frase à esquerda, a foto da
          sala recortada no balão e cortada pela borda de baixo da seção; à
-         direita, onde atendemos e como.
+         direita, quem somos e como trabalhamos.
          ========================================================================== -->
     <section class="sobre" id="sobre" aria-labelledby="titulo-sobre">
       <div class="sobre__painel">
@@ -438,19 +478,18 @@
         </figure>
         <div class="sobre__textos">
           <div class="entrada">
-            <h3>No Centro de Manaus</h3>
+            <h3>Milhares de clientes</h3>
             <p>
-              Atendemos na Rua Costa Azevedo, 9, sala 901, no Centro de Manaus, e
-              em Brasília. Quem preferir faz tudo 100% online, de qualquer lugar
-              do Brasil.
+              Já ajudamos milhares de clientes a estudar, trabalhar ou conhecer o
+              mundo, com total segurança dos seus dados.
             </p>
           </div>
           <div class="entrada">
             <h3>Tudo pela conversa</h3>
             <p>
-              Já ajudamos milhares de clientes a estudar, trabalhar ou conhecer o
-              mundo, com total segurança dos seus dados. Entrevista e biometria,
-              quando o consulado pede, são feitas por você, no posto consular.
+              Do primeiro contato ao passaporte de volta, você fala com a gente
+              pelo WhatsApp. Entrevista e biometria, quando o consulado pede, são
+              feitas por você, no posto consular.
             </p>
           </div>
           <a
@@ -566,129 +605,227 @@
     </section>
 
     <!-- ==========================================================================
-         CONTATO: o compositor do fim, num balão dourado: preencher e enviar
-         abre o WhatsApp com a mensagem montada (main.js, "ativarCupom"); sem
-         JS, abre a conversa. Ao lado, as nuvens vistas da janela do avião
-         (vídeo mudo em loop) recortadas no balão.
+         VISITE A GENTE: o cartão de visita, em papel, sobre Manaus vista do
+         alto com a Ponte Rio Negro.
          ========================================================================== -->
-    <section class="contato" id="contato" aria-labelledby="titulo-contato">
+    <section class="visita" id="visite" aria-labelledby="titulo-visita">
+      <img
+        class="visita__foto"
+        src="assets/ponte-rio-negro-manaus-brasil.jpg"
+        alt="Manaus vista do alto, com a Ponte Rio Negro ao fundo"
+        width="1920"
+        height="1275"
+        loading="lazy"
+      />
+      <div class="cartao-visita entrada">
+        <h2 id="titulo-visita">Visite a gente</h2>
+        <address>
+          Rua Costa Azevedo, 9, sala 901<br />
+          Centro, Manaus-AM
+        </address>
+        <p class="cartao-visita__extra">Também em Brasília-DF e 100% online.</p>
+        <dl class="cartao-visita__horas">
+          <div>
+            <dt>Segunda a sexta</dt>
+            <!-- TROCAR: horário real de atendimento -->
+            <dd>9h às 18h</dd>
+          </div>
+        </dl>
+        <ul class="cartao-visita__contatos">
+          <li><a href="https://wa.me/5592981265897">(92) 98126-5897</a> em português</li>
+          <li><a href="https://wa.me/51939125188" lang="es">+51 939 125 188</a> en español</li>
+          <li><a href="https://instagram.com/amazonvisto" target="_blank" rel="noopener">@amazonvisto</a> no Instagram</li>
+        </ul>
+        <a
+          class="cartao-visita__mapa"
+          href="https://www.google.com/maps?q=Rua%20Costa%20Azevedo,%209,%20Centro,%20Manaus%20-%20AM"
+          target="_blank"
+          rel="noopener"
+        >Abrir no mapa</a>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         CONTATO: o cartão de embarque que se preenche. O passageiro é você; o
+         destino muda com o serviço escolhido, como no painel do aeroporto
+         (passaporte e intercâmbio giram pelos destinos); enviar abre o
+         WhatsApp com a mensagem montada (main.js, "ativarEmbarque"). Sem JS,
+         o formulário abre a conversa. Ao lado, as nuvens da janela do avião.
+         ========================================================================== -->
+    <section class="embarque-secao" id="contato" aria-labelledby="titulo-embarque">
+      <div class="embarque-secao__lado">
+        <div class="embarque-secao__texto entrada">
+          <p class="embarque-secao__frase">Sua próxima viagem começa com uma conversa.</p>
+          <p class="embarque-secao__apoio">A análise inicial é gratuita, pelo WhatsApp.</p>
+        </div>
+        <figure class="embarque-secao__janela entrada" aria-hidden="true">
+          <video
+            src="assets/clouds-from-airplane-window-1-2016-08.webm"
+            poster="assets/clouds-from-airplane-window-1-2016-08-poster.jpg"
+            muted
+            loop
+            playsinline
+            preload="none"
+            width="854"
+            height="480"
+          ></video>
+        </figure>
+      </div>
+
       <form
-        class="cupom entrada"
-        id="cupom"
+        class="embarque entrada"
+        id="embarque"
         action="https://wa.me/5592981265897"
         method="get"
         target="_blank"
         data-whatsapp="5592981265897"
         data-modelo="Olá! Meu nome é {nome}, sou de {cidade} e quero ajuda com: {servico} ({situacao})."
       >
-        <h2 id="titulo-contato">Comece a conversa</h2>
-        <p>Preencha e a mensagem sai pronta para o nosso WhatsApp. A análise inicial é gratuita.</p>
-        <div class="cupom__campos">
-          <label class="visualmente-oculto" for="cupomNome">Seu nome</label>
-          <input id="cupomNome" name="nome" type="text" autocomplete="given-name" placeholder="Seu nome" required />
-          <label class="visualmente-oculto" for="cupomCidade">Sua cidade</label>
-          <input id="cupomCidade" name="cidade" type="text" autocomplete="address-level2" placeholder="Sua cidade" />
-          <label class="visualmente-oculto" for="cupomServico">Serviço</label>
-          <select id="cupomServico" name="servico">
-            <option>Visto americano</option>
-            <option>Renovação do visto americano</option>
-            <option>Visto canadense</option>
-            <option>Visto chinês</option>
-            <option>Visto peruano</option>
-            <option>Passaporte</option>
-            <option>Intercâmbio</option>
-          </select>
-          <label class="visualmente-oculto" for="cupomSituacao">Situação</label>
-          <select id="cupomSituacao" name="situacao">
-            <option value="primeira vez">Primeira vez</option>
-            <option value="já tive antes">Já tive antes</option>
-            <option value="ainda não sei">Ainda não sei</option>
-          </select>
+        <div class="embarque__corpo">
+          <h2 id="titulo-embarque">Cartão de embarque</h2>
+          <div class="embarque__rota" aria-hidden="true">
+            <p class="embarque__ponto">
+              <span class="embarque__codigo">MAO</span>
+              <span class="embarque__cidade">De Manaus</span>
+            </p>
+            <svg class="embarque__aviao" viewBox="0 0 24 24" focusable="false">
+              <path d="M21.5 15.2v-1.9l-8.1-5V3.4C13.4 2.6 12.8 2 12 2s-1.4.6-1.4 1.4v4.9l-8.1 5v1.9l8.1-2.5v4.9L8.6 19v1.5L12 19.6l3.4.9V19l-2-1.5v-4.9l8.1 2.6Z" />
+            </svg>
+            <p class="embarque__ponto embarque__ponto--destino">
+              <span class="embarque__codigo placas" id="painelDestino" data-mundo="JFK|YYZ|PEK|LIM"><span>J</span><span>F</span><span>K</span></span>
+              <span class="embarque__cidade" id="cidadeDestino" data-varios="Para o mundo">Para Nova York</span>
+            </p>
+          </div>
+
+          <div class="embarque__campos">
+            <label class="embarque__campo">
+              <span>Passageiro</span>
+              <input name="nome" type="text" autocomplete="given-name" placeholder="Seu nome" required />
+            </label>
+            <label class="embarque__campo">
+              <span>Cidade</span>
+              <input name="cidade" type="text" autocomplete="address-level2" placeholder="Sua cidade" />
+            </label>
+            <label class="embarque__campo">
+              <span>Serviço</span>
+              <select name="servico" id="embarqueServico">
+                <option value="Visto americano" data-destino="JFK:Para Nova York">Visto americano</option>
+                <option value="Renovação do visto americano" data-destino="JFK:Para Nova York">Renovação do visto americano</option>
+                <option value="Visto canadense" data-destino="YYZ:Para Toronto">Visto canadense</option>
+                <option value="Visto chinês" data-destino="PEK:Para Pequim">Visto chinês</option>
+                <option value="Visto peruano" data-destino="LIM:Para Lima">Visto peruano</option>
+                <option value="Passaporte">Passaporte</option>
+                <option value="Intercâmbio">Intercâmbio</option>
+              </select>
+            </label>
+            <label class="embarque__campo">
+              <span>Situação</span>
+              <select name="situacao">
+                <option value="primeira vez">Primeira vez</option>
+                <option value="já tive antes">Já tive antes</option>
+                <option value="ainda não sei">Ainda não sei</option>
+              </select>
+            </label>
+          </div>
+
+          <dl class="embarque__dados">
+            <div><dt>Portão</dt><dd>WhatsApp</dd></div>
+            <div><dt>Embarque</dt><dd>Agora</dd></div>
+            <div><dt>Análise</dt><dd>Gratuita</dd></div>
+          </dl>
+
+          <button class="botao botao--acao embarque__acao" type="submit">
+            Enviar pelo WhatsApp
+            <svg aria-hidden="true" focusable="false"><use href="#visto" /></svg>
+          </button>
         </div>
-        <button class="botao botao--acao cupom__enviar" type="submit">
-          Enviar pelo WhatsApp
-          <svg aria-hidden="true" focusable="false"><use href="#visto" /></svg>
-        </button>
+
+        <div class="embarque__canhoto" aria-hidden="true">
+          <p class="embarque__trecho">MAO <span>para o mundo</span></p>
+          <p class="embarque__classe">Classe <strong>Assessoria completa</strong></p>
+          <div class="embarque__leitura"><svg class="embarque__barras" viewBox="0 0 240 56" preserveAspectRatio="none" focusable="false"><rect x="0" width="1" height="56" /><rect x="4" width="2" height="56" /><rect x="7" width="3" height="56" /><rect x="12" width="2" height="56" /><rect x="17" width="4" height="56" /><rect x="23" width="3" height="56" /><rect x="28" width="4" height="56" /><rect x="33" width="2" height="56" /><rect x="38" width="3" height="56" /><rect x="42" width="3" height="56" /><rect x="47" width="4" height="56" /><rect x="54" width="1" height="56" /><rect x="57" width="4" height="56" /><rect x="64" width="3" height="56" /><rect x="69" width="4" height="56" /><rect x="76" width="2" height="56" /><rect x="80" width="4" height="56" /><rect x="85" width="1" height="56" /><rect x="87" width="2" height="56" /><rect x="90" width="4" height="56" /><rect x="96" width="3" height="56" /><rect x="102" width="1" height="56" /><rect x="104" width="3" height="56" /><rect x="109" width="2" height="56" /><rect x="112" width="4" height="56" /><rect x="117" width="2" height="56" /><rect x="121" width="3" height="56" /><rect x="127" width="3" height="56" /><rect x="131" width="2" height="56" /><rect x="134" width="2" height="56" /><rect x="138" width="2" height="56" /><rect x="142" width="3" height="56" /><rect x="146" width="4" height="56" /><rect x="152" width="4" height="56" /><rect x="158" width="3" height="56" /><rect x="163" width="3" height="56" /><rect x="169" width="4" height="56" /><rect x="175" width="3" height="56" /><rect x="179" width="3" height="56" /><rect x="184" width="2" height="56" /><rect x="188" width="4" height="56" /><rect x="195" width="1" height="56" /><rect x="199" width="1" height="56" /><rect x="202" width="1" height="56" /><rect x="204" width="4" height="56" /><rect x="209" width="3" height="56" /><rect x="213" width="2" height="56" /><rect x="217" width="1" height="56" /><rect x="221" width="4" height="56" /><rect x="228" width="4" height="56" /><rect x="235" width="4" height="56" /></svg><span class="embarque__laser"></span></div>
+          <svg class="mrz embarque__mrz" viewBox="0 0 600 22" preserveAspectRatio="none" focusable="false"><text x="0" y="16" textLength="600" lengthAdjust="spacingAndGlyphs">AMAZONVISTO&lt;&lt;MAO&lt;&lt;PORTAO&lt;WHATSAPP&lt;&lt;AGORA&lt;&lt;&lt;&lt;</text></svg>
+        </div>
       </form>
-      <figure class="contato__janela entrada" aria-hidden="true">
-        <video
-          src="assets/clouds-from-airplane-window-1-2016-08.webm"
-          poster="assets/clouds-from-airplane-window-1-2016-08-poster.jpg"
-          muted
-          loop
-          playsinline
-          preload="none"
-          width="854"
-          height="480"
-        ></video>
-      </figure>
     </section>
   </main>
 
   <!-- ==========================================================================
-       RODAPÉ: o fim da conversa. Primeiro o tique duplo sozinho num campo vazio (a
-       mensagem foi vista); depois a marca dentro de um balão dourado gigante,
-       os links, os endereços e o crédito das fotos.
+       RODAPÉ: o cartão-postal. A borda listrada do correio aéreo, depois o
+       verso do postal, com a borda de cima picotada: o recado à esquerda (e
+       os links do site), os endereços à direita, com o selo do Teatro
+       Amazonas e o carimbo do correio, o "visto".
        TROCAR: CNPJ e Reclame Aqui (com "hidden" até lá).
        ========================================================================== -->
   <footer class="rodape">
-    <div class="rodape__fim" aria-hidden="true">
-      <svg class="rodape__visto" focusable="false"><use href="#visto" /></svg>
-    </div>
-    <p class="rodape__marca" translate="no">Amazon Visto</p>
+    <div class="listra listra--fina" aria-hidden="true"></div>
+    <div class="verso">
+      <svg class="verso__recorte" viewBox="0 0 1200 24" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+        <path d="M0 24V24C0 10.7 22.4 0 50 0S100 10.7 100 24C100 10.7 122.4 0 150 0S200 10.7 200 24C200 10.7 222.4 0 250 0S300 10.7 300 24C300 10.7 322.4 0 350 0S400 10.7 400 24C400 10.7 422.4 0 450 0S500 10.7 500 24C500 10.7 522.4 0 550 0S600 10.7 600 24C600 10.7 622.4 0 650 0S700 10.7 700 24C700 10.7 722.4 0 750 0S800 10.7 800 24C800 10.7 822.4 0 850 0S900 10.7 900 24C900 10.7 922.4 0 950 0S1000 10.7 1000 24C1000 10.7 1022.4 0 1050 0S1100 10.7 1100 24C1100 10.7 1122.4 0 1150 0S1200 10.7 1200 24Z" />
+      </svg>
 
-    <div class="rodape__colunas">
-      <nav aria-label="Serviços">
-        <h2>Serviços</h2>
-        <ul>
-          <li><a href="#visto-americano">Visto americano</a></li>
-          <li><a href="#visto-canadense">Visto canadense</a></li>
-          <li><a href="#visto-chines">Visto chinês</a></li>
-          <li><a href="#visto-peruano">Visto peruano</a></li>
-          <li><a href="#passaporte-brasileiro">Passaporte</a></li>
-          <li><a href="#intercambio">Intercâmbio</a></li>
-        </ul>
-      </nav>
-      <nav aria-label="A empresa">
-        <h2>A empresa</h2>
-        <ul>
-          <li><a href="#como-funciona">Como funciona</a></li>
-          <li><a href="#sobre">Quem somos</a></li>
-          <li><a href="#duvidas">Dúvidas</a></li>
-          <li><a href="es.html" hreflang="es" lang="es">Versión en español</a></li>
-        </ul>
-      </nav>
-      <div class="rodape__contatos">
-        <h2>Fale com a gente</h2>
+      <div class="verso__recado">
+        <h2 class="verso__titulo">Boa viagem.</h2>
+        <p>
+          Assessoria completa em vistos, passaporte e intercâmbio. Líder de
+          mercado no Norte do Brasil, Empresa do Ano 2025 e Empresa Destaque
+          2026, com atendimento 100% online para todo o país.
+        </p>
+        <div class="verso__links">
+          <nav aria-label="Serviços">
+            <h3>Serviços</h3>
+            <ul>
+              <li><a href="#visto-americano">Visto americano</a></li>
+              <li><a href="#visto-canadense">Visto canadense</a></li>
+              <li><a href="#visto-chines">Visto chinês</a></li>
+              <li><a href="#visto-peruano">Visto peruano</a></li>
+              <li><a href="#passaporte-brasileiro">Passaporte</a></li>
+              <li><a href="#intercambio">Intercâmbio</a></li>
+            </ul>
+          </nav>
+          <nav aria-label="A empresa">
+            <h3>A empresa</h3>
+            <ul>
+              <li><a href="#sobre">Quem somos</a></li>
+              <li><a href="#duvidas">Dúvidas</a></li>
+              <li><a href="#visite">Visite a gente</a></li>
+              <li><a href="es.html" hreflang="es" lang="es">Versión en español</a></li>
+            </ul>
+          </nav>
+        </div>
+        <p class="verso__cnpj" hidden>Amazon Visto · CNPJ TROCAR</p>
+        <a class="verso__reclame" href="TROCAR" target="_blank" rel="noopener" hidden>Reputação no Reclame Aqui</a>
+      </div>
+
+      <div class="verso__enderecos">
+        <div class="verso__selos" aria-hidden="true">
+          <img class="verso__selo" src="assets/teatro-amazonas-atualmente-01.jpg" alt="" width="1920" height="1280" loading="lazy" />
+          <svg class="carimbo verso__carimbo" viewBox="0 0 120 120" focusable="false"><defs><path id="anel-postal" d="M 17,60 a 43,43 0 1,1 86,0 a 43,43 0 1,1 -86,0" /></defs><circle cx="60" cy="60" r="56" /><circle cx="60" cy="60" r="31" /><text><textPath href="#anel-postal" textLength="266" lengthAdjust="spacing">MANAUS-AM · AMAZON VISTO ·</textPath></text><use href="#visto" x="41" y="49" width="38" height="24" /></svg>
+        </div>
         <ul>
           <li><a href="https://wa.me/5592981265897">WhatsApp (92) 98126-5897</a></li>
           <li><a href="https://wa.me/51939125188" lang="es">Español +51 939 125 188</a></li>
           <li><a href="https://instagram.com/amazonvisto" target="_blank" rel="noopener">Instagram @amazonvisto</a></li>
+          <li><a href="https://www.google.com/maps?q=Rua%20Costa%20Azevedo,%209,%20Centro,%20Manaus%20-%20AM" target="_blank" rel="noopener">Rua Costa Azevedo, 9, Manaus</a></li>
+          <!-- TROCAR: horário real de atendimento -->
+          <li>Segunda a sexta, das 9h às 18h</li>
         </ul>
       </div>
-      <address class="rodape__endereco">
-        <h2>Onde estamos</h2>
-        <a href="https://www.google.com/maps?q=Rua%20Costa%20Azevedo,%209,%20Centro,%20Manaus%20-%20AM" target="_blank" rel="noopener">Rua Costa Azevedo, 9, sala 901<br />Centro, Manaus-AM</a>
-        <span>Também em Brasília-DF</span>
-        <!-- TROCAR: horário real de atendimento -->
-        <span>Segunda a sexta, das 9h às 18h</span>
-      </address>
-    </div>
 
-    <div class="rodape__pe">
-      <p>
-        &copy; <span id="anoAtual">2026</span> <span translate="no">Amazon Visto</span>. Todos os direitos reservados.
-        Desenvolvido por <a href="https://wa.me/5592992162419" target="_blank" rel="noopener">Daniel Cardoso</a>.
-      </p>
-      <p class="rodape__cnpj" hidden>Amazon Visto · CNPJ TROCAR</p>
-      <a class="rodape__reclame" href="TROCAR" target="_blank" rel="noopener" hidden>Reputação no Reclame Aqui</a>
-      <p class="rodape__creditos">
-        Fotos e vídeo: <a href="https://commons.wikimedia.org/w/index.php?curid=43878206">Teatro Amazonas</a>, por Karine Hermes, <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>;
-        <a href="https://www.rawpixel.com/image/6020363/photo-image-public-domain-blue-business">passaporte e cartão de embarque</a>, CC0, via rawpixel;
-        <a href="https://commons.wikimedia.org/wiki/File:Clouds_from_Airplane_Window_1_2016-08-29.webm">nuvens pela janela do avião</a>, por F Astily, <a href="https://creativecommons.org/licenses/by-sa/4.0">CC BY-SA 4.0</a>, via Wikimedia Commons.
-        Fonte Chillax, da Indian Type Foundry, via Fontshare.
-      </p>
-      <a class="rodape__topo" href="#inicio">Voltar ao início</a>
+      <div class="verso__pe">
+        <p>
+          &copy; <span id="anoAtual">2026</span> <span translate="no">Amazon Visto</span>. Todos os direitos reservados.
+          Desenvolvido por <a href="https://wa.me/5592992162419" target="_blank" rel="noopener">Daniel Cardoso</a>.
+        </p>
+        <p>
+          Fotos e vídeo: <a href="https://commons.wikimedia.org/w/index.php?curid=43878206">Teatro Amazonas</a>, por Karine Hermes, <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>;
+          <a href="https://commons.wikimedia.org/wiki/File:Ponte_Rio_Negro_Manaus_Brasil.jpg">Ponte Rio Negro</a>, por Ana Claudia Jatahy (MTUR), CC0;
+          <a href="https://www.rawpixel.com/image/6020363/photo-image-public-domain-blue-business">passaporte e cartão de embarque</a>, CC0, via rawpixel;
+          <a href="https://commons.wikimedia.org/wiki/File:Clouds_from_Airplane_Window_1_2016-08-29.webm">nuvens pela janela do avião</a>, por F Astily, <a href="https://creativecommons.org/licenses/by-sa/4.0">CC BY-SA 4.0</a>, via Wikimedia Commons.
+          Fonte Chillax, da Indian Type Foundry, via Fontshare.
+        </p>
+        <a class="verso__topo" href="#inicio">Voltar ao início</a>
+      </div>
     </div>
   </footer>
 
@@ -706,6 +843,6 @@
     </svg>
   </a>
 
-  <script src="js/main.js?v=41"></script>
+  <script src="js/main.js?v=42"></script>
 </body>
 </html>

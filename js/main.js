@@ -7,8 +7,10 @@
    "js" está no <html>, que o <head> coloca).
 
    O momento da página é a conversa da capa: escolher o caso faz a Amazon
-   Visto "digitar" e responder, o tique duplo da mensagem do visitante fica "visto"
-   e a mensagem sai pronta para o WhatsApp.
+   Visto "digitar" e responder, o tique duplo da mensagem do visitante fica
+   "visto" e a mensagem sai pronta para o WhatsApp. Os documentos da viagem
+   também se mexem: o painel de partidas mostra a hora de cada destino, e o
+   cartão de embarque troca o destino conforme o serviço escolhido.
    ========================================================================== */
 
 document.documentElement.classList.add("js");
@@ -19,8 +21,9 @@ document.addEventListener("DOMContentLoaded", () => {
   atualizarAnoDoRodape();
   ativarConversa();
   ativarServicos();
+  ativarPainel();
   ativarDuvidas();
-  ativarCupom();
+  ativarEmbarque();
   ativarContadores();
   ativarObturador();
   ativarVideos();
@@ -56,6 +59,60 @@ function aCadaMinuto(fn) {
 
 function abrirWhatsApp(numero, texto) {
   window.open(`https://wa.me/${numero}?text=${encodeURIComponent(texto)}`, "_blank", "noopener");
+}
+
+// Troca o texto de um grupo de plaquetas (.placas), uma letra por plaqueta,
+// como no painel do aeroporto: cada plaqueta que muda vira (rotateX), uma
+// depois da outra. Na primeira vez, e com menos movimento, só escreve.
+function virarPlacas(grupo, texto) {
+  const letras = Array.from(texto);
+  while (grupo.children.length < letras.length) grupo.appendChild(document.createElement("span"));
+  while (grupo.children.length > letras.length) grupo.lastElementChild.remove();
+  Array.from(grupo.children).forEach((placa, i) => {
+    const letra = letras[i];
+    placa.classList.toggle("placas__sep", letra === ":");
+    if (placa.textContent === letra) return;
+    if (!placa.textContent || prefereMenosMovimento()) {
+      placa.textContent = letra;
+      return;
+    }
+    setTimeout(() => {
+      placa.classList.remove("virando");
+      void placa.offsetWidth; // recomeça a virada
+      placa.classList.add("virando");
+      setTimeout(() => (placa.textContent = letra), 170);
+    }, i * 90);
+  });
+}
+
+// Gira um grupo de plaquetas por uma lista de códigos, a cada 2,8s, só
+// enquanto ele está na tela. Devolve um interruptor: ligar(false) para.
+function girarCodigos(grupo, codigos) {
+  if (codigos.length < 2 || prefereMenosMovimento() || !("IntersectionObserver" in window)) return () => {};
+  let atual = codigos.indexOf(grupo.textContent.trim());
+  let intervalo = null;
+  let visivel = false;
+  let ligado = true;
+  const passo = () => {
+    atual = (atual + 1) % codigos.length;
+    virarPlacas(grupo, codigos[atual]);
+  };
+  const rever = () => {
+    const rodar = ligado && visivel;
+    if (rodar && !intervalo) intervalo = setInterval(passo, 2800);
+    else if (!rodar && intervalo) {
+      clearInterval(intervalo);
+      intervalo = null;
+    }
+  };
+  new IntersectionObserver(([entrada]) => {
+    visivel = entrada.isIntersecting;
+    rever();
+  }).observe(grupo);
+  return (ligar) => {
+    ligado = ligar;
+    rever();
+  };
 }
 
 /* --------------------------------------------------------------------------
@@ -205,6 +262,8 @@ function ativarConversa() {
       const responder = () => {
         if (esta !== rodada) return;
         minha.classList.add("e-vista");
+        // Com a resposta, aparece o compositor com a mensagem pronta.
+        conversa.classList.add("e-respondida");
         lista.querySelectorAll(".msg--digitando").forEach((m) => m.remove());
         const dela = novaMensagem("msg--deles", `<p></p><span class="msg__hora" aria-hidden="true">${hora}</span>`);
         dela.querySelector("p").textContent = fala.textContent.trim();
@@ -238,11 +297,12 @@ function ativarConversa() {
 }
 
 /* --------------------------------------------------------------------------
-   5. SERVIÇOS: OS LADRILHOS ABREM A FICHA
-   Cada ladrilho é um link para a ficha do serviço (#visto-americano). Com
-   JS, só a ficha escolhida aparece: tocar num ladrilho troca a ficha (num
-   fade curto de 0,3s), marca o ladrilho e leva até ela. Links do rodapé e o
-   endereço na barra (#visto-canadense) abrem a ficha certa.
+   5. SERVIÇOS: AS LINHAS DO PAINEL ABREM A FICHA
+   Cada linha do painel de partidas é um link para a ficha do serviço
+   (#visto-americano). Com JS, só a ficha escolhida aparece: tocar numa
+   linha troca a ficha (a página entra em 0,32s e o carimbo bate), marca a
+   linha com o tique duplo e leva até ela. Links do rodapé e o endereço na
+   barra (#visto-canadense) abrem a ficha certa.
    -------------------------------------------------------------------------- */
 function ativarServicos() {
   const fichas = Array.from(document.querySelectorAll(".ficha"));
@@ -285,7 +345,48 @@ function ativarServicos() {
 }
 
 /* --------------------------------------------------------------------------
-   6. DÚVIDAS: A CONVERSA DAS PERGUNTAS
+   6. PAINEL DE PARTIDAS
+   Cada linha com data-fuso mostra a hora local de lá agora, em plaquetas
+   que viram na troca do minuto; a origem (Manaus) mostra também a data por
+   extenso. No intercâmbio, o código gira pelos destinos enquanto o painel
+   está na tela. Sem JS, as horas não aparecem.
+   -------------------------------------------------------------------------- */
+function ativarPainel() {
+  const painel = document.getElementById("painel");
+  if (!painel || !window.Intl) return;
+
+  const relogios = Array.from(painel.querySelectorAll("[data-fuso]"))
+    .map((linha) => {
+      try {
+        return {
+          formato: new Intl.DateTimeFormat("pt-BR", { timeZone: linha.dataset.fuso, hour: "2-digit", minute: "2-digit", hourCycle: "h23" }),
+          placas: linha.querySelector(".destino__hora, .painel__hora"),
+        };
+      } catch {
+        return null;
+      }
+    })
+    .filter((relogio) => relogio && relogio.placas);
+
+  const data = painel.querySelector(".painel__data");
+  let formatoData = null;
+  try {
+    formatoData = new Intl.DateTimeFormat(document.documentElement.lang || "pt-BR", { timeZone: "America/Manaus", weekday: "long", day: "numeric", month: "long" });
+  } catch {}
+
+  const atualizar = () => {
+    const agora = new Date();
+    if (data && formatoData) data.textContent = formatoData.format(agora);
+    relogios.forEach(({ formato, placas }) => virarPlacas(placas, formato.format(agora)));
+  };
+  atualizar();
+  aCadaMinuto(atualizar);
+
+  painel.querySelectorAll("[data-codigos]").forEach((grupo) => girarCodigos(grupo, grupo.dataset.codigos.split("|")));
+}
+
+/* --------------------------------------------------------------------------
+   7. DÚVIDAS: A CONVERSA DAS PERGUNTAS
    Tocar numa pergunta (o balão do cliente) abre a resposta da Amazon Visto
    e o tique duplo fica "visto". Uma aberta por vez; a primeira começa
    aberta. Sem JS, todas aparecem.
@@ -310,31 +411,72 @@ function ativarDuvidas() {
 }
 
 /* --------------------------------------------------------------------------
-   7. CUPOM DO CONTATO
-   Monta a mensagem com nome, cidade, serviço e situação (o modelo fica no
-   data-modelo do HTML) e abre o WhatsApp.
+   8. CARTÃO DE EMBARQUE DO CONTATO
+   - O destino do cartão segue o serviço escolhido (data-destino de cada
+     opção: "JFK:Para Nova York"), virando as plaquetas; passaporte e
+     intercâmbio não têm um destino só: o cartão diz "Para o mundo" e o
+     código gira pelos destinos (data-mundo).
+   - Enviar monta a mensagem com nome, cidade, serviço e situação (o modelo
+     fica no data-modelo do HTML) e abre o WhatsApp.
    -------------------------------------------------------------------------- */
-function ativarCupom() {
-  const cupom = document.getElementById("cupom");
-  if (!cupom) return;
+function ativarEmbarque() {
+  const cartao = document.getElementById("embarque");
+  if (!cartao) return;
+  const painel = document.getElementById("painelDestino");
+  const cidade = document.getElementById("cidadeDestino");
+  const servico = cartao.elements.servico;
+  const mundo = ((painel && painel.dataset.mundo) || "").split("|").filter(Boolean);
 
-  cupom.addEventListener("submit", (evento) => {
+  const mostrarCidade = (nome) => {
+    if (!cidade || !nome || cidade.textContent === nome) return;
+    if (prefereMenosMovimento()) {
+      cidade.textContent = nome;
+      return;
+    }
+    cidade.style.opacity = "0";
+    setTimeout(() => {
+      cidade.textContent = nome;
+      cidade.style.opacity = "1";
+    }, 200);
+  };
+
+  let girar = () => {};
+  if (painel && mundo.length) {
+    girar = girarCodigos(painel, mundo);
+    girar(false);
+  }
+
+  const escolher = () => {
+    const opcao = servico && servico.selectedOptions[0];
+    const destino = opcao && opcao.dataset.destino ? opcao.dataset.destino.split(":") : null;
+    if (destino && destino.length === 2) {
+      girar(false);
+      if (painel) virarPlacas(painel, destino[0]);
+      mostrarCidade(destino[1]);
+    } else {
+      mostrarCidade(cidade && cidade.dataset.varios);
+      girar(true);
+    }
+  };
+  if (servico) servico.addEventListener("change", escolher);
+
+  cartao.addEventListener("submit", (evento) => {
     evento.preventDefault();
-    const valor = (nome) => (cupom.elements[nome] ? cupom.elements[nome].value.trim() : "");
-    const cidade = valor("cidade");
-    let texto = cupom.dataset.modelo;
-    if (!cidade) texto = texto.replace(/,[^,{]*\{cidade\}/, "");
+    const valor = (nome) => (cartao.elements[nome] ? cartao.elements[nome].value.trim() : "");
+    const cidadeDigitada = valor("cidade");
+    let texto = cartao.dataset.modelo;
+    if (!cidadeDigitada) texto = texto.replace(/,[^,{]*\{cidade\}/, "");
     texto = texto
       .replace("{nome}", valor("nome"))
-      .replace("{cidade}", cidade)
+      .replace("{cidade}", cidadeDigitada)
       .replace("{servico}", valor("servico"))
       .replace("{situacao}", valor("situacao"));
-    abrirWhatsApp(cupom.dataset.whatsapp, texto);
+    abrirWhatsApp(cartao.dataset.whatsapp, texto);
   });
 }
 
 /* --------------------------------------------------------------------------
-   8. CONTADOR (seguidores no Instagram)
+   9. CONTADOR (seguidores no Instagram)
    Conta de 0 até o valor escrito no HTML, uma vez, quando entra na tela.
    O texto no HTML já é o valor final, então sem JS aparece certo.
    -------------------------------------------------------------------------- */
@@ -378,10 +520,11 @@ function contarAte(elemento) {
 }
 
 /* --------------------------------------------------------------------------
-   9. OBTURADOR
+   10. OBTURADOR
    A foto-vitrine (a ficha do visto americano) abre de baixo para cima uma
-   vez, quando aparece na tela. Observa a ficha, não a foto: um elemento
-   recortado por clip-path não conta como visível.
+   vez, quando aparece na tela, e o carimbo bate em seguida (CSS). Observa o
+   bloco da foto, não a foto: um elemento recortado por clip-path não conta
+   como visível.
    -------------------------------------------------------------------------- */
 function ativarObturador() {
   const fotos = document.querySelectorAll(".obturador");
@@ -404,7 +547,7 @@ function ativarObturador() {
 }
 
 /* --------------------------------------------------------------------------
-   10. VÍDEO (as nuvens do contato)
+   11. VÍDEO (as nuvens da janela do avião)
    Loop mudo que só toca enquanto está na tela; quem prefere menos movimento
    vê só o quadro parado.
    -------------------------------------------------------------------------- */
@@ -433,7 +576,7 @@ function ativarVideos() {
 }
 
 /* --------------------------------------------------------------------------
-   11. BOTÃO FLUTUANTE DE WHATSAPP
+   12. BOTÃO FLUTUANTE DE WHATSAPP
    Escondido enquanto a capa (que já tem a conversa) está na tela.
    -------------------------------------------------------------------------- */
 function ativarBotaoFlutuante() {
@@ -448,7 +591,7 @@ function ativarBotaoFlutuante() {
 }
 
 /* --------------------------------------------------------------------------
-   12. FOTOS QUE CARREGAM DEPOIS
+   13. FOTOS QUE CARREGAM DEPOIS
    As fotos com loading="lazy" chegam num fade. A classe "fotos-suaves" só
    entra aqui, então se este arquivo não carregar nenhuma foto fica escondida.
    -------------------------------------------------------------------------- */

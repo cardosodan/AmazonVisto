@@ -4,18 +4,24 @@
    Mobile-first: os estilos sem @media valem para o celular; as @media
    (min-width: ...) ajustam para tablet e desktop.
 
-   Direção: "a conversa". O site é a conversa em que o visto começa: o
-   tique duplo tique duplo do WhatsApp, que em português se chama "visto", vira o
-   visto do passaporte. Um motivo só roda o sistema inteiro: o balão de
-   mensagem (cantos redondos e um canto agudo, o "rabinho") com o tique duplo
-   desenhado. Ele aparece gigante na capa, recorta as fotos, dá forma aos
-   botões, aos ladrilhos, ao painel e às fichas, e marca as listas.
+   Direção: "os papéis da viagem, numa conversa só". O tique duplo do
+   WhatsApp, que em português se chama "visto", vira o visto do passaporte.
+   Duas famílias de peças, cada uma com um papel:
+   - Os documentos da viagem, em papel com granulado e guilhoche de
+     segurança: a página do passaporte (capa), o painel de partidas e a
+     página de visto (serviços), o cartão de visita, o cartão de embarque
+     (contato) e o cartão-postal (rodapé). Têm a borda listrada do correio
+     aéreo, a zona de leitura (MRZ) e o carimbo, que é o próprio tique
+     duplo dentro de um anel.
+   - A conversa, em balões (cantos redondos e um canto agudo, o
+     "rabinho"): a conversa viva da capa, as provas, as dúvidas e os
+     botões. Dourado é a voz da Amazon Visto; papel é a voz do cliente.
 
-   Cores da marca, em campos inteiros que nunca se misturam: azul-meia-noite
-   de fundo (a conversa à noite), dourado na voz da Amazon Visto, papel na
-   voz do cliente, azul-marinho e papel como campos de seção, vermelho só no
-   botão de enviar. Uma família (Chillax, servida do próprio site), cinco
-   tamanhos. Sem gradiente, sem sombra parada, sem fio fino.
+   Cores da marca em campos inteiros: azul-meia-noite de fundo, azul-marinho
+   como campo de seção, papel nos documentos, dourado na voz da empresa,
+   vermelho nas ações e na listra do envelope. Uma família (Chillax, servida
+   do próprio site); a zona de leitura usa letra de máquina. Sem gradiente,
+   sem sombra parada, sem fio fino.
    ========================================================================== */
 
 @font-face {
@@ -52,6 +58,7 @@
   --tinta-2: #141e6c;
   --papel: #f3f4f1;
   --papel-2: #e5e6e0;
+  --papel-claro: #fbfbf8;
   --ouro: #c9a45c;
   --ouro-escuro: #b28d47;
   --vermelho: #b3121f;
@@ -59,31 +66,47 @@
   --tinta-suave: #434b70;
   --papel-suave: rgba(243, 244, 241, 0.8);
 
-  /* Tipografia: uma família, seis tamanhos. */
+  /* Granulado de papel (ruído SVG, não gradiente) por cima do papel. */
+  --grao: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.06 0 0 0 0 0.09 0 0 0 0 0.38 0 0 0 0.07 0'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23g)'/%3E%3C/svg%3E");
+  /* Borda do envelope de correio aéreo: paralelogramos vermelhos e
+     azul-marinho sobre o papel (um "ladrilho" SVG que se repete). */
+  --listra: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='72' height='28' viewBox='0 0 72 28' preserveAspectRatio='none'%3E%3Cpath fill='%23b3121f' d='M0 28 12 0h18L18 28z'/%3E%3Cpath fill='%230f1862' d='M36 28 48 0h18L54 28z'/%3E%3C/svg%3E");
+  /* Guilhoche: a impressão de segurança de passaportes e cédulas, desenhada
+     em código (images/guilhoche-roseta.svg, scripts/gerar-guilhoche.mjs).
+     Entra como máscara, então a cor vem do CSS. */
+  --roseta: url("../images/guilhoche-roseta.svg");
+
+  /* Tipografia: uma família; a zona de leitura usa letra de máquina, como
+     no passaporte de verdade (OCR-B). */
   --fonte: "Chillax", "Segoe UI", system-ui, sans-serif;
+  --fonte-mrz: "OCR-B", "OCR B", ui-monospace, "Cascadia Mono", Consolas, "Courier New", monospace; /* taste-skill-ignore: zona de leitura de documento */
   --t-pequeno: clamp(0.875rem, 0.85rem + 0.1vw, 0.9375rem);
   --t-texto: clamp(1.0625rem, 1rem + 0.25vw, 1.1875rem);
-  --t-destaque: clamp(1.25rem, 1.1rem + 0.7vw, 1.625rem);
-  --t-titulo: clamp(2rem, 1.3rem + 3.2vw, 4rem);
-  --t-capa: clamp(2.75rem, 0.6rem + 5.6vw, 5.75rem);
+  --t-destaque: clamp(1.1875rem, 1.05rem + 0.7vw, 1.625rem);
+  --t-titulo: clamp(1.875rem, 1.2rem + 3.2vw, 4rem);
+  --t-capa: clamp(2.375rem, 0.9rem + 4.4vw, 4.75rem);
   /* A fala da Amazon Visto em destaque (frase, não título: até 36px). */
-  --t-fala: clamp(1.5rem, 1rem + 1.4vw, 2.25rem);
+  --t-fala: clamp(1.1875rem, 0.9rem + 1.5vw, 2.25rem);
 
   /* Grade */
   --margem: clamp(20px, 5vw, 72px);
   --altura-barra: 72px;
   --entre: clamp(64px, 7.5vw, 112px);
 
-  /* O balão: cantos redondos e um canto agudo (o "rabinho"). */
+  /* O balão: cantos redondos e um canto agudo (o "rabinho"). Dois raios:
+     o pequeno (mensagens, campos, perguntas) e o grande (botões, falas). */
+  --raio-p: 20px;
   --raio: 26px;
-  --raio-g: clamp(56px, 7vw, 120px);
   --rabinho: 6px;
+  /* O canto do papel: quase reto, como um documento. */
+  --canto-papel: 4px;
 
   /* Movimento */
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
   --ease-expo: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-in-out: cubic-bezier(0.76, 0, 0.24, 1);
   --ease-soft: cubic-bezier(0.33, 1, 0.68, 1);
+  --ease-gaveta: cubic-bezier(0.32, 0.72, 0, 1);
   --t-press: 140ms;
   --t-hover: 180ms;
 }
@@ -196,7 +219,6 @@ p {
 
 .servicos :focus-visible,
 .conversa :focus-visible,
-.cupom :focus-visible,
 .pergunta__resposta :focus-visible {
   outline-color: var(--tinta);
 }
@@ -353,7 +375,7 @@ svg use,
 .barra__nav.e-aberta {
   visibility: visible;
   transform: none;
-  transition: transform 0.5s cubic-bezier(0.32, 0.72, 0, 1), visibility 0s;
+  transition: transform 0.5s var(--ease-gaveta), visibility 0s;
 }
 
 .barra__nav a {
@@ -395,79 +417,286 @@ svg use,
     transition: text-decoration-color var(--t-hover) ease, color var(--t-hover) ease;
   }
 
+}
+
+@media (min-width: 768px) and (hover: hover) and (pointer: fine) {
   .barra__nav a:hover {
     text-decoration-color: var(--ouro);
   }
 }
 
 /* ==========================================================================
-   5. CAPA: o título à esquerda e o balão dourado gigante, cortado pela
-   tela, com a conversa viva dentro.
+   5. PEÇAS DE DOCUMENTO: o papel, o guilhoche, a listra do correio aéreo,
+   a zona de leitura, o carimbo e as plaquetas do painel do aeroporto.
+   ========================================================================== */
+
+/* O papel dos documentos: granulado por cima da cor. */
+.capa__cartao,
+.servicos,
+.cartao-visita,
+.embarque,
+.verso {
+  position: relative;
+  isolation: isolate;
+  background: var(--papel) var(--grao);
+  color: var(--tinta);
+}
+
+/* Guilhoche de fundo: um pseudo-elemento por peça, atrás do conteúdo (a
+   peça isola o empilhamento). Traço fino, cor e opacidade baixas. */
+.capa__cartao::before,
+.servicos::before,
+.provas::before,
+.embarque-secao::before,
+.verso::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  pointer-events: none;
+  aspect-ratio: 1;
+  background: currentColor;
+  -webkit-mask: var(--roseta) center / contain no-repeat;
+  mask: var(--roseta) center / contain no-repeat;
+}
+
+/* Borda listrada do envelope de correio aéreo. */
+.listra {
+  height: 24px;
+  background: var(--papel) var(--listra) 0 0 / 60px 100% repeat-x;
+}
+
+.listra--fina {
+  height: 8px;
+  background-size: 22px 100%;
+}
+
+/* Zona de leitura óptica (MRZ): as linhas de "<" do pé do passaporte,
+   esticadas na largura exata com textLength (SVG). */
+.mrz {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.mrz text {
+  font-family: var(--fonte-mrz);
+  font-size: 17px;
+  fill: currentColor;
+}
+
+/* O carimbo: dois anéis, o texto na volta e o tique duplo no meio. Tinta
+   azul-marinho desgastada (filtro #tintaCarimbo no HTML). */
+.carimbo {
+  display: block;
+  overflow: visible;
+  color: var(--tinta);
+  filter: url(#tintaCarimbo);
+}
+
+.carimbo circle {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.6;
+}
+
+.carimbo circle + circle {
+  stroke-width: 1.3;
+}
+
+.carimbo text {
+  fill: currentColor;
+  font-family: var(--fonte);
+  font-size: 8.6px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+}
+
+.carimbo use {
+  stroke-width: 2.3;
+}
+
+/* As plaquetas do painel do aeroporto: uma letra ou número em cada, com o
+   vinco no meio; viram uma a uma quando o texto muda (main.js). */
+.placas {
+  display: inline-flex;
+  gap: 3px;
+  perspective: 240px;
+  font-weight: 600;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0;
+}
+
+.placas > span {
+  position: relative;
+  width: 0.95em;
+  padding: 0.26em 0.1em 0.22em;
+  border-radius: var(--canto-papel);
+  background: var(--tinta);
+  color: var(--papel);
+  text-align: center;
+}
+
+.placas > span::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(50% - 1px);
+  height: 2px; /* taste-skill-ignore: vinco da plaqueta, não é fio */
+  background: var(--noite);
+  opacity: 0.55;
+}
+
+/* Os dois-pontos da hora não são plaqueta. */
+.placas > .placas__sep {
+  width: 0.4em;
+  padding-inline: 0;
+  background: none;
+  color: var(--tinta);
+}
+
+.placas > .placas__sep::after {
+  display: none;
+}
+
+/* ==========================================================================
+   6. CAPA: a página de dados do passaporte à esquerda (o título, a listra do
+   envelope, o chip, a zona de leitura e o carimbo do "visto"); o avião à
+   direita, com a conversa viva no pé da foto.
    ========================================================================== */
 .capa {
-  position: relative;
   display: grid;
-  gap: 48px;
-  overflow: clip;
-  padding: calc(var(--altura-barra) + clamp(40px, 8vw, 72px)) var(--margem) 0;
+  gap: 12px;
+  padding: calc(var(--altura-barra) + 12px) 12px 12px;
   background: var(--noite);
 }
 
+.capa__cartao {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border-radius: var(--canto-papel);
+}
+
+/* A roseta de segurança atrás do texto, como na página de dados. */
+.capa__cartao::before {
+  left: 50%;
+  top: 50%;
+  width: max(130%, 560px);
+  color: var(--tinta);
+  opacity: 0.075;
+  translate: -50% -50%;
+}
+
+.capa__chip {
+  position: absolute;
+  top: 40px;
+  right: 16px;
+  width: 34px;
+  fill: none;
+  stroke: var(--tinta);
+  stroke-width: 2.4;
+  opacity: 0.55;
+}
+
 .capa__texto {
-  position: relative;
-  z-index: 1;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  justify-content: center;
+  padding: 36px 20px 0;
 }
 
 .capa h1 {
+  max-width: 11em;
   font-size: var(--t-capa);
   line-height: 1;
 }
 
 .capa__apoio {
-  max-width: 32ch;
-  margin-top: clamp(24px, 2.6vw, 36px);
-  font-size: var(--t-destaque);
-  line-height: 1.4;
+  max-width: 34ch;
+  margin-top: 16px;
+  line-height: 1.45;
 }
 
 .capa__texto .botao {
-  margin-top: clamp(28px, 3vw, 40px);
+  align-self: flex-start;
+  margin-top: 24px;
 }
 
 .capa__selos {
-  margin-top: clamp(28px, 3vw, 40px);
+  margin-top: 20px;
   font-size: var(--t-pequeno);
-  color: var(--papel-suave);
+  color: var(--tinta-suave);
 }
 
-/* O balão gigante: desenhado atrás da conversa, entra pela direita e é
-   cortado pela borda direita e pela de baixo; o canto agudo fica em cima,
-   à esquerda, como o rabinho da mensagem que chega. */
+/* O pé da página: a zona de leitura e, por cima dela, o carimbo. */
+.capa__pe {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+  padding: 28px 20px 18px;
+}
+
+.capa__mrz {
+  flex: 1;
+  min-width: 0;
+  max-width: 520px;
+  color: var(--tinta-suave);
+  opacity: 0.85;
+}
+
+.capa__carimbo {
+  flex: none;
+  width: 76px;
+  margin: -24px -2px 0 0;
+  rotate: -12deg;
+  opacity: 0.85;
+}
+
+.capa__foto {
+  height: 38svh;
+  min-height: 240px;
+  overflow: hidden;
+  border-radius: var(--canto-papel);
+}
+
+.capa__foto img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 62% 50%;
+}
+
+/* A conversa: um balão dourado sobre o pé da foto, com o canto agudo em
+   cima, à esquerda, como a mensagem que chega. */
 .conversa {
   position: relative;
-  margin-right: calc(-1 * var(--margem));
-  border-radius: var(--rabinho) 0 0 clamp(96px, 14vw, 240px);
+  z-index: 1;
+  margin: -76px 12px 0;
+  border-radius: var(--rabinho) var(--raio) var(--raio) var(--raio);
   background: var(--ouro);
   color: var(--noite);
 }
 
 .conversa__janela {
-  position: relative;
   display: grid;
-  gap: 20px;
-  max-width: 38rem;
-  padding: clamp(24px, 6vh, 72px) clamp(20px, 3.4vw, 56px) clamp(56px, 8vw, 112px);
+  gap: 14px;
+  padding: 18px 16px 18px;
 }
 
 .conversa__topo {
   display: flex;
   align-items: center;
-  gap: 0.85rem;
+  gap: 0.75rem;
 }
 
 .conversa__topo img {
-  width: 44px;
-  height: 44px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   background: var(--papel);
 }
@@ -496,47 +725,46 @@ svg use,
 .msg {
   position: relative;
   max-width: 30ch;
-  padding: 0.75rem 1rem 0.6rem;
-  border-radius: var(--rabinho) 22px 22px 22px;
+  padding: 0.65rem 0.9rem 0.55rem;
+  border-radius: var(--rabinho) var(--raio-p) var(--raio-p) var(--raio-p);
   line-height: 1.4;
 }
 
 /* A Amazon Visto fala direto no dourado, sem balão por dentro. */
 .msg--deles {
   justify-self: start;
-  max-width: 34ch;
+  max-width: 36ch;
   padding: 0;
   border-radius: 0;
   background: none;
   color: var(--noite);
-  font-size: var(--t-destaque);
   font-weight: 500;
-  line-height: 1.3;
+  line-height: 1.35;
 }
 
 .msg--deles .msg__hora {
   float: none;
   display: flex;
-  margin: 0.4rem 0 0;
+  margin: 0.35rem 0 0;
 }
 
 .msg--abertura {
-  max-width: 20ch;
-  font-size: var(--t-fala);
+  max-width: 22ch;
+  font-size: var(--t-destaque);
   font-weight: 600;
-  line-height: 1.12;
+  line-height: 1.18;
   letter-spacing: -0.02em;
 }
 
 .msg--abertura .msg__hora {
-  font-size: 0.8125rem;
+  font-size: var(--t-pequeno);
   font-weight: 400;
   letter-spacing: 0;
 }
 
 .msg--minha {
   justify-self: end;
-  border-radius: 22px var(--rabinho) 22px 22px;
+  border-radius: var(--raio-p) var(--rabinho) var(--raio-p) var(--raio-p);
   background: var(--papel);
   color: var(--noite);
 }
@@ -547,7 +775,7 @@ svg use,
   gap: 0.3em;
   float: right;
   margin: 0.45em 0 0 0.9em;
-  font-size: 0.8125rem;
+  font-size: var(--t-pequeno);
   font-variant-numeric: tabular-nums;
   opacity: 0.75;
 }
@@ -559,8 +787,8 @@ svg use,
   transition: color 0.3s ease;
 }
 
-/* Quando a Amazon Visto começa a responder, o tique duplo da mensagem do cliente
-   fica "visto". */
+/* Quando a Amazon Visto começa a responder, o tique duplo da mensagem do
+   cliente fica "visto". */
 .msg--minha.e-vista .msg__hora svg {
   color: var(--tinta);
 }
@@ -586,12 +814,12 @@ svg use,
 }
 
 .resposta {
-  min-height: 48px;
-  padding: 0.6rem 1.1rem;
-  border-radius: 22px var(--rabinho) 22px 22px;
+  min-height: 44px;
+  padding: 0.5rem 0.95rem;
+  border-radius: var(--raio-p) var(--rabinho) var(--raio-p) var(--raio-p);
   background: var(--noite);
   color: var(--papel);
-  font-size: var(--t-texto);
+  font-size: var(--t-pequeno);
   font-weight: 500;
   transition: background-color var(--t-hover) ease, color var(--t-hover) ease, transform var(--t-press) var(--ease-out);
 }
@@ -611,19 +839,24 @@ svg use,
   }
 }
 
-/* O compositor: o texto da mensagem, que dá para editar, e o enviar. */
+/* O compositor: a mensagem pronta, que dá para editar, e o enviar. Com JS,
+   aparece quando a Amazon Visto responde (antes disso, o caminho direto é
+   o botão da página do passaporte). */
 .compositor {
   display: grid;
   gap: 10px;
-  margin-top: 6px;
+}
+
+.js .conversa:not(.e-respondida) .compositor {
+  display: none;
 }
 
 .compositor textarea {
   width: 100%;
-  min-height: 4.4em;
-  padding: 0.8rem 1rem;
+  min-height: 4.2em;
+  padding: 0.7rem 0.95rem;
   border: 0;
-  border-radius: 22px var(--rabinho) 22px 22px;
+  border-radius: var(--raio-p) var(--rabinho) var(--raio-p) var(--raio-p);
   background: var(--papel);
   color: var(--noite);
   line-height: 1.4;
@@ -634,35 +867,105 @@ svg use,
   justify-self: start;
 }
 
+@media (min-width: 640px) {
+  .capa__texto {
+    padding: clamp(40px, 6vw, 72px) clamp(28px, 4.4vw, 64px) 0;
+  }
+
+  .capa__apoio {
+    margin-top: clamp(18px, 2vw, 28px);
+    font-size: var(--t-destaque);
+    line-height: 1.4;
+  }
+
+  .capa__texto .botao {
+    margin-top: clamp(24px, 3vw, 36px);
+  }
+
+  .capa__selos {
+    margin-top: clamp(20px, 2.6vw, 32px);
+  }
+
+  .capa__pe {
+    padding: clamp(32px, 4vw, 48px) clamp(28px, 4.4vw, 64px) clamp(20px, 2.6vw, 32px);
+  }
+
+  .capa__carimbo {
+    width: clamp(96px, 9vw, 128px);
+    margin-top: -40px;
+  }
+
+  .listra {
+    height: 40px;
+    background-size: 72px 100%;
+  }
+
+  .listra--fina {
+    height: 10px;
+    background-size: 26px 100%;
+  }
+
+  .capa__chip {
+    top: 64px;
+    right: 24px;
+    width: 44px;
+  }
+}
+
 @media (min-width: 900px) {
   .capa {
-    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
-    align-items: center;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     min-height: 100svh;
-    padding-bottom: 0;
   }
 
-  .capa__texto {
-    padding-bottom: clamp(48px, 8vh, 96px);
+  .capa__cartao {
+    grid-column: 1;
+    grid-row: 1;
   }
 
+  .capa__foto {
+    grid-column: 2;
+    grid-row: 1;
+    height: auto;
+    min-height: 100%;
+  }
+
+  /* A conversa ocupa a mesma célula da foto, encostada no pé dela. */
   .conversa {
-    align-self: stretch;
-    margin-top: clamp(8px, 3vh, 40px);
+    grid-column: 2;
+    grid-row: 1;
+    align-self: end;
+    justify-self: start;
+    width: min(calc(100% - 48px), 33rem);
+    margin: 0 0 24px 24px;
+  }
+
+  .conversa__janela {
+    gap: 16px;
+    padding: 24px 26px 26px;
   }
 }
 
 /* ==========================================================================
-   6. SERVIÇOS: os destinos em faixas de letra grande (Estados Unidos
-   primeiro e maior); cada nome abre a ficha do serviço logo abaixo, que fica
-   direto no papel, sem painel.
+   7. SERVIÇOS: o painel de partidas. Cada destino é uma linha do painel do
+   aeroporto: o código, o nome em letra grande e a hora local de lá; cada
+   nome abre a página de visto do serviço logo abaixo, com o carimbo e a
+   zona de leitura, direto no papel.
    ========================================================================== */
 .servicos {
   display: grid;
-  gap: clamp(32px, 4vw, 48px) clamp(32px, 4vw, 64px);
+  gap: clamp(28px, 4vw, 48px) clamp(32px, 4vw, 64px);
+  overflow: clip;
   padding: var(--entre) var(--margem);
-  background: var(--papel);
+}
+
+/* A roseta grande no canto, como na página de visto. */
+.servicos::before {
+  right: max(-320px, -22vw);
+  top: -120px;
+  width: min(86vw, 900px);
   color: var(--tinta);
+  opacity: 0.05;
 }
 
 .servicos__topo h2 {
@@ -674,26 +977,69 @@ svg use,
   margin-top: 1rem;
 }
 
+/* A origem, no pé do painel: Manaus, a data e a hora daqui. */
+.painel__origem {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 0.75rem;
+  padding-top: 16px;
+  font-size: var(--t-pequeno);
+  color: var(--tinta-suave);
+}
+
+.painel__titulo {
+  font-weight: 600;
+  color: var(--tinta);
+}
+
+.painel__origem .placas {
+  font-size: var(--t-pequeno);
+}
+
+.painel__hora {
+  margin-left: auto;
+}
+
 .destinos {
   display: grid;
 }
 
+/* Uma linha do painel: código | nome e o que é | hora local. */
 .destino {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 0.25rem 1.5rem;
-  padding: clamp(8px, 1.2vw, 16px) 0;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  grid-template-areas:
+    "codigo nome hora"
+    "codigo fato fato";
+  align-items: start;
+  column-gap: 14px;
+  row-gap: 0.15rem;
+  padding: 12px 0;
+}
+
+.destino__codigo,
+.destino__hora {
+  margin-top: 0.3rem;
+  font-size: var(--t-pequeno);
+}
+
+.destino__codigo {
+  grid-area: codigo;
+}
+
+.destino__hora {
+  grid-area: hora;
 }
 
 .destino__nome {
+  grid-area: nome;
   display: inline-flex;
   align-items: center;
   gap: 0.25em;
   font-size: var(--t-titulo);
   font-weight: 600;
-  line-height: 1;
+  line-height: 1.02;
   letter-spacing: -0.035em;
   text-decoration: underline;
   text-decoration-color: transparent;
@@ -707,7 +1053,8 @@ svg use,
 }
 
 .destino__fato {
-  font-size: var(--t-texto);
+  grid-area: fato;
+  font-size: var(--t-pequeno);
   color: var(--tinta-suave);
 }
 
@@ -730,7 +1077,7 @@ svg use,
 
 .fichas {
   grid-column: 1 / -1;
-  margin-top: clamp(16px, 3vw, 40px);
+  margin-top: clamp(8px, 3vw, 40px);
 }
 
 .js .ficha:not(.e-aberta) {
@@ -739,7 +1086,7 @@ svg use,
 
 .ficha {
   display: grid;
-  gap: clamp(24px, 4vw, 64px);
+  gap: clamp(28px, 4vw, 64px);
   scroll-margin-top: calc(var(--altura-barra) + 24px);
 }
 
@@ -760,23 +1107,36 @@ svg use,
   from {
     opacity: 0;
     transform: translateY(10px);
-    filter: blur(3px);
   }
+}
+
+/* A foto no balão e, no canto de baixo, o carimbo do visto. */
+.ficha__visual {
+  position: relative;
 }
 
 .ficha__foto {
   overflow: hidden;
-  border-radius: var(--rabinho) 32% 32% 32%;
+  border-radius: var(--rabinho) 38% 38% 38%;
   /* Papel atrás da foto: sem fio escuro na borda arredondada. */
   background: var(--papel-2);
 }
 
 .ficha__foto img {
   width: 100%;
-  aspect-ratio: 1;
+  aspect-ratio: 4 / 3;
   object-fit: cover;
   /* Cada foto pode dizer onde está o foco (--foco no figure). */
   object-position: var(--foco, 50% 50%);
+}
+
+.ficha__carimbo {
+  position: absolute;
+  right: -6px;
+  bottom: -26px;
+  width: 92px;
+  rotate: -10deg;
+  opacity: 0.9;
 }
 
 .ficha__texto h3 {
@@ -863,10 +1223,43 @@ svg use,
   margin-top: clamp(24px, 3vw, 36px);
 }
 
+/* A zona de leitura no pé da página de visto. */
+.ficha__mrz {
+  margin-top: clamp(28px, 3.4vw, 40px);
+  color: var(--tinta-suave);
+  opacity: 0.8;
+}
+
 @media (min-width: 640px) {
+  .destino {
+    column-gap: clamp(16px, 2vw, 28px);
+    padding: clamp(12px, 1.4vw, 18px) 0;
+  }
+
+  .destino__codigo,
+  .destino__hora,
+  .painel__origem .placas {
+    font-size: var(--t-texto);
+  }
+
+  .destino__codigo,
+  .destino__hora {
+    margin-top: 0.45em;
+  }
+
+  .destino__fato {
+    font-size: var(--t-texto);
+  }
+
   .ficha__caminho,
   .vistos {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .ficha__carimbo {
+    width: clamp(110px, 24%, 150px);
+    right: -2%;
+    bottom: -7%;
   }
 }
 
@@ -881,138 +1274,13 @@ svg use,
     align-items: start;
   }
 
-  .ficha__foto {
+  .ficha__visual {
     position: sticky;
     top: calc(var(--altura-barra) + 32px);
   }
-}
 
-/* ==========================================================================
-   7. COMO FUNCIONA: "muitos em um": o diagrama é o comparativo.
-   ========================================================================== */
-.caminho {
-  display: grid;
-  gap: clamp(32px, 4vw, 56px);
-  padding: var(--entre) var(--margem);
-  background: var(--tinta);
-  color: var(--papel);
-}
-
-.caminho__topo h2 {
-  font-size: var(--t-titulo);
-}
-
-.caminho__topo p {
-  max-width: 38ch;
-  margin-top: 1rem;
-}
-
-.diagrama {
-  width: 100%;
-  height: auto;
-}
-
-.diagrama--deitado {
-  display: none;
-}
-
-.dg-claro {
-  fill: var(--papel);
-  opacity: 0.3;
-}
-
-.dg-medio {
-  fill: var(--papel);
-  opacity: 0.62;
-}
-
-.dg-faixa {
-  fill: var(--papel);
-}
-
-.dg-visto {
-  color: var(--ouro);
-  stroke-width: 2.3;
-}
-
-.caminho__colunas h3 {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-size: var(--t-destaque);
-  letter-spacing: -0.01em;
-}
-
-.caminho__colunas h3 .icone-visto {
-  color: var(--ouro);
-}
-
-.caminho__colunas p {
-  margin-top: 0.4rem;
-  color: var(--papel-suave);
-}
-
-/* No celular o diagrama fica em pé, à esquerda, e cada texto fica na altura
-   do seu terço. */
-@media (max-width: 767px) {
-  .caminho {
-    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
-    column-gap: 20px;
-  }
-
-  .caminho__topo {
-    grid-column: 1 / -1;
-  }
-
-  .caminho__diagrama {
-    grid-column: 1;
-    grid-row: 2;
-  }
-
-  .caminho__colunas {
-    grid-column: 2;
-    grid-row: 2;
-    display: grid;
-    grid-template-rows: repeat(3, 1fr);
-  }
-
-  .caminho__colunas li {
-    align-self: center;
-  }
-
-  .caminho__colunas p {
-    font-size: var(--t-pequeno);
-  }
-}
-
-@media (min-width: 768px) {
-  .caminho__topo {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    gap: 1rem 4rem;
-    align-items: end;
-  }
-
-  .caminho__topo p {
-    margin-top: 0;
-  }
-
-  .diagrama--deitado {
-    display: block;
-  }
-
-  .diagrama--empe {
-    display: none;
-  }
-
-  .caminho__colunas {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 2rem;
-  }
-
-  .caminho__colunas p {
-    max-width: 30ch;
+  .ficha__foto img {
+    aspect-ratio: 1;
   }
 }
 
@@ -1021,10 +1289,22 @@ svg use,
    embaixo do outro como numa conversa; um deles é uma foto.
    ========================================================================== */
 .provas {
+  position: relative;
+  isolation: isolate;
+  overflow: clip;
   display: grid;
   gap: clamp(32px, 4vw, 48px) clamp(32px, 4vw, 64px);
   padding: var(--entre) var(--margem);
   background: var(--noite);
+}
+
+/* A roseta dourada atrás do título, como a marca d'água de um diploma. */
+.provas::before {
+  left: max(-260px, -20vw);
+  bottom: -18%;
+  width: min(92vw, 760px);
+  color: var(--ouro);
+  opacity: 0.08;
 }
 
 .provas h2 {
@@ -1041,7 +1321,7 @@ svg use,
   justify-self: start;
   max-width: min(100%, 30ch);
   padding: 0.85rem 1.25rem 1rem;
-  border-radius: var(--rabinho) 26px 26px 26px;
+  border-radius: var(--rabinho) var(--raio) var(--raio) var(--raio);
   background: var(--ouro);
   color: var(--noite);
   font-size: var(--t-fala);
@@ -1057,7 +1337,7 @@ svg use,
 
 /* A foto que chega na conversa: a imagem dentro do balão, a legenda embaixo. */
 .fala--foto {
-  max-width: min(100%, 30rem);
+  max-width: min(84%, 30rem);
   padding: 8px 8px 1rem;
 }
 
@@ -1065,12 +1345,13 @@ svg use,
   width: 100%;
   aspect-ratio: 3 / 2;
   object-fit: cover;
-  border-radius: 2px 20px 20px 20px;
+  border-radius: var(--rabinho) var(--raio-p) var(--raio-p) var(--raio-p);
 }
 
 .fala--foto p {
   padding: 0.7rem 0.6rem 0;
   font-size: var(--t-destaque);
+  line-height: 1.3;
 }
 
 @media (min-width: 1024px) {
@@ -1126,10 +1407,10 @@ svg use,
    vem por último, depois dos textos. */
 .sobre__foto {
   order: 3;
-  justify-self: center;
-  width: 86vw;
-  max-width: 560px;
-  margin-bottom: -18%;
+  justify-self: start;
+  width: 62vw;
+  max-width: 420px;
+  margin-bottom: -16%;
   overflow: hidden;
   border-radius: var(--rabinho) 38% 38% 38%;
 }
@@ -1212,12 +1493,12 @@ svg use,
   gap: 0.75rem;
   min-height: 56px;
   padding: 0.85rem 1.1rem;
-  border-radius: 22px var(--rabinho) 22px 22px;
+  border-radius: var(--raio-p) var(--rabinho) var(--raio-p) var(--raio-p);
   background: var(--papel);
   color: var(--noite);
-  font-size: var(--t-destaque);
+  font-size: var(--t-texto);
   font-weight: 500;
-  line-height: 1.25;
+  line-height: 1.3;
   text-align: left;
   transition: transform var(--t-press) var(--ease-out);
 }
@@ -1251,7 +1532,7 @@ svg use,
   justify-self: start;
   max-width: min(100%, 40rem);
   padding: 0.9rem 1.2rem 1rem;
-  border-radius: var(--rabinho) 22px 22px 22px;
+  border-radius: var(--rabinho) var(--raio-p) var(--raio-p) var(--raio-p);
   background: var(--ouro);
   color: var(--noite);
 }
@@ -1262,6 +1543,13 @@ svg use,
   text-underline-offset: 4px;
 }
 
+@media (min-width: 768px) {
+  .pergunta__balao {
+    font-size: var(--t-destaque);
+    line-height: 1.3;
+  }
+}
+
 @media (min-width: 1024px) {
   .duvidas {
     grid-template-columns: minmax(0, 3fr) minmax(0, 9fr);
@@ -1270,224 +1558,626 @@ svg use,
 }
 
 /* ==========================================================================
-   11. CONTATO: o compositor do fim num balão dourado (a Amazon Visto
-   convida), com os campos em papel (o cliente escreve); ao lado, as nuvens
-   numa janela em forma de balão.
+   11. VISITE A GENTE: o cartão de visita, em papel, sobre Manaus vista do
+   alto. No celular a foto vem primeiro e o cartão sobe sobre o pé dela.
    ========================================================================== */
-.contato {
-  display: grid;
-  gap: clamp(24px, 4vw, 56px);
-  padding: var(--entre) var(--margem);
-  background: var(--tinta);
+.visita {
+  position: relative;
+  background: var(--noite);
 }
 
-.cupom {
-  display: grid;
-  gap: 1.25rem;
-  align-content: start;
-  padding: clamp(24px, 4vw, 56px);
-  border-radius: var(--rabinho) var(--raio-g) var(--raio-g) var(--raio-g);
-  background: var(--ouro);
-  color: var(--noite);
-}
-
-.cupom h2 {
-  font-size: var(--t-titulo);
-}
-
-.cupom > p {
-  max-width: 36ch;
-}
-
-.cupom__campos {
-  display: grid;
-  gap: 10px;
-  margin-top: 0.5rem;
-}
-
-.cupom input,
-.cupom select {
+.visita__foto {
   width: 100%;
-  min-height: 54px;
-  padding: 0 1.1rem;
-  border: 0;
-  border-radius: 18px var(--rabinho) 18px 18px;
-  background: var(--papel);
-  color: var(--noite);
-  font-size: var(--t-texto);
-  appearance: none;
+  height: 34svh;
+  min-height: 220px;
+  object-fit: cover;
+  object-position: 55% 30%;
 }
 
-.cupom select {
-  padding-right: 3rem;
-  background: var(--papel) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 9' fill='none' stroke='%23070b2e' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M1.5 1.5 7 7l5.5-5.5'/%3E%3C/svg%3E") right 1.2rem center / 14px 9px no-repeat;
-  cursor: pointer;
+.cartao-visita {
+  display: flex;
+  flex-direction: column;
+  max-width: 26rem;
+  margin: -56px var(--margem) 0;
+  padding: 24px 22px 26px;
+  border-radius: var(--canto-papel);
 }
 
-.cupom input::placeholder {
+.cartao-visita h2 {
+  font-size: var(--t-destaque);
+  letter-spacing: -0.01em;
+}
+
+.cartao-visita address {
+  margin-top: 0.9rem;
+  font-style: normal;
+}
+
+.cartao-visita__extra {
+  margin-top: 0.4rem;
   color: var(--tinta-suave);
 }
 
-.cupom__enviar {
-  justify-self: start;
-  margin-top: 0.25rem;
+.cartao-visita__horas {
+  margin-top: 1.1rem;
 }
 
-.contato__janela {
+.cartao-visita__horas div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.cartao-visita__horas dd {
+  font-weight: 600;
+}
+
+.cartao-visita__contatos {
+  display: grid;
+  gap: 0.35rem;
+  margin-top: 1.1rem;
+}
+
+.cartao-visita__contatos a,
+.cartao-visita__mapa {
+  font-weight: 600;
+  text-decoration: underline;
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 4px;
+}
+
+.cartao-visita__mapa {
+  align-self: flex-start;
+  margin-top: 1.1rem;
+}
+
+.cartao-visita :focus-visible,
+.embarque :focus-visible,
+.verso :focus-visible,
+.capa__cartao :focus-visible {
+  outline-color: var(--tinta);
+}
+
+@media (min-width: 900px) {
+  .visita {
+    display: grid;
+    align-items: center;
+    min-height: 82svh;
+    padding: var(--entre) var(--margem);
+  }
+
+  .visita__foto {
+    position: absolute;
+    inset: 0;
+    height: 100%;
+  }
+
+  .cartao-visita {
+    width: min(100%, 27rem);
+    margin: 0;
+    padding: 40px 40px 36px;
+  }
+
+  .cartao-visita h2 {
+    font-size: var(--t-fala);
+  }
+}
+
+/* ==========================================================================
+   12. CONTATO: o cartão de embarque que se preenche. O corpo tem a rota, os
+   campos e o enviar; o canhoto, separado pela fileira de furos, tem o
+   código de barras (um feixe vermelho passa por ele uma vez) e a zona de
+   leitura. Ao lado, a frase e as nuvens da janela do avião.
+   ========================================================================== */
+.embarque-secao {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  gap: 32px;
+  overflow: clip;
+  padding: var(--entre) var(--margem) calc(var(--entre) * 0.8);
+  background: var(--noite);
+  color: var(--papel);
+}
+
+.embarque-secao::before {
+  left: max(-240px, -24vw);
+  top: max(-220px, -16vw);
+  width: min(96vw, 820px);
+  color: var(--ouro);
+  opacity: 0.1;
+}
+
+.embarque-secao__lado {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 20px;
+  align-items: end;
+}
+
+.embarque-secao__frase {
+  max-width: 18ch;
+  font-size: var(--t-fala);
+  font-weight: 500;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+
+.embarque-secao__apoio {
+  max-width: 30ch;
+  margin-top: 0.75rem;
+  color: var(--papel-suave);
+}
+
+/* A janela do avião: as nuvens recortadas no balão. */
+.embarque-secao__janela {
+  width: 96px;
   overflow: hidden;
   border-radius: var(--rabinho) 38% 38% 38%;
   background: var(--tinta-2);
 }
 
-.contato__janela video {
+.embarque-secao__janela video {
   width: 100%;
   aspect-ratio: 4 / 5;
   object-fit: cover;
 }
 
+.embarque {
+  display: grid;
+  border-radius: var(--canto-papel);
+  rotate: 0.6deg;
+}
+
+.embarque__corpo {
+  padding: 26px 20px 24px;
+}
+
+.embarque h2 {
+  font-size: var(--t-destaque);
+  text-align: center;
+  letter-spacing: -0.01em;
+}
+
+.embarque__rota {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 20px;
+}
+
+.embarque__ponto {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.3rem;
+}
+
+.embarque__ponto--destino {
+  align-items: flex-end;
+}
+
+.embarque__codigo {
+  font-size: var(--t-titulo);
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+.embarque__codigo.placas > span {
+  width: 0.82em;
+}
+
+.embarque__cidade {
+  font-size: var(--t-pequeno);
+  color: var(--tinta-suave);
+  transition: opacity 0.25s ease;
+}
+
+.embarque__aviao {
+  justify-self: center;
+  width: 26px;
+  height: 26px;
+  fill: var(--vermelho);
+  rotate: 90deg;
+}
+
+/* Os campos são o que o cliente escreve: balões em papel claro, com o
+   rótulo do cartão em cima. */
+/* No celular, nome e cidade lado a lado; os dois seletores, inteiros. */
+.embarque__campos {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px 10px;
+  margin-top: 24px;
+}
+
+.embarque__campo:has(select) {
+  grid-column: 1 / -1;
+}
+
+.embarque__campo {
+  display: grid;
+  gap: 0.3rem;
+}
+
+.embarque__campo > span {
+  font-size: var(--t-pequeno);
+  color: var(--tinta-suave);
+}
+
+.embarque__campo input,
+.embarque__campo select {
+  width: 100%;
+  min-height: 50px;
+  padding: 0 1rem;
+  border: 0;
+  border-radius: var(--raio-p) var(--rabinho) var(--raio-p) var(--raio-p);
+  background: var(--papel-2);
+  color: var(--noite);
+  font-size: var(--t-texto);
+  font-weight: 500;
+  appearance: none;
+}
+
+.embarque__campo select {
+  padding-right: 2.75rem;
+  background: var(--papel-2) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 9' fill='none' stroke='%23070b2e' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M1.5 1.5 7 7l5.5-5.5'/%3E%3C/svg%3E") right 1.1rem center / 14px 9px no-repeat;
+  cursor: pointer;
+}
+
+.embarque__campo input::placeholder {
+  color: var(--tinta-suave);
+  font-weight: 400;
+}
+
+.embarque__dados {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.75rem 1.5rem;
+  margin-top: 20px;
+}
+
+.embarque__dados dt {
+  font-size: var(--t-pequeno);
+  color: var(--tinta-suave);
+}
+
+.embarque__dados dd {
+  font-weight: 600;
+}
+
+.embarque__acao {
+  width: 100%;
+  margin-top: 22px;
+}
+
+.embarque__canhoto {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-inline: 20px;
+  padding: 20px 0 16px;
+  border-top: 4px dotted var(--papel-2);
+}
+
+.embarque__trecho {
+  font-size: var(--t-destaque);
+  font-weight: 600;
+  line-height: 1.1;
+}
+
+.embarque__trecho span {
+  display: block;
+  font-size: var(--t-pequeno);
+  font-weight: 400;
+  color: var(--tinta-suave);
+}
+
+.embarque__classe {
+  font-size: var(--t-pequeno);
+  color: var(--tinta-suave);
+}
+
+.embarque__classe strong {
+  display: block;
+  font-size: var(--t-texto);
+  font-weight: 600;
+  color: var(--tinta);
+}
+
+.embarque__leitura {
+  position: relative;
+  overflow: hidden;
+}
+
+.embarque__barras {
+  display: block;
+  width: 100%;
+  height: 48px;
+  fill: var(--tinta);
+}
+
+/* Um feixe vermelho passa pelo código de barras uma vez (vai e volta), como
+   o leitor do portão de embarque. */
+.embarque__laser {
+  position: absolute;
+  inset: -4px 0;
+  opacity: 0;
+  transform: translateX(-100%);
+  pointer-events: none;
+}
+
+.embarque__laser::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  width: 3px;
+  background: var(--vermelho);
+}
+
+.embarque__mrz {
+  color: var(--tinta-suave);
+  opacity: 0.85;
+}
+
 @media (min-width: 640px) {
-  .cupom__campos {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+  .embarque__corpo {
+    padding: clamp(28px, 4vw, 44px) clamp(24px, 4vw, 44px);
+  }
+
+  .embarque__campo:has(select) {
+    grid-column: auto;
+  }
+
+  .embarque {
+    grid-template-columns: minmax(0, 1fr) 190px;
+  }
+
+  .embarque__canhoto {
+    justify-content: space-between;
+    margin: clamp(28px, 4vw, 44px) 0;
+    padding: 0 clamp(18px, 2.6vw, 28px);
+    border-top: 0;
+    border-left: 4px dotted var(--papel-2);
+  }
+
+  .embarque__barras {
+    height: 88px;
+  }
+
+  /* No canhoto estreito a linha de 44 caracteres viraria pó. */
+  .embarque__mrz {
+    display: none;
+  }
+
+  .embarque-secao__janela {
+    width: 132px;
   }
 }
 
-@media (min-width: 900px) {
-  .contato {
-    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+@media (min-width: 1024px) {
+  .embarque-secao {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: 24px;
     align-items: center;
+  }
+
+  .embarque-secao__lado {
+    grid-column: 1 / span 4;
+    grid-template-columns: 1fr;
+    gap: 32px;
+    align-items: start;
+  }
+
+  .embarque-secao__janela {
+    width: min(100%, 18rem);
+  }
+
+  .embarque {
+    grid-column: 5 / span 8;
+    rotate: 1.2deg;
   }
 }
 
 /* ==========================================================================
-   12. RODAPÉ: o fim da conversa. O tique duplo sozinho num campo vazio (o único
-   vazio de propósito da página) e a marca dentro de um balão dourado
-   gigante; embaixo, os links e os endereços.
+   13. RODAPÉ: o cartão-postal. A listra do correio aéreo; depois o verso do
+   postal, com a borda de cima picotada: o recado e os links à esquerda, os
+   endereços à direita, com o selo do Teatro Amazonas e o carimbo do
+   correio (o "visto").
    ========================================================================== */
 .rodape {
-  padding: 0 var(--margem) clamp(32px, 4vw, 48px);
+  overflow: clip;
+  padding: 0 0 clamp(32px, 5vw, 72px);
   background: var(--noite);
-  color: var(--papel);
 }
 
-.rodape__fim {
+.rodape > .listra {
+  margin-bottom: clamp(48px, 8vw, 120px);
+}
+
+.verso {
   display: grid;
-  place-items: center;
-  min-height: clamp(260px, 44svh, 420px);
+  gap: 2.25rem;
+  max-width: 1100px;
+  margin-inline: var(--margem);
+  padding: 32px 22px 28px;
 }
 
-.rodape__visto {
-  width: clamp(120px, 15vw, 220px);
-  height: auto;
-  aspect-ratio: 22 / 14;
-  color: var(--ouro);
+.verso::after {
+  right: clamp(-200px, -10vw, -40px);
+  bottom: -20%;
+  width: min(80vw, 620px);
+  color: var(--tinta);
+  opacity: 0.06;
 }
 
-.rodape__visto use {
-  stroke-width: 1.5;
+.verso__recorte {
+  position: absolute;
+  left: 0;
+  bottom: calc(100% - 1px);
+  width: 100%;
+  height: 14px;
+  fill: var(--papel);
 }
 
-.rodape__marca {
-  overflow: hidden;
-  padding: clamp(18px, 2.4vw, 36px) clamp(20px, 3vw, 44px) clamp(14px, 2vw, 28px);
-  border-radius: var(--rabinho) var(--raio-g) var(--raio-g) var(--raio-g);
-  background: var(--ouro);
-  color: var(--noite);
-  font-size: clamp(2.5rem, 11.6vw, 11rem);
-  font-weight: 600;
-  line-height: 0.9;
-  letter-spacing: -0.045em;
-  white-space: nowrap;
-  /* O balão abraça o nome, como uma mensagem, em vez de esticar até a margem. */
-  width: fit-content;
-  max-width: 100%;
+.verso__titulo {
+  font-size: var(--t-titulo);
 }
 
-.rodape__colunas {
+.verso__recado > p {
+  max-width: 40ch;
+  margin-top: 1rem;
+}
+
+.verso__links {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 2.5rem 2rem;
-  margin-top: clamp(48px, 6vw, 72px);
+  gap: 1.5rem;
+  margin-top: 2rem;
 }
 
-.rodape__colunas h2 {
-  margin-bottom: 0.8rem;
+.verso__links h3 {
+  margin-bottom: 0.6rem;
   font-size: var(--t-texto);
   letter-spacing: -0.01em;
 }
 
-.rodape__colunas ul {
+.verso__links ul {
   display: grid;
-  gap: 0.45rem;
+  gap: 0.35rem;
 }
 
-.rodape__colunas a,
-.rodape__endereco span {
-  font-size: var(--t-pequeno);
-  color: var(--papel-suave);
+.verso__links a,
+.verso__enderecos a {
   text-decoration: underline;
   text-decoration-color: transparent;
+  text-decoration-thickness: 1.5px;
   text-underline-offset: 4px;
   transition: text-decoration-color var(--t-hover) ease;
 }
 
-.rodape__endereco {
-  display: grid;
-  gap: 0.45rem;
-  align-content: start;
-  font-style: normal;
+.verso__links a {
+  font-size: var(--t-pequeno);
 }
 
 @media (hover: hover) and (pointer: fine) {
-  .rodape__colunas a:hover {
+  .verso__links a:hover,
+  .verso__enderecos a:hover {
     text-decoration-color: currentColor;
   }
 }
 
-.rodape__pe {
-  display: grid;
-  gap: 1rem;
-  margin-top: clamp(48px, 6vw, 72px);
-  font-size: var(--t-pequeno);
-  color: var(--papel-suave);
+.verso__enderecos {
+  position: relative;
 }
 
-.rodape__pe a {
+/* O selo: a foto com a borda picotada (os pontos da borda são da cor do
+   postal, como os furos do selo) e, por cima, o carimbo do correio. */
+.verso__selos {
+  position: relative;
+  width: 84px;
+  margin: 0 0 1.5rem auto;
+}
+
+.verso__selo {
+  width: 84px;
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
+  padding: 4px;
+  border: 5px dotted var(--papel);
+  background: var(--papel-claro);
+  rotate: 4deg;
+}
+
+.verso__carimbo {
+  position: absolute;
+  left: -52px;
+  bottom: -18px;
+  width: 92px;
+  rotate: -14deg;
+  opacity: 0.85;
+}
+
+.verso__enderecos ul {
+  display: grid;
+  gap: 0.7rem;
+}
+
+.verso__pe {
+  display: grid;
+  gap: 0.8rem;
+  font-size: var(--t-pequeno);
+  color: var(--tinta-suave);
+}
+
+.verso__pe a {
   text-decoration: underline;
   text-underline-offset: 3px;
 }
 
-.rodape__topo {
+.verso__topo {
   justify-self: start;
+  margin-top: 0.4rem;
   font-weight: 600;
-  color: var(--papel);
+  color: var(--tinta);
 }
 
-@media (max-width: 639px) {
-  .rodape__contatos,
-  .rodape__endereco {
-    grid-column: 1 / -1;
+@media (min-width: 640px) {
+  .verso {
+    padding: clamp(36px, 5vw, 64px);
+  }
+
+  .verso__recorte {
+    height: 24px;
+  }
+
+  .verso__selos,
+  .verso__selo {
+    width: 96px;
   }
 }
 
 @media (min-width: 900px) {
-  .rodape__colunas {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+  .verso {
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+    column-gap: 64px;
+    width: calc(100% - 2 * var(--margem));
+    margin-inline: auto;
   }
 
-  .rodape__pe {
+  .verso__selos {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 0;
+  }
+
+  .verso__enderecos ul {
+    padding-top: 9.5rem;
+    font-size: var(--t-destaque);
+  }
+
+  .verso__pe {
+    grid-column: 1 / -1;
     grid-template-columns: minmax(0, 1fr) auto;
-    align-items: end;
     column-gap: 3rem;
+    align-items: end;
   }
 
-  .rodape__topo {
+  .verso__topo {
     grid-column: 2;
-    grid-row: 1 / span 3;
+    grid-row: 1 / span 2;
   }
 }
 
 /* ==========================================================================
-   13. BOTÃO FLUTUANTE DE WHATSAPP (flutua de verdade: pode ter sombra)
+   14. BOTÃO FLUTUANTE DE WHATSAPP (flutua de verdade: pode ter sombra)
    ========================================================================== */
 .flutuante {
   position: fixed;
@@ -1498,7 +2188,7 @@ svg use,
   place-items: center;
   width: 56px;
   height: 56px;
-  border-radius: 50% 50% 50% 8px;
+  border-radius: 50% 50% 50% var(--rabinho);
   background: var(--vermelho);
   color: var(--papel);
   box-shadow: 0 12px 28px -10px rgba(0, 0, 0, 0.45); /* taste-skill-ignore: botão flutuante */
@@ -1532,9 +2222,10 @@ svg use,
 }
 
 /* ==========================================================================
-   14. MOVIMENTO: entradas em cascata, a foto-vitrine que abre como
-   obturador, as mensagens que chegam e os vistos que se desenham. Só
-   esconde com JS ativo e sem pedido de menos movimento.
+   15. MOVIMENTO: entradas em cascata, a foto-vitrine que abre como
+   obturador, as mensagens que chegam, as plaquetas que viram, o carimbo
+   que bate no papel e o feixe do leitor de embarque. Só esconde com JS
+   ativo e sem pedido de menos movimento.
    ========================================================================== */
 @media (prefers-reduced-motion: no-preference) {
   .js .entrada {
@@ -1545,6 +2236,15 @@ svg use,
 
   .js .entrada.entrou {
     opacity: 1;
+    transform: none;
+  }
+
+  /* O cartão de embarque entra com o mesmo leve giro de quando está parado. */
+  .js .embarque.entrada {
+    transform: translateY(24px) rotate(0.6deg);
+  }
+
+  .js .embarque.entrada.entrou {
     transform: none;
   }
 
@@ -1565,17 +2265,22 @@ svg use,
     animation: digitar 1s ease-in-out infinite;
   }
 
-  .js .pergunta__resposta:not([hidden]) {
-    transform-origin: 0 0;
-    animation: chegar 0.36s var(--ease-out) both;
-  }
-
   .msg--digitando p span:nth-child(2) {
     animation-delay: 0.15s;
   }
 
   .msg--digitando p span:nth-child(3) {
     animation-delay: 0.3s;
+  }
+
+  .js .conversa.e-respondida .compositor {
+    transform-origin: 0 0;
+    animation: chegar 0.36s var(--ease-out) both;
+  }
+
+  .js .pergunta__resposta:not([hidden]) {
+    transform-origin: 0 0;
+    animation: chegar 0.36s var(--ease-out) both;
   }
 
   /* A foto-vitrine (visto americano) abre como obturador, uma vez. */
@@ -1597,26 +2302,33 @@ svg use,
     transform: none;
   }
 
-  /* Os vistos do diagrama se desenham em sequência quando ele aparece. */
-  .js .caminho__diagrama .dg-visto {
-    stroke-dasharray: 26;
-    stroke-dashoffset: 26;
-  }
-
-  .js .caminho__diagrama.entrou .dg-visto {
-    stroke-dashoffset: 0;
-    transition: stroke-dashoffset 0.5s var(--ease-out);
-    transition-delay: calc(0.5s + var(--i, 0) * 22ms);
-  }
-
-  .js .caminho__diagrama .dg-faixa {
+  /* O carimbo bate no papel quando a vitrine abre ou a página troca (dois
+     nomes de animação, para uma troca sempre recomeçar a batida). */
+  .js .obturador:not(.e-aberto) + .ficha__carimbo {
     opacity: 0;
-    transition: opacity 0.5s ease;
-    transition-delay: calc(0.2s + var(--i, 0) * 8ms);
   }
 
-  .js .caminho__diagrama.entrou .dg-faixa {
-    opacity: 1;
+  .js .obturador.e-aberto + .ficha__carimbo {
+    animation: carimbar 0.42s cubic-bezier(0.5, 0, 0.2, 1) 0.9s both;
+  }
+
+  .ficha.trocando .ficha__carimbo {
+    animation: carimbarTroca 0.32s cubic-bezier(0.5, 0, 0.2, 1) 0.14s both;
+  }
+
+  /* As plaquetas viram de cima para baixo, uma a uma. */
+  .placas .virando {
+    animation: virarPlaqueta 0.34s ease-in-out;
+  }
+
+  /* O feixe do leitor passa uma vez quando o cartão de embarque aparece. */
+  .js .embarque.entrou .embarque__laser {
+    animation: lerCodigo 1.6s var(--ease-in-out) 1.1s both;
+  }
+
+  /* A roseta da página do passaporte gira muito devagar. */
+  .capa__cartao::before {
+    animation: girarRoseta 240s linear infinite;
   }
 
   /* Fotos que carregam depois chegam num fade (a classe vem do main.js). */
@@ -1641,6 +2353,77 @@ svg use,
   50% {
     opacity: 1;
     transform: translateY(-3px);
+  }
+}
+
+@keyframes carimbar {
+  0% {
+    opacity: 0;
+    transform: scale(1.35);
+  }
+  70% {
+    opacity: 0.9;
+    transform: scale(0.97);
+  }
+  100% {
+    opacity: 0.9;
+    transform: none;
+  }
+}
+
+@keyframes carimbarTroca {
+  0% {
+    opacity: 0;
+    transform: scale(1.35);
+  }
+  70% {
+    opacity: 0.9;
+    transform: scale(0.97);
+  }
+  100% {
+    opacity: 0.9;
+    transform: none;
+  }
+}
+
+@keyframes virarPlaqueta {
+  0% {
+    transform: rotateX(0deg);
+  }
+  49% {
+    transform: rotateX(-90deg);
+  }
+  51% {
+    transform: rotateX(90deg);
+  }
+  100% {
+    transform: rotateX(0deg);
+  }
+}
+
+@keyframes lerCodigo {
+  0% {
+    opacity: 0;
+    transform: translateX(-100%);
+  }
+  8% {
+    opacity: 1;
+  }
+  50% {
+    transform: translateX(0);
+  }
+  92% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(-100%);
+  }
+}
+
+@keyframes girarRoseta {
+  to {
+    rotate: 360deg;
   }
 }
 

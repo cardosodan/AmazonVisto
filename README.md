@@ -44,20 +44,23 @@ site-institucional-estatico/
 ├── css/
 │   └── style.css        → TODO o visual: cores, fontes, layout, animações
 ├── js/
-│   └── main.js           → menu, entradas, conversa da capa, fichas, dúvidas, cupom
+│   └── main.js           → menu, entradas, conversa da capa, painel de partidas,
+│                            fichas, dúvidas, cartão de embarque
 ├── fonts/
 │   └── chillax-400/500/600.woff2 → a fonte do site, servida do próprio site
 ├── images/
-│   ├── logo.webp           → logomarca (barra, conversa, quadro comparativo)
+│   ├── logo.webp           → logomarca (barra, conversa)
 │   ├── favicon.png          → ícone da aba do navegador
+│   ├── banner.webp          → o avião na pista (capa)
 │   ├── sobre.webp           → foto da sala (seção "Quem somos")
+│   ├── guilhoche-roseta.svg → a impressão de segurança dos documentos (gerada)
 │   ├── produto-1.webp a produto-6.webp → fotos dos seis serviços
 │   ├── produto-7.webp a produto-12.webp → reservas para serviços novos
 │   └── og-image.jpg         → imagem que aparece ao compartilhar o link
 ├── assets/              → fotos e vídeo de coleções abertas, com crédito
 ├── scripts/
 │   ├── gerar-es.mjs       → gera o es.html (traduções na lista TEXTOS)
-│   └── gerar-diagrama.mjs → desenha o diagrama "Da papelada ao visto"
+│   └── gerar-guilhoche.mjs → desenha os guilhoches (images/guilhoche-*.svg)
 └── README.md            → este arquivo
 ```
 
@@ -115,11 +118,11 @@ Abra `css/style.css`, vá até o bloco `:root` bem no topo do arquivo:
 
 ```css
 :root {
-  --noite: #070b2e;    /* fundo: a conversa à noite */
-  --tinta: #0f1862;    /* azul-marinho: campos de seção e texto no papel */
-  --papel: #f3f4f1;    /* papel: campos claros e texto no escuro */
-  --ouro: #c9a45c;     /* dourado: a voz da Amazon Visto (o balão) */
-  --vermelho: #b3121f; /* vermelho: só nos botões de enviar e conversar */
+  --noite: #070b2e;    /* fundo: a noite da viagem */
+  --tinta: #0f1862;    /* azul-marinho: campo de seção, texto e carimbo no papel */
+  --papel: #f3f4f1;    /* papel: os documentos e a voz do cliente */
+  --ouro: #c9a45c;     /* dourado: a voz da Amazon Visto (os balões) */
+  --vermelho: #b3121f; /* vermelho: as ações e a listra do correio aéreo */
   ...
 }
 ```
@@ -159,8 +162,9 @@ já usa a imagem nova automaticamente (não precisa editar o HTML):
 |---|---|---|
 | `logo.webp` | Barra, conversa da capa | Quadrado, ~160×160px |
 | `favicon.png` | Aba do navegador | Quadrado, 64×64px |
+| `banner.webp` | Capa, ao lado da página do passaporte | 1920×1281px (paisagem) |
 | `sobre.webp` | Seção "Quem somos" (recortada no balão) | 900×1100px (retrato) |
-| `produto-1.webp` … `produto-6.webp` | Ladrilhos e fichas dos serviços | 800×800px (quadrado) |
+| `produto-2.webp` … `produto-6.webp` | Fichas dos serviços (páginas de visto) | 800×800px (quadrado) |
 | `og-image.jpg` | Preview ao compartilhar o link (WhatsApp etc.) | 1200×630px |
 
 **A conversa da capa.** O balão dourado é uma conversa de verdade. Cada
@@ -172,23 +176,35 @@ presença ("online agora" ou "visto por último … às 18:00") usa a hora de
 Manaus e o horário de atendimento escrito no `main.js` (função
 `ativarConversa`); ao mudar o horário, mude lá e no texto do rodapé.
 
-**Serviços ("Para onde você vai?").** Cada serviço tem duas peças ligadas
-pelo mesmo nome (ex.: `visto-americano`): o ladrilho (`<a class="destino"
-href="#visto-americano" data-servico="visto-americano">`) e a ficha
-(`<article class="ficha" id="visto-americano">`), com país, modalidade,
-atendimento, pagamento, "O que está incluso", o preço (com `hidden` até ter
-o valor) e o botão de WhatsApp com o serviço na mensagem. Para incluir um
-serviço, copie um ladrilho e a ficha dele e troque o nome, a foto
-(`produto-7.webp` em diante já existem como reserva) e os textos; lembre de
-criar também o botão de resposta e a fala dele na conversa da capa.
+**Serviços ("Para onde você vai?").** Os destinos são o painel de partidas
+do aeroporto. Cada serviço tem duas peças ligadas pelo mesmo nome (ex.:
+`visto-americano`): a linha do painel (`<a class="destino"
+href="#visto-americano" data-servico="visto-americano"
+data-fuso="America/New_York">`, com o código em plaquetas e a hora local do
+fuso em `data-fuso`) e a ficha, uma página de visto (`<article
+class="ficha" id="visto-americano">`), com país, modalidade, atendimento,
+pagamento, "O que está incluso", o preço (com `hidden` até ter o valor), o
+botão de WhatsApp, o carimbo e a zona de leitura (MRZ) no pé. Para incluir
+um serviço, copie uma linha e a ficha dela e troque o nome, o código, o
+fuso, a foto (`produto-7.webp` em diante já existem como reserva), o texto
+do carimbo e os textos; lembre de criar também o botão de resposta e a fala
+dele na conversa da capa, e a opção no cartão de embarque.
 
-**O diagrama "Da papelada ao visto"** é desenhado por
-`node scripts/gerar-diagrama.mjs`, que escreve o SVG dentro do
-`<figure class="caminho__diagrama">`. Rode de novo se mudar o desenho.
+**Os documentos da viagem.** A capa (página do passaporte), as fichas
+(páginas de visto), o cartão de visita, o cartão de embarque e o
+cartão-postal do rodapé são "papel": granulado e guilhoche de segurança
+atrás do conteúdo. Os guilhoches são desenhados por
+`node scripts/gerar-guilhoche.mjs images`. O carimbo é um SVG com o texto
+na volta do anel (troque o texto dentro do `<textPath>`). No cartão de
+embarque, cada opção de serviço diz o destino em `data-destino`
+(`"JFK:Para Nova York"`); passaporte e intercâmbio não têm, então o código
+gira pelos destinos de `data-mundo`.
 
-O vídeo das nuvens (`assets/`) vem de uma coleção aberta, com fonte e
-licença em `assets/credits.json` e o crédito no rodapé. As outras fotos de
-`assets/` ficaram de reserva; se voltar a usar alguma, credite no rodapé.
+As fotos e o vídeo de `assets/` (Teatro Amazonas, Ponte Rio Negro,
+passaporte e cartão de embarque, nuvens pela janela do avião) vêm de
+coleções abertas, com fonte e licença em `assets/credits.json` e o crédito
+no rodapé. O carimbo de passaporte de Belize ficou de reserva; se voltar a
+usar, credite no rodapé.
 
 ### 2.6. Links de WhatsApp, redes sociais e mapa
 
@@ -369,8 +385,9 @@ par `[português, espanhol]` nessa lista.
 
 - [ ] Todos os `TROCAR` no `index.html` foram substituídos (busque por
       "TROCAR" com Ctrl+F pra garantir que não sobrou nenhum) — inclusive
-      nos `<template id="incluso-...">` (preço, itens, prazo e documentos
-      de cada serviço) e no CNPJ/Reclame Aqui do rodapé
+      nas fichas (preço e itens de cada serviço, com `hidden` até lá), no
+      horário (cartão de visita, rodapé e presença da conversa) e no
+      CNPJ/Reclame Aqui do rodapé
 - [ ] `es.html` gerado de novo depois da última mudança no `index.html`
       (`node scripts/gerar-es.mjs`)
 - [ ] Cores (`:root` em `css/style.css`) refletem a marca do cliente
@@ -381,8 +398,8 @@ par `[português, espanhol]` nessa lista.
 - [ ] Redes sociais do rodapé apontam para os perfis certos (ou foram
       removidas, se não existirem)
 - [ ] Endereço, telefone, e-mail e horário reais na seção de Contato
-- [ ] Mapa mostra o endereço certo (abra o `iframe` isoladamente pra
-      conferir o pino)
+- [ ] Os links "Abrir no mapa" (cartão de visita) e do endereço no
+      rodapé levam ao endereço certo
 - [ ] `<title>`, `meta description` e Open Graph preenchidos com o conteúdo
       real (teste como fica ao colar o link publicado numa conversa do
       WhatsApp)

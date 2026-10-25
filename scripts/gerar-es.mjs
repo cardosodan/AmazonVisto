@@ -70,7 +70,8 @@ const ESTRUTURA = [
     `<li><a href="es.html" hreflang="es" lang="es">Versión en español</a></li>`,
     `<li><a href="index.html" hreflang="pt-BR" lang="pt-BR">Versão em português</a></li>`,
   ],
-  // Os formulários (conversa da capa e cupom) enviam para o número do Peru.
+  // Os formulários (conversa da capa e cartão de embarque) enviam para o
+  // número do Peru.
   [`action="https://wa.me/${WHATSAPP_PT}"`, `action="https://wa.me/${WHATSAPP_ES}"`],
   [`data-whatsapp="${WHATSAPP_PT}"`, `data-whatsapp="${WHATSAPP_ES}"`],
   [`data-rotulo-abrir="Abrir menu"`, `data-rotulo-abrir="Abrir menú"`],
@@ -111,10 +112,16 @@ const TEXTOS = [
     "Visa americana, canadiense, china, peruana y pasaporte, sin salir de casa y en hasta 10 cuotas. Líder del mercado en el Norte de Brasil.",
   ],
 
+  // O recado do cartão-postal (contém frases menores da lista: vem antes).
+  [
+    "Assessoria completa em vistos, passaporte e intercâmbio. Líder de mercado no Norte do Brasil, Empresa do Ano 2025 e Empresa Destaque 2026, com atendimento 100% online para todo o país.",
+    "Asesoría completa en visas, pasaporte e intercambio. Líder en el Norte de Brasil, Empresa del Año 2025 y Empresa Destacada 2026, con atención 100% en línea para Brasil y América Latina.",
+  ],
+
   // Barra
   ["Pular para o conteúdo", "Saltar al contenido"],
   [`<a href="#servicos">Serviços</a>`, `<a href="#servicos">Servicios</a>`],
-  [`<a href="#como-funciona">Como funciona</a>`, `<a href="#como-funciona">Cómo funciona</a>`],
+  [`<a href="#contato">Contato</a>`, `<a href="#contato">Contacto</a>`],
   [`<a href="#duvidas">Dúvidas</a>`, `<a href="#duvidas">Preguntas</a>`],
   [`<a href="#sobre">Quem somos</a>`, `<a href="#sobre">Quiénes somos</a>`],
   [">Menu</button>", ">Menú</button>"],
@@ -126,6 +133,9 @@ const TEXTOS = [
     "Asesoría de visa americana, canadiense, china y peruana, pasaporte e intercambio. En Manaus, Brasilia o 100% en línea, en hasta 10 cuotas sin intereses.",
   ],
   ["Conversar no WhatsApp", "Conversar por WhatsApp"],
+  ["Avião na pista do aeroporto ao entardecer", "Avión en la pista del aeropuerto al atardecer"],
+  ["SEU VISTO · VISTO POR NÓS ·", "TU VISA · VISTA POR NOSOTROS ·"],
+  ["VISTOS&lt;PASSAPORTE&lt;INTERCAMBIO&lt;&lt;10X&lt;SEM&lt;JUROS", "VISAS&lt;PASAPORTE&lt;INTERCAMBIO&lt;&lt;10&lt;CUOTAS&lt;&lt;&lt;"],
   ["Empresa do Ano 2025 · Empresa Destaque 2026", "Empresa del Año 2025 · Empresa Destacada 2026"],
   ["Atendimento de segunda a sexta, das 9h às 18h", "Atención de lunes a viernes, de 9 a 18 h"],
   [
@@ -179,6 +189,16 @@ const TEXTOS = [
 
   // Serviços: ladrilhos e fichas
   ["Para onde você vai?", "¿A dónde vas?"],
+  ["Partidas de Manaus", "Salidas de Manaus"],
+  ["PERU · AMAZON VISTO · MANAUS ·", "PERÚ · AMAZON VISTO · MANAUS ·"],
+  ["BRASIL · PASSAPORTE · MANAUS ·", "BRASIL · PASAPORTE · MANAUS ·"],
+  ["INTERCÂMBIO · AMAZON VISTO · MANAUS ·", "INTERCAMBIO · AMAZON VISTO · MANAUS ·"],
+  ["V&lt;USAVISTO&lt;AMERICANO&lt;&lt;TURISMO&lt;NEGOCIOS", "V&lt;USAVISA&lt;AMERICANA&lt;&lt;TURISMO&lt;NEGOCIOS"],
+  ["V&lt;CANVISTO&lt;CANADENSE&lt;&lt;VISITANTE", "V&lt;CANVISA&lt;CANADIENSE&lt;&lt;VISITANTE"],
+  ["V&lt;CHNVISTO&lt;CHINES&lt;&lt;TURISMO&lt;NEGOCIOS", "V&lt;CHNVISA&lt;CHINA&lt;&lt;TURISMO&lt;NEGOCIOS"],
+  ["V&lt;PERVISTO&lt;PERUANO&lt;&lt;ENTRADA", "V&lt;PERVISA&lt;PERUANA&lt;&lt;ENTRADA"],
+  ["P&lt;BRAPASSAPORTE&lt;BRASILEIRO&lt;&lt;EMISSAO", "P&lt;BRAPASAPORTE&lt;BRASILENO&lt;&lt;EMISION"],
+  ["V&lt;&lt;&lt;&lt;INTERCAMBIO&lt;&lt;ESTUDO&lt;TRABALHO", "V&lt;&lt;&lt;&lt;INTERCAMBIO&lt;&lt;ESTUDIO&lt;TRABAJO"],
   [
     "Seis serviços e um jeito só de fazer: análise gratuita, documentos sob medida e acompanhamento até o passaporte voltar.",
     "Seis servicios y una sola forma de hacerlo: análisis gratuito, documentos a medida y acompañamiento hasta que el pasaporte vuelva.",
@@ -242,28 +262,6 @@ const TEXTOS = [
   ["Conversar sobre intercâmbio", "Conversar sobre intercambio"],
   [">Passaporte brasileiro<", ">Pasaporte brasileño<"],
 
-  // Como funciona
-  ["Da papelada ao visto", "Del papeleo a la visa"],
-  [
-    "Sozinho, o visto é uma pilha de formulários, taxas e agendamentos, muitas vezes em outro idioma. Com a gente, vira uma conversa só.",
-    "Solo, la visa es una pila de formularios, tasas y citas, muchas veces en otro idioma. Con nosotros, se vuelve una sola conversación.",
-  ],
-  ["<h3>Sozinho</h3>", "<h3>Solo</h3>"],
-  ["<h3>Com a gente</h3>", "<h3>Con nosotros</h3>"],
-  ["<h3>Visto <svg", "<h3>Visa <svg"],
-  [
-    "Formulário, taxa, agendamento, documentos e entrevista, cada um num site diferente.",
-    "Formulario, tasa, citas, documentos y entrevista, cada uno en un sitio distinto.",
-  ],
-  [
-    "Uma conversa no WhatsApp: a gente organiza tudo e avisa você a cada etapa.",
-    "Una conversación por WhatsApp: organizamos todo y te avisamos en cada etapa.",
-  ],
-  [
-    "Passaporte de volta e viagem marcada. Quem decide é o consulado; o caminho fica leve.",
-    "Pasaporte de vuelta y viaje programado. Quien decide es el consulado; el camino se vuelve liviano.",
-  ],
-
   // Provas (a Amazon Visto conta)
   ["Por que confiar", "Por qué confiar"],
   [
@@ -282,15 +280,15 @@ const TEXTOS = [
   // Sobre
   ["Líder de mercado no Norte do Brasil", "Líder en el Norte de Brasil"],
   ["A sala da Amazon Visto no Centro de Manaus", "La oficina de Amazon Visto en el Centro de Manaus"],
-  ["No Centro de Manaus", "En el Centro de Manaus"],
+  ["Milhares de clientes", "Miles de clientes"],
   [
-    "Atendemos na Rua Costa Azevedo, 9, sala 901, no Centro de Manaus, e em Brasília. Quem preferir faz tudo 100% online, de qualquer lugar do Brasil.",
-    "Atendemos en la Rua Costa Azevedo, 9, sala 901, en el Centro de Manaus, y en Brasilia. Quien prefiera lo hace todo 100% en línea, desde cualquier lugar de Brasil o de América Latina.",
+    "Já ajudamos milhares de clientes a estudar, trabalhar ou conhecer o mundo, com total segurança dos seus dados.",
+    "Ya ayudamos a miles de clientes a estudiar, trabajar o conocer el mundo, con total seguridad de tus datos.",
   ],
   ["Tudo pela conversa", "Todo por la conversación"],
   [
-    "Já ajudamos milhares de clientes a estudar, trabalhar ou conhecer o mundo, com total segurança dos seus dados. Entrevista e biometria, quando o consulado pede, são feitas por você, no posto consular.",
-    "Ya ayudamos a miles de clientes a estudiar, trabajar o conocer el mundo, con total seguridad de tus datos. La entrevista y la biometría, cuando el consulado las pide, las haces tú, en la oficina consular.",
+    "Do primeiro contato ao passaporte de volta, você fala com a gente pelo WhatsApp. Entrevista e biometria, quando o consulado pede, são feitas por você, no posto consular.",
+    "Del primer contacto al pasaporte de vuelta, hablas con nosotros por WhatsApp. La entrevista y la biometría, cuando el consulado las pide, las haces tú, en la oficina consular.",
   ],
   ["Falar com a equipe", "Hablar con el equipo"],
 
@@ -328,33 +326,70 @@ const TEXTOS = [
     "Sí. Para clientes de habla hispana, la atención es por WhatsApp al",
   ],
 
-  // Contato (cupom)
-  ["Comece a conversa", "Empieza a conversar"],
+  // Visite a gente (cartão de visita)
+  ["Manaus vista do alto, com a Ponte Rio Negro ao fundo", "Manaus vista desde lo alto, con el Puente Río Negro al fondo"],
+  ["Visite a gente", "Visítanos"],
+  ["Também em Brasília-DF e 100% online.", "También en Brasilia-DF y 100% en línea."],
+  ["<dt>Segunda a sexta</dt>", "<dt>Lunes a viernes</dt>"],
+  ["<dd>9h às 18h</dd>", "<dd>9 a 18 h</dd>"],
+  ["</a> em português</li>", "</a> en portugués</li>"],
+  ["</a> no Instagram</li>", "</a> en Instagram</li>"],
+  ["Abrir no mapa", "Abrir en el mapa"],
+
+  // Contato (cartão de embarque)
+  ["Sua próxima viagem começa com uma conversa.", "Tu próximo viaje empieza con una conversación."],
+  ["A análise inicial é gratuita, pelo WhatsApp.", "El análisis inicial es gratuito, por WhatsApp."],
+  ["Cartão de embarque", "Tarjeta de embarque"],
+  [">De Manaus<", ">Desde Manaus<"],
+  [`data-varios="Para o mundo">Para Nova York</span>`, `data-varios="Al mundo">A Nueva York</span>`],
   [
-    "Preencha e a mensagem sai pronta para o nosso WhatsApp. A análise inicial é gratuita.",
-    "Completa los datos y el mensaje sale listo para nuestro WhatsApp. El análisis inicial es gratuito.",
+    `<option value="Visto americano" data-destino="JFK:Para Nova York">Visto americano</option>`,
+    `<option value="Visa americana" data-destino="JFK:A Nueva York">Visa americana</option>`,
   ],
+  [
+    `<option value="Renovação do visto americano" data-destino="JFK:Para Nova York">Renovação do visto americano</option>`,
+    `<option value="Renovación de la visa americana" data-destino="JFK:A Nueva York">Renovación de la visa americana</option>`,
+  ],
+  [
+    `<option value="Visto canadense" data-destino="YYZ:Para Toronto">Visto canadense</option>`,
+    `<option value="Visa canadiense" data-destino="YYZ:A Toronto">Visa canadiense</option>`,
+  ],
+  [
+    `<option value="Visto chinês" data-destino="PEK:Para Pequim">Visto chinês</option>`,
+    `<option value="Visa china" data-destino="PEK:A Pekín">Visa china</option>`,
+  ],
+  [
+    `<option value="Visto peruano" data-destino="LIM:Para Lima">Visto peruano</option>`,
+    `<option value="Visa peruana" data-destino="LIM:A Lima">Visa peruana</option>`,
+  ],
+  [`<option value="Passaporte">Passaporte</option>`, `<option value="Pasaporte">Pasaporte</option>`],
+  [`<option value="Intercâmbio">Intercâmbio</option>`, `<option value="Intercambio">Intercambio</option>`],
+  ["<option value=\"primeira vez\">Primeira vez</option>", "<option value=\"primera vez\">Primera vez</option>"],
+  ["<option value=\"já tive antes\">Já tive antes</option>", "<option value=\"ya la tuve antes\">Ya la tuve antes</option>"],
+  ["<option value=\"ainda não sei\">Ainda não sei</option>", "<option value=\"todavía no sé\">Todavía no sé</option>"],
+  ["<span>Passageiro</span>", "<span>Pasajero</span>"],
+  ["<span>Cidade</span>", "<span>Ciudad</span>"],
+  ["<span>Serviço</span>", "<span>Servicio</span>"],
+  ["<span>Situação</span>", "<span>Situación</span>"],
+  [`placeholder="Seu nome"`, `placeholder="Tu nombre"`],
+  [`placeholder="Sua cidade"`, `placeholder="Tu ciudad"`],
+  ["<dt>Portão</dt>", "<dt>Puerta</dt>"],
+  ["<dd>Agora</dd>", "<dd>Ahora</dd>"],
+  ["<dt>Análise</dt>", "<dt>Análisis</dt>"],
+  ["<dd>Gratuita</dd>", "<dd>Gratuito</dd>"],
   [
     "Olá! Meu nome é {nome}, sou de {cidade} e quero ajuda com: {servico} ({situacao}).",
     "¡Hola! Me llamo {nome}, soy de {cidade} y quiero ayuda con: {servico} ({situacao}).",
   ],
-  [`placeholder="Seu nome"`, `placeholder="Tu nombre"`],
-  [`placeholder="Sua cidade"`, `placeholder="Tu ciudad"`],
-  [">Seu nome</label>", ">Tu nombre</label>"],
-  [">Serviço</label>", ">Servicio</label>"],
-  [">Situação</label>", ">Situación</label>"],
-  [">Sua cidade</label>", ">Tu ciudad</label>"],
-  ["<option>Renovação do visto americano</option>", "<option>Renovación de la visa americana</option>"],
-  ["<option value=\"primeira vez\">Primeira vez</option>", "<option value=\"primera vez\">Primera vez</option>"],
-  ["<option value=\"já tive antes\">Já tive antes</option>", "<option value=\"ya la tuve antes\">Ya la tuve antes</option>"],
-  ["<option value=\"ainda não sei\">Ainda não sei</option>", "<option value=\"todavía no sé\">Todavía no sé</option>"],
+  ["MAO <span>para o mundo</span>", "MAO <span>al mundo</span>"],
+  ["Classe <strong>Assessoria completa</strong>", "Clase <strong>Asesoría completa</strong>"],
+  ["AMAZONVISTO&lt;&lt;MAO&lt;&lt;PORTAO&lt;WHATSAPP&lt;&lt;AGORA", "AMAZONVISTO&lt;&lt;MAO&lt;&lt;PUERTA&lt;WHATSAPP&lt;&lt;AHORA"],
 
-  // Rodapé
-  ["<h2>Serviços</h2>", "<h2>Servicios</h2>"],
-  ["<h2>A empresa</h2>", "<h2>La empresa</h2>"],
-  ["<h2>Fale com a gente</h2>", "<h2>Habla con nosotros</h2>"],
-  ["<h2>Onde estamos</h2>", "<h2>Dónde estamos</h2>"],
-  ["Também em Brasília-DF", "También en Brasilia-DF"],
+  // Rodapé (o cartão-postal)
+  ["Boa viagem.", "Buen viaje."],
+  ["<h3>Serviços</h3>", "<h3>Servicios</h3>"],
+  ["<h3>A empresa</h3>", "<h3>La empresa</h3>"],
+  [">Ponte Rio Negro</a>", ">Puente Río Negro</a>"],
   ["Segunda a sexta, das 9h às 18h", "De lunes a viernes, de 9 a 18 h"],
   ["Reputação no Reclame Aqui", "Reputación en Reclame Aqui"],
   ["Todos os direitos reservados.", "Todos los derechos reservados."],
@@ -365,9 +400,8 @@ const TEXTOS = [
   ["Fonte Chillax, da Indian Type Foundry, via Fontshare.", "Fuente Chillax, de Indian Type Foundry, vía Fontshare."],
   ["Voltar ao início", "Volver al inicio"],
 
-  // Nomes curtos dos serviços (ladrilhos, botões da conversa, títulos das
-  // fichas, opções do cupom, rodapé): por último, depois das frases que os
-  // contêm.
+  // Nomes curtos dos serviços (painel, botões da conversa, títulos das
+  // fichas, rodapé): por último, depois das frases que os contêm.
   [">Visto americano<", ">Visa americana<"],
   [">Visto canadense<", ">Visa canadiense<"],
   [">Visto chinês<", ">Visa china<"],
