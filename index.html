@@ -619,8 +619,8 @@
     </section>
 
     <!-- ==========================================================================
-         VISITE A GENTE: o cartão de visita, em papel, sobre Manaus vista do
-         alto com a Ponte Rio Negro.
+         VISITE A GENTE: o cartão de visita, em papel, e o mapa do Google com o
+         endereço, sobre Manaus vista do alto com a Ponte Rio Negro.
          ========================================================================== -->
     <section class="visita" id="visite" aria-labelledby="titulo-visita">
       <img
@@ -657,22 +657,30 @@
           rel="noopener"
         >Abrir no mapa</a>
       </div>
+      <!-- O mapa do Google com o endereço (incorporação sem chave). -->
+      <div class="visita__mapa entrada">
+        <iframe
+          src="https://www.google.com/maps?q=Rua%20Costa%20Azevedo,%209,%20Centro,%20Manaus%20-%20AM&amp;z=16&amp;output=embed"
+          title="Mapa: Rua Costa Azevedo, 9, Centro, Manaus-AM"
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"
+          allowfullscreen
+        ></iframe>
+      </div>
     </section>
 
     <!-- ==========================================================================
-         CONTATO: o cartão de embarque que se preenche. O passageiro é você; o
-         destino muda com o serviço escolhido, como no painel do aeroporto
-         (passaporte e intercâmbio giram pelos destinos); enviar abre o
-         WhatsApp com a mensagem montada (main.js, "ativarEmbarque"). Sem JS,
-         o formulário abre a conversa. Ao lado, as nuvens da janela do avião.
+         A JANELA: a cena das nuvens. Na parede clara da cabine, uma janela de
+         avião; ao rolar, ela abre até a tela inteira e o céu toma tudo; aí
+         chegam, em balões dourados, as duas falas da Amazon Visto (main.js,
+         "ativarJanela", que só mede a rolagem e passa o quanto abriu para o
+         CSS em --abre). Com menos movimento ou sem JS, a janela já aparece
+         aberta, com as falas.
          ========================================================================== -->
-    <section class="embarque-secao" id="contato" aria-labelledby="titulo-embarque">
-      <div class="embarque-secao__lado">
-        <div class="embarque-secao__texto entrada">
-          <p class="embarque-secao__frase">Sua próxima viagem começa com uma conversa.</p>
-          <p class="embarque-secao__apoio">A análise inicial é gratuita, pelo WhatsApp.</p>
-        </div>
-        <figure class="embarque-secao__janela entrada" aria-hidden="true">
+    <div class="janela" id="janela">
+      <div class="janela__palco">
+        <div class="janela__moldura" aria-hidden="true"></div>
+        <figure class="janela__vista" aria-hidden="true">
           <video
             src="assets/clouds-from-airplane-window-1-2016-08.webm"
             poster="assets/clouds-from-airplane-window-1-2016-08-poster.jpg"
@@ -684,8 +692,21 @@
             height="480"
           ></video>
         </figure>
+        <div class="janela__falas">
+          <p class="janela__fala">Sua próxima viagem começa com uma conversa.</p>
+          <p class="janela__fala janela__fala--apoio">A análise inicial é gratuita, pelo WhatsApp.</p>
+        </div>
       </div>
+    </div>
 
+    <!-- ==========================================================================
+         CONTATO: o cartão de embarque que se preenche, no centro. O passageiro
+         é você; o destino muda com o serviço escolhido, como no painel do
+         aeroporto (passaporte e intercâmbio giram pelos destinos); enviar
+         abre o WhatsApp com a mensagem montada (main.js, "ativarEmbarque").
+         Sem JS, o formulário abre a conversa.
+         ========================================================================== -->
+    <section class="embarque-secao" id="contato" aria-labelledby="titulo-embarque">
       <form
         class="embarque entrada"
         id="embarque"

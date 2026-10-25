@@ -23,6 +23,7 @@ document.addEventListener("DOMContentLoaded", () => {
   ativarServicos();
   ativarPainel();
   ativarDuvidas();
+  ativarJanela();
   ativarEmbarque();
   ativarContadores();
   ativarObturador();
@@ -418,6 +419,35 @@ function ativarDuvidas() {
 }
 
 /* --------------------------------------------------------------------------
+   7b. A JANELA DO AVIÃO
+   Mede só a rolagem: enquanto o palco fica grudado no topo, o quanto a
+   janela abriu (de 0 a 1) vai para o CSS em --abre, que recorta a vista,
+   sobe a persiana e faz as falas chegarem. Abre nos primeiros 70% do tempo
+   grudado; o resto segura a vista aberta. Com menos movimento, nada disso
+   roda e a janela já aparece aberta.
+   -------------------------------------------------------------------------- */
+function ativarJanela() {
+  const janela = document.getElementById("janela");
+  if (!janela || prefereMenosMovimento()) return;
+  janela.classList.add("e-viva");
+
+  let pedido = 0;
+  const medir = () => {
+    pedido = 0;
+    const caixa = janela.getBoundingClientRect();
+    const curso = caixa.height - window.innerHeight;
+    const abre = curso > 0 ? Math.min(1, Math.max(0, -caixa.top / (curso * 0.7))) : 1;
+    janela.style.setProperty("--abre", abre.toFixed(3));
+  };
+  const pedir = () => {
+    if (!pedido) pedido = requestAnimationFrame(medir);
+  };
+  window.addEventListener("scroll", pedir, { passive: true });
+  window.addEventListener("resize", pedir);
+  medir();
+}
+
+/* --------------------------------------------------------------------------
    8. CARTÃO DE EMBARQUE DO CONTATO
    - O destino do cartão segue o serviço escolhido (data-destino de cada
      opção: "JFK:Para Nova York"), virando as plaquetas; passaporte e
@@ -585,12 +615,12 @@ function ativarVideos() {
 /* --------------------------------------------------------------------------
    12. BOTÃO FLUTUANTE DE WHATSAPP
    Escondido enquanto está na tela uma parte que já tem o próprio enviar (a
-   capa, com a conversa, e o cartão de embarque) e no rodapé, para não
-   cobrir os botões nem os textos de lá.
+   capa, com a conversa, e o cartão de embarque), na cena da janela e no
+   rodapé, para não cobrir os botões, as falas nem os textos de lá.
    -------------------------------------------------------------------------- */
 function ativarBotaoFlutuante() {
   const botao = document.querySelector(".flutuante");
-  const partes = Array.from(document.querySelectorAll(".capa, .embarque-secao, .rodape"));
+  const partes = Array.from(document.querySelectorAll(".capa, .janela, .embarque-secao, .rodape"));
   if (!botao || !partes.length || !("IntersectionObserver" in window)) return;
 
   const visiveis = new Set();

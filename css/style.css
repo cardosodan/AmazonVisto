@@ -1671,6 +1671,7 @@ svg use,
    ========================================================================== */
 .visita {
   position: relative;
+  padding-bottom: clamp(40px, 6vw, 64px);
   background: var(--noite);
 }
 
@@ -1740,6 +1741,24 @@ svg use,
   margin-top: 1.1rem;
 }
 
+/* O mapa do Google, numa moldura de papel, como um mapa impresso. */
+.visita__mapa {
+  position: relative;
+  margin: 16px var(--margem) 0;
+  padding: 6px;
+  border-radius: var(--canto-papel);
+  background: var(--papel) var(--grao);
+}
+
+.visita__mapa iframe {
+  display: block;
+  width: 100%;
+  height: 300px;
+  border: 0;
+  border-radius: 2px;
+  background: var(--papel-2);
+}
+
 .cartao-visita :focus-visible,
 .embarque :focus-visible,
 .verso :focus-visible,
@@ -1750,9 +1769,23 @@ svg use,
 @media (min-width: 900px) {
   .visita {
     display: grid;
+    grid-template-columns: minmax(0, 27rem) minmax(0, 1fr);
+    column-gap: 24px;
     align-items: center;
     min-height: 82svh;
     padding: var(--entre) var(--margem);
+  }
+
+  .visita__mapa {
+    justify-self: end;
+    align-self: stretch;
+    width: min(100%, 40rem);
+    margin: 0;
+  }
+
+  .visita__mapa iframe {
+    height: 100%;
+    min-height: 420px;
   }
 
   .visita__foto {
@@ -1773,16 +1806,148 @@ svg use,
 }
 
 /* ==========================================================================
-   12. CONTATO: o cartão de embarque que se preenche. O corpo tem a rota, os
-   campos e o enviar; o canhoto, separado pela fileira de furos, tem o
-   código de barras (um feixe vermelho passa por ele uma vez) e a zona de
-   leitura. Ao lado, a frase e as nuvens da janela do avião.
+   12. A JANELA: a parede clara da cabine com a janela do avião. Com JS e
+   movimento, a seção fica mais alta que a tela e o palco gruda no topo; a
+   janela abre com a rolagem (--abre, de 0 a 1, vem do main.js) até a tela
+   inteira, a persiana sobe e as falas chegam no fim. Sem isso, --abre vale 1:
+   a janela já aberta, com as falas.
+   ========================================================================== */
+.janela {
+  --abre: 1;
+  --fecha: calc(1 - var(--abre));
+  /* A janela fechada: os recuos até a parede e o raio do formato. */
+  --recuo-x: 13%;
+  --recuo-y: 13%;
+  --raio-janela: 96px;
+  --moldura: 16px;
+  position: relative;
+  background: var(--papel) var(--grao);
+}
+
+.janela.e-viva {
+  height: 210svh;
+}
+
+.janela__palco {
+  position: relative;
+  height: 100svh;
+  min-height: 560px;
+  overflow: hidden;
+}
+
+.janela.e-viva .janela__palco {
+  position: sticky;
+  top: 0;
+}
+
+/* A moldura (o plástico da cabine em volta do vidro) e a vista: duas
+   camadas no mesmo formato, a moldura um pouco maior. A janela começa
+   abaixo da barra do topo, que cobre o alto do palco. */
+.janela__moldura,
+.janela__vista {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+}
+
+.janela__moldura {
+  background: var(--papel-2);
+  clip-path: inset(
+    calc((var(--altura-barra) + var(--recuo-y) - var(--moldura)) * var(--fecha))
+    calc((var(--recuo-x) - var(--moldura)) * var(--fecha))
+    calc((var(--recuo-y) - var(--moldura)) * var(--fecha))
+    round calc((var(--raio-janela) + var(--moldura)) * var(--fecha))
+  );
+}
+
+.janela__vista {
+  background: var(--tinta-2);
+  clip-path: inset(
+    calc((var(--altura-barra) + var(--recuo-y)) * var(--fecha))
+    calc(var(--recuo-x) * var(--fecha))
+    calc(var(--recuo-y) * var(--fecha))
+    round calc(var(--raio-janela) * var(--fecha))
+  );
+}
+
+.janela__vista video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 60% 50%;
+  /* De perto pela janela, de longe quando ela abre. */
+  transform: scale(calc(1 + 0.18 * var(--fecha)));
+}
+
+/* A persiana da janela: desce do alto do vidro quando a janela está
+   fechada e sobe enquanto ela abre. */
+.janela__vista::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: calc((var(--altura-barra) + var(--recuo-y) + 24%) * var(--fecha));
+  border-bottom: calc(8px * var(--fecha)) solid var(--papel-2);
+  background: var(--papel);
+}
+
+/* As falas da Amazon Visto chegam sobre o céu, em balões dourados. */
+.janela__falas {
+  position: absolute;
+  left: var(--margem);
+  right: var(--margem);
+  bottom: clamp(28px, 7vh, 72px);
+  display: grid;
+  justify-items: start;
+  gap: 10px;
+}
+
+.janela__fala {
+  --chegou: clamp(0, calc((var(--abre) - 0.62) * 5), 1);
+  max-width: min(100%, 18ch);
+  padding: 0.8rem 1.15rem 0.9rem;
+  border-radius: var(--rabinho) var(--raio) var(--raio) var(--raio);
+  background: var(--ouro);
+  color: var(--noite);
+  font-size: var(--t-fala);
+  font-weight: 500;
+  line-height: 1.18;
+  letter-spacing: -0.02em;
+  opacity: var(--chegou);
+  transform: translateY(calc((1 - var(--chegou)) * 18px));
+  transform-origin: 0 0;
+}
+
+.janela__fala--apoio {
+  --chegou: clamp(0, calc((var(--abre) - 0.82) * 5.5), 1);
+  max-width: min(100%, 30ch);
+  border-radius: var(--rabinho) var(--raio-p) var(--raio-p) var(--raio-p);
+  font-size: var(--t-texto);
+  line-height: 1.35;
+  letter-spacing: 0;
+}
+
+@media (min-width: 900px) {
+  .janela {
+    --recuo-x: 33%;
+    --recuo-y: 11%;
+    --raio-janela: 200px;
+    --moldura: 20px;
+  }
+}
+
+/* ==========================================================================
+   13. CONTATO: o cartão de embarque que se preenche, no centro. O corpo tem
+   a rota, os campos e o enviar; o canhoto, separado pela fileira de furos,
+   tem o código de barras (um feixe vermelho passa por ele uma vez) e a zona
+   de leitura.
    ========================================================================== */
 .embarque-secao {
   position: relative;
   isolation: isolate;
   display: grid;
-  gap: 32px;
+  justify-items: center;
   overflow: clip;
   padding: var(--entre) var(--margem) calc(var(--entre) * 0.8);
   background: var(--noite);
@@ -1797,43 +1962,9 @@ svg use,
   opacity: 0.1;
 }
 
-.embarque-secao__lado {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  gap: 20px;
-  align-items: end;
-}
-
-.embarque-secao__frase {
-  max-width: 18ch;
-  font-size: var(--t-fala);
-  font-weight: 500;
-  line-height: 1.2;
-  letter-spacing: -0.02em;
-}
-
-.embarque-secao__apoio {
-  max-width: 30ch;
-  margin-top: 0.75rem;
-  color: var(--papel-suave);
-}
-
-/* A janela do avião: as nuvens recortadas no balão. */
-.embarque-secao__janela {
-  width: 96px;
-  overflow: hidden;
-  border-radius: var(--rabinho) 38% 38% 38%;
-  background: var(--tinta-2);
-}
-
-.embarque-secao__janela video {
-  width: 100%;
-  aspect-ratio: 4 / 5;
-  object-fit: cover;
-}
-
 .embarque {
   display: grid;
+  width: min(100%, 880px);
   border-radius: var(--canto-papel);
   rotate: 0.6deg;
 }
@@ -2063,38 +2194,16 @@ svg use,
   .embarque__mrz {
     display: none;
   }
-
-  .embarque-secao__janela {
-    width: 132px;
-  }
 }
 
 @media (min-width: 1024px) {
-  .embarque-secao {
-    grid-template-columns: repeat(12, minmax(0, 1fr));
-    column-gap: 24px;
-    align-items: center;
-  }
-
-  .embarque-secao__lado {
-    grid-column: 1 / span 4;
-    grid-template-columns: 1fr;
-    gap: 32px;
-    align-items: start;
-  }
-
-  .embarque-secao__janela {
-    width: min(100%, 18rem);
-  }
-
   .embarque {
-    grid-column: 5 / span 8;
     rotate: 1.2deg;
   }
 }
 
 /* ==========================================================================
-   13. RODAPÉ: o cartão-postal. A listra do correio aéreo; depois o verso do
+   14. RODAPÉ: o cartão-postal. A listra do correio aéreo; depois o verso do
    postal, com a borda de cima picotada: o recado e os links à esquerda, os
    endereços à direita, com o selo do Teatro Amazonas e o carimbo do
    correio (o "visto").
@@ -2291,7 +2400,7 @@ svg use,
 }
 
 /* ==========================================================================
-   14. BOTÃO FLUTUANTE DE WHATSAPP (flutua de verdade: pode ter sombra)
+   15. BOTÃO FLUTUANTE DE WHATSAPP (flutua de verdade: pode ter sombra)
    ========================================================================== */
 .flutuante {
   position: fixed;
@@ -2336,7 +2445,7 @@ svg use,
 }
 
 /* ==========================================================================
-   15. MOVIMENTO: entradas em cascata, a foto-vitrine que abre como
+   16. MOVIMENTO: entradas em cascata, a foto-vitrine que abre como
    obturador, as mensagens que chegam, as plaquetas que viram, o carimbo
    que bate no papel e o feixe do leitor de embarque. Só esconde com JS
    ativo e sem pedido de menos movimento.
