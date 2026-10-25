@@ -6,9 +6,9 @@
    escondido sem JS (o conteúdo só é escondido para entrar quando a classe
    "js" está no <html>, que este arquivo e o <head> colocam).
 
-   O momento da página é o "Escolha o seu destino": passar o mouse num
-   destino mostra a foto dele; escolher faz o carimbo bater na foto e leva
-   o serviço para a mensagem do WhatsApp.
+   O momento da página é o arquivo de pastas ("Escolha o seu destino"):
+   tocar numa aba abre a pasta do destino ali mesmo, a ficha desliza para
+   fora e o carimbo bate na foto.
    ========================================================================== */
 
 document.documentElement.classList.add("js");
@@ -18,13 +18,30 @@ document.addEventListener("DOMContentLoaded", () => {
   ativarEntradas();
   atualizarAnoDoRodape();
   ativarDestinos();
+  ativarStatus();
+  ativarRelogios();
+  ativarBotaoFlutuante();
+  ativarFotosSuaves();
   ativarContadores();
-  ativarPainelDeServicos();
   ativarPainelDeDestino();
   ativarVideos();
 });
 
 const prefereMenosMovimento = () => window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+// Roda "fn" na virada de cada minuto do relógio (não a cada 60s a partir de
+// agora, que atrasaria até um minuto) e de novo quando a aba volta a ficar
+// visível, já que o navegador congela os timers de abas escondidas.
+function aCadaMinuto(fn) {
+  const agendar = () => setTimeout(() => {
+    fn();
+    agendar();
+  }, 60000 - (Date.now() % 60000) + 40);
+  agendar();
+  document.addEventListener("visibilitychange", () => {
+    if (!document.hidden) fn();
+  });
+}
 
 /* --------------------------------------------------------------------------
    1. MENU
@@ -101,63 +118,219 @@ function atualizarAnoDoRodape() {
 }
 
 /* --------------------------------------------------------------------------
-   4. "ESCOLHA O SEU DESTINO" (abas dos serviços)
-   - Escolher um destino (clique, toque ou setas do teclado): troca o painel
-     de texto e a foto, e o carimbo daquele destino bate por cima.
-   - Passar o mouse num destino (só com mouse de verdade): mostra a foto
-     dele como prévia; ao sair do índice volta para o escolhido.
-   Abas acessíveis no padrão WAI-ARIA (setas, Home/End, tabindex móvel).
+   4. ARQUIVO DE PASTAS ("Escolha o seu destino")
+   Cada aba é um destino. Escolher (clique, toque ou setas do teclado) abre
+   a pasta dele ali mesmo: a aba sobe, a capa da pasta tomba para a frente,
+   a ficha de papel desliza para fora e o carimbo do destino bate na foto.
+   A primeira pasta abre sozinha quando o arquivo aparece na tela. Abas
+   acessíveis no padrão WAI-ARIA (setas, Home/End, tabindex móvel). Sem JS,
+   todas as pastas ficam abertas.
    -------------------------------------------------------------------------- */
 function ativarDestinos() {
   const raiz = document.getElementById("destinos");
   if (!raiz) return;
 
   const abas = Array.from(raiz.querySelectorAll('[role="tab"]'));
-  const fotos = Array.from(raiz.querySelectorAll(".destinos__foto"));
-  const indice = raiz.querySelector(".destinos__indice");
   if (!abas.length) return;
 
-  const fotoDe = (servico) => fotos.find((f) => f.dataset.servico === servico);
-  let escolhido = abas.find((a) => a.getAttribute("aria-selected") === "true") || abas[0];
-
-  const mostrarFoto = (servico, carimbar) => {
-    fotos.forEach((f) => f.classList.toggle("e-ativa", f.dataset.servico === servico));
-    const foto = fotoDe(servico);
-    if (carimbar && foto && !prefereMenosMovimento()) {
-      foto.classList.remove("carimbando");
-      void foto.offsetWidth; // reinicia a animação
-      foto.classList.add("carimbando");
-    }
+  // "puxando": a cerimônia inteira (capa, ficha, carimbo), só na primeira
+  // vez. "trocando": a troca rápida de aba (~0,3s). Sem modo: instantâneo,
+  // para as setas do teclado, que a pessoa aperta em sequência.
+  const animar = (pasta, modo) => {
+    pasta.classList.remove("puxando", "trocando");
+    if (!modo || prefereMenosMovimento()) return;
+    void pasta.offsetWidth; // reinicia a animação
+    pasta.classList.add(modo);
   };
 
-  const escolher = (aba, focar) => {
-    escolhido = aba;
+  let primeiraVez = true;
+  let observador = null;
+
+  const abrir = (aba, modo, focar) => {
+    if (aba.getAttribute("aria-selected") === "true" && !focar) return;
+    primeiraVez = false;
+    if (observador) observador.disconnect();
     abas.forEach((a) => {
       const ativa = a === aba;
       a.setAttribute("aria-selected", String(ativa));
       a.tabIndex = ativa ? 0 : -1;
-      const painel = document.getElementById(a.getAttribute("aria-controls"));
-      if (painel) painel.classList.toggle("e-ativo", ativa);
+      const pasta = document.getElementById(a.getAttribute("aria-controls"));
+      if (!pasta) return;
+      pasta.classList.toggle("e-aberta", ativa);
+      animar(pasta, ativa ? modo : null);
     });
-    mostrarFoto(aba.dataset.servico, true);
     if (focar) aba.focus();
   };
 
+  if ("IntersectionObserver" in window) {
+    observador = new IntersectionObserver(
+      ([entrada]) => {
+        if (!entrada.isIntersecting || !primeiraVez) return;
+        const aberta = raiz.querySelector(".pasta-servico.e-aberta");
+        if (aberta) animar(aberta, "puxando");
+        primeiraVez = false;
+        observador.disconnect();
+      },
+      { threshold: 0.35 }
+    );
+    observador.observe(raiz.querySelector(".arquivo__pastas") || raiz);
+  }
+
   abas.forEach((aba, i) => {
-    aba.addEventListener("click", () => escolher(aba, false));
+    aba.addEventListener("click", () => abrir(aba, "trocando", false));
     aba.addEventListener("keydown", (evento) => {
-      const mapa = { ArrowDown: i + 1, ArrowRight: i + 1, ArrowUp: i - 1, ArrowLeft: i - 1, Home: 0, End: abas.length - 1 };
+      const mapa = { ArrowRight: i + 1, ArrowDown: i + 1, ArrowLeft: i - 1, ArrowUp: i - 1, Home: 0, End: abas.length - 1 };
       if (!(evento.key in mapa)) return;
       evento.preventDefault();
-      escolher(abas[(mapa[evento.key] + abas.length) % abas.length], true);
+      abrir(abas[(mapa[evento.key] + abas.length) % abas.length], null, true);
     });
   });
+}
 
-  // Prévia ao passar o mouse (rápida e exata, sem atraso).
-  if (window.matchMedia("(hover: hover) and (pointer: fine)").matches && indice) {
-    abas.forEach((aba) => aba.addEventListener("pointerenter", () => mostrarFoto(aba.dataset.servico, false)));
-    indice.addEventListener("pointerleave", () => mostrarFoto(escolhido.dataset.servico, false));
-  }
+/* --------------------------------------------------------------------------
+   4b. STATUS DO ATENDIMENTO NA CAPA
+   "Aberto agora" ou "Fechado agora", pela hora de Manaus, com o horário
+   escrito no HTML (segunda a sexta, 9h às 18h). Atualiza a cada minuto.
+   Os textos vêm de data-aberto / data-fechado (a versão em espanhol traduz
+   lá). Sem JS, fica a frase fixa com o horário.
+   -------------------------------------------------------------------------- */
+function ativarStatus() {
+  const status = document.getElementById("statusAtendimento");
+  if (!status || !window.Intl) return;
+
+  const partes = new Intl.DateTimeFormat("pt-BR", {
+    timeZone: "America/Manaus",
+    weekday: "short",
+    hour: "2-digit",
+    minute: "2-digit",
+    hourCycle: "h23",
+  });
+  const fixo = status.textContent.trim();
+
+  const atualizar = () => {
+    const p = Object.fromEntries(partes.formatToParts(new Date()).map((x) => [x.type, x.value]));
+    const dia = p.weekday.toLowerCase().replace(".", "");
+    const util = !["sáb", "dom"].includes(dia);
+    const hora = Number(p.hour) + Number(p.minute) / 60;
+    const aberto = util && hora >= 9 && hora < 18;
+    status.classList.toggle("e-aberto", aberto);
+    status.textContent = `${aberto ? status.dataset.aberto : status.dataset.fechado} · ${status.dataset.cidade} ${p.hour}:${p.minute} · ${fixo}`;
+  };
+
+  atualizar();
+  aCadaMinuto(atualizar);
+}
+
+/* --------------------------------------------------------------------------
+   4c. PAINEL DE HORÁRIOS NA FOTO DA CAPA
+   A hora agora em Manaus e em cada destino (fuso em data-fuso), em
+   plaquetas de painel de aeroporto. Ao aparecer, as plaquetas giram até
+   assentar na hora certa; depois só vira a plaqueta que mudou. Sem JS (ou
+   sem Intl), o painel continua escondido.
+   -------------------------------------------------------------------------- */
+function ativarRelogios() {
+  const painel = document.getElementById("relogios");
+  if (!painel || !window.Intl) return;
+
+  const linhas = Array.from(painel.querySelectorAll("[data-fuso]")).map((li) => {
+    let formato;
+    try {
+      formato = new Intl.DateTimeFormat("pt-BR", { timeZone: li.dataset.fuso, hour: "2-digit", minute: "2-digit", hourCycle: "h23" });
+    } catch {
+      return null;
+    }
+    const hora = li.querySelector(".relogios__hora");
+    hora.textContent = "";
+    // 5 plaquetas: H H : M M
+    const placas = Array.from({ length: 5 }, (_, i) => {
+      const placa = document.createElement("span");
+      placa.className = i === 2 ? "placa relogios__sep" : "placa";
+      // pisca alinhado ao segundo de verdade, não ao carregamento da página
+      if (i === 2) placa.style.animationDelay = `-${Date.now() % 1000}ms`;
+      placa.setAttribute("aria-hidden", "true");
+      hora.appendChild(placa);
+      return placa;
+    });
+    const leitura = document.createElement("span");
+    leitura.className = "visualmente-oculto";
+    hora.appendChild(leitura);
+    return { formato, placas, leitura };
+  }).filter(Boolean);
+  if (!linhas.length) return;
+
+  const virar = (placa, texto, atraso) => {
+    if (placa.textContent === texto) return;
+    if (prefereMenosMovimento()) {
+      placa.textContent = texto;
+      return;
+    }
+    setTimeout(() => {
+      placa.classList.remove("virando");
+      void placa.offsetWidth;
+      placa.classList.add("virando");
+      setTimeout(() => (placa.textContent = texto), 170);
+    }, atraso);
+  };
+
+  const atualizar = (assentar) => {
+    const agora = new Date();
+    linhas.forEach(({ formato, placas, leitura }, l) => {
+      const texto = formato.format(agora).replace(/\D/g, "").padStart(4, "0");
+      const chars = [texto[0], texto[1], ":", texto[2], texto[3]];
+      leitura.textContent = `${chars[0]}${chars[1]}:${chars[3]}${chars[4]}`;
+      placas.forEach((placa, i) => {
+        if (i === 2) return void (placa.textContent = ":");
+        if (assentar && !prefereMenosMovimento()) {
+          // gira por alguns números antes de parar no certo
+          for (let k = 0; k < 3; k++) virar(placa, String((Number(chars[i]) + 7 + k * 3) % 10), l * 90 + i * 60 + k * 260);
+          setTimeout(() => virar(placa, chars[i], 0), l * 90 + i * 60 + 3 * 260);
+        } else {
+          virar(placa, chars[i], i * 80);
+        }
+      });
+    });
+  };
+
+  painel.hidden = false;
+  atualizar(true);
+  aCadaMinuto(() => atualizar(false));
+}
+
+/* --------------------------------------------------------------------------
+   4d. BOTÃO FLUTUANTE DE WHATSAPP
+   Fica escondido enquanto a capa (que já tem o botão principal) está na
+   tela, e entra quando a pessoa começa a descer. Sem JS, aparece sempre.
+   -------------------------------------------------------------------------- */
+function ativarBotaoFlutuante() {
+  const botao = document.querySelector(".whatsapp-flutuante");
+  const capa = document.querySelector(".capa");
+  if (!botao || !capa || !("IntersectionObserver" in window)) return;
+
+  botao.classList.add("e-escondido");
+  new IntersectionObserver(([entrada]) => botao.classList.toggle("e-escondido", entrada.isIntersecting), {
+    rootMargin: "0px 0px -35% 0px",
+  }).observe(capa);
+}
+
+/* --------------------------------------------------------------------------
+   4e. FOTOS QUE CARREGAM DEPOIS
+   As fotos com loading="lazy" chegam num fade quando terminam de baixar,
+   em vez de aparecerem de repente. A classe "fotos-suaves" só entra aqui,
+   então se este arquivo não carregar nenhuma foto fica escondida.
+   -------------------------------------------------------------------------- */
+function ativarFotosSuaves() {
+  const fotos = document.querySelectorAll('img[loading="lazy"]');
+  if (!fotos.length || prefereMenosMovimento()) return;
+
+  document.documentElement.classList.add("fotos-suaves");
+  fotos.forEach((foto) => {
+    const marcar = () => foto.classList.add("carregou");
+    if (foto.complete) marcar();
+    else {
+      foto.addEventListener("load", marcar, { once: true });
+      foto.addEventListener("error", marcar, { once: true });
+    }
+  });
 }
 
 /* --------------------------------------------------------------------------
@@ -205,37 +378,7 @@ function contarAte(elemento) {
 }
 
 /* --------------------------------------------------------------------------
-   6. PAINEL "O QUE ESTÁ INCLUSO"
-   Um único <dialog> reaproveitado: o <template id="incluso-..."> do serviço
-   é copiado para dentro e o painel abre com showModal() (prende o foco,
-   fecha com Esc, devolve o foco ao botão). Os botões começam "hidden" e só
-   aparecem se o navegador suportar <dialog>.
-   -------------------------------------------------------------------------- */
-function ativarPainelDeServicos() {
-  const painel = document.getElementById("painelServico");
-  const corpo = document.getElementById("painelCorpo");
-  const botoes = document.querySelectorAll("[data-painel]");
-  if (!painel || !corpo || !botoes.length || typeof painel.showModal !== "function") return;
-
-  botoes.forEach((botao) => {
-    const modelo = document.getElementById(`incluso-${botao.dataset.painel}`);
-    if (!modelo) return;
-    botao.hidden = false;
-    botao.addEventListener("click", () => {
-      corpo.replaceChildren(modelo.content.cloneNode(true));
-      painel.showModal();
-      painel.querySelector(".painel__caixa").scrollTop = 0;
-    });
-  });
-
-  painel.querySelector(".painel__fechar")?.addEventListener("click", () => painel.close());
-  painel.addEventListener("click", (evento) => {
-    if (evento.target === painel) painel.close();
-  });
-}
-
-/* --------------------------------------------------------------------------
-   7. PAINEL DE AEROPORTO NO CARTÃO DE EMBARQUE
+   6. PAINEL DE AEROPORTO NO CARTÃO DE EMBARQUE
    O código do destino troca a cada poucos segundos (JFK → YYZ → PEK →
    LIM), virando letra por letra. Destinos e cidades vêm do HTML
    (data-destinos="JFK:Nova York|..."). Só gira enquanto está na tela.
@@ -282,7 +425,7 @@ function ativarPainelDeDestino() {
 }
 
 /* --------------------------------------------------------------------------
-   8. VÍDEO (nuvens pela janela do avião)
+   7. VÍDEO (nuvens pela janela do avião)
    Loop mudo que só toca enquanto está na tela; quem prefere menos
    movimento vê só o quadro parado (poster).
    -------------------------------------------------------------------------- */

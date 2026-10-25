@@ -41,8 +41,9 @@ site-institucional-estatico/
 ├── css/
 │   └── style.css        → TODO o visual: cores, fontes, layout, animações
 ├── js/
-│   └── main.js           → menu mobile, animação de rolagem, ano do rodapé
+│   └── main.js           → menu, entradas ao rolar, pastas, status e relógios
 ├── images/
+│   ├── guilhoche-roseta.svg / guilhoche-faixa.svg → impressão de segurança de fundo
 │   ├── logo.png            → logomarca (cabeçalho + rodapé)
 │   ├── favicon.png          → ícone da aba do navegador
 │   ├── banner.jpg            → imagem de fundo do topo (hero)
@@ -165,14 +166,26 @@ já usa a imagem nova automaticamente (não precisa editar o HTML):
 | `depoimento-1.jpg` … `depoimento-3.jpg` | Avatar nos depoimentos | 300×300px (quadrado, vira círculo via CSS) |
 | `og-image.jpg` | Preview ao compartilhar o link (WhatsApp etc.) | 1200×630px |
 
-**Serviços ("Escolha o seu destino").** Cada serviço tem três peças no
-`index.html`, ligadas pelo mesmo nome (ex.: `visto-americano`): a foto
-(`<figure class="destinos__foto" data-servico="...">`), a aba
-(`<button role="tab" data-servico="...">`) e o painel de texto
-(`<article id="painel-...">`), mais o `<template id="incluso-...">` do painel
-"O que está incluso". Para incluir um serviço, copie as quatro peças de um
-existente e troque o nome, a foto (`produto-7.webp` em diante já existem como
-reserva) e os textos; para tirar, apague as quatro.
+**Serviços ("Escolha o seu destino").** É um arquivo de pastas: cada
+serviço tem duas peças no `index.html`, ligadas pelo mesmo nome (ex.:
+`visto-americano`): a aba (`<button class="arquivo__aba" role="tab"
+aria-controls="pasta-...">`) e a pasta (`<article class="pasta-servico"
+id="pasta-...">`). Dentro da pasta ficam a capa que abre
+(`pasta-servico__capa`), a foto com o carimbo, a ficha de dados
+(`pasta-servico__dados`: país, modalidade, atendimento, pagamento), "O que
+está incluso", o preço (com `hidden` até ter o valor), o botão de WhatsApp
+com o serviço na mensagem e a linha MRZ do pé. Para incluir um serviço,
+copie a aba e a pasta de um existente e troque o nome, a cor
+(`arquivo__aba--...` / `pasta-servico--...`), a foto (`produto-7.webp` em
+diante já existem como reserva) e os textos; para tirar, apague as duas.
+
+**Detalhes de documento.** O guilhoche de fundo (`images/guilhoche-*.svg`)
+entra como máscara no CSS, então a cor vem do CSS (`--roseta` e `--faixa`
+no `:root`). As linhas MRZ (as fileiras de `<` do pé do passaporte) são SVG
+com `textLength`, que esticam sempre na largura certa. O painel de horários
+da capa (`#relogios`) mostra a hora local de cada `data-fuso`; para trocar
+um destino, mude o código, a cidade e o fuso (nome IANA, ex.:
+`Europe/Lisbon`).
 
 Fotos das coleções abertas (Teatro Amazonas, Ponte Rio Negro, carimbo,
 passaporte e o vídeo das nuvens) ficam em `assets/`, com fonte e licença em

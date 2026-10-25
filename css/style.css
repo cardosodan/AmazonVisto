@@ -4,56 +4,75 @@
    Mobile-first: os estilos sem @media valem para celular; as @media
    (min-width: ...) ajustam para tablet e desktop.
 
-   Direção: "a página é o objeto". A papelada de uma viagem vira a
-   papelaria em que o site é impresso: a capa é uma pilha de pastas de
-   documentação (cada aba é uma seção e empresta a cor do fundo dela), os
-   serviços ficam na pasta da frente, aberta, com o carimbo do destino
-   batendo na foto; a equipe escreve uma carta numa folha recortada; os
-   prêmios vêm num cartão impresso; o convite final é um cartão de
-   embarque saindo de Manaus (MAO); o rodapé é o verso do cartão.
+   Direção: "a página é o objeto" — a papelada da viagem vira a papelaria
+   em que o site é impresso. A capa é um cartão com a borda listrada do
+   envelope de correio aéreo ao lado de uma foto em altura total; os
+   serviços são um arquivo de pastas que abrem ali mesmo; a equipe escreve
+   uma carta; os prêmios vêm num cartão impresso; o convite final é um
+   cartão de embarque saindo de Manaus (MAO); o rodapé é o verso do cartão.
 
-   Regras da casa: uma família tipográfica (STIX Two Text) em cinco
-   tamanhos; cores chapadas (azul-marinho, papel, vermelho só na ação);
-   cantos retos em tudo; nada de gradiente, sombra em repouso, fio fino ou
-   rótulo em caixa-alta espaçada. Superfícies se separam por um degrau de
-   tom, nunca por linha.
+   Paleta profunda: azul-meia-noite de fundo, azul-marinho do logo, papel
+   com textura, vermelho só na ação (e na listra do envelope), dourado nos
+   selos. Uma família tipográfica (STIX Two Text) em cinco tamanhos; cantos
+   retos; nada de gradiente, sombra em repouso, fio fino ou rótulo em
+   caixa-alta. Superfícies se separam por degrau de tom, não por linha.
    ========================================================================== */
 
 /* ==========================================================================
    1. VARIÁVEIS
    ========================================================================== */
 :root {
-  /* Cores — azul-marinho e vermelho tirados do logo; papel frio (página de
-     passaporte); dourado e manila só nas pastas e nos detalhes. */
+  /* Cores */
+  --meia-noite: #070b2e;
   --tinta: #0f1862;
-  --fundo-escuro: #0b1250;
-  --azul-pasta: #34449a;
+  --tinta-2: #141e6c;
   --papel: #f3f4f1;
-  --papel-2: #e4e6e0;
+  --papel-2: #e5e6e0;
   --branco: #ffffff;
-  --nevoa: #dde2ec;
-  --manila: #cdb58a;
   --vermelho: #b3121f;
   --vermelho-escuro: #8c0d18;
-  --dourado: #c2a36b;
+  --dourado: #c9a45c;
+  --dourado-escuro: #7d6233;
+  --vinho: #5e0b14;
+  --aco: #2e3768;
+  --noite-pasta: #1b1f3d;
   --tinta-suave: #434b70;
-  --papel-suave: rgba(243, 244, 241, 0.84);
+  --papel-suave: rgba(243, 244, 241, 0.82);
+
+  /* Granulado de papel (ruído SVG, não gradiente) por cima do papel. */
+  --grao: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.06 0 0 0 0 0.09 0 0 0 0 0.38 0 0 0 0.07 0'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23g)'/%3E%3C/svg%3E");
+  /* Borda do envelope de correio aéreo: paralelogramos vermelhos e
+     azul-marinho sobre o papel (SVG, um "ladrilho" que se repete). */
+  --listra: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='72' height='28' viewBox='0 0 72 28' preserveAspectRatio='none'%3E%3Cpath fill='%23b3121f' d='M0 28 12 0h18L18 28z'/%3E%3Cpath fill='%230f1862' d='M36 28 48 0h18L54 28z'/%3E%3C/svg%3E");
+
+  /* Guilhoche: a impressão de segurança de passaportes e cédulas, desenhada
+     em código (images/guilhoche-*.svg). Entra como máscara, então a cor
+     vem do CSS: dourado no azul, azul-marinho no papel. */
+  --roseta: url("../images/guilhoche-roseta.svg");
+  --faixa: url("../images/guilhoche-faixa.svg");
 
   /* Tipografia — uma família, cinco tamanhos. */
   --fonte: "STIX Two Text", Georgia, "Times New Roman", serif;
+  /* Só para a zona de leitura óptica (MRZ) dos documentos, que no
+     passaporte de verdade é impressa em OCR-B. */
+  --fonte-mrz: "OCR-B", "OCR B", ui-monospace, "Cascadia Mono", Consolas, "Courier New", monospace; /* taste-skill-ignore: MRZ é tipo OCR de documento */
   --passo-pequeno: clamp(0.8125rem, 0.79rem + 0.1vw, 0.875rem);
   --passo-texto: clamp(1.125rem, 1.05rem + 0.3vw, 1.3125rem);
   --passo-destaque: clamp(1.25rem, 1.1rem + 0.7vw, 1.625rem);
   --passo-titulo: clamp(2rem, 1.3rem + 3.2vw, 4rem);
-  --passo-capa: clamp(4rem, 11vw, 10.5rem);
+  --passo-capa: clamp(2.5rem, 1.6rem + 2.6vw, 4.25rem);
 
-  /* Grade — uma única margem lateral para a página inteira. */
+  /* Grade */
   --margem: clamp(20px, 4vw, 48px);
-  --largura: 1320px;
   --altura-barra: 60px;
-  --entre-secoes: clamp(72px, 9vw, 136px);
+  --entre-secoes: clamp(80px, 10vw, 160px);
 
+  /* Movimento: saída forte para o que entra/responde, ease-in-out forte
+     para o que se move na tela, curva de gaveta (iOS) para o menu. */
   --ease-saida: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+  --ease-gaveta: cubic-bezier(0.32, 0.72, 0, 1);
+  --press: 160ms;
 }
 
 /* ==========================================================================
@@ -82,14 +101,15 @@ body {
   font-size: var(--passo-texto);
   line-height: 1.5;
   color: var(--tinta);
-  background: var(--fundo-escuro);
+  background: var(--meia-noite);
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
   overflow-wrap: break-word;
+  font-variant-numeric: lining-nums;
 }
 
 ::selection {
-  background: var(--tinta);
+  background: var(--vermelho);
   color: var(--papel);
 }
 
@@ -132,9 +152,10 @@ ol {
 
 h1,
 h2,
-h3 {
+h3,
+h4 {
   font-weight: 400;
-  line-height: 1.1;
+  line-height: 1.08;
   letter-spacing: -0.026em;
   text-wrap: balance;
 }
@@ -148,12 +169,18 @@ p {
   outline-offset: 3px;
 }
 
-.capa :focus-visible,
-.processo :focus-visible,
+.barra :focus-visible,
 .reconhecimento :focus-visible,
+.servicos :focus-visible,
+.processo :focus-visible,
+.sobre :focus-visible,
 .embarque-secao :focus-visible,
-.barra :focus-visible {
+.rodape > :focus-visible {
   outline-color: var(--dourado);
+}
+
+.papel {
+  background: var(--papel) var(--grao);
 }
 
 .visualmente-oculto {
@@ -182,25 +209,114 @@ p {
   left: 0;
 }
 
+/* Borda listrada do envelope de correio aéreo. */
+.listra {
+  height: 40px;
+  background: var(--papel) var(--listra) 0 0 / 72px 100% repeat-x;
+}
+
+.listra--fina {
+  height: 10px;
+  background-size: 26px 100%;
+}
+
+/* Guilhoche de fundo: um pseudo-elemento por seção, atrás do conteúdo
+   (a seção isola o empilhamento). Traço fino, cor e opacidade baixas. */
+.capa__cartao,
+.servicos,
+.processo,
+.sobre,
+.embarque-secao,
+.verso,
+.comparativo {
+  position: relative;
+  isolation: isolate;
+}
+
+/* O guilhoche sangra pelas bordas: corta sem criar rolagem (clip, não
+   hidden, para o position: sticky de dentro continuar funcionando). */
+.servicos,
+.processo,
+.sobre,
+.comparativo,
+.rodape {
+  overflow: clip;
+}
+
+.capa__cartao::before,
+.servicos::before,
+.processo::before,
+.sobre::before,
+.embarque-secao::before,
+.verso::after,
+.comparativo::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  pointer-events: none;
+  background: currentColor;
+  -webkit-mask: var(--roseta) center / contain no-repeat;
+  mask: var(--roseta) center / contain no-repeat;
+}
+
+/* Zona de leitura óptica (MRZ): as duas linhas de "<" do pé do
+   passaporte, esticadas na largura exata com textLength (SVG). */
+.mrz {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.mrz text {
+  font-family: var(--fonte-mrz);
+  font-size: 17px;
+  fill: currentColor;
+}
+
 /* ==========================================================================
-   3. BOTÕES E LINKS — cantos retos, uma cor chapada. O vermelho é a ação.
+   3. BOTÕES E LINKS — cantos retos, cor chapada; vermelho é a ação.
    ========================================================================== */
 .botao {
+  position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: 52px;
-  padding: 0.8rem 1.6rem;
+  min-height: 56px;
+  padding: 0.8rem 1.7rem;
+  overflow: hidden;
   font-family: var(--fonte);
   font-size: var(--passo-texto);
   font-weight: 600;
   line-height: 1.2;
   text-align: center;
-  transition: background-color 0.2s ease, color 0.2s ease, transform 0.15s ease;
+  transition: background-color 0.2s ease, color 0.2s ease, transform var(--press) var(--ease-saida);
 }
 
-.botao:active {
-  transform: translateY(1px);
+/* No hover, a listra do envelope sobe por baixo do botão. */
+.botao::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 6px;
+  background: var(--papel) var(--listra) 0 0 / 22px 100% repeat-x;
+  transform: translateY(100%);
+  transition: transform 0.3s var(--ease-saida);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .botao:hover::after {
+    transform: none;
+  }
+}
+
+/* Tudo que se aperta afunda um pouco: o site "ouviu" o toque. */
+.botao:active,
+.celula:active,
+.embarque__acao:active {
+  transform: scale(0.97);
 }
 
 .botao--acao {
@@ -208,8 +324,10 @@ p {
   color: var(--papel);
 }
 
-.botao--acao:hover {
-  background: var(--vermelho-escuro);
+@media (hover: hover) and (pointer: fine) {
+  .botao--acao:hover {
+    background: var(--vermelho-escuro);
+  }
 }
 
 .botao--tinta {
@@ -217,8 +335,10 @@ p {
   color: var(--papel);
 }
 
-.botao--tinta:hover {
-  background: var(--fundo-escuro);
+@media (hover: hover) and (pointer: fine) {
+  .botao--tinta:hover {
+    background: var(--meia-noite);
+  }
 }
 
 .link {
@@ -229,8 +349,10 @@ p {
   transition: color 0.2s ease;
 }
 
-.link:hover {
-  color: var(--vermelho);
+@media (hover: hover) and (pointer: fine) {
+  .link:hover {
+    color: var(--vermelho);
+  }
 }
 
 /* ==========================================================================
@@ -245,7 +367,7 @@ p {
   align-items: center;
   height: var(--altura-barra);
   padding-inline: var(--margem);
-  background: var(--fundo-escuro);
+  background: var(--meia-noite);
   color: var(--papel);
 }
 
@@ -297,9 +419,11 @@ p {
   transition: color 0.2s ease;
 }
 
-.barra__idioma:hover,
-.barra__acao:hover {
-  color: var(--dourado);
+@media (hover: hover) and (pointer: fine) {
+  .barra__idioma:hover,
+  .barra__acao:hover {
+    color: var(--dourado);
+  }
 }
 
 .barra__marca {
@@ -319,8 +443,8 @@ p {
   background: var(--papel);
 }
 
-/* Painel do menu (todas as larguras) — folha de papel com as seções em
-   letra grande. */
+/* Painel do menu — fechado, fica inteiro acima da tela (não só
+   transparente): nada do menu ocupa a área visível nem recebe foco. */
 .navegacao {
   position: fixed;
   top: var(--altura-barra);
@@ -333,19 +457,44 @@ p {
   flex-direction: column;
   gap: 2rem;
   padding: 2rem var(--margem) calc(2rem + env(safe-area-inset-bottom, 0px));
-  background: var(--papel);
+  background: var(--papel) var(--grao);
   color: var(--tinta);
-  /* Fechado, o painel fica inteiro acima da tela (não só transparente):
-     nada do menu ocupa a área visível nem recebe foco. */
   visibility: hidden;
   transform: translateY(calc(-100% - var(--altura-barra)));
-  transition: transform 0.5s var(--ease-saida), visibility 0s linear 0.5s;
+  /* Fecha mais rápido do que abre: quem fecha já decidiu. */
+  transition: transform 0.3s var(--ease-saida), visibility 0s linear 0.3s;
 }
 
 .navegacao--aberta {
   visibility: visible;
   transform: none;
-  transition: transform 0.5s var(--ease-saida), visibility 0s;
+  transition: transform 0.5s var(--ease-gaveta), visibility 0s;
+}
+
+/* Os links chegam em cascata (45ms entre um e outro) quando o menu abre;
+   ao fechar não há cascata, eles só voltam ao lugar depois que o painel
+   sumiu. */
+@media (prefers-reduced-motion: no-preference) {
+  .navegacao__lista li,
+  .navegacao__cta {
+    opacity: 0;
+    translate: 0 14px;
+    transition: opacity 0s linear 0.3s, translate 0s linear 0.3s;
+  }
+
+  .navegacao--aberta .navegacao__lista li,
+  .navegacao--aberta .navegacao__cta {
+    opacity: 1;
+    translate: none;
+    transition: opacity 0.4s ease, translate 0.5s var(--ease-saida);
+  }
+
+  .navegacao--aberta .navegacao__lista li:nth-child(1) { transition-delay: 0.08s; }
+  .navegacao--aberta .navegacao__lista li:nth-child(2) { transition-delay: 0.125s; }
+  .navegacao--aberta .navegacao__lista li:nth-child(3) { transition-delay: 0.17s; }
+  .navegacao--aberta .navegacao__lista li:nth-child(4) { transition-delay: 0.215s; }
+  .navegacao--aberta .navegacao__lista li:nth-child(5) { transition-delay: 0.26s; }
+  .navegacao--aberta .navegacao__cta { transition-delay: 0.3s; }
 }
 
 .navegacao__link {
@@ -357,9 +506,11 @@ p {
   transition: color 0.2s ease, transform 0.3s var(--ease-saida);
 }
 
-.navegacao__link:hover {
-  color: var(--vermelho);
-  transform: translateX(8px);
+@media (hover: hover) and (pointer: fine) {
+  .navegacao__link:hover {
+    color: var(--vermelho);
+    transform: translateX(8px);
+  }
 }
 
 .navegacao__cta {
@@ -380,210 +531,774 @@ p {
 }
 
 /* ==========================================================================
-   5. CAPA — o nome e a pilha de pastas
+   5. CAPA — o cartão com a listra do envelope, ao lado da foto
    ========================================================================== */
 .capa {
-  position: relative;
+  display: grid;
+  gap: 12px;
+  padding: calc(var(--altura-barra) + 12px) 12px 12px;
+  background: var(--meia-noite);
+}
+
+.capa__cartao {
   display: flex;
   flex-direction: column;
-  /* Alta o bastante pra pasta da frente aparecer no fim da primeira tela,
-     mas com teto: em telas muito altas (tablet em pé) não abre um vão entre
-     o nome e as pastas. */
-  min-height: clamp(560px, calc(100svh - 132px), 820px);
-  padding: calc(var(--altura-barra) + clamp(48px, 9vh, 110px)) var(--margem) 0;
-  background: var(--fundo-escuro);
-  color: var(--papel);
+  overflow: hidden;
+  background: var(--papel) var(--grao);
 }
 
-.capa__titulo {
-  text-align: center;
-}
-
-.capa h1 {
-  font-size: var(--passo-capa);
-  line-height: 0.95;
-}
-
-.capa__apoio {
-  max-width: 46ch;
-  margin: clamp(24px, 3vw, 40px) auto 0;
-  font-size: var(--passo-texto);
-  color: var(--papel);
-}
-
-/* Pastas: faixas de cor chapada, cada uma mostrando só uma tira de 52px
-   (64px no desktop) por trás da seguinte, com a aba trapezoidal subindo
-   da borda de cima. A ordem no HTML vai do fundo para a frente. */
-.pastas {
-  display: grid;
-  width: 100%;
-  margin: clamp(48px, 8vh, 96px) auto 0;
-  margin-top: auto;
-  padding-top: calc(clamp(48px, 8vh, 96px) + 40px);
-}
-
-.pasta {
-  --cor: var(--papel);
-  --cor-texto: var(--tinta);
-  --aba-x: 6%;
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  height: 52px;
-  padding-inline: clamp(16px, 3vw, 32px);
-  background: var(--cor);
-  color: var(--cor-texto);
-  transition: transform 0.35s var(--ease-saida);
+/* A roseta de segurança atrás do texto, como na página de dados do
+   passaporte. */
+.capa__cartao::before {
+  left: 50%;
+  top: 54%;
+  width: max(130%, 560px);
+  aspect-ratio: 1;
+  color: var(--tinta);
+  opacity: 0.075;
+  translate: -50% -50%;
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  .pasta {
-    animation: pastaSubir 0.9s var(--ease-saida) both;
+  .capa__cartao::before {
+    animation: girarRoseta 240s linear infinite;
   }
 }
 
-.pasta:hover {
-  transform: translateY(-6px);
+@keyframes girarRoseta {
+  to {
+    rotate: 360deg;
+  }
 }
 
-.pasta__aba {
+/* Símbolo do passaporte eletrônico, no canto do cartão. */
+.capa__chip {
   position: absolute;
-  left: var(--aba-x);
-  bottom: 100%;
+  top: 56px;
+  right: 16px;
+  width: 40px;
+  fill: none;
+  stroke: var(--tinta);
+  stroke-width: 2.4;
+  opacity: 0.55;
+}
+
+.capa__mrz {
+  width: min(100%, 560px);
+  margin-top: clamp(28px, 3.5vw, 44px);
+  color: var(--tinta-suave);
+  opacity: 0.85;
+}
+
+.capa__conteudo {
+  position: relative;
   display: flex;
+  flex: 1;
+  flex-direction: column;
   align-items: center;
-  height: 32px;
-  padding: 0 26px;
-  background: var(--cor);
-  color: var(--cor-texto);
+  justify-content: center;
+  gap: 0;
+  padding: clamp(32px, 5vw, 64px) clamp(20px, 4vw, 48px) 28px;
+  text-align: center;
+}
+
+.capa__marca {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: var(--passo-destaque);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.capa__marca img {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: var(--branco);
+}
+
+.capa h1 {
+  max-width: 11em;
+  margin-top: clamp(24px, 3vw, 40px);
+  font-size: var(--passo-capa);
+  line-height: 1.02;
+}
+
+.capa__apoio {
+  max-width: 38ch;
+  margin-top: clamp(20px, 2.4vw, 32px);
+}
+
+.capa__acao {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  margin-top: clamp(28px, 3vw, 40px);
+}
+
+/* Status do atendimento — calculado pela hora de Manaus no JS. */
+.capa__status {
+  font-size: var(--passo-pequeno);
+  color: var(--tinta-suave);
+  font-variant-numeric: tabular-nums;
+}
+
+.capa__status::before {
+  content: "";
+  display: inline-block;
+  width: 0.55em;
+  height: 0.55em;
+  margin-right: 0.55em;
+  vertical-align: 0.05em;
+  background: var(--tinta-suave);
+}
+
+.capa__status.e-aberto::before {
+  background: #1f8a4c;
+  animation: piscarStatus 2.4s ease-in-out infinite;
+}
+
+.capa__status.e-aberto {
+  color: var(--tinta);
+}
+
+@keyframes piscarStatus {
+  50% {
+    opacity: 0.35;
+  }
+}
+
+/* Três selos curtos, numa linha, entre o botão e os atalhos. */
+.capa__selos {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem 1.75rem;
+  margin-top: clamp(28px, 3.5vw, 44px);
+  padding: 1rem 1.25rem;
+  background: var(--papel-2);
+  font-size: var(--passo-pequeno);
+}
+
+.capa__selos strong {
+  font-weight: 600;
+}
+
+.capa__links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem 1.5rem;
+  margin-top: clamp(24px, 3vw, 36px);
+  font-size: var(--passo-pequeno);
+}
+
+.capa__links a {
+  text-decoration: underline;
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 4px;
+  transition: color 0.2s ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .capa__links a:hover {
+    color: var(--vermelho);
+  }
+}
+
+.capa__foto {
+  order: -1;
+  height: 46svh;
+  min-height: 340px;
+}
+
+.capa__quadro {
+  position: relative;
+  height: 100%;
+  overflow: hidden;
+}
+
+.capa__quadro img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 62% 50%;
+}
+
+/* Painel de horários sobre a foto: plaquetas de painel de aeroporto com
+   a hora local de Manaus e dos destinos (JS em "ativarRelogios"). */
+.relogios {
+  position: absolute;
+  left: 10px;
+  right: 10px;
+  bottom: 10px;
+  padding: 12px 12px 14px;
+  background: var(--meia-noite);
+  color: var(--papel);
+}
+
+.relogios__titulo {
+  font-size: var(--passo-pequeno);
+  color: var(--papel-suave);
+}
+
+.relogios__lista {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.relogios li {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.relogios__codigo {
   font-size: var(--passo-pequeno);
   font-weight: 600;
+  color: var(--dourado);
+}
+
+/* No celular só os códigos aparecem; o nome da cidade fica para o leitor
+   de tela. */
+.relogios__cidade {
+  position: absolute;
+  width: 1px;
+  height: 1px; /* taste-skill-ignore: texto só para leitor de tela */
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
   white-space: nowrap;
-  clip-path: polygon(12px 0, calc(100% - 12px) 0, 100% 100%, 0 100%);
 }
 
-.pasta--contato {
-  --cor: var(--vermelho);
-  --cor-texto: var(--papel);
-  --aba-x: 4%;
-  animation-delay: 0.1s;
+.relogios__hora {
+  display: flex;
+  gap: 2px;
+  perspective: 240px;
+  font-size: 1.0625rem;
+  font-weight: 600;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
 }
 
-.pasta--duvidas {
-  --cor: var(--nevoa);
-  --aba-x: 36%;
-  animation-delay: 0.18s;
+.relogios__hora .placa {
+  position: relative;
+  flex: 1;
+  max-width: 1.05em;
+  padding: 0.28em 0 0.24em;
+  background: var(--tinta);
+  text-align: center;
 }
 
-.pasta--sobre {
-  --cor: var(--manila);
-  --aba-x: 66%;
-  animation-delay: 0.26s;
+/* Vinco no meio de cada plaqueta, como no painel de verdade. */
+.relogios__hora .placa::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(50% - 1px);
+  height: 2px;
+  background: var(--meia-noite);
 }
 
-.pasta--processo {
-  --cor: var(--azul-pasta);
-  --cor-texto: var(--papel);
-  --aba-x: 20%;
-  animation-delay: 0.34s;
+.relogios__hora .relogios__sep {
+  flex: none;
+  max-width: none;
+  padding-inline: 1px;
+  background: none;
 }
 
-@keyframes pastaSubir {
+.relogios__hora .relogios__sep::after {
+  content: none;
+}
+
+.relogios__hora .virando {
+  animation: virarPlaqueta 0.34s ease-in-out;
+}
+
+@media (min-width: 640px) {
+  .relogios__lista {
+    gap: 12px;
+  }
+
+  .relogios__hora {
+    font-size: 1.375rem;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  /* A foto "assenta" uma vez ao carregar. */
+  .capa__quadro img {
+    animation: fotoAssentar 2.4s var(--ease-saida) both;
+  }
+}
+
+@keyframes fotoAssentar {
   from {
-    opacity: 0;
-    transform: translateY(40px);
+    transform: scale(1.08);
   }
 }
 
-@media (min-width: 768px) {
-  .pastas,
-  .pasta-frente {
-    width: min(86vw, var(--largura));
+@media (min-width: 900px) {
+  .capa {
+    grid-template-columns: 1fr 1fr;
+    min-height: 100svh;
   }
 
-  .pasta {
-    height: 64px;
+  .listra {
+    height: 56px;
   }
 
-  .pasta__aba {
-    height: 40px;
-    padding: 0 32px;
-    font-size: var(--passo-texto);
-    clip-path: polygon(16px 0, calc(100% - 16px) 0, 100% 100%, 0 100%);
+  .listra--fina {
+    height: 10px;
+  }
+
+  .capa__chip {
+    top: 80px;
+    right: 24px;
+    width: 48px;
+  }
+
+  .capa__foto {
+    order: 0;
+    height: auto;
+    min-height: 100%;
+  }
+
+  .capa__quadro {
+    position: sticky;
+    top: calc(var(--altura-barra) + 12px);
+    height: calc(100svh - var(--altura-barra) - 24px);
+  }
+
+  .relogios {
+    left: 24px;
+    right: 24px;
+    bottom: 24px;
+    padding: 18px 22px 22px;
+  }
+
+  .relogios li {
+    gap: 8px;
+  }
+
+  .relogios__cidade {
+    position: static;
+    width: auto;
+    height: auto;
+    overflow: visible;
+    clip: auto;
+    font-size: var(--passo-pequeno);
+    color: var(--papel-suave);
+  }
+
+}
+
+@media (min-width: 1200px) {
+  .relogios {
+    right: auto;
+    width: min(calc(100% - 48px), 620px);
   }
 }
 
 /* ==========================================================================
-   6. SERVIÇOS — a pasta da frente, aberta
+   6. RECONHECIMENTO — o cartão impresso, torto e cortado
+   ========================================================================== */
+.reconhecimento {
+  display: flex;
+  justify-content: center;
+  height: clamp(460px, 56vw, 740px);
+  overflow: hidden;
+  padding: clamp(64px, 8vw, 112px) var(--margem) 0;
+  background: var(--tinta);
+}
+
+.lista-impressa {
+  flex: none;
+  width: min(92vw, 760px);
+  aspect-ratio: 5 / 7;
+  padding: clamp(28px, 5vw, 56px);
+  background: var(--papel) var(--grao);
+  text-align: center;
+  rotate: -1.5deg;
+}
+
+.lista-impressa h2 {
+  font-size: var(--passo-destaque);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.lista-impressa__carimbos {
+  display: flex;
+  justify-content: center;
+  gap: 4%;
+  margin: clamp(24px, 4vw, 44px) 0;
+}
+
+.carimbo-premio {
+  width: 30%;
+  overflow: visible;
+  color: var(--tinta);
+  filter: url(#tintaCarimbo);
+}
+
+.carimbo-premio:nth-child(1) {
+  rotate: -6deg;
+}
+
+.carimbo-premio:nth-child(2) {
+  rotate: 4deg;
+}
+
+.carimbo-premio:nth-child(3) {
+  rotate: -3deg;
+}
+
+.carimbo-premio--vermelho {
+  color: var(--vermelho);
+}
+
+.carimbo-premio--dourado {
+  color: var(--dourado-escuro);
+}
+
+.carimbo-premio circle {
+  fill: none;
+  stroke: currentColor;
+}
+
+.carimbo-premio circle:first-of-type {
+  stroke-width: 4;
+}
+
+.carimbo-premio circle:last-of-type {
+  stroke-width: 1.6;
+}
+
+.carimbo-premio text {
+  fill: currentColor;
+  font-family: var(--fonte);
+  font-weight: 600;
+}
+
+.carimbo-premio__anel {
+  font-size: 14.5px;
+  letter-spacing: 2.2px;
+}
+
+.carimbo-premio__valor {
+  font-size: 38px;
+}
+
+.lista-impressa__nomes {
+  line-height: 1.7;
+}
+
+@media (min-width: 900px) {
+  .lista-impressa {
+    width: min(56vw, 760px);
+  }
+}
+
+/* ==========================================================================
+   7. SERVIÇOS — o arquivo de pastas
+   As abas ficam enfileiradas como num arquivo; a escolhida sobe e encosta
+   no corpo da pasta, da mesma cor. Ao abrir, a ficha de papel desliza
+   para fora e o carimbo do destino bate na foto.
    ========================================================================== */
 .servicos {
-  position: relative;
-  z-index: 1;
-  padding: 0 var(--margem) clamp(48px, 6vw, 88px);
-  background: var(--fundo-escuro);
+  padding: var(--entre-secoes) var(--margem);
+  background: var(--meia-noite);
+  color: var(--papel);
 }
 
-.pasta-frente {
-  position: relative;
-  margin-inline: auto;
-  padding: clamp(24px, 3.5vw, 48px);
-  background: var(--papel);
-  color: var(--tinta);
-}
-
-.pasta-frente__aba {
-  left: 52%;
-  background: var(--papel);
-  color: var(--tinta);
-}
-
-.pasta-frente__topo {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem 2rem;
-}
-
-.pasta-frente__nota {
-  font-size: var(--passo-texto);
-  color: var(--tinta-suave);
-}
-
-.destinos {
-  display: grid;
-  gap: clamp(28px, 4vw, 64px);
-  margin-top: clamp(32px, 4vw, 56px);
-}
-
-/* Prancha quadrada: as seis fotos empilhadas, a ativa por cima; o carimbo
-   do destino "bate" sobre a foto ao trocar (ver main.js). */
-.destinos__prancha {
-  position: relative;
+.servicos::before {
+  right: max(-260px, -18vw);
+  top: max(-200px, -12vw);
+  width: min(72vw, 880px);
   aspect-ratio: 1;
+  color: var(--dourado);
+  opacity: 0.11;
+}
+
+.servicos__topo {
+  display: grid;
+  gap: 1rem 4rem;
+  align-items: end;
+}
+
+.servicos__topo h2 {
+  font-size: var(--passo-titulo);
+}
+
+.servicos__topo p {
+  max-width: 40ch;
+  color: var(--papel-suave);
+}
+
+.arquivo {
+  margin-top: clamp(36px, 5vw, 64px);
+}
+
+/* Cores das pastas (aba e corpo). */
+.arquivo__aba,
+.pasta-servico {
+  --cor: var(--tinta);
+  --cor-texto: var(--papel);
+}
+
+.arquivo__aba--vermelho,
+.pasta-servico--vermelho {
+  --cor: var(--vermelho);
+}
+
+.arquivo__aba--vinho,
+.pasta-servico--vinho {
+  --cor: var(--vinho);
+}
+
+.arquivo__aba--dourado,
+.pasta-servico--dourado {
+  --cor: var(--dourado);
+  --cor-texto: var(--meia-noite);
+}
+
+.arquivo__aba--aco,
+.pasta-servico--aco {
+  --cor: var(--aco);
+}
+
+.arquivo__aba--noite,
+.pasta-servico--noite {
+  --cor: var(--noite-pasta);
+}
+
+.arquivo__abas {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
+  align-items: end;
+}
+
+.arquivo__aba {
+  min-height: 48px;
+  padding: 0.55rem 0.75rem;
+  background: var(--cor);
+  color: var(--cor-texto);
+  font-size: var(--passo-pequeno);
+  font-weight: 600;
+  line-height: 1.2;
+  clip-path: polygon(10px 0, calc(100% - 10px) 0, 100% 100%, 0 100%);
+  transform: translateY(8px);
+  transition: transform 240ms var(--ease-saida);
+}
+
+.arquivo__aba:not([aria-selected="true"]):active {
+  transform: translateY(11px);
+  transition-duration: 100ms;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .arquivo__aba:hover {
+    transform: translateY(2px);
+  }
+}
+
+.arquivo__aba[aria-selected="true"] {
+  transform: none;
+  min-height: 56px;
+}
+
+.arquivo__pastas {
+  position: relative;
+}
+
+.pasta-servico {
+  position: relative;
+  padding: 10px;
+  background: var(--cor);
+  perspective: 2400px;
+}
+
+/* A capa da pasta: aparece fechada por um instante e tomba para a frente
+   (dobradiça embaixo) quando a pasta abre, revelando a ficha. */
+.pasta-servico__capa {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 0.4rem;
+  padding: clamp(24px, 4vw, 56px);
+  overflow: hidden;
+  background: var(--cor);
+  color: var(--cor-texto);
+  transform-origin: 50% 100%;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.pasta-servico__capa::before {
+  content: "";
+  position: absolute;
+  right: -20%;
+  top: -30%;
+  width: 90%;
+  aspect-ratio: 1;
+  background: currentColor;
+  opacity: 0.16;
+  -webkit-mask: var(--roseta) center / contain no-repeat;
+  mask: var(--roseta) center / contain no-repeat;
+}
+
+.pasta-servico__capa span:first-child {
+  font-size: var(--passo-titulo);
+  line-height: 1.05;
+  letter-spacing: -0.026em;
+}
+
+.pasta-servico__capa span:last-child {
+  font-size: var(--passo-pequeno);
+  font-weight: 600;
+}
+
+/* Primeira vez que o arquivo aparece ("puxando"): a capa tomba, a ficha
+   sai e o carimbo bate, uma vez só. Depois, trocar de aba ("trocando") é
+   rápido: a ficha nova aparece em ~0,3s, sem capa. Pelo teclado (setas),
+   a troca é instantânea. */
+.pasta-servico.puxando .pasta-servico__capa {
+  animation: abrirCapa 0.9s var(--ease-in-out) both;
+}
+
+@keyframes abrirCapa {
+  0% {
+    visibility: visible;
+    opacity: 1;
+    transform: rotateX(0deg);
+  }
+  22% {
+    visibility: visible;
+    opacity: 1;
+    transform: rotateX(-6deg);
+  }
+  68% {
+    opacity: 0;
+    transform: rotateX(-72deg);
+  }
+  100% {
+    visibility: hidden;
+    opacity: 0;
+    transform: rotateX(-72deg);
+  }
+}
+
+.pasta-servico + .pasta-servico {
+  margin-top: 1.5rem;
+}
+
+/* Com JS: só a pasta escolhida aparece (sem JS, todas abertas). */
+.js .pasta-servico:not(.e-aberta) {
+  display: none;
+}
+
+.js .pasta-servico + .pasta-servico {
+  margin-top: 0;
+}
+
+.pasta-servico__folha {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  gap: clamp(20px, 3vw, 44px);
+  padding: clamp(14px, 2.5vw, 32px);
+  overflow: hidden;
+  background: var(--papel) var(--grao);
+  color: var(--tinta);
+}
+
+/* Roseta de segurança no canto da ficha, como num visto de verdade. */
+.pasta-servico__folha::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  right: -14%;
+  bottom: -28%;
+  width: min(76%, 620px);
+  aspect-ratio: 1;
+  background: var(--cor);
+  opacity: 0.09;
+  pointer-events: none;
+  -webkit-mask: var(--roseta) center / contain no-repeat;
+  mask: var(--roseta) center / contain no-repeat;
+}
+
+.pasta-servico.puxando .pasta-servico__folha {
+  animation: puxarFolha 0.7s var(--ease-saida) 0.3s both;
+}
+
+.pasta-servico.trocando .pasta-servico__folha {
+  animation: trocarFolha 0.3s var(--ease-saida) both;
+}
+
+/* Clipe de papel prendendo a foto na ficha. */
+.pasta-servico__clipe {
+  position: absolute;
+  z-index: 2;
+  top: 2px;
+  left: clamp(30px, 5vw, 64px);
+  width: 22px;
+  fill: none;
+  stroke: #8f94ab;
+  stroke-width: 3;
+  stroke-linecap: round;
+  rotate: -8deg;
+}
+
+@keyframes puxarFolha {
+  from {
+    opacity: 0;
+    transform: translateY(28px);
+  }
+}
+
+/* O desfoque de 3px emenda a ficha velha com a nova: o olho vê uma troca,
+   não dois papéis se sobrepondo. */
+@keyframes trocarFolha {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+    filter: blur(3px);
+  }
+}
+
+.pasta-servico__foto {
+  position: relative;
+  aspect-ratio: 4 / 3;
   overflow: hidden;
   background: var(--tinta);
 }
 
-.destinos__foto {
-  position: absolute;
-  inset: 0;
-  opacity: 0;
-  transition: opacity 0.24s ease;
-}
-
-.destinos__foto.e-ativa {
-  opacity: 1;
-}
-
-.destinos__foto img {
+.pasta-servico__foto img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  transition: transform 1.2s var(--ease-saida);
 }
 
-.destinos__carimbo {
+@media (hover: hover) and (pointer: fine) {
+  .pasta-servico__foto:hover img {
+    transform: scale(1.04);
+  }
+}
+
+.pasta-servico__carimbo {
   position: absolute;
   right: 6%;
   bottom: 6%;
@@ -595,12 +1310,16 @@ p {
   transform: rotate(-10deg);
 }
 
-.destinos__carimbo--largo {
-  width: 40%;
+.pasta-servico__carimbo--largo {
+  width: 42%;
 }
 
-.destinos__foto.carimbando .destinos__carimbo {
-  animation: carimbar 0.45s cubic-bezier(0.5, 0, 0.2, 1) both;
+.pasta-servico.puxando .pasta-servico__carimbo {
+  animation: carimbar 0.45s cubic-bezier(0.5, 0, 0.2, 1) 0.8s both;
+}
+
+.pasta-servico.trocando .pasta-servico__carimbo {
+  animation: carimbar 0.32s cubic-bezier(0.5, 0, 0.2, 1) 0.14s both;
 }
 
 @keyframes carimbar {
@@ -614,92 +1333,91 @@ p {
   }
 }
 
-.destinos__coluna {
+.pasta-servico__ficha {
   display: flex;
   flex-direction: column;
 }
 
-.destinos__titulo {
+.pasta-servico__ficha h3 {
   font-size: var(--passo-titulo);
 }
 
-.destinos__indice {
+.pasta-servico__desc {
+  max-width: 40ch;
+  margin-top: 1rem;
+}
+
+/* Ficha de dados, como a página de dados do passaporte: rótulo pequeno
+   em cima, valor embaixo, duas colunas. */
+.pasta-servico__dados {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0.25rem 1.5rem;
-  margin-top: clamp(20px, 3vw, 40px);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem 1.5rem;
+  margin-top: clamp(20px, 2.5vw, 28px);
+  padding: 1.1rem 1.25rem;
+  background: var(--papel-2);
 }
 
-.destinos__aba {
-  position: relative;
-  min-height: 44px;
-  padding: 0.35em 0 0.35em 1.1em;
-  text-align: left;
-  font-size: var(--passo-texto);
+.pasta-servico__dados dt {
+  font-size: var(--passo-pequeno);
   color: var(--tinta-suave);
-  transition: color 0.2s ease;
 }
 
-/* Marcador do destino escolhido: um quadradinho cheio, na cor da ação. */
-.destinos__aba::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 50%;
-  width: 0.45em;
-  height: 0.45em;
-  background: var(--vermelho);
-  opacity: 0;
-  transform: translateY(-50%) scale(0.6);
-  transition: transform 0.25s var(--ease-saida), opacity 0.2s ease;
-}
-
-.destinos__aba:hover {
-  color: var(--tinta);
-}
-
-.destinos__aba[aria-selected="true"] {
-  color: var(--tinta);
+.pasta-servico__dados dd {
+  margin-top: 0.15rem;
   font-weight: 600;
+  line-height: 1.3;
 }
 
-.destinos__aba[aria-selected="true"]::before {
-  opacity: 1;
-  transform: translateY(-50%) scale(1);
+.pasta-servico__mrz {
+  margin-top: clamp(24px, 3vw, 36px);
+  color: var(--tinta-suave);
+  opacity: 0.8;
 }
 
-.destinos__paineis {
-  margin-top: clamp(28px, 3vw, 44px);
-}
-
-/* Sem JS, todos os serviços aparecem; com JS, só o escolhido. */
-.js .destinos__painel:not(.e-ativo) {
-  display: none;
-}
-
-.destinos__painel + .destinos__painel {
-  margin-top: 2.5rem;
-}
-
-.js .destinos__painel + .destinos__painel {
-  margin-top: 0;
-}
-
-.destinos__painel h3 {
-  font-size: var(--passo-destaque);
+.pasta-servico__ficha h4 {
+  margin-top: clamp(24px, 3vw, 36px);
+  font-size: var(--passo-texto);
   font-weight: 600;
-  letter-spacing: -0.01em;
+  letter-spacing: 0;
 }
 
-.destinos__painel p {
-  max-width: 34ch;
+.pasta-servico__lista {
+  display: grid;
+  gap: 0.5rem;
   margin-top: 0.75rem;
 }
 
-.destinos__acoes {
+.pasta-servico__lista li {
+  position: relative;
+  padding-left: 1.4em;
+}
+
+.pasta-servico__lista li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.55em;
+  width: 0.45em;
+  height: 0.45em;
+  background: var(--vermelho);
+}
+
+.pasta-servico__preco {
+  margin-top: 1.25rem;
+  padding: 0.9rem 1.1rem;
+  background: var(--papel-2);
+}
+
+.pasta-servico__acoes {
   display: grid;
-  gap: 8px;
+  gap: 0.75rem;
   margin-top: clamp(24px, 3vw, 40px);
+}
+
+.pasta-servico__acoes p {
+  font-size: var(--passo-pequeno);
+  color: var(--tinta-suave);
 }
 
 .celula {
@@ -711,7 +1429,7 @@ p {
   font-size: var(--passo-texto);
   font-weight: 600;
   text-align: center;
-  transition: background-color 0.2s ease;
+  transition: background-color 0.2s ease, transform var(--press) var(--ease-saida);
 }
 
 .celula--acao {
@@ -719,78 +1437,82 @@ p {
   color: var(--papel);
 }
 
-.celula--acao:hover {
-  background: var(--vermelho-escuro);
-}
-
-.celula--tom {
-  background: var(--papel-2);
-  color: var(--tinta);
-}
-
-.celula--tom:hover {
-  background: var(--nevoa);
-}
-
-@media (max-width: 599px) {
-  .destinos__indice {
-    grid-template-columns: 1fr;
-  }
-}
-
-/* No celular o título da seção vem antes da foto. */
-@media (max-width: 899px) {
-  .destinos__coluna {
-    display: contents;
-  }
-
-  .destinos__titulo {
-    order: -1;
+@media (hover: hover) and (pointer: fine) {
+  .celula--acao:hover {
+    background: var(--vermelho-escuro);
   }
 }
 
 @media (min-width: 900px) {
-  .destinos {
-    grid-template-columns: 1fr 1fr;
+  .servicos__topo {
+    grid-template-columns: 1.3fr 1fr;
+  }
+
+  .servicos__topo p {
+    justify-self: end;
+  }
+
+  .arquivo__abas {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+
+  .arquivo__aba {
+    min-height: 52px;
+    font-size: var(--passo-texto);
+    clip-path: polygon(14px 0, calc(100% - 14px) 0, 100% 100%, 0 100%);
+  }
+
+  .arquivo__aba[aria-selected="true"] {
+    min-height: 64px;
+  }
+
+  .pasta-servico {
+    padding: 14px;
+  }
+
+  .pasta-servico__folha {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     align-items: start;
   }
 
-  .destinos__coluna {
-    align-self: stretch;
+  .pasta-servico__foto {
+    aspect-ratio: 1;
   }
 
-  .destinos__indice {
-    grid-template-columns: 1fr;
-  }
-
-  .destinos__aba {
-    font-size: var(--passo-destaque);
-    padding-block: 0.2em;
-  }
-
-  .destinos__paineis {
-    margin-top: auto;
-    padding-top: clamp(28px, 3vw, 44px);
-  }
-
-  .destinos__acoes {
-    grid-template-columns: 1fr 1fr;
+  .pasta-servico__acoes {
+    grid-template-columns: auto 1fr;
+    align-items: center;
+    gap: 1.5rem;
   }
 
   .celula {
-    min-height: 72px;
+    min-height: 64px;
+    padding-inline: 2rem;
   }
 }
 
 /* ==========================================================================
-   7. COMO FUNCIONA — fileira de quatro momentos
+   8. COMO FUNCIONA — fileira de quatro momentos
    Uma coluna no celular, duas no tablet, quatro no desktop. O espaço antes
    de cada foto varia, então as fotos sobem e descem ao longo da fileira.
    ========================================================================== */
 .processo {
-  padding: var(--entre-secoes) var(--margem) clamp(56px, 6vw, 96px);
-  background: var(--azul-pasta);
+  padding: var(--entre-secoes) var(--margem);
+  background: var(--tinta-2);
   color: var(--papel);
+}
+
+/* Faixa de guilhoche correndo atrás da fileira, como a borda de um
+   documento. */
+.processo::before {
+  left: 0;
+  right: 0;
+  bottom: clamp(8px, 2vw, 28px);
+  height: 140px;
+  color: var(--dourado);
+  opacity: 0.16;
+  -webkit-mask: var(--faixa) 0 0 / 320px 140px repeat-x;
+  mask: var(--faixa) 0 0 / 320px 140px repeat-x;
 }
 
 .processo h2 {
@@ -799,13 +1521,65 @@ p {
 
 .processo__fileira {
   display: grid;
-  gap: 56px;
+  gap: 44px;
   margin-top: clamp(32px, 4vw, 56px);
 }
 
+@media (min-width: 640px) {
+  .processo__fileira {
+    padding-bottom: 96px;
+  }
+}
+
 .momento {
+  position: relative;
   display: flex;
   flex-direction: column;
+}
+
+/* Cada momento ganha o seu carimbo, como as páginas do passaporte
+   enchendo ao longo da viagem. Some no celular (a foto é pequena). */
+.momento__carimbo {
+  display: none;
+  position: absolute;
+  right: -10px;
+  bottom: -86px;
+  width: min(62%, 168px);
+  overflow: visible;
+  fill: none;
+  stroke: currentColor;
+  color: var(--papel);
+  filter: url(#tintaCarimbo);
+  rotate: -8deg;
+}
+
+.momento:nth-child(even) .momento__carimbo {
+  color: var(--dourado);
+  rotate: 6deg;
+}
+
+.momento__carimbo rect:first-child {
+  stroke-width: 2.5;
+}
+
+.momento__carimbo rect:last-of-type {
+  stroke-width: 1;
+}
+
+.momento__carimbo text {
+  fill: currentColor;
+  stroke: none;
+  font-family: var(--fonte);
+  font-weight: 700;
+}
+
+.momento__carimbo-grande {
+  font-size: 19px;
+}
+
+.momento__carimbo-pequeno {
+  font-size: 9.5px;
+  letter-spacing: 2.5px;
 }
 
 .momento h3 {
@@ -823,9 +1597,37 @@ p {
 .momento img,
 .momento video {
   width: 100%;
-  aspect-ratio: 3 / 2;
+  aspect-ratio: 16 / 9;
   object-fit: cover;
-  margin-top: 24px;
+  margin-top: 20px;
+}
+
+/* No celular cada momento é uma linha: texto à esquerda, foto à
+   direita, como uma linha do tempo curta. */
+@media (max-width: 639px) {
+  .processo__fileira {
+    gap: 32px;
+  }
+
+  .momento {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 38%;
+    column-gap: 16px;
+    align-items: start;
+  }
+
+  .momento h3,
+  .momento p {
+    grid-column: 1;
+  }
+
+  .momento img,
+  .momento video {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+    margin-top: 0;
+    aspect-ratio: 4 / 5;
+  }
 }
 
 @media (min-width: 640px) {
@@ -837,15 +1639,19 @@ p {
   .momento img,
   .momento video {
     aspect-ratio: 4 / 5;
-    margin-top: 40px;
+    margin-top: 32px;
+  }
+
+  .momento__carimbo {
+    display: block;
   }
 
   .momento:nth-child(2) img {
-    margin-top: 72px;
+    margin-top: 56px;
   }
 
   .momento:nth-child(4) video {
-    margin-top: 72px;
+    margin-top: 56px;
   }
 }
 
@@ -856,52 +1662,197 @@ p {
 
   .momento img,
   .momento video {
-    margin-top: 96px;
+    margin-top: 48px;
   }
 
   .momento:nth-child(2) img {
-    margin-top: 140px;
+    margin-top: 96px;
   }
 
   .momento:nth-child(3) img {
-    margin-top: 72px;
+    margin-top: 32px;
   }
 
   .momento:nth-child(4) video {
-    margin-top: 120px;
+    margin-top: 72px;
   }
 }
 
+/* ==========================================================================
+   9. SOZINHO x COM A GENTE — o formulário
+   ========================================================================== */
+.comparativo {
+  display: grid;
+  gap: clamp(40px, 5vw, 64px);
+  padding: var(--entre-secoes) var(--margem);
+  background: var(--papel) var(--grao);
+}
+
+.comparativo::before {
+  left: max(-220px, -14vw);
+  bottom: max(-260px, -16vw);
+  width: min(64vw, 760px);
+  aspect-ratio: 1;
+  color: var(--tinta);
+  opacity: 0.06;
+}
+
+.comparativo h2 {
+  font-size: var(--passo-titulo);
+}
+
+.comparativo__texto p {
+  max-width: 40ch;
+  margin: 1.25rem 0 2rem;
+}
+
+.comparativo__folha {
+  background: var(--branco);
+}
+
+.comparativo__tabela {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+/* Tabela de verdade: as linhas entre as etapas são as do formulário. */
+.comparativo__tabela th,
+.comparativo__tabela td {
+  padding: 1.1rem clamp(16px, 2vw, 28px);
+  vertical-align: top;
+  border-bottom: 1px solid rgba(15, 24, 98, 0.14);
+}
+
+.comparativo__tabela thead th {
+  font-weight: 600;
+}
+
+.comparativo__tabela tbody th {
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.comparativo__tabela td {
+  color: var(--tinta-suave);
+}
+
+.comparativo__tabela .comparativo__nossa {
+  background: var(--tinta);
+  color: var(--papel);
+  border-bottom-color: rgba(243, 244, 241, 0.18);
+}
+
+/* No celular cada etapa vira um bloco com o nome da coluna antes. */
+@media (max-width: 767px) {
+  .comparativo__tabela thead {
+    position: absolute;
+    width: 1px;
+    height: 1px; /* taste-skill-ignore: cabeçalho oculto da tabela no celular */
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+  }
+
+  .comparativo__tabela,
+  .comparativo__tabela tbody,
+  .comparativo__tabela tr,
+  .comparativo__tabela th,
+  .comparativo__tabela td {
+    display: block;
+  }
+
+  /* Cada etapa: o nome em cima, as duas respostas lado a lado. */
+  .comparativo__tabela tr {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+
+  .comparativo__tabela tbody th {
+    grid-column: 1 / -1;
+    padding: 1.1rem 1rem 0.6rem;
+    border-bottom: 0;
+    white-space: normal;
+  }
+
+  .comparativo__tabela td {
+    padding: 0.7rem 0.9rem 1.1rem;
+    font-size: 1rem;
+    line-height: 1.45;
+  }
+
+  .comparativo__tabela td::before {
+    content: attr(data-rotulo);
+    display: block;
+    font-size: var(--passo-pequeno);
+    font-weight: 600;
+    color: inherit;
+  }
+}
+
+@media (min-width: 1024px) {
+  .comparativo {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.7fr);
+    align-items: start;
+  }
+}
 
 /* ==========================================================================
-   8. SOBRE NÓS — a carta na pasta manila
+   10. SOBRE NÓS — a foto da sala e a carta
    ========================================================================== */
 .sobre {
   display: grid;
-  justify-items: center;
-  padding: clamp(56px, 7vw, 112px) var(--margem) var(--entre-secoes);
-  background: var(--manila);
+  gap: clamp(32px, 5vw, 64px);
+  padding: var(--entre-secoes) var(--margem);
+  background: var(--meia-noite);
+  color: var(--papel);
+}
+
+.sobre::before {
+  left: 0;
+  right: 0;
+  bottom: clamp(24px, 4vw, 56px);
+  height: 140px;
+  color: var(--dourado);
+  opacity: 0.13;
+  -webkit-mask: var(--faixa) 0 0 / 320px 140px repeat-x;
+  mask: var(--faixa) 0 0 / 320px 140px repeat-x;
+}
+
+.sobre__foto img {
+  width: 100%;
+  aspect-ratio: 3 / 2;
+  object-fit: cover;
+}
+
+.sobre__foto figcaption {
+  margin-top: 0.75rem;
+  font-size: var(--passo-pequeno);
+  color: var(--papel-suave);
+}
+
+.sobre__papel {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
 }
 
 .carta {
   position: relative;
-  width: min(640px, 100%);
-  padding: clamp(28px, 6vw, 60px) clamp(24px, 6vw, 60px) clamp(36px, 6vw, 64px);
-  background: var(--papel);
+  padding: clamp(28px, 5vw, 56px) clamp(24px, 5vw, 56px) clamp(36px, 5vw, 60px);
+  background: var(--papel) var(--grao);
+  color: var(--tinta);
 }
 
 .carta__selo {
   width: 44px;
   height: 44px;
   border-radius: 50%;
-  background: var(--nevoa);
+  background: var(--branco);
 }
 
 .carta h2 {
-  margin-top: 28px;
-  font-size: var(--passo-destaque);
-  font-weight: 600;
-  letter-spacing: -0.01em;
+  margin-top: 24px;
+  font-size: var(--passo-titulo);
 }
 
 .carta p {
@@ -949,10 +1900,10 @@ p {
   flex-direction: column;
   align-items: stretch;
   gap: 1rem;
-  width: min(640px, 100%);
   margin-top: 44px;
-  padding: 20px clamp(24px, 6vw, 60px);
-  background: var(--papel);
+  padding: 20px clamp(24px, 5vw, 56px);
+  background: var(--papel) var(--grao);
+  color: var(--tinta);
 }
 
 .canhoto p {
@@ -977,209 +1928,19 @@ p {
   }
 }
 
-/* ==========================================================================
-   9. RECONHECIMENTO — o cartão impresso, torto e cortado
-   ========================================================================== */
-.reconhecimento {
-  display: flex;
-  justify-content: center;
-  height: clamp(560px, 64vw, 820px);
-  overflow: hidden;
-  padding: var(--entre-secoes) var(--margem) 0;
-  background: var(--fundo-escuro);
-}
-
-.lista-impressa {
-  flex: none;
-  width: min(92vw, 760px);
-  aspect-ratio: 5 / 7;
-  padding: clamp(28px, 5vw, 56px);
-  background: var(--papel);
-  text-align: center;
-  rotate: -1.5deg;
-}
-
-.lista-impressa h2 {
-  font-size: var(--passo-destaque);
-  font-weight: 600;
-  letter-spacing: -0.01em;
-}
-
-.lista-impressa__carimbos {
-  display: flex;
-  justify-content: center;
-  gap: 4%;
-  margin: clamp(24px, 4vw, 44px) 0;
-}
-
-.carimbo-premio {
-  width: 30%;
-  overflow: visible;
-  color: var(--tinta);
-  filter: url(#tintaCarimbo);
-}
-
-.carimbo-premio:nth-child(1) {
-  rotate: -6deg;
-}
-
-.carimbo-premio:nth-child(2) {
-  rotate: 4deg;
-}
-
-.carimbo-premio:nth-child(3) {
-  rotate: -3deg;
-}
-
-.carimbo-premio--vermelho {
-  color: var(--vermelho);
-}
-
-.carimbo-premio--dourado {
-  color: #8a6d3b;
-}
-
-.carimbo-premio circle {
-  fill: none;
-  stroke: currentColor;
-}
-
-.carimbo-premio circle:first-of-type {
-  stroke-width: 4;
-}
-
-.carimbo-premio circle:last-of-type {
-  stroke-width: 1.6;
-}
-
-.carimbo-premio text {
-  fill: currentColor;
-  font-family: var(--fonte);
-  font-weight: 600;
-}
-
-.carimbo-premio__anel {
-  font-size: 14.5px;
-  letter-spacing: 2.2px;
-}
-
-.carimbo-premio__valor {
-  font-size: 38px;
-}
-
-.lista-impressa__nomes {
-  line-height: 1.7;
-}
-
-@media (min-width: 900px) {
-  .lista-impressa {
-    width: min(56vw, 760px);
-  }
-}
-
-/* ==========================================================================
-   10. SOZINHO x COM A GENTE — o formulário
-   ========================================================================== */
-.comparativo {
-  display: grid;
-  gap: clamp(40px, 5vw, 64px);
-  padding: var(--entre-secoes) var(--margem);
-  background: var(--papel);
-}
-
-.comparativo h2 {
-  font-size: var(--passo-titulo);
-}
-
-.comparativo__texto p {
-  max-width: 40ch;
-  margin: 1.25rem 0 2rem;
-}
-
-.comparativo__folha {
-  background: var(--branco);
-}
-
-.comparativo__tabela {
-  width: 100%;
-  border-collapse: collapse;
-  text-align: left;
-}
-
-/* Tabela de verdade: as linhas entre as etapas são as do próprio
-   formulário. */
-.comparativo__tabela th,
-.comparativo__tabela td {
-  padding: 1.1rem clamp(16px, 2vw, 28px);
-  vertical-align: top;
-  border-bottom: 1px solid rgba(15, 24, 98, 0.14);
-}
-
-.comparativo__tabela thead th {
-  font-weight: 600;
-}
-
-.comparativo__tabela tbody th {
-  font-weight: 600;
-  white-space: nowrap;
-}
-
-.comparativo__tabela td {
-  color: var(--tinta-suave);
-}
-
-.comparativo__tabela .comparativo__nossa {
-  background: var(--tinta);
-  color: var(--papel);
-  border-bottom-color: rgba(243, 244, 241, 0.18);
-}
-
-/* No celular cada etapa vira um bloco: a etapa, e as duas respostas uma
-   embaixo da outra com o nome da coluna antes. */
-@media (max-width: 767px) {
-  .comparativo__tabela thead {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    overflow: hidden;
-    clip: rect(0, 0, 0, 0);
-  }
-
-  .comparativo__tabela,
-  .comparativo__tabela tbody,
-  .comparativo__tabela tr,
-  .comparativo__tabela th,
-  .comparativo__tabela td {
-    display: block;
-  }
-
-  .comparativo__tabela tr {
-    padding-bottom: 8px;
-  }
-
-  .comparativo__tabela tbody th {
-    border-bottom: 0;
-    padding-bottom: 0.5rem;
-  }
-
-  .comparativo__tabela td {
-    border-bottom: 0;
-    padding-block: 0.6rem;
-  }
-
-  .comparativo__tabela td::before {
-    content: attr(data-rotulo);
-    display: block;
-    font-size: var(--passo-pequeno);
-    font-weight: 600;
-    color: inherit;
-  }
-}
-
 @media (min-width: 1024px) {
-  .comparativo {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1.7fr);
+  .sobre {
+    grid-template-columns: minmax(0, 0.85fr) minmax(0, 1fr);
     align-items: start;
+  }
+
+  .sobre__foto {
+    position: sticky;
+    top: calc(var(--altura-barra) + 32px);
+  }
+
+  .sobre__foto img {
+    aspect-ratio: 4 / 5;
   }
 }
 
@@ -1188,7 +1949,7 @@ p {
    ========================================================================== */
 .duvidas {
   display: grid;
-  background: var(--nevoa);
+  background: var(--papel) var(--grao);
 }
 
 .duvidas__texto {
@@ -1244,14 +2005,45 @@ p {
   transform: translateY(-25%) rotate(-135deg);
 }
 
-.pergunta summary:hover {
-  color: var(--vermelho);
+@media (hover: hover) and (pointer: fine) {
+  .pergunta summary:hover {
+    color: var(--vermelho);
+  }
 }
 
 .pergunta p {
   max-width: 60ch;
   margin-top: 0.5rem;
   color: var(--tinta-suave);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  @supports (interpolate-size: allow-keywords) {
+    .duvidas__lista {
+      interpolate-size: allow-keywords;
+    }
+
+    .pergunta::details-content {
+      block-size: 0;
+      overflow-y: clip;
+      transition: block-size 0.32s var(--ease-saida), content-visibility 0.32s allow-discrete;
+    }
+
+    .pergunta[open]::details-content {
+      block-size: auto;
+    }
+  }
+
+  .pergunta p {
+    transition: opacity 0.3s ease 0.06s, translate 0.35s var(--ease-saida) 0.06s;
+  }
+
+  @starting-style {
+    .pergunta[open] p {
+      opacity: 0;
+      translate: 0 -6px;
+    }
+  }
 }
 
 .pergunta a {
@@ -1272,12 +2064,12 @@ p {
 .duvidas__fotos {
   position: relative;
   order: -1;
-  padding-bottom: 72px;
+  padding-bottom: 40px;
 }
 
 .duvidas__foto-alta {
   width: 100%;
-  aspect-ratio: 4 / 5;
+  aspect-ratio: 3 / 2;
   object-fit: cover;
 }
 
@@ -1289,7 +2081,7 @@ p {
   aspect-ratio: 1;
   object-fit: cover;
   object-position: 45% 50%;
-  border: 6px solid var(--nevoa);
+  border: 6px solid var(--papel);
 }
 
 @media (max-width: 899px) {
@@ -1336,12 +2128,12 @@ p {
    ========================================================================== */
 .contato {
   position: relative;
-  background: var(--fundo-escuro);
+  background: var(--meia-noite);
 }
 
 .contato__foto {
   width: 100%;
-  height: 70svh;
+  height: 44svh;
   object-fit: cover;
   object-position: 55% 30%;
 }
@@ -1352,7 +2144,7 @@ p {
   flex-direction: column;
   margin: -80px var(--margem) 0;
   padding: 28px 24px 0;
-  background: var(--papel);
+  background: var(--papel) var(--grao);
   color: var(--tinta);
 }
 
@@ -1447,8 +2239,17 @@ p {
   gap: 40px;
   overflow: hidden;
   padding: var(--entre-secoes) var(--margem) 0;
-  background: var(--fundo-escuro);
+  background: var(--meia-noite);
   color: var(--papel);
+}
+
+.embarque-secao::before {
+  left: max(-240px, -16vw);
+  top: max(-220px, -14vw);
+  width: min(80vw, 820px);
+  aspect-ratio: 1;
+  color: var(--dourado);
+  opacity: 0.1;
 }
 
 .embarque-secao__frase {
@@ -1457,15 +2258,151 @@ p {
   line-height: 1.35;
 }
 
+/* O bilhete: corpo e canhoto, separados por uma fileira de furos. */
 .embarque {
   justify-self: center;
-  width: min(90vw, 620px);
+  display: grid;
+  width: min(100%, 760px);
   margin-bottom: -60px;
-  padding: clamp(28px, 4vw, 48px) clamp(24px, 4vw, 48px) calc(60px + clamp(28px, 4vw, 48px));
-  background: var(--papel);
+  padding-bottom: 60px;
+  background: var(--papel) var(--grao);
   color: var(--tinta);
-  text-align: center;
   rotate: 1deg;
+}
+
+.embarque__corpo {
+  padding: clamp(28px, 4vw, 48px) clamp(24px, 4vw, 48px);
+  text-align: center;
+}
+
+.embarque__canhoto {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-inline: clamp(24px, 4vw, 48px);
+  padding: 24px 0 8px;
+  border-top: 4px dotted var(--papel-2);
+}
+
+.embarque__trecho {
+  font-size: var(--passo-destaque);
+  font-weight: 600;
+  line-height: 1.1;
+}
+
+.embarque__trecho span {
+  display: block;
+  font-size: var(--passo-pequeno);
+  font-weight: 400;
+  color: var(--tinta-suave);
+}
+
+.embarque__classe {
+  font-size: var(--passo-pequeno);
+  color: var(--tinta-suave);
+}
+
+.embarque__classe strong {
+  display: block;
+  font-size: var(--passo-texto);
+  color: var(--tinta);
+}
+
+.embarque__leitura {
+  position: relative;
+  overflow: hidden;
+}
+
+/* Um feixe vermelho passa pelo código de barras uma vez (vai e volta),
+   como o leitor do portão de embarque. */
+.embarque__laser {
+  position: absolute;
+  inset: -4px 0;
+  opacity: 0;
+  transform: translateX(-100%);
+  pointer-events: none;
+}
+
+.embarque__laser::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  width: 3px;
+  background: var(--vermelho);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .js .embarque.entrada.entrou .embarque__laser {
+    animation: lerCodigo 1.6s var(--ease-in-out) 1.1s both;
+  }
+
+  /* Os dois-pontos do painel piscam no compasso dos segundos. */
+  .relogios__hora .relogios__sep {
+    animation: piscarSegundos 1s steps(1) infinite;
+  }
+}
+
+@keyframes lerCodigo {
+  0% {
+    opacity: 0;
+    transform: translateX(-100%);
+  }
+  8% {
+    opacity: 1;
+  }
+  50% {
+    transform: translateX(0);
+  }
+  92% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(-100%);
+  }
+}
+
+@keyframes piscarSegundos {
+  50% {
+    opacity: 0.25;
+  }
+}
+
+.embarque__barras {
+  display: block;
+  width: 100%;
+  height: 56px;
+  fill: var(--tinta);
+}
+
+.embarque__mrz {
+  color: var(--tinta-suave);
+  opacity: 0.85;
+}
+
+@media (min-width: 640px) {
+  .embarque {
+    grid-template-columns: minmax(0, 1fr) 200px;
+  }
+
+  .embarque__canhoto {
+    justify-content: space-between;
+    margin: clamp(28px, 4vw, 48px) 0;
+    padding: 0 clamp(20px, 3vw, 32px);
+    border-top: 0;
+    border-left: 4px dotted var(--papel-2);
+  }
+
+  .embarque__barras {
+    height: 88px;
+  }
+
+  /* No canhoto estreito a linha de 44 caracteres viraria pó. */
+  .embarque__mrz {
+    display: none;
+  }
 }
 
 .embarque h2 {
@@ -1541,7 +2478,7 @@ p {
   right: 0;
   top: calc(50% - 1px);
   height: 2px;
-  background: var(--fundo-escuro);
+  background: var(--meia-noite);
 }
 
 .embarque__painel .virando {
@@ -1584,32 +2521,31 @@ p {
   background: var(--vermelho);
   color: var(--papel);
   font-weight: 600;
-  transition: background-color 0.2s ease;
+  transition: background-color 0.2s ease, transform var(--press) var(--ease-saida);
 }
 
-.embarque__acao:hover {
-  background: var(--vermelho-escuro);
+@media (hover: hover) and (pointer: fine) {
+  .embarque__acao:hover {
+    background: var(--vermelho-escuro);
+  }
 }
 
 @media (min-width: 1024px) {
   .embarque-secao {
     grid-template-columns: repeat(12, minmax(0, 1fr));
     column-gap: 24px;
-    min-height: 80svh;
-    align-items: end;
+    align-items: center;
   }
 
   .embarque-secao__frase {
     grid-column: 1 / span 4;
-    align-self: end;
-    margin-bottom: 124px;
   }
 
   .embarque {
-    grid-column: 6 / span 7;
+    grid-column: 5 / span 8;
     justify-self: stretch;
     width: auto;
-    rotate: 2deg;
+    rotate: 1.5deg;
   }
 }
 
@@ -1617,8 +2553,12 @@ p {
    14. RODAPÉ — o verso do cartão
    ========================================================================== */
 .rodape {
-  padding: clamp(72px, 9vw, 140px) var(--margem) clamp(40px, 5vw, 72px);
-  background: var(--fundo-escuro);
+  padding: 0 0 clamp(40px, 5vw, 72px);
+  background: var(--meia-noite);
+}
+
+.rodape > .listra {
+  margin-bottom: clamp(72px, 9vw, 140px);
 }
 
 .verso {
@@ -1626,10 +2566,19 @@ p {
   display: grid;
   gap: 2.5rem;
   max-width: 1100px;
-  margin-inline: auto;
+  margin-inline: var(--margem);
   padding: clamp(32px, 5vw, 64px);
-  background: var(--papel);
+  background: var(--papel) var(--grao);
   color: var(--tinta);
+}
+
+.verso::after {
+  right: clamp(-200px, -10vw, -40px);
+  bottom: -30%;
+  width: min(70vw, 620px);
+  aspect-ratio: 1;
+  color: var(--tinta);
+  opacity: 0.06;
 }
 
 .verso__recorte {
@@ -1673,8 +2622,10 @@ p {
   transition: color 0.2s ease;
 }
 
-.verso__enderecos a:hover {
-  color: var(--vermelho);
+@media (hover: hover) and (pointer: fine) {
+  .verso__enderecos a:hover {
+    color: var(--vermelho);
+  }
 }
 
 .verso__imprenta,
@@ -1715,6 +2666,12 @@ p {
   }
 }
 
+@media (min-width: 1196px) {
+  .verso {
+    margin-inline: auto;
+  }
+}
+
 /* ==========================================================================
    15. BOTÃO FLUTUANTE DE WHATSAPP (flutua de verdade: pode ter sombra)
    ========================================================================== */
@@ -1731,7 +2688,23 @@ p {
   background: #25d366;
   color: var(--branco);
   box-shadow: 0 12px 28px -10px rgba(4, 8, 40, 0.6); /* taste-skill-ignore: botão flutuante */
-  transition: transform 0.25s var(--ease-saida);
+  transition: transform 0.24s var(--ease-saida), opacity 0.24s ease, visibility 0s;
+}
+
+.whatsapp-flutuante:active,
+.whatsapp-flutuante:hover:active {
+  transform: scale(0.94);
+  transition-duration: 100ms;
+}
+
+/* Com JS, só aparece depois da capa (a capa já tem o botão principal, e o
+   flutuante cobria o painel de horários). Sai mais rápido do que entra. */
+.js .whatsapp-flutuante.e-escondido {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: scale(0.9) translateY(8px);
+  transition: transform 0.16s ease, opacity 0.16s ease, visibility 0s linear 0.16s;
 }
 
 .whatsapp-flutuante svg {
@@ -1739,204 +2712,116 @@ p {
   height: 28px;
 }
 
-.whatsapp-flutuante:hover {
-  transform: scale(1.06);
-}
-
-/* ==========================================================================
-   16. PAINEL "O QUE ESTÁ INCLUSO" (diálogo — flutua de verdade)
-   ========================================================================== */
-html:has(.painel[open]) {
-  overflow: hidden;
-}
-
-.painel {
-  position: fixed;
-  inset: 0 0 0 auto;
-  width: min(500px, 100%);
-  max-width: 100%;
-  height: 100dvh;
-  max-height: 100dvh;
-  margin: 0;
-  padding: 0;
-  border: 0;
-  background: var(--papel);
-  color: var(--tinta);
-  box-shadow: -30px 0 80px -30px rgba(9, 15, 66, 0.6); /* taste-skill-ignore: diálogo */
-  overscroll-behavior: contain;
-}
-
-.painel[open] {
-  animation: painelEntrar 0.5s var(--ease-saida);
-}
-
-.painel::backdrop {
-  background: rgba(9, 15, 66, 0.55);
-}
-
-@keyframes painelEntrar {
-  from {
-    transform: translateX(100%);
+@media (hover: hover) and (pointer: fine) {
+  .whatsapp-flutuante:hover {
+    transform: scale(1.06);
   }
 }
 
-.painel__caixa {
-  position: relative;
-  height: 100%;
-  overflow-y: auto;
-  overscroll-behavior: contain;
-  padding: 4.5rem clamp(24px, 5vw, 44px) calc(2.5rem + env(safe-area-inset-bottom, 0px));
-}
-
-.painel__fechar {
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-  z-index: 2;
-  display: grid;
-  place-items: center;
-  width: 44px;
-  height: 44px;
-  background: var(--papel-2);
-  color: var(--tinta);
-  transition: background-color 0.2s ease;
-}
-
-.painel__fechar:hover {
-  background: var(--nevoa);
-}
-
-.painel__fechar svg {
-  width: 20px;
-  height: 20px;
-}
-
-.painel__titulo {
-  font-size: var(--passo-titulo);
-}
-
-.painel__descricao {
-  margin-top: 0.75rem;
-  color: var(--tinta-suave);
-}
-
-.painel__preco {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: 0.25rem 0.5rem;
-  margin-top: 1.5rem;
-  padding: 1rem 1.25rem;
-  background: var(--papel-2);
-}
-
-.painel__preco strong {
-  font-size: var(--passo-destaque);
-}
-
-.painel__preco span {
-  flex-basis: 100%;
-  font-size: var(--passo-pequeno);
-  color: var(--tinta-suave);
-}
-
-.painel__subtitulo {
-  margin-top: 2rem;
-  font-size: var(--passo-texto);
-  font-weight: 600;
-  letter-spacing: 0;
-}
-
-.painel__lista {
-  display: grid;
-  gap: 0.6rem;
-  margin-top: 0.75rem;
-}
-
-.painel__lista li {
-  position: relative;
-  padding-left: 1.4em;
-}
-
-.painel__lista li::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 0.55em;
-  width: 0.45em;
-  height: 0.45em;
-  background: var(--vermelho);
-}
-
-.painel__trocar {
-  color: var(--vermelho);
-  font-style: italic;
-}
-
-.painel__dados {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1rem;
-  margin: 1.75rem 0 2rem;
-}
-
-.painel__dados div {
-  padding: 0.75rem 1rem;
-  background: var(--papel-2);
-}
-
-.painel__dados dt {
-  font-size: var(--passo-pequeno);
-  color: var(--tinta-suave);
-}
-
-.painel__dados dd {
-  font-weight: 600;
-}
-
-.painel__cta {
-  width: 100%;
-  min-height: 56px;
-  margin-top: 2rem;
-  background: var(--vermelho);
-  color: var(--papel);
-}
-
-.painel__cta:hover {
-  background: var(--vermelho-escuro);
-}
-
-.painel__cta .icone {
-  width: 1.1em;
-  height: 1.1em;
-  margin-right: 0.6rem;
-}
-
 /* ==========================================================================
-   17. ENTRADA AO ROLAR — título, depois texto, depois figura, em cascata
+   16. ENTRADA AO ROLAR — título, depois texto, depois figura, em cascata
    (60–90ms) dentro de cada seção. Só esconde quando o JS está ativo
-   (classe "js" no <html>), então nada some se o script falhar.
+   (classe "js" no <html>) e o visitante não pediu menos movimento.
    ========================================================================== */
-.js .entrada {
-  opacity: 0;
-  transform: translateY(24px);
-  transition: opacity 0.8s var(--ease-saida), transform 0.9s var(--ease-saida);
+@media (prefers-reduced-motion: no-preference) {
+  .js .entrada {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.8s var(--ease-saida), transform 0.9s var(--ease-saida);
+  }
+
+  .js .entrada.entrou {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* O cartão impresso e o de embarque mantêm a inclinação ao entrar. */
+  .js .lista-impressa.entrada,
+  .js .embarque.entrada {
+    transform: translateY(48px);
+  }
+
+  .js .lista-impressa.entrada.entrou,
+  .js .embarque.entrada.entrou {
+    transform: none;
+  }
+
+  /* Títulos chegam saindo de um leve desfoque. */
+  .js h2.entrada {
+    filter: blur(6px);
+    transition: opacity 0.8s var(--ease-saida), transform 0.9s var(--ease-saida), filter 0.7s var(--ease-saida);
+  }
+
+  .js h2.entrada.entrou {
+    filter: none;
+  }
+
+  /* Fotos dos momentos e da sala se revelam de baixo para cima. */
+  .js .momento.entrada img,
+  .js .momento.entrada video,
+  .js .sobre__foto.entrada img {
+    clip-path: inset(0 0 100% 0);
+    transition: clip-path 1.1s var(--ease-in-out) 0.12s;
+  }
+
+  .js .momento.entrada.entrou img,
+  .js .momento.entrada.entrou video,
+  .js .sobre__foto.entrada.entrou img {
+    clip-path: inset(0);
+  }
+
+  /* Carimbos batem uma vez, em sequência, quando aparecem: os da linha
+     do tempo e os dos prêmios. */
+  .js .momento.entrada .momento__carimbo,
+  .js .lista-impressa.entrada .carimbo-premio {
+    opacity: 0;
+  }
+
+  .js .momento.entrada.entrou .momento__carimbo {
+    animation: baterCarimbo 0.42s cubic-bezier(0.5, 0, 0.2, 1) 0.9s both;
+  }
+
+  .js .lista-impressa.entrada.entrou .carimbo-premio {
+    animation: baterCarimbo 0.42s cubic-bezier(0.5, 0, 0.2, 1) 0.5s both;
+  }
+
+  .js .lista-impressa.entrada.entrou .carimbo-premio:nth-child(2) {
+    animation-delay: 0.65s;
+  }
+
+  .js .lista-impressa.entrada.entrou .carimbo-premio:nth-child(3) {
+    animation-delay: 0.8s;
+  }
+
+  /* O cartão de embarque endireita um pouco sob o mouse. */
+  .js .embarque.entrada {
+    transition: opacity 0.8s var(--ease-saida), transform 0.9s var(--ease-saida), rotate 0.5s var(--ease-saida);
+  }
+
+  /* Fotos que carregam depois (loading="lazy") chegam num fade, em vez de
+     "pipocar". A classe vem do main.js, então sem JS nada some. */
+  .fotos-suaves img[loading="lazy"] {
+    opacity: 0;
+    transition: opacity 0.5s ease;
+  }
+
+  .fotos-suaves img[loading="lazy"].carregou {
+    opacity: 1;
+  }
 }
 
-.js .entrada.entrou {
-  opacity: 1;
-  transform: none;
-}
-
-/* O cartão impresso e o de embarque mantêm a inclinação ao entrar. */
-.js .lista-impressa.entrada,
-.js .embarque.entrada {
-  transform: translateY(48px);
-}
-
-.js .lista-impressa.entrada.entrou,
-.js .embarque.entrada.entrou {
-  transform: none;
+@keyframes baterCarimbo {
+  from {
+    opacity: 0;
+    transform: scale(1.6);
+  }
+  60% {
+    opacity: 1;
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -1951,9 +2836,10 @@ html:has(.painel[open]) {
     animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;
   }
+}
 
-  .js .entrada {
-    opacity: 1;
-    transform: none;
+@media (hover: hover) and (pointer: fine) {
+  .embarque.entrou:hover {
+    rotate: 0.4deg;
   }
 }

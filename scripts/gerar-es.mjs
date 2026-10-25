@@ -82,9 +82,10 @@ const ESTRUTURA = [
   [`aria-label="Seções do site"`, `aria-label="Secciones del sitio"`],
   [`aria-label="Falar no WhatsApp"`, `aria-label="Hablar por WhatsApp"`],
   [`aria-label="Vista das nuvens pela janela do avião"`, `aria-label="Vista de las nubes desde la ventana del avión"`],
-  [`<button type="button" class="painel__fechar" aria-label="Fechar">`, `<button type="button" class="painel__fechar" aria-label="Cerrar">`],
   [`<strong>R$ TROCAR</strong>`, `<strong>TROCAR</strong>`],
   [`<!-- TROCAR: valor "a partir de" deste serviço -->`, `<!-- TROCAR: valor "desde" y moneda de este servicio -->`],
+  [`data-aberto="Aberto agora" data-fechado="Fechado agora"`, `data-aberto="Abierto ahora" data-fechado="Cerrado ahora"`],
+  [`aria-label="Atalhos"`, `aria-label="Atajos"`],
   [`data-rotulo="Por conta própria"`, `data-rotulo="Por tu cuenta"`],
   [`data-rotulo="Com a Amazon Visto"`, `data-rotulo="Con Amazon Visto"`],
   [
@@ -138,15 +139,22 @@ const TEXTOS = [
   [`class="navegacao__link">Contato</a>`, `class="navegacao__link">Contacto</a>`],
   ["Fale com um especialista", "Habla con un especialista"],
 
-  // Capa e pastas
+  // Capa
+  ["Vistos e passaporte sem burocracia", "Visas y pasaporte sin burocracia"],
   [
-    "Assessoria de vistos e passaporte em Manaus, Brasília e 100% online. Parcele em até 10x sem juros.",
-    "Asesoría de visas y pasaporte en Manaus, Brasilia y 100% en línea. Paga en hasta 10 cuotas sin intereses.",
+    "Assessoria em Manaus, Brasília e 100% online: visto americano, canadense, chinês e peruano, passaporte e intercâmbio, em até 10x sem juros.",
+    "Asesoría en Manaus, Brasilia y 100% en línea: visa americana, canadiense, china y peruana, pasaporte e intercambio, en hasta 10 cuotas sin intereses.",
   ],
-  [`<span class="pasta__aba">Contato</span>`, `<span class="pasta__aba">Contacto</span>`],
-  [`<span class="pasta__aba">Dúvidas</span>`, `<span class="pasta__aba">Preguntas</span>`],
-  [`<span class="pasta__aba">Sobre nós</span>`, `<span class="pasta__aba">Nosotros</span>`],
-  [`aria-hidden="true">Serviços</span>`, `aria-hidden="true">Servicios</span>`],
+  ["Atendimento de segunda a sexta, das 9h às 18h", "Atención de lunes a viernes, de 9 a 18 h"],
+  ["<strong>Empresa do Ano</strong> 2025", "<strong>Empresa del Año</strong> 2025"],
+  ["<strong>Empresa Destaque</strong> 2026", "<strong>Empresa Destacada</strong> 2026"],
+  ["<strong>Até 10x</strong> sem juros", "<strong>Hasta 10 cuotas</strong> sin intereses"],
+  [`<a href="#servicos">Serviços</a>`, `<a href="#servicos">Servicios</a>`],
+  [`<a href="#duvidas">Dúvidas</a>`, `<a href="#duvidas">Preguntas</a>`],
+  ["Avião na pista do aeroporto ao entardecer", "Avión en la pista del aeropuerto al atardecer"],
+  ["Agora em Manaus e nos destinos", "Ahora en Manaus y en los destinos"],
+  [`<span class="relogios__cidade">Nova York</span>`, `<span class="relogios__cidade">Nueva York</span>`],
+  [`<span class="relogios__cidade">Pequim</span>`, `<span class="relogios__cidade">Pekín</span>`],
   ["Como funciona", "Cómo funciona"],
 
   // Rodapé (vem antes porque contém "Empresa do Ano 2025 e Empresa Destaque 2026")
@@ -156,8 +164,28 @@ const TEXTOS = [
   ],
 
   // Serviços
-  ["Empresa do Ano 2025 e Empresa Destaque 2026", "Empresa del Año 2025 y Empresa Destacada 2026"],
   ["Escolha o seu destino", "Elige tu destino"],
+  [
+    "Seis serviços e um processo só: análise gratuita, documentos sob medida e acompanhamento até a aprovação.",
+    "Seis servicios y un solo proceso: análisis gratuito, documentos a medida y acompañamiento hasta la aprobación.",
+  ],
+  [">Passaporte<", ">Pasaporte<"],
+  ["<dt>Modalidade</dt>", "<dt>Modalidad</dt>"],
+  ["<dt>Atendimento</dt>", "<dt>Atención</dt>"],
+  ["<dt>Pagamento</dt>", "<dt>Pago</dt>"],
+  ["<dd>Até 10x sem juros</dd>", "<dd>Hasta 10 cuotas sin intereses</dd>"],
+  ["<dd>Peru</dd>", "<dd>Perú</dd>"],
+  ["<dd>À sua escolha</dd>", "<dd>A tu elección</dd>"],
+  ["<dd>Turismo e negócios (B1/B2)</dd>", "<dd>Turismo y negocios (B1/B2)</dd>"],
+  ["<dd>Visto de visitante (TRV)</dd>", "<dd>Visa de visitante (TRV)</dd>"],
+  ["<dd>Turismo (L) e negócios (M)</dd>", "<dd>Turismo (L) y negocios (M)</dd>"],
+  ["<dd>Visto de entrada</dd>", "<dd>Visa de entrada</dd>"],
+  ["<dd>Emissão e renovação</dd>", "<dd>Emisión y renovación</dd>"],
+  ["<dd>Estudo e trabalho no exterior</dd>", "<dd>Estudio y trabajo en el exterior</dd>"],
+  ["<dd>Online ou presencial</dd>", "<dd>En línea o presencial</dd>"],
+  ["<dd>Em português ou español</dd>", "<dd>En portugués o español</dd>"],
+  ["<dd>Pelo WhatsApp</dd>", "<dd>Por WhatsApp</dd>"],
+  ["Análise inicial gratuita e até 10x sem juros.", "Análisis inicial gratuito y hasta 10 cuotas sin intereses."],
   [
     "Novo visto ou renovação, para turismo ou negócios, sem sair de casa.",
     "Visa nueva o renovación, para turismo o negocios, sin salir de casa.",
@@ -196,8 +224,6 @@ const TEXTOS = [
   ["Orientação completa para estudar ou trabalhar fora do Brasil", "Orientación completa para estudiar o trabajar fuera de Brasil"],
   ["Atualizações a cada etapa, pelo WhatsApp", "Novedades en cada etapa, por WhatsApp"],
   ["TROCAR: itens específicos deste serviço", "TROCAR: ítems específicos de este servicio"],
-  ["<dt>Prazo médio</dt>", "<dt>Plazo promedio</dt>"],
-  ["Quero este serviço", "Quiero este servicio"],
 
   // Como funciona
   ["Primeiro, a conversa", "Primero, la conversación"],
@@ -219,6 +245,11 @@ const TEXTOS = [
   ],
   ["Passaporte e cartão de embarque sobre a mesa", "Pasaporte y tarjeta de embarque sobre la mesa"],
   ["Por fim, o embarque", "Por último, el embarque"],
+  // Carimbos dos momentos (texto do SVG)
+  [">CONVERSA</text>", ">CONVERSACIÓN</text>"],
+  [">SOB MEDIDA</text>", ">A MEDIDA</text>"],
+  [">ACOMPANHADO</text>", ">ACOMPAÑADO</text>"],
+  [">BOA VIAGEM</text>", ">BUEN VIAJE</text>"],
   [
     "Visto ou passaporte em mãos, pronto para a viagem que você planejou.",
     "Visa o pasaporte en mano, listo para el viaje que planeaste.",
@@ -349,6 +380,10 @@ const TEXTOS = [
   ["<dd>Você</dd>", "<dd>Tú</dd>"],
   ["<dt>Portão</dt>", "<dt>Puerta</dt>"],
   ["<dd>Agora</dd>", "<dd>Ahora</dd>"],
+  ["<dt>Assento</dt>", "<dt>Asiento</dt>"],
+  ["<dd>Janela</dd>", "<dd>Ventana</dd>"],
+  ["MAO <span>para o mundo</span>", "MAO <span>al mundo</span>"],
+  ["Classe <strong>Assessoria completa</strong>", "Clase <strong>Asesoría completa</strong>"],
 
   // Rodapé
   ["Boa viagem.", "Buen viaje."],
@@ -373,6 +408,30 @@ for (const [pt, es] of TEXTOS) {
   if (!re.test(h)) naoUsados.push(pt);
   h = h.replace(comoRegex(pt), es);
 }
+
+// Linhas MRZ (SVG class="mrz ..."): troca palavra por palavra e completa
+// de novo até 44 caracteres, como no documento de verdade.
+const MRZ = {
+  VISTOS: "VISAS", VISTO: "VISA", PASSAPORTE: "PASAPORTE", SEM: "SIN", JUROS: "INTERESES",
+  AMERICANO: "AMERICANA", CANADENSE: "CANADIENSE", CHINES: "CHINA", PERUANO: "PERUANA",
+  BRASILEIRO: "BRASILENO", EMISSAO: "EMISION", ESTUDO: "ESTUDIO", TRABALHO: "TRABAJO",
+  PORTAO: "PUERTA", AGORA: "AHORA", ONLINE: "ENLINEA",
+};
+h = h.replace(/(<svg class="mrz[^"]*"[^>]*>)([\s\S]*?)(<\/svg>)/g, (m, ini, meio, fim) =>
+  ini +
+  meio.replace(/>([A-Z0-9&;lt]+)<\/text>/g, (t, linha) => {
+    const bruta = linha.replace(/&lt;/g, "<");
+    const nova = bruta
+      .split(/(<+)/)
+      // "USAVISTO": o código do país vem colado na primeira palavra
+      .map((p) => MRZ[p] || (p.length > 3 && MRZ[p.slice(3)] ? p.slice(0, 3) + MRZ[p.slice(3)] : p))
+      .join("")
+      .padEnd(44, "<")
+      .slice(0, 44);
+    return ">" + nova.replace(/</g, "&lt;") + "</text>";
+  }) +
+  fim
+);
 
 // Nomes de serviço por último (títulos, alt, legendas, faixa, rodapé).
 for (const [pt, es] of SERVICOS) h = h.split(pt).join(es);
