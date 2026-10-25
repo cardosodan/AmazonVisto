@@ -214,7 +214,8 @@ function ativarStatus() {
     const hora = Number(p.hour) + Number(p.minute) / 60;
     const aberto = util && hora >= 9 && hora < 18;
     status.classList.toggle("e-aberto", aberto);
-    status.textContent = `${aberto ? status.dataset.aberto : status.dataset.fechado} · ${status.dataset.cidade} ${p.hour}:${p.minute} · ${fixo}`;
+    // A hora de Manaus está no painel de horários; aqui só o estado.
+    status.textContent = `${aberto ? status.dataset.aberto : status.dataset.fechado} · ${fixo}`;
   };
 
   atualizar();
@@ -222,24 +223,52 @@ function ativarStatus() {
 }
 
 /* --------------------------------------------------------------------------
-   4c. PAINEL DE HORÁRIOS NA FOTO DA CAPA
-   A hora agora em Manaus e em cada destino (fuso em data-fuso), em
-   plaquetas de painel de aeroporto. Ao aparecer, as plaquetas giram até
-   assentar na hora certa; depois só vira a plaqueta que mudou. Sem JS (ou
-   sem Intl), o painel continua escondido.
+   4c. PAINEL DE HORÁRIOS DA CAPA
+   Como o painel de embarque: a hora de Manaus em destaque, com a data, e
+   cada destino em uma linha com a hora local e a diferença para Manaus
+   (calculada agora, então respeita horário de verão). Ao aparecer, as
+   plaquetas giram até assentar; depois só vira a que mudou, na virada do
+   minuto. Sem JS (ou sem Intl), o painel continua escondido.
    -------------------------------------------------------------------------- */
 function ativarRelogios() {
   const painel = document.getElementById("relogios");
   if (!painel || !window.Intl) return;
 
-  const linhas = Array.from(painel.querySelectorAll("[data-fuso]")).map((li) => {
+  const idioma = document.documentElement.lang || "pt-BR";
+  const origem = "America/Manaus";
+  const mesmaHora = painel.dataset.mesma || "mesma hora";
+  const numero = new Intl.NumberFormat(idioma, { maximumFractionDigits: 1 });
+
+  // Minutos "de parede" num fuso, para comparar dois fusos no mesmo instante.
+  const minutosNoFuso = (fuso, data) => {
+    const p = Object.fromEntries(
+      new Intl.DateTimeFormat("en-US", { timeZone: fuso, hourCycle: "h23", year: "numeric", month: "numeric", day: "numeric", hour: "numeric", minute: "numeric" })
+        .formatToParts(data)
+        .map((x) => [x.type, x.value])
+    );
+    return Date.UTC(+p.year, +p.month - 1, +p.day, +p.hour, +p.minute) / 60000;
+  };
+  const diferenca = (fuso, data) => {
+    const horas = (minutosNoFuso(fuso, data) - minutosNoFuso(origem, data)) / 60;
+    if (!horas) return mesmaHora;
+    return `${horas > 0 ? "+" : "−"}${numero.format(Math.abs(horas))} h`;
+  };
+
+  let formatoData = null;
+  try {
+    formatoData = new Intl.DateTimeFormat(idioma, { timeZone: origem, weekday: "long", day: "numeric", month: "long" });
+  } catch {}
+  const data = painel.querySelector(".relogios__data");
+
+  const linhas = Array.from(painel.querySelectorAll("[data-fuso]")).map((linha) => {
+    const fuso = linha.dataset.fuso;
     let formato;
     try {
-      formato = new Intl.DateTimeFormat("pt-BR", { timeZone: li.dataset.fuso, hour: "2-digit", minute: "2-digit", hourCycle: "h23" });
+      formato = new Intl.DateTimeFormat("pt-BR", { timeZone: fuso, hour: "2-digit", minute: "2-digit", hourCycle: "h23" });
     } catch {
       return null;
     }
-    const hora = li.querySelector(".relogios__hora");
+    const hora = linha.querySelector(".relogios__hora");
     hora.textContent = "";
     // 5 plaquetas: H H : M M
     const placas = Array.from({ length: 5 }, (_, i) => {
@@ -254,7 +283,7 @@ function ativarRelogios() {
     const leitura = document.createElement("span");
     leitura.className = "visualmente-oculto";
     hora.appendChild(leitura);
-    return { formato, placas, leitura };
+    return { fuso, formato, placas, leitura, rotuloFuso: linha.querySelector(".relogios__fuso") };
   }).filter(Boolean);
   if (!linhas.length) return;
 
@@ -274,16 +303,18 @@ function ativarRelogios() {
 
   const atualizar = (assentar) => {
     const agora = new Date();
-    linhas.forEach(({ formato, placas, leitura }, l) => {
+    if (data && formatoData) data.textContent = formatoData.format(agora);
+    linhas.forEach(({ fuso, formato, placas, leitura, rotuloFuso }, l) => {
       const texto = formato.format(agora).replace(/\D/g, "").padStart(4, "0");
       const chars = [texto[0], texto[1], ":", texto[2], texto[3]];
       leitura.textContent = `${chars[0]}${chars[1]}:${chars[3]}${chars[4]}`;
+      if (rotuloFuso) rotuloFuso.textContent = diferenca(fuso, agora);
       placas.forEach((placa, i) => {
         if (i === 2) return void (placa.textContent = ":");
         if (assentar && !prefereMenosMovimento()) {
-          // gira por alguns números antes de parar no certo
-          for (let k = 0; k < 3; k++) virar(placa, String((Number(chars[i]) + 7 + k * 3) % 10), l * 90 + i * 60 + k * 260);
-          setTimeout(() => virar(placa, chars[i], 0), l * 90 + i * 60 + 3 * 260);
+          // gira por alguns números antes de parar no certo, linha a linha
+          for (let k = 0; k < 3; k++) virar(placa, String((Number(chars[i]) + 7 + k * 3) % 10), l * 110 + i * 60 + k * 260);
+          setTimeout(() => virar(placa, chars[i], 0), l * 110 + i * 60 + 3 * 260);
         } else {
           virar(placa, chars[i], i * 80);
         }

@@ -86,8 +86,7 @@ const ESTRUTURA = [
   [`<!-- TROCAR: valor "a partir de" deste serviço -->`, `<!-- TROCAR: valor "desde" y moneda de este servicio -->`],
   [`data-aberto="Aberto agora" data-fechado="Fechado agora"`, `data-aberto="Abierto ahora" data-fechado="Cerrado ahora"`],
   [`aria-label="Atalhos"`, `aria-label="Atajos"`],
-  [`data-rotulo="Por conta própria"`, `data-rotulo="Por tu cuenta"`],
-  [`data-rotulo="Com a Amazon Visto"`, `data-rotulo="Con Amazon Visto"`],
+  [`data-mesma="mesma hora"`, `data-mesma="misma hora"`],
   [
     `data-destinos="JFK:Para Nova York|YYZ:Para Toronto|PEK:Para Pequim|LIM:Para Lima"`,
     `data-destinos="JFK:A Nueva York|YYZ:A Toronto|PEK:A Pekín|LIM:A Lima"`,
@@ -152,7 +151,13 @@ const TEXTOS = [
   [`<a href="#servicos">Serviços</a>`, `<a href="#servicos">Servicios</a>`],
   [`<a href="#duvidas">Dúvidas</a>`, `<a href="#duvidas">Preguntas</a>`],
   ["Avião na pista do aeroporto ao entardecer", "Avión en la pista del aeropuerto al atardecer"],
-  ["Agora em Manaus e nos destinos", "Ahora en Manaus y en los destinos"],
+  // Painel de horários
+  ["<span>Visto</span>", "<span>Visa</span>"],
+  ["<span>Diferença</span>", "<span>Diferencia</span>"],
+  [`<span class="relogios__servico">Visto americano</span>`, `<span class="relogios__servico">Visa americana</span>`],
+  [`<span class="relogios__servico">Visto canadense</span>`, `<span class="relogios__servico">Visa canadiense</span>`],
+  [`<span class="relogios__servico">Visto chinês</span>`, `<span class="relogios__servico">Visa china</span>`],
+  [`<span class="relogios__servico">Visto peruano</span>`, `<span class="relogios__servico">Visa peruana</span>`],
   [`<span class="relogios__cidade">Nova York</span>`, `<span class="relogios__cidade">Nueva York</span>`],
   [`<span class="relogios__cidade">Pequim</span>`, `<span class="relogios__cidade">Pekín</span>`],
   ["Como funciona", "Cómo funciona"],
@@ -216,7 +221,6 @@ const TEXTOS = [
   // Painel "o que está incluso"
   ["A partir de <strong>", "Desde <strong>"],
   ["em até 10x sem juros no cartão", "en hasta 10 cuotas sin intereses con tarjeta"],
-  ["Lista exata de documentos para o seu caso específico, sem enrolação.", "Lista exacta de documentos para tu caso específico, sin rodeos."],
   ["Lista exata de documentos para o seu caso", "Lista exacta de documentos para tu caso"],
   ["Consulta inicial gratuita para entender o seu objetivo", "Consulta inicial gratuita para entender tu objetivo"],
   ["Acompanhamento do processo junto ao consulado ou embaixada", "Acompañamiento del trámite ante el consulado o la embajada"],
@@ -284,36 +288,35 @@ const TEXTOS = [
   ["Português e español&nbsp;·", "Portugués y español&nbsp;·"],
   ["Até 10x sem juros no cartão", "Hasta 10 cuotas sin intereses con tarjeta"],
 
-  // Sozinho x com a gente
+  // Sozinho x com a gente (depois de "Como funciona", que tem frases
+  // mais longas começando igual, como "Cuidamos do processo junto ao...")
   ["Sozinho ou com a gente", "Solo o con nosotros"],
   [
-    "Dá para tirar o visto por conta própria. A diferença está no caminho até lá. Nenhuma assessoria pode garantir a aprovação: a decisão é sempre do consulado. O que fazemos é tirar o peso do caminho.",
-    "Puedes tramitar tu visa por tu cuenta. La diferencia está en el camino hasta allí. Ninguna asesoría puede garantizar la aprobación: la decisión es siempre del consulado. Lo que hacemos es quitarte el peso del camino.",
+    "Dá para tirar o visto por conta própria. A diferença está no caminho até lá.",
+    "Puedes tramitar tu visa por tu cuenta. La diferencia está en el camino hasta allí.",
+  ],
+  [
+    "Nenhuma assessoria pode garantir a aprovação: a decisão é sempre do consulado. O que fazemos é tirar o peso do caminho.",
+    "Ninguna asesoría puede garantizar la aprobación: la decisión es siempre del consulado. Lo que hacemos es quitarte el peso del camino.",
   ],
   ["Começar pela consulta gratuita", "Empezar con la consulta gratuita"],
+  ["Tirar o visto por conta própria ou com a Amazon Visto, etapa por etapa", "Tramitar la visa por tu cuenta o con Amazon Visto, etapa por etapa"],
   [`<th scope="col">Por conta própria</th>`, `<th scope="col">Por tu cuenta</th>`],
-  [`Com a <span translate="no">Amazon Visto</span></th>`, `Con <span translate="no">Amazon Visto</span></th>`],
-  [`<th scope="row">Processo no consulado</th>`, `<th scope="row">Trámite en el consulado</th>`],
-  [`<th scope="row">Acompanhamento</th>`, `<th scope="row">Acompañamiento</th>`],
+  [`<span>Com a <span translate="no">Amazon Visto</span></span>`, `<span>Con <span translate="no">Amazon Visto</span></span>`],
   [`<th scope="row">Primeiro passo</th>`, `<th scope="row">Primer paso</th>`],
+  [`<th scope="row">No consulado</th>`, `<th scope="row">En el consulado</th>`],
+  [`<th scope="row">No meio do caminho</th>`, `<th scope="row">En el camino</th>`],
   [`<th scope="row">Atendimento</th>`, `<th scope="row">Atención</th>`],
-  [
-    "Descobrir sozinho o que cada consulado exige, e torcer para não faltar nada.",
-    "Averiguar por tu cuenta lo que exige cada consulado y esperar que no falte nada.",
-  ],
-  [
-    "Navegar por sites, formulários e agendamentos, muitas vezes em outro idioma.",
-    "Navegar por sitios web, formularios y citas, muchas veces en otro idioma.",
-  ],
-  ["Ninguém para tirar dúvidas quando algo trava no meio do caminho.", "Nadie a quien preguntar cuando algo se traba en el camino."],
-  ["Horas de pesquisa antes mesmo de começar.", "Horas de investigación antes incluso de empezar."],
-  ["Vídeos e fóruns genéricos, que não conhecem o seu caso.", "Videos y foros genéricos que no conocen tu caso."],
-  ["Cuidamos do processo junto ao consulado ou embaixada.", "Nos encargamos del trámite ante el consulado o la embajada."],
-  ["Você é informado a cada etapa, direto pelo WhatsApp.", "Te mantenemos informado en cada etapa, directo por WhatsApp."],
-  [
-    "Presencial em Manaus e Brasília ou 100% online, em português ou español.",
-    "Presencial en Manaus y Brasilia o 100% en línea, en portugués o español.",
-  ],
+  ["Horas de pesquisa antes mesmo de começar", "Horas de investigación antes incluso de empezar"],
+  ["Consulta inicial gratuita, pelo WhatsApp", "Consulta inicial gratuita, por WhatsApp"],
+  ["Descobrir sozinho o que cada consulado exige", "Averiguar por tu cuenta lo que exige cada consulado"],
+  ["Lista exata para o seu caso", "Lista exacta para tu caso"],
+  ["Sites, formulários e agendamentos, muitas vezes em outro idioma", "Sitios web, formularios y citas, muchas veces en otro idioma"],
+  ["Cuidamos do processo junto ao consulado", "Nos encargamos del trámite ante el consulado"],
+  ["Ninguém para tirar dúvidas quando algo trava", "Nadie a quien preguntar cuando algo se traba"],
+  ["Atualização a cada etapa, pelo WhatsApp", "Novedades en cada etapa, por WhatsApp"],
+  ["Vídeos e fóruns genéricos", "Videos y foros genéricos"],
+  ["Presencial em Manaus e Brasília ou 100% online", "Presencial en Manaus y Brasilia o 100% en línea"],
 
   // Perguntas frequentes
   ["Perguntas frequentes", "Preguntas frecuentes"],

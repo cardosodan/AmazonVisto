@@ -42,7 +42,7 @@
     rel="stylesheet"
   />
 
-  <link rel="stylesheet" href="css/style.css?v=32" />
+  <link rel="stylesheet" href="css/style.css?v=34" />
 </head>
 <body>
   <a class="pular-conteudo" href="#conteudo-principal">Saltar al contenido</a>
@@ -145,7 +145,7 @@
               rel="noopener"
             >Habla con un especialista</a>
             <!-- TROCAR: horário real de atendimento (o status usa seg. a sex., 9h às 18h, hora de Manaus) -->
-            <p class="capa__status" id="statusAtendimento" data-aberto="Abierto ahora" data-fechado="Cerrado ahora" data-cidade="Manaus">
+            <p class="capa__status" id="statusAtendimento" data-aberto="Abierto ahora" data-fechado="Cerrado ahora">
               Atención de lunes a viernes, de 9 a 18 h
             </p>
           </div>
@@ -171,21 +171,53 @@
             height="1281"
             fetchpriority="high"
           />
-          <!-- Painel de horários: a hora agora em Manaus e nos destinos,
-               em plaquetas de painel de aeroporto (ver main.js,
-               "ativarRelogios"). Sem JS, fica escondido. -->
-          <div class="relogios" id="relogios" hidden>
-            <p class="relogios__titulo">Ahora en Manaus y en los destinos</p>
-            <ul class="relogios__lista">
-              <li data-fuso="America/Manaus"><span class="relogios__codigo">MAO</span><span class="relogios__cidade">Manaus</span><span class="relogios__hora">--:--</span></li>
-              <li data-fuso="America/New_York"><span class="relogios__codigo">JFK</span><span class="relogios__cidade">Nueva York</span><span class="relogios__hora">--:--</span></li>
-              <li data-fuso="America/Toronto"><span class="relogios__codigo">YYZ</span><span class="relogios__cidade">Toronto</span><span class="relogios__hora">--:--</span></li>
-              <li data-fuso="Asia/Shanghai"><span class="relogios__codigo">PEK</span><span class="relogios__cidade">Pekín</span><span class="relogios__hora">--:--</span></li>
-              <li data-fuso="America/Lima"><span class="relogios__codigo">LIM</span><span class="relogios__cidade">Lima</span><span class="relogios__hora">--:--</span></li>
-            </ul>
-          </div>
         </div>
       </figure>
+      <!-- Painel de horários, como o painel de embarque do aeroporto:
+           Manaus (a origem) em destaque e, em linhas, cada destino com o
+           visto dele, a diferença de fuso e a hora local (ver main.js,
+           "ativarRelogios"). No celular vem logo depois do cartão; no
+           desktop fica sobre o pé da foto. Sem JS, fica escondido. -->
+      <div class="relogios" id="relogios" data-mesma="misma hora" hidden>
+        <div class="relogios__origem" data-fuso="America/Manaus">
+          <p class="relogios__titulo"><span class="relogios__codigo">MAO</span> Manaus, hora local</p>
+          <p class="relogios__data"></p>
+          <span class="relogios__hora">--:--</span>
+        </div>
+        <div class="relogios__rotulos" aria-hidden="true">
+          <span>Destino</span><span>Visa</span><span>Diferencia</span><span>Hora local</span>
+        </div>
+        <ul class="relogios__lista">
+          <li class="relogios__linha" data-fuso="America/New_York">
+            <span class="relogios__codigo">JFK</span>
+            <span class="relogios__cidade">Nueva York</span>
+            <span class="relogios__servico">Visa americana</span>
+            <span class="relogios__fuso"></span>
+            <span class="relogios__hora">--:--</span>
+          </li>
+          <li class="relogios__linha" data-fuso="America/Toronto">
+            <span class="relogios__codigo">YYZ</span>
+            <span class="relogios__cidade">Toronto</span>
+            <span class="relogios__servico">Visa canadiense</span>
+            <span class="relogios__fuso"></span>
+            <span class="relogios__hora">--:--</span>
+          </li>
+          <li class="relogios__linha" data-fuso="Asia/Shanghai">
+            <span class="relogios__codigo">PEK</span>
+            <span class="relogios__cidade">Pekín</span>
+            <span class="relogios__servico">Visa china</span>
+            <span class="relogios__fuso"></span>
+            <span class="relogios__hora">--:--</span>
+          </li>
+          <li class="relogios__linha" data-fuso="America/Lima">
+            <span class="relogios__codigo">LIM</span>
+            <span class="relogios__cidade">Lima</span>
+            <span class="relogios__servico">Visa peruana</span>
+            <span class="relogios__fuso"></span>
+            <span class="relogios__hora">--:--</span>
+          </li>
+        </ul>
+      </div>
     </section>
 
     <!-- ==========================================================================
@@ -514,15 +546,60 @@
     </section>
 
     <!-- ==========================================================================
-         SOZINHO x COM A AMAZON VISTO — um formulário de verdade (<table>),
-         com a coluna da assessoria preenchida em azul-marinho. Sem prometer
-         aprovação: nenhuma assessoria pode.
+         SOZINHO x COM A AMAZON VISTO — um quadro de verdade (<table>): as
+         cinco etapas na ordem da viagem, uma linha cada, com a coluna da
+         assessoria em azul-marinho. Sem prometer aprovação: nenhuma
+         assessoria pode (a nota fica no pé, junto do botão).
          ========================================================================== -->
     <section class="comparativo" id="por-que" aria-labelledby="titulo-comparativo">
-      <div class="comparativo__texto entrada">
-        <h2 id="titulo-comparativo">Solo o con nosotros</h2>
+      <div class="comparativo__topo">
+        <h2 id="titulo-comparativo" class="entrada">Solo o con nosotros</h2>
+        <p class="entrada">Puedes tramitar tu visa por tu cuenta. La diferencia está en el camino hasta allí.</p>
+      </div>
+
+      <div class="comparativo__quadro entrada">
+        <table class="comparativo__tabela">
+          <caption class="visualmente-oculto">Tramitar la visa por tu cuenta o con Amazon Visto, etapa por etapa</caption>
+          <thead>
+            <tr>
+              <th scope="col"><span class="visualmente-oculto">Etapa</span></th>
+              <th scope="col">Por tu cuenta</th>
+              <th scope="col" class="comparativo__nossa"><span class="comparativo__marca"><img src="images/logo.webp" alt="" width="28" height="28" loading="lazy" /><span>Con <span translate="no">Amazon Visto</span></span></span></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">Primer paso</th>
+              <td>Horas de investigación antes incluso de empezar</td>
+              <td class="comparativo__nossa">Consulta inicial gratuita, por WhatsApp</td>
+            </tr>
+            <tr>
+              <th scope="row">Documentos</th>
+              <td>Averiguar por tu cuenta lo que exige cada consulado</td>
+              <td class="comparativo__nossa">Lista exacta para tu caso</td>
+            </tr>
+            <tr>
+              <th scope="row">En el consulado</th>
+              <td>Sitios web, formularios y citas, muchas veces en otro idioma</td>
+              <td class="comparativo__nossa">Nos encargamos del trámite ante el consulado</td>
+            </tr>
+            <tr>
+              <th scope="row">En el camino</th>
+              <td>Nadie a quien preguntar cuando algo se traba</td>
+              <td class="comparativo__nossa">Novedades en cada etapa, por WhatsApp</td>
+            </tr>
+            <tr>
+              <th scope="row">Atención</th>
+              <td>Videos y foros genéricos</td>
+              <td class="comparativo__nossa">Presencial en Manaus y Brasilia o 100% en línea</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="comparativo__pe entrada">
         <p>
-          Puedes tramitar tu visa por tu cuenta. La diferencia está en el camino hasta allí. Ninguna asesoría puede garantizar la aprobación: la decisión es siempre del consulado. Lo que hacemos es quitarte el peso del camino.
+          Ninguna asesoría puede garantizar la aprobación: la decisión es siempre del consulado. Lo que hacemos es quitarte el peso del camino.
         </p>
         <a
           class="botao botao--acao"
@@ -530,45 +607,6 @@
           target="_blank"
           rel="noopener"
         >Empezar con la consulta gratuita</a>
-      </div>
-
-      <div class="comparativo__folha entrada">
-        <table class="comparativo__tabela">
-          <thead>
-            <tr>
-              <th scope="col"><span class="visualmente-oculto">Etapa</span></th>
-              <th scope="col">Por tu cuenta</th>
-              <th scope="col" class="comparativo__nossa">Con <span translate="no">Amazon Visto</span></th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <th scope="row">Documentos</th>
-              <td data-rotulo="Por tu cuenta">Averiguar por tu cuenta lo que exige cada consulado y esperar que no falte nada.</td>
-              <td class="comparativo__nossa" data-rotulo="Con Amazon Visto">Lista exacta de documentos para tu caso específico, sin rodeos.</td>
-            </tr>
-            <tr>
-              <th scope="row">Trámite en el consulado</th>
-              <td data-rotulo="Por tu cuenta">Navegar por sitios web, formularios y citas, muchas veces en otro idioma.</td>
-              <td class="comparativo__nossa" data-rotulo="Con Amazon Visto">Nos encargamos del trámite ante el consulado o la embajada.</td>
-            </tr>
-            <tr>
-              <th scope="row">Acompañamiento</th>
-              <td data-rotulo="Por tu cuenta">Nadie a quien preguntar cuando algo se traba en el camino.</td>
-              <td class="comparativo__nossa" data-rotulo="Con Amazon Visto">Te mantenemos informado en cada etapa, directo por WhatsApp.</td>
-            </tr>
-            <tr>
-              <th scope="row">Primer paso</th>
-              <td data-rotulo="Por tu cuenta">Horas de investigación antes incluso de empezar.</td>
-              <td class="comparativo__nossa" data-rotulo="Con Amazon Visto">Consulta inicial gratuita para entender tu objetivo.</td>
-            </tr>
-            <tr>
-              <th scope="row">Atención</th>
-              <td data-rotulo="Por tu cuenta">Videos y foros genéricos que no conocen tu caso.</td>
-              <td class="comparativo__nossa" data-rotulo="Con Amazon Visto">Presencial en Manaus y Brasilia o 100% en línea, en portugués o español.</td>
-            </tr>
-          </tbody>
-        </table>
       </div>
     </section>
 
@@ -902,6 +940,6 @@
     </svg>
   </a>
 
-  <script src="js/main.js?v=29"></script>
+  <script src="js/main.js?v=30"></script>
 </body>
 </html>

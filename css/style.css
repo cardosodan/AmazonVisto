@@ -728,35 +728,51 @@ p {
   object-position: 62% 50%;
 }
 
-/* Painel de horários sobre a foto: plaquetas de painel de aeroporto com
-   a hora local de Manaus e dos destinos (JS em "ativarRelogios"). */
+/* Painel de horários, como o painel de embarque: Manaus (a origem) em
+   destaque e, em linhas listradas, cada destino com o visto dele, a
+   diferença de fuso e a hora local, em plaquetas (JS em "ativarRelogios").
+   No celular vem logo abaixo do cartão; no desktop, sobre o pé da foto. */
 .relogios {
-  position: absolute;
-  left: 10px;
-  right: 10px;
-  bottom: 10px;
-  padding: 12px 12px 14px;
-  background: var(--meia-noite);
+  order: 1;
+  padding: 20px 18px 0;
+  background: var(--tinta);
   color: var(--papel);
 }
 
+.relogios__origem {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-areas:
+    "titulo hora"
+    "data hora";
+  align-items: center;
+  column-gap: 16px;
+  row-gap: 2px;
+  padding-bottom: 18px;
+}
+
 .relogios__titulo {
+  grid-area: titulo;
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+.relogios__data {
+  grid-area: data;
   font-size: var(--passo-pequeno);
   color: var(--papel-suave);
 }
 
-.relogios__lista {
-  display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: 6px;
-  margin-top: 10px;
+.relogios__data::first-letter {
+  text-transform: uppercase;
 }
 
-.relogios li {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  min-width: 0;
+.relogios__origem .relogios__hora {
+  grid-area: hora;
+  font-size: clamp(1.75rem, 1.3rem + 1.4vw, 2.5rem);
 }
 
 .relogios__codigo {
@@ -765,22 +781,70 @@ p {
   color: var(--dourado);
 }
 
-/* No celular só os códigos aparecem; o nome da cidade fica para o leitor
-   de tela. */
+/* Os rótulos das colunas só aparecem no desktop, onde há colunas. */
+.relogios__rotulos {
+  display: none;
+}
+
+.relogios__lista {
+  margin-inline: -18px;
+}
+
+/* Cada destino é uma linha; no celular em duas: cidade e hora em cima,
+   visto e diferença de fuso embaixo. Linhas alternadas em dois tons de
+   azul, como no painel do aeroporto. */
+.relogios__linha {
+  display: grid;
+  grid-template-columns: 2.9em minmax(0, 1fr) auto;
+  grid-template-areas:
+    "codigo cidade hora"
+    "codigo servico fuso";
+  align-items: center;
+  column-gap: 12px;
+  row-gap: 4px;
+  padding: 12px 18px;
+}
+
+.relogios__linha:nth-child(odd) {
+  background: var(--tinta-2);
+}
+
+.relogios__linha .relogios__codigo {
+  grid-area: codigo;
+}
+
 .relogios__cidade {
-  position: absolute;
-  width: 1px;
-  height: 1px; /* taste-skill-ignore: texto só para leitor de tela */
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
+  grid-area: cidade;
+  font-size: 1.0625rem;
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+.relogios__servico {
+  grid-area: servico;
+  font-size: var(--passo-pequeno);
+  color: var(--papel-suave);
+}
+
+.relogios__fuso {
+  grid-area: fuso;
+  justify-self: end;
+  font-size: var(--passo-pequeno);
+  color: var(--papel-suave);
+  font-variant-numeric: tabular-nums;
   white-space: nowrap;
+}
+
+.relogios__linha .relogios__hora {
+  grid-area: hora;
+  justify-self: end;
 }
 
 .relogios__hora {
   display: flex;
   gap: 2px;
   perspective: 240px;
-  font-size: 1.0625rem;
+  font-size: 1.125rem;
   font-weight: 600;
   line-height: 1;
   font-variant-numeric: tabular-nums;
@@ -788,10 +852,9 @@ p {
 
 .relogios__hora .placa {
   position: relative;
-  flex: 1;
-  max-width: 1.05em;
-  padding: 0.28em 0 0.24em;
-  background: var(--tinta);
+  min-width: 0.78em;
+  padding: 0.24em 0.06em 0.2em;
+  background: var(--meia-noite);
   text-align: center;
 }
 
@@ -803,12 +866,11 @@ p {
   right: 0;
   top: calc(50% - 1px);
   height: 2px;
-  background: var(--meia-noite);
+  background: var(--tinta);
 }
 
 .relogios__hora .relogios__sep {
-  flex: none;
-  max-width: none;
+  min-width: 0;
   padding-inline: 1px;
   background: none;
 }
@@ -819,16 +881,6 @@ p {
 
 .relogios__hora .virando {
   animation: virarPlaqueta 0.34s ease-in-out;
-}
-
-@media (min-width: 640px) {
-  .relogios__lista {
-    gap: 12px;
-  }
-
-  .relogios__hora {
-    font-size: 1.375rem;
-  }
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -876,33 +928,81 @@ p {
     height: calc(100svh - var(--altura-barra) - 24px);
   }
 
+  /* O painel ocupa a mesma célula da foto, encostado no pé dela. */
+  .capa__cartao {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .capa__foto {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  /* Grudado no pé da tela enquanto a capa está à vista (a capa pode ser
+     mais alta que a tela; a foto também é sticky). */
   .relogios {
-    left: 24px;
-    right: 24px;
-    bottom: 24px;
-    padding: 18px 22px 22px;
+    grid-column: 2;
+    grid-row: 1;
+    align-self: end;
+    justify-self: start;
+    position: sticky;
+    bottom: 36px;
+    z-index: 1;
+    width: min(calc(100% - 48px), 600px);
+    margin: 0 0 24px 24px;
+    padding: 22px 24px 0;
+  }
+}
+
+/* Do tablet para cima cada destino cabe numa linha só, com rótulos nas
+   colunas, como o painel do aeroporto. */
+@media (min-width: 640px) {
+  .relogios {
+    padding: 22px 24px 0;
   }
 
-  .relogios li {
-    gap: 8px;
+  .relogios__rotulos,
+  .relogios__linha {
+    grid-template-columns: 3.1em minmax(0, 0.9fr) minmax(0, 1.25fr) 6.4em auto;
   }
 
-  .relogios__cidade {
-    position: static;
-    width: auto;
-    height: auto;
-    overflow: visible;
-    clip: auto;
+  .relogios__rotulos {
+    display: grid;
+    column-gap: 12px;
+    padding: 0 0 8px;
     font-size: var(--passo-pequeno);
     color: var(--papel-suave);
   }
 
-}
+  .relogios__rotulos span:first-child {
+    grid-column: 1 / span 2;
+  }
 
-@media (min-width: 1200px) {
-  .relogios {
-    right: auto;
-    width: min(calc(100% - 48px), 620px);
+  .relogios__rotulos span:last-child {
+    justify-self: end;
+  }
+
+  .relogios__lista {
+    margin-inline: -24px;
+  }
+
+  /* Uma linha por destino, num tamanho só (1rem), como no painel. */
+  .relogios__linha {
+    grid-template-areas: "codigo cidade servico fuso hora";
+    padding: 9px 24px;
+    font-size: 1rem;
+  }
+
+  .relogios__cidade,
+  .relogios__servico,
+  .relogios__fuso {
+    font-size: inherit;
+    white-space: nowrap;
+  }
+
+  .relogios__fuso {
+    justify-self: start;
   }
 }
 
@@ -1679,120 +1779,227 @@ p {
 }
 
 /* ==========================================================================
-   9. SOZINHO x COM A GENTE — o formulário
+   9. SOZINHO x COM A GENTE — o quadro comparativo
+   Cinco etapas, uma linha cada. "Por conta própria" em tom apagado com
+   um ×; "Com a Amazon Visto" no bloco azul-marinho com o selo e um ✓.
+   No celular as duas colunas seguem lado a lado e o nome da etapa vai em
+   cima da primeira, para a coluna azul continuar inteira.
    ========================================================================== */
 .comparativo {
-  display: grid;
-  gap: clamp(40px, 5vw, 64px);
+  --icone-x: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M4 4l8 8M12 4l-8 8' fill='none' stroke='%23000' stroke-width='2.2' stroke-linecap='round'/%3E%3C/svg%3E");
+  --icone-v: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M2.8 8.6l3.4 3.3L13.4 4.6' fill='none' stroke='%23000' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
   padding: var(--entre-secoes) var(--margem);
   background: var(--papel) var(--grao);
 }
 
-.comparativo::before {
-  left: max(-220px, -14vw);
-  bottom: max(-260px, -16vw);
-  width: min(64vw, 760px);
-  aspect-ratio: 1;
-  color: var(--tinta);
-  opacity: 0.06;
+.comparativo__topo {
+  display: grid;
+  gap: 1rem 4rem;
+  align-items: end;
 }
 
 .comparativo h2 {
   font-size: var(--passo-titulo);
 }
 
-.comparativo__texto p {
-  max-width: 40ch;
-  margin: 1.25rem 0 2rem;
+.comparativo__topo p {
+  max-width: 36ch;
 }
 
-.comparativo__folha {
+.comparativo__quadro {
+  margin-top: clamp(32px, 4vw, 56px);
   background: var(--branco);
 }
 
 .comparativo__tabela {
   width: 100%;
   border-collapse: collapse;
+  table-layout: fixed;
   text-align: left;
 }
 
 /* Tabela de verdade: as linhas entre as etapas são as do formulário. */
 .comparativo__tabela th,
 .comparativo__tabela td {
-  padding: 1.1rem clamp(16px, 2vw, 28px);
+  padding: 1.15rem clamp(16px, 2vw, 28px);
   vertical-align: top;
-  border-bottom: 1px solid rgba(15, 24, 98, 0.14);
+  border-bottom: 1px solid rgba(15, 24, 98, 0.1);
+}
+
+.comparativo__tabela tbody tr:last-child > * {
+  border-bottom: 0;
 }
 
 .comparativo__tabela thead th {
+  font-size: var(--passo-pequeno);
   font-weight: 600;
+  color: var(--tinta-suave);
+}
+
+.comparativo__tabela thead th:nth-child(1) {
+  width: 22%;
+}
+
+.comparativo__tabela thead th:nth-child(2) {
+  width: 36%;
 }
 
 .comparativo__tabela tbody th {
   font-weight: 600;
-  white-space: nowrap;
 }
 
 .comparativo__tabela td {
+  position: relative;
+  padding-left: calc(clamp(16px, 2vw, 28px) + 1.5em);
   color: var(--tinta-suave);
+}
+
+/* × e ✓ desenhados (máscara SVG), na cor do texto de cada coluna. */
+.comparativo__tabela td::before {
+  content: "";
+  position: absolute;
+  left: clamp(16px, 2vw, 28px);
+  top: calc(1.15rem + 0.3em);
+  width: 0.95em;
+  height: 0.95em;
+  background: currentColor;
+  -webkit-mask: var(--icone-x) center / contain no-repeat;
+  mask: var(--icone-x) center / contain no-repeat;
+  opacity: 0.55;
 }
 
 .comparativo__tabela .comparativo__nossa {
   background: var(--tinta);
   color: var(--papel);
-  border-bottom-color: rgba(243, 244, 241, 0.18);
+  border-bottom-color: rgba(243, 244, 241, 0.14);
 }
 
-/* No celular cada etapa vira um bloco com o nome da coluna antes. */
-@media (max-width: 767px) {
-  .comparativo__tabela thead {
-    position: absolute;
-    width: 1px;
-    height: 1px; /* taste-skill-ignore: cabeçalho oculto da tabela no celular */
-    overflow: hidden;
-    clip: rect(0, 0, 0, 0);
-  }
+.comparativo__tabela td.comparativo__nossa {
+  font-weight: 600;
+}
 
+.comparativo__tabela td.comparativo__nossa::before {
+  background: var(--dourado);
+  -webkit-mask-image: var(--icone-v);
+  mask-image: var(--icone-v);
+  opacity: 1;
+}
+
+.comparativo__tabela thead th {
+  vertical-align: middle;
+}
+
+.comparativo__tabela thead .comparativo__nossa {
+  font-size: var(--passo-texto);
+  color: var(--papel);
+}
+
+.comparativo__marca {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  line-height: 1.2;
+}
+
+.comparativo__marca img {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--branco);
+}
+
+.comparativo__pe {
+  display: grid;
+  gap: 1.25rem;
+  margin-top: clamp(24px, 3vw, 36px);
+}
+
+.comparativo__pe p {
+  max-width: 52ch;
+  font-size: var(--passo-pequeno);
+  color: var(--tinta-suave);
+}
+
+@media (max-width: 767px) {
   .comparativo__tabela,
-  .comparativo__tabela tbody,
-  .comparativo__tabela tr,
-  .comparativo__tabela th,
-  .comparativo__tabela td {
+  .comparativo__tabela thead,
+  .comparativo__tabela tbody {
     display: block;
   }
 
-  /* Cada etapa: o nome em cima, as duas respostas lado a lado. */
   .comparativo__tabela tr {
     display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   }
 
+  .comparativo__tabela thead th:first-child {
+    display: none;
+  }
+
+  .comparativo__tabela thead th {
+    width: auto !important;
+    padding: 0.9rem 1rem;
+  }
+
+  .comparativo__tabela thead .comparativo__nossa {
+    font-size: 1rem;
+  }
+
+  .comparativo__marca img {
+    width: 24px;
+    height: 24px;
+  }
+
   .comparativo__tabela tbody th {
-    grid-column: 1 / -1;
-    padding: 1.1rem 1rem 0.6rem;
+    grid-column: 1;
+    grid-row: 1;
+    padding: 1rem 1rem 0.2rem;
     border-bottom: 0;
-    white-space: normal;
+    font-size: var(--passo-pequeno);
   }
 
   .comparativo__tabela td {
-    padding: 0.7rem 0.9rem 1.1rem;
+    grid-column: 1;
+    grid-row: 2;
+    padding: 0.2rem 1rem 1rem calc(1rem + 1.4em);
     font-size: 1rem;
     line-height: 1.45;
   }
 
   .comparativo__tabela td::before {
-    content: attr(data-rotulo);
-    display: block;
-    font-size: var(--passo-pequeno);
-    font-weight: 600;
-    color: inherit;
+    left: 1rem;
+    top: calc(0.2rem + 0.28em);
+  }
+
+  /* A coluna azul ocupa a linha toda, com o texto alinhado ao da esquerda. */
+  .comparativo__tabela td.comparativo__nossa {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+    padding-top: calc(1.2rem + 1.5 * var(--passo-pequeno));
+  }
+
+  .comparativo__tabela td.comparativo__nossa::before {
+    top: calc(1.2rem + 1.5 * var(--passo-pequeno) + 0.28em);
+  }
+
+  .comparativo__pe .botao {
+    width: 100%;
   }
 }
 
-@media (min-width: 1024px) {
-  .comparativo {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1.7fr);
-    align-items: start;
+@media (min-width: 900px) {
+  .comparativo__topo {
+    grid-template-columns: 1.3fr 1fr;
+  }
+
+  .comparativo__topo p {
+    justify-self: end;
+  }
+
+  .comparativo__pe {
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 2rem;
   }
 }
 

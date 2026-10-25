@@ -183,9 +183,11 @@ diante já existem como reserva) e os textos; para tirar, apague as duas.
 entra como máscara no CSS, então a cor vem do CSS (`--roseta` e `--faixa`
 no `:root`). As linhas MRZ (as fileiras de `<` do pé do passaporte) são SVG
 com `textLength`, que esticam sempre na largura certa. O painel de horários
-da capa (`#relogios`) mostra a hora local de cada `data-fuso`; para trocar
-um destino, mude o código, a cidade e o fuso (nome IANA, ex.:
-`Europe/Lisbon`).
+da capa (`#relogios`) funciona como o painel de embarque: Manaus em cima,
+com a data, e uma linha por destino (`relogios__linha`) com o código, a
+cidade, o visto, a diferença de fuso (calculada na hora, com horário de
+verão) e a hora local. Para trocar um destino, mude esses textos e o
+`data-fuso` (nome IANA, ex.: `Europe/Lisbon`).
 
 Fotos das coleções abertas (Teatro Amazonas, Ponte Rio Negro, carimbo,
 passaporte e o vídeo das nuvens) ficam em `assets/`, com fonte e licença em
