@@ -1,401 +1,311 @@
 /* ==========================================================================
-   TEMPLATE DE SITE INSTITUCIONAL — JAVASCRIPT
+   AMAZON VISTO — JAVASCRIPT
    ==========================================================================
-   JS puro, sem dependências. Cada responsabilidade numa função separada e
-   independente das outras — se algo aqui der erro, o resto do site
-   continua funcionando normalmente.
+   JS puro, sem dependências. Cada responsabilidade numa função separada:
+   se uma falhar, o resto do site continua funcionando — e nada fica
+   escondido sem JS (o conteúdo só é escondido para entrar quando a classe
+   "js" está no <html>, que este arquivo e o <head> colocam).
 
-   Sobre o movimento do site: pouco e com intenção. O único "momento" é o
-   carimbo "Visto aprovado" batendo na vitrine do hero (e os carimbos da
-   faixa de reconhecimento, no mesmo gesto). O resto é entrada suave ao
-   rolar e a linha do processo, que segue o scroll da própria seção. Nada de
-   máquina de escrever, título letra por letra, cursor customizado ou brilho
-   seguindo o mouse — pra uma assessoria de visto, isso lê como "template",
-   não como empresa séria.
-
-   Tudo que lê layout no scroll (getBoundingClientRect) passa por
-   "porQuadro": no máximo uma leitura por frame, em vez de uma por evento.
+   O momento da página é o "Escolha o seu destino": passar o mouse num
+   destino mostra a foto dele; escolher faz o carimbo bater na foto e leva
+   o serviço para a mensagem do WhatsApp.
    ========================================================================== */
 
+document.documentElement.classList.add("js");
+
 document.addEventListener("DOMContentLoaded", () => {
-  ativarMenuMobile();
-  ativarSombraDoCabecalhoAoRolar();
-  ativarRevelacaoAoRolar();
-  ativarLinkAtivoNaNavegacao();
+  ativarMenu();
+  ativarEntradas();
   atualizarAnoDoRodape();
-  ativarScrollHorizontalServicos();
+  ativarDestinos();
   ativarContadores();
-  ativarVitrineDoHero();
-  ativarLinhaDoProcesso();
+  ativarPainelDeServicos();
+  ativarPainelDeDestino();
+  ativarVideos();
 });
 
 const prefereMenosMovimento = () => window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-// Agrupa chamadas repetidas (scroll, resize, mousemove) em no máximo uma por
-// frame de animação — evita ler/escrever layout dezenas de vezes por frame.
-function porQuadro(funcao) {
-  let agendado = false;
-  return (...args) => {
-    if (agendado) return;
-    agendado = true;
-    requestAnimationFrame(() => {
-      agendado = false;
-      funcao(...args);
-    });
-  };
-}
-
 /* --------------------------------------------------------------------------
-   1. MENU MOBILE (hambúrguer)
-   Abre/fecha o painel de navegação em telas pequenas e fecha sozinho quando
-   o visitante clica em algum link (senão o menu ficaria aberto por cima do
-   conteúdo depois de navegar).
+   1. MENU
+   O botão "Menu" abre o painel com as seções (em qualquer largura). Fecha
+   ao clicar num link ou com Esc. Os rótulos vêm do HTML (data-rotulo-*)
+   pra versão em espanhol não ficar com "Abrir menu" em português.
    -------------------------------------------------------------------------- */
-function ativarMenuMobile() {
+function ativarMenu() {
   const botao = document.getElementById("botaoMenuMobile");
   const navegacao = document.getElementById("navegacao");
   if (!botao || !navegacao) return;
 
-  const fecharMenu = () => {
-    navegacao.classList.remove("navegacao--aberta");
-    botao.setAttribute("aria-expanded", "false");
-    botao.setAttribute("aria-label", "Abrir menu");
+  const rotuloAbrir = botao.dataset.rotuloAbrir || "Abrir menu";
+  const rotuloFechar = botao.dataset.rotuloFechar || "Fechar menu";
+
+  const definir = (aberto) => {
+    navegacao.classList.toggle("navegacao--aberta", aberto);
+    botao.setAttribute("aria-expanded", String(aberto));
+    botao.setAttribute("aria-label", aberto ? rotuloFechar : rotuloAbrir);
   };
 
-  const alternarMenu = () => {
-    const abrindo = !navegacao.classList.contains("navegacao--aberta");
-    navegacao.classList.toggle("navegacao--aberta", abrindo);
-    botao.setAttribute("aria-expanded", String(abrindo));
-    botao.setAttribute("aria-label", abrindo ? "Fechar menu" : "Abrir menu");
-  };
-
-  botao.addEventListener("click", alternarMenu);
-
-  navegacao.querySelectorAll("a").forEach((link) => {
-    link.addEventListener("click", fecharMenu);
-  });
-
-  // Fecha o menu com a tecla Esc (acessibilidade)
+  botao.addEventListener("click", () => definir(!navegacao.classList.contains("navegacao--aberta")));
+  navegacao.querySelectorAll("a").forEach((link) => link.addEventListener("click", () => definir(false)));
   document.addEventListener("keydown", (evento) => {
-    if (evento.key === "Escape") fecharMenu();
+    if (evento.key === "Escape" && navegacao.classList.contains("navegacao--aberta")) {
+      definir(false);
+      botao.focus();
+    }
   });
 }
 
 /* --------------------------------------------------------------------------
-   2. CABEÇALHO AO ROLAR
-   No topo da página o cabeçalho é transparente, por cima do hero escuro
-   (texto claro). Assim que o visitante rola, ganha fundo de papel, fio
-   inferior e texto escuro — a classe "cabecalho--rolado" controla tudo isso
-   no CSS.
+   2. ENTRADA AO ROLAR
+   Cada ".entrada" sobe e aparece uma vez quando entra na tela. Dentro da
+   mesma seção, as partes entram em cascata (título, texto, figura) com
+   75ms entre uma e outra.
    -------------------------------------------------------------------------- */
-function ativarSombraDoCabecalhoAoRolar() {
-  const cabecalho = document.getElementById("cabecalho");
-  if (!cabecalho) return;
-
-  const verificarRolagem = () => {
-    cabecalho.classList.toggle("cabecalho--rolado", window.scrollY > 12);
-  };
-
-  verificarRolagem();
-  window.addEventListener("scroll", porQuadro(verificarRolagem), { passive: true });
-}
-
-/* --------------------------------------------------------------------------
-   3. ANIMAÇÃO DE ENTRADA AO ROLAR (SCROLL REVEAL)
-   Usa IntersectionObserver (nativo do navegador, sem biblioteca) para
-   adicionar a classe ".reveal--visivel" em elementos ".reveal" assim que
-   eles entram na tela. Cada elemento anima uma vez só (unobserve depois).
-   -------------------------------------------------------------------------- */
-function ativarRevelacaoAoRolar() {
-  const elementos = document.querySelectorAll(".reveal");
+function ativarEntradas() {
+  const elementos = document.querySelectorAll(".entrada");
   if (!elementos.length) return;
 
-  // Quem prefere menos animação já vê tudo visível direto, sem observer
   if (prefereMenosMovimento() || !("IntersectionObserver" in window)) {
-    elementos.forEach((el) => el.classList.add("reveal--visivel"));
+    elementos.forEach((el) => el.classList.add("entrou"));
     return;
   }
 
+  // Atraso de cada parte = posição dela entre as ".entrada" da seção.
+  document.querySelectorAll("section, footer").forEach((secao) => {
+    secao.querySelectorAll(".entrada").forEach((el, i) => {
+      el.style.transitionDelay = `${Math.min(i * 0.075, 0.45)}s`;
+    });
+  });
+
   const observador = new IntersectionObserver(
-    (entradas, observer) => {
+    (entradas, obs) => {
       entradas.forEach((entrada) => {
-        if (entrada.isIntersecting) {
-          const elemento = entrada.target;
-
-          // Atraso extra pra quem tem outros ".reveal" irmãos (mesmo pai) —
-          // dá um efeito de cascata em grades (diferenciais, passos do
-          // processo, carimbos) sem precisar numerar nada no HTML.
-          const irmaosRevelaveis = elemento.parentElement
-            ? Array.from(elemento.parentElement.children).filter((el) =>
-                el.classList.contains("reveal")
-              )
-            : [];
-          const indice = irmaosRevelaveis.indexOf(elemento);
-          if (indice > 0) {
-            elemento.style.transitionDelay = `${Math.min(indice * 0.09, 0.45)}s`;
-          }
-
-          elemento.classList.add("reveal--visivel");
-          observer.unobserve(elemento);
-        }
+        if (!entrada.isIntersecting) return;
+        entrada.target.classList.add("entrou");
+        obs.unobserve(entrada.target);
       });
     },
-    { threshold: 0.15, rootMargin: "0px 0px -40px 0px" }
+    { threshold: 0.12, rootMargin: "0px 0px -40px 0px" }
   );
 
   elementos.forEach((el) => observador.observe(el));
 }
 
 /* --------------------------------------------------------------------------
-   4. DESTACAR O LINK ATIVO NO MENU CONFORME A SEÇÃO VISÍVEL
-   Ajuda o visitante a se localizar na página enquanto rola.
-   -------------------------------------------------------------------------- */
-function ativarLinkAtivoNaNavegacao() {
-  const secoes = document.querySelectorAll("main section[id]");
-  const links = document.querySelectorAll(".navegacao__link");
-  if (!secoes.length || !("IntersectionObserver" in window)) return;
-
-  const linkPorId = new Map();
-  links.forEach((link) => {
-    const id = link.getAttribute("href").replace("#", "");
-    linkPorId.set(id, link);
-  });
-
-  const observador = new IntersectionObserver(
-    (entradas) => {
-      entradas.forEach((entrada) => {
-        if (!entrada.isIntersecting) return;
-
-        const link = linkPorId.get(entrada.target.id);
-        if (link) {
-          links.forEach((l) => {
-            l.classList.remove("navegacao__link--ativo");
-            l.removeAttribute("aria-current");
-          });
-          link.classList.add("navegacao__link--ativo");
-          link.setAttribute("aria-current", "true");
-        }
-      });
-    },
-    { rootMargin: "-45% 0px -50% 0px" } // considera "ativa" a seção perto do meio da tela
-  );
-
-  secoes.forEach((secao) => observador.observe(secao));
-}
-
-/* --------------------------------------------------------------------------
-   5. ANO ATUAL NO RODAPÉ
-   Evita ter que lembrar de atualizar o "© 2026" na mão todo ano.
+   3. ANO NO RODAPÉ
    -------------------------------------------------------------------------- */
 function atualizarAnoDoRodape() {
-  const spanAno = document.getElementById("anoAtual");
-  if (!spanAno) return;
-  spanAno.textContent = new Date().getFullYear();
+  const ano = document.getElementById("anoAtual");
+  if (ano) ano.textContent = new Date().getFullYear();
 }
 
 /* --------------------------------------------------------------------------
-   6. SCROLL HORIZONTAL "PINADO" DOS SERVIÇOS
-   Em vez do típico "scrollytelling" com GSAP/ScrollTrigger, replica o
-   mesmo resultado com CSS position:sticky puro: a seção ganha uma altura
-   extra (igual à distância horizontal que a trilha de cards precisa
-   percorrer) e, enquanto o visitante rola essa sobra vertical, a trilha
-   desliza pra esquerda proporcionalmente — o scroll vertical normal "pilota"
-   o deslocamento horizontal, sem tomar o controle da rolagem do visitante
-   (ele sempre pode continuar rolando pra baixo normalmente, sem trava).
-   Em telas pequenas e para quem prefere menos movimento, vira uma faixa
-   comum com rolagem horizontal nativa (mais previsível no touch e sem
-   nenhum "sequestro" de scroll).
+   4. "ESCOLHA O SEU DESTINO" (abas dos serviços)
+   - Escolher um destino (clique, toque ou setas do teclado): troca o painel
+     de texto e a foto, e o carimbo daquele destino bate por cima.
+   - Passar o mouse num destino (só com mouse de verdade): mostra a foto
+     dele como prévia; ao sair do índice volta para o escolhido.
+   Abas acessíveis no padrão WAI-ARIA (setas, Home/End, tabindex móvel).
    -------------------------------------------------------------------------- */
-function ativarScrollHorizontalServicos() {
-  const secao = document.querySelector(".servicos-scroll");
-  // A "pista" é só o miolo que cria a sobra de altura (o texto de cabeçalho
-  // da seção fica FORA dela, rolando normal; isso evita que os cards fiquem
-  // espremidos/cortados embaixo da tela, já que o pin só precisa caber os
-  // cards, não cabeçalho + cards juntos).
-  const pista = document.getElementById("pistaServicos");
-  const pin = document.querySelector(".servicos-scroll__pin");
-  const trilha = document.getElementById("trilhaServicos");
-  if (!secao || !pista || !pin || !trilha) return;
+function ativarDestinos() {
+  const raiz = document.getElementById("destinos");
+  if (!raiz) return;
 
-  const semTelaGrande = window.matchMedia("(max-width: 1023px)").matches;
+  const abas = Array.from(raiz.querySelectorAll('[role="tab"]'));
+  const fotos = Array.from(raiz.querySelectorAll(".destinos__foto"));
+  const indice = raiz.querySelector(".destinos__indice");
+  if (!abas.length) return;
 
-  if (semTelaGrande || prefereMenosMovimento()) {
-    secao.classList.add("servicos-scroll--simples");
-    trilha.classList.add("servicos-scroll__trilha--nativa");
-    return;
-  }
+  const fotoDe = (servico) => fotos.find((f) => f.dataset.servico === servico);
+  let escolhido = abas.find((a) => a.getAttribute("aria-selected") === "true") || abas[0];
 
-  const recalcularAltura = () => {
-    const distanciaHorizontal = Math.max(0, trilha.scrollWidth - window.innerWidth);
-    pista.style.height = `${pin.offsetHeight + distanciaHorizontal}px`;
-  };
-
-  const atualizarPosicao = () => {
-    const distanciaHorizontal = trilha.scrollWidth - window.innerWidth;
-    if (distanciaHorizontal <= 0) {
-      trilha.style.transform = "translateX(0)";
-      return;
+  const mostrarFoto = (servico, carimbar) => {
+    fotos.forEach((f) => f.classList.toggle("e-ativa", f.dataset.servico === servico));
+    const foto = fotoDe(servico);
+    if (carimbar && foto && !prefereMenosMovimento()) {
+      foto.classList.remove("carimbando");
+      void foto.offsetWidth; // reinicia a animação
+      foto.classList.add("carimbando");
     }
-    const caixa = pista.getBoundingClientRect();
-    const percurso = caixa.height - pin.offsetHeight;
-    const progresso = percurso > 0 ? -caixa.top / percurso : 0;
-    const progressoLimitado = Math.min(1, Math.max(0, progresso));
-    trilha.style.transform = `translateX(-${progressoLimitado * distanciaHorizontal}px)`;
   };
 
-  recalcularAltura();
-  atualizarPosicao();
-  window.addEventListener("scroll", porQuadro(atualizarPosicao), { passive: true });
-  window.addEventListener(
-    "resize",
-    porQuadro(() => {
-      recalcularAltura();
-      atualizarPosicao();
-    })
-  );
+  const escolher = (aba, focar) => {
+    escolhido = aba;
+    abas.forEach((a) => {
+      const ativa = a === aba;
+      a.setAttribute("aria-selected", String(ativa));
+      a.tabIndex = ativa ? 0 : -1;
+      const painel = document.getElementById(a.getAttribute("aria-controls"));
+      if (painel) painel.classList.toggle("e-ativo", ativa);
+    });
+    mostrarFoto(aba.dataset.servico, true);
+    if (focar) aba.focus();
+  };
+
+  abas.forEach((aba, i) => {
+    aba.addEventListener("click", () => escolher(aba, false));
+    aba.addEventListener("keydown", (evento) => {
+      const mapa = { ArrowDown: i + 1, ArrowRight: i + 1, ArrowUp: i - 1, ArrowLeft: i - 1, Home: 0, End: abas.length - 1 };
+      if (!(evento.key in mapa)) return;
+      evento.preventDefault();
+      escolher(abas[(mapa[evento.key] + abas.length) % abas.length], true);
+    });
+  });
+
+  // Prévia ao passar o mouse (rápida e exata, sem atraso).
+  if (window.matchMedia("(hover: hover) and (pointer: fine)").matches && indice) {
+    abas.forEach((aba) => aba.addEventListener("pointerenter", () => mostrarFoto(aba.dataset.servico, false)));
+    indice.addEventListener("pointerleave", () => mostrarFoto(escolhido.dataset.servico, false));
+  }
 }
 
 /* --------------------------------------------------------------------------
-   7. CONTADOR ANIMADO (carimbo de seguidores)
-   Conta de 0 até o valor de cada "[data-contar]" assim que ele entra na
-   tela, preservando o formato original (casa decimal com vírgula, sufixo
-   tipo " mil" ou "x") — o texto no HTML já é o valor final real, então
-   funciona mesmo se o JS falhar ou o navegador não suportar
-   IntersectionObserver (só não anima, mostra o valor certo direto). Só vai
-   em quantidade de verdade — ano não "conta" (não faz sentido ver 1580).
+   5. CONTADOR (seguidores no Instagram)
+   Conta de 0 até o valor escrito no HTML, uma vez, quando entra na tela.
+   O texto no HTML já é o valor final, então sem JS aparece certo.
    -------------------------------------------------------------------------- */
 function ativarContadores() {
   const elementos = document.querySelectorAll("[data-contar]");
-  if (!elementos.length) return;
-
-  if (prefereMenosMovimento() || !("IntersectionObserver" in window)) return;
+  if (!elementos.length || prefereMenosMovimento() || !("IntersectionObserver" in window)) return;
 
   const observador = new IntersectionObserver(
-    (entradas, observer) => {
+    (entradas, obs) => {
       entradas.forEach((entrada) => {
-        if (entrada.isIntersecting) {
-          contarAte(entrada.target);
-          observer.unobserve(entrada.target);
-        }
+        if (!entrada.isIntersecting) return;
+        contarAte(entrada.target);
+        obs.unobserve(entrada.target);
       });
     },
     { threshold: 0.6 }
   );
-
   elementos.forEach((el) => observador.observe(el));
 }
 
 function contarAte(elemento) {
-  const textoOriginal = elemento.textContent.trim();
-  const correspondencia = textoOriginal.match(/^([\d.,]+)/);
-  if (!correspondencia) return; // nada numérico no início — deixa o texto como está
+  const texto = elemento.textContent.trim();
+  const numero = texto.match(/^([\d.,]+)/);
+  if (!numero) return;
+  const sufixo = texto.slice(numero[1].length);
+  const temDecimal = numero[1].includes(",");
+  const final = parseFloat(numero[1].replace(/\./g, "").replace(",", "."));
+  if (Number.isNaN(final)) return;
 
-  const numeroTexto = correspondencia[1];
-  const sufixo = textoOriginal.slice(numeroTexto.length);
-  const temDecimal = numeroTexto.includes(",");
-  const valorFinal = parseFloat(numeroTexto.replace(/\./g, "").replace(",", "."));
-  if (Number.isNaN(valorFinal)) return;
-
-  const formatador = new Intl.NumberFormat("pt-BR", {
+  const formato = new Intl.NumberFormat("pt-BR", {
     minimumFractionDigits: temDecimal ? 1 : 0,
     maximumFractionDigits: temDecimal ? 1 : 0,
   });
-
-  const duracao = 1400;
   const inicio = performance.now();
-
   const passo = (agora) => {
-    const progresso = Math.min(1, (agora - inicio) / duracao);
-    const suavizado = 1 - Math.pow(1 - progresso, 3); // ease-out cúbico
-    elemento.textContent = formatador.format(valorFinal * suavizado) + sufixo;
-    if (progresso < 1) requestAnimationFrame(passo);
+    const t = Math.min(1, (agora - inicio) / 1400);
+    elemento.textContent = formato.format(final * (1 - Math.pow(1 - t, 3))) + sufixo;
+    if (t < 1) requestAnimationFrame(passo);
   };
   requestAnimationFrame(passo);
 }
 
 /* --------------------------------------------------------------------------
-   8. VITRINE DE DESTINOS DO HERO (leque de fotos + selo "aprovado")
-   Revela o leque com um pequeno atraso (depois do título entrar) — as
-   fotos abrem em leque e, por último, o carimbo "bate" por cima. Paralaxe
-   bem leve: cada foto se desloca alguns pixels conforme o mouse anda pela
-   seção (só transform, uma vez por frame).
+   6. PAINEL "O QUE ESTÁ INCLUSO"
+   Um único <dialog> reaproveitado: o <template id="incluso-..."> do serviço
+   é copiado para dentro e o painel abre com showModal() (prende o foco,
+   fecha com Esc, devolve o foco ao botão). Os botões começam "hidden" e só
+   aparecem se o navegador suportar <dialog>.
    -------------------------------------------------------------------------- */
-function ativarVitrineDoHero() {
-  const vitrine = document.getElementById("vitrineHero");
-  if (!vitrine) return;
+function ativarPainelDeServicos() {
+  const painel = document.getElementById("painelServico");
+  const corpo = document.getElementById("painelCorpo");
+  const botoes = document.querySelectorAll("[data-painel]");
+  if (!painel || !corpo || !botoes.length || typeof painel.showModal !== "function") return;
 
-  if (prefereMenosMovimento()) {
-    vitrine.classList.add("hero__vitrine--revelada");
-    return;
-  }
+  botoes.forEach((botao) => {
+    const modelo = document.getElementById(`incluso-${botao.dataset.painel}`);
+    if (!modelo) return;
+    botao.hidden = false;
+    botao.addEventListener("click", () => {
+      corpo.replaceChildren(modelo.content.cloneNode(true));
+      painel.showModal();
+      painel.querySelector(".painel__caixa").scrollTop = 0;
+    });
+  });
 
-  setTimeout(() => vitrine.classList.add("hero__vitrine--revelada"), 450);
-  ativarParallaxDaVitrine(vitrine);
-}
-
-function ativarParallaxDaVitrine(vitrine) {
-  const hero = document.getElementById("inicio");
-  const semMouseDeVerdade = window.matchMedia("(pointer: coarse)").matches;
-  if (!hero || semMouseDeVerdade) return;
-
-  const cartoes = vitrine.querySelectorAll(".hero__selo");
-  const carimbo = vitrine.querySelector(".hero__carimbo");
-
-  hero.addEventListener(
-    "mousemove",
-    porQuadro((evento) => {
-      const centroX = window.innerWidth / 2;
-      const centroY = window.innerHeight / 2;
-      const deslocamentoX = (evento.clientX - centroX) / centroX;
-      const deslocamentoY = (evento.clientY - centroY) / centroY;
-
-      cartoes.forEach((cartao, indice) => {
-        const profundidade = (indice + 1) * 3;
-        cartao.style.setProperty("--px", `${deslocamentoX * profundidade}px`);
-        cartao.style.setProperty("--py", `${deslocamentoY * profundidade}px`);
-      });
-
-      if (carimbo) {
-        carimbo.style.setProperty("--px", `${deslocamentoX * 5}px`);
-        carimbo.style.setProperty("--py", `${deslocamentoY * 5}px`);
-      }
-    })
-  );
+  painel.querySelector(".painel__fechar")?.addEventListener("click", () => painel.close());
+  painel.addEventListener("click", (evento) => {
+    if (evento.target === painel) painel.close();
+  });
 }
 
 /* --------------------------------------------------------------------------
-   9. LINHA DO PROCESSO PREENCHENDO COM O SCROLL
-   A variável fica no wrapper (.processo__percurso), não na <ol>: assim ela
-   chega tanto à linha (::after da lista) quanto ao avião, que é irmão da
-   lista. Cada passo ganha "--alcancado" quando o avião passa por ele. Só
-   existe dentro da própria seção — não afeta o resto do scroll da página.
+   7. PAINEL DE AEROPORTO NO CARTÃO DE EMBARQUE
+   O código do destino troca a cada poucos segundos (JFK → YYZ → PEK →
+   LIM), virando letra por letra. Destinos e cidades vêm do HTML
+   (data-destinos="JFK:Nova York|..."). Só gira enquanto está na tela.
    -------------------------------------------------------------------------- */
-function ativarLinhaDoProcesso() {
-  const percurso = document.getElementById("percursoProcesso");
-  if (!percurso) return;
-  const passos = percurso.querySelectorAll(".processo__passo");
+function ativarPainelDeDestino() {
+  const painel = document.getElementById("painelDestino");
+  const cidade = document.getElementById("cidadeDestino");
+  if (!painel || !cidade || !("IntersectionObserver" in window) || prefereMenosMovimento()) return;
 
-  if (prefereMenosMovimento()) {
-    percurso.style.setProperty("--progresso-processo", "1");
-    passos.forEach((passo) => passo.classList.add("processo__passo--alcancado"));
-    return;
-  }
+  const destinos = (painel.dataset.destinos || "")
+    .split("|")
+    .map((par) => par.split(":"))
+    .filter((par) => par.length === 2);
+  const letras = painel.querySelectorAll("span");
+  if (destinos.length < 2 || !letras.length) return;
 
-  const atualizar = () => {
-    const caixa = percurso.getBoundingClientRect();
-    const alturaJanela = window.innerHeight;
-    // 0 quando o topo da lista chega a 85% da tela, 1 quando ela chega a
-    // 35% — a viagem acontece enquanto a seção está bem à vista.
-    const progresso = (alturaJanela * 0.85 - caixa.top) / (alturaJanela * 0.5);
-    const limitado = Math.min(1, Math.max(0, progresso));
-    percurso.style.setProperty("--progresso-processo", String(limitado));
-    passos.forEach((passo, i) => {
-      const marco = passos.length > 1 ? i / (passos.length - 1) : 0;
-      passo.classList.toggle("processo__passo--alcancado", limitado >= marco - 0.001);
+  let atual = 0;
+  const trocar = () => {
+    atual = (atual + 1) % destinos.length;
+    const [codigo, nome] = destinos[atual];
+    letras.forEach((letra, i) => {
+      setTimeout(() => {
+        letra.classList.remove("virando");
+        void letra.offsetWidth;
+        letra.classList.add("virando");
+        setTimeout(() => (letra.textContent = codigo[i] || ""), 170);
+      }, i * 110);
     });
+    cidade.style.opacity = "0";
+    setTimeout(() => {
+      cidade.textContent = nome;
+      cidade.style.opacity = "1";
+    }, 320);
   };
 
-  atualizar();
-  window.addEventListener("scroll", porQuadro(atualizar), { passive: true });
-  window.addEventListener("resize", porQuadro(atualizar));
+  let intervalo = null;
+  new IntersectionObserver(([entrada]) => {
+    if (entrada.isIntersecting && !intervalo) intervalo = setInterval(trocar, 2800);
+    else if (!entrada.isIntersecting && intervalo) {
+      clearInterval(intervalo);
+      intervalo = null;
+    }
+  }).observe(painel);
+}
+
+/* --------------------------------------------------------------------------
+   8. VÍDEO (nuvens pela janela do avião)
+   Loop mudo que só toca enquanto está na tela; quem prefere menos
+   movimento vê só o quadro parado (poster).
+   -------------------------------------------------------------------------- */
+function ativarVideos() {
+  const videos = document.querySelectorAll("video[muted]");
+  if (!videos.length || prefereMenosMovimento() || !("IntersectionObserver" in window)) return;
+
+  const observador = new IntersectionObserver(
+    (entradas) => {
+      entradas.forEach((entrada) => {
+        const video = entrada.target;
+        if (entrada.isIntersecting) {
+          video.preload = "auto";
+          video.play().catch(() => {});
+        } else {
+          video.pause();
+        }
+      });
+    },
+    { threshold: 0.25 }
+  );
+  videos.forEach((v) => {
+    v.muted = true;
+    observador.observe(v);
+  });
 }

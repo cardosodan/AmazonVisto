@@ -1,0 +1,903 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <!-- ARQUIVO GERADO — não edite à mão. É a versão em espanhol do
+       index.html, gerada por "node scripts/gerar-es.mjs". Mude o index.html
+       (e, se preciso, as traduções no script) e rode o script de novo. -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#0f1862" />
+  <meta name="color-scheme" content="light" />
+  <script>document.documentElement.classList.add("js");</script>
+
+  <!-- SEO -->
+  <title>Amazon Visto | Visa Americana, Canadiense, China y Pasaporte</title>
+  <meta
+    name="description"
+    content="Asesoría completa en visas (americana, canadiense, china, peruana), pasaporte brasileño e intercambio. Atención presencial en Manaus-AM y Brasilia-DF, y 100% en línea para Brasil y América Latina. Hasta 10 cuotas sin intereses."
+  />
+  <meta name="keywords" content="visa americana, visa canadiense, visa china, visa peruana, pasaporte, intercambio, Manaus, Brasilia, asesoría de visas" />
+  <meta name="author" content="Amazon Visto" />
+  <meta name="robots" content="index, follow" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Amazon Visto | Turismo, Estudio y Trabajo" />
+  <meta
+    property="og:description"
+    content="Visa americana, canadiense, china, peruana y pasaporte, sin salir de casa y en hasta 10 cuotas. Líder del mercado en el Norte de Brasil."
+  />
+  <meta property="og:image" content="images/og-image.jpg" />
+  <!-- TROCAR: colocar a URL real depois do deploy -->
+  <meta property="og:url" content="https://www.amazonvisto.com.br/es.html" />
+  <meta property="og:locale" content="es_LA" />
+  <meta name="twitter:card" content="summary_large_image" />
+
+  <link rel="icon" type="image/png" href="images/favicon.png" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=STIX+Two+Text:ital,wght@0,400;0,600;1,400;1,600&display=swap"
+    rel="stylesheet"
+  />
+
+  <link rel="stylesheet" href="css/style.css?v=28" />
+</head>
+<body>
+  <a class="pular-conteudo" href="#conteudo-principal">Saltar al contenido</a>
+
+  <!-- Filtro "tinta de carimbo": desgasta levemente as bordas dos carimbos,
+       como tinta real no papel. -->
+  <svg width="0" height="0" style="position: absolute" aria-hidden="true" focusable="false">
+    <filter id="tintaCarimbo" x="-5%" y="-5%" width="110%" height="110%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="7" result="ruido" />
+      <feDisplacementMap in="SourceGraphic" in2="ruido" scale="2.2" result="tremido" />
+      <feComponentTransfer in="ruido" result="falhas">
+        <feFuncA type="discrete" tableValues="1 1 1 1 1 0.35 1 1" />
+      </feComponentTransfer>
+      <feComposite in="tremido" in2="falhas" operator="in" />
+    </filter>
+  </svg>
+
+  <!-- ==========================================================================
+       BARRA DO TOPO — marca no centro, menu e idioma à esquerda, uma ação à
+       direita. O menu abre um painel com as seções (em qualquer largura).
+       ========================================================================== -->
+  <header class="barra" id="cabecalho">
+    <div class="barra__lado">
+      <button
+        class="barra__menu"
+        id="botaoMenuMobile"
+        aria-label="Abrir menú"
+        data-rotulo-abrir="Abrir menú"
+        data-rotulo-fechar="Cerrar menú"
+        aria-expanded="false"
+        aria-controls="navegacao"
+      >
+        <span class="barra__menu-icone" aria-hidden="true"><span></span><span></span></span>
+        <span class="barra__menu-texto">Menú</span>
+      </button>
+      <a class="barra__idioma" href="index.html" hreflang="pt-BR" lang="pt-BR">Português</a>
+    </div>
+
+    <a href="#inicio" class="barra__marca">
+      <img src="images/logo.webp" alt="" width="36" height="36" />
+      <span translate="no">Amazon Visto</span>
+    </a>
+
+    <div class="barra__lado barra__lado--fim">
+      <a
+        class="barra__acao"
+        href="https://wa.me/51939125188?text=%C2%A1Hola!%20Vengo%20del%20sitio%20web%20y%20me%20gustar%C3%ADa%20m%C3%A1s%20informaci%C3%B3n%20sobre%20visas."
+        target="_blank"
+        rel="noopener"
+      >Hablemos</a>
+    </div>
+
+    <nav class="navegacao" id="navegacao" aria-label="Navegación principal">
+      <ul class="navegacao__lista">
+        <li><a href="#servicos" class="navegacao__link">Servicios</a></li>
+        <li><a href="#processo" class="navegacao__link">Cómo funciona</a></li>
+        <li><a href="#sobre" class="navegacao__link">Nosotros</a></li>
+        <li><a href="#duvidas" class="navegacao__link">Preguntas</a></li>
+        <li><a href="#contato" class="navegacao__link">Contacto</a></li>
+      </ul>
+      <a
+        class="botao botao--acao navegacao__cta"
+        href="https://wa.me/51939125188?text=%C2%A1Hola!%20Vengo%20del%20sitio%20web%20y%20me%20gustar%C3%ADa%20m%C3%A1s%20informaci%C3%B3n%20sobre%20visas."
+        target="_blank"
+        rel="noopener"
+      >Habla con un especialista</a>
+    </nav>
+  </header>
+
+  <main id="conteudo-principal">
+    <!-- ==========================================================================
+         CAPA — o nome grande e, embaixo, a pilha de pastas da documentação:
+         cada pasta é uma seção (a aba leva até ela e empresta a cor do fundo
+         dela). A pasta da frente, aberta, é a seção Serviços logo abaixo.
+         ========================================================================== -->
+    <section class="capa" id="inicio">
+      <div class="capa__titulo entrada">
+        <h1 translate="no">Amazon Visto</h1>
+        <p class="capa__apoio">
+          Asesoría de visas y pasaporte en Manaus, Brasilia y 100% en línea. Paga en hasta 10 cuotas sin intereses.
+        </p>
+      </div>
+
+      <nav class="pastas" aria-label="Secciones del sitio">
+        <a class="pasta pasta--contato" href="#contato"><span class="pasta__aba">Contacto</span></a>
+        <a class="pasta pasta--duvidas" href="#duvidas"><span class="pasta__aba">Preguntas</span></a>
+        <a class="pasta pasta--sobre" href="#sobre"><span class="pasta__aba">Nosotros</span></a>
+        <a class="pasta pasta--processo" href="#processo"><span class="pasta__aba">Cómo funciona</span></a>
+      </nav>
+    </section>
+
+    <!-- ==========================================================================
+         SERVIÇOS — a pasta da frente, aberta. "Elige tu destino": o
+         índice de serviços troca a foto, o carimbo daquele destino bate por
+         cima e o botão de WhatsApp passa a levar o serviço escolhido na
+         mensagem (ver main.js, "ativarDestinos"). Sem JS, todos os serviços
+         aparecem um embaixo do outro.
+         ========================================================================== -->
+    <section class="servicos" id="servicos" aria-labelledby="titulo-servicos">
+      <div class="pasta-frente">
+        <span class="pasta__aba pasta-frente__aba" aria-hidden="true">Servicios</span>
+
+        <div class="pasta-frente__topo entrada">
+          <a
+            class="botao botao--acao"
+            href="https://wa.me/51939125188?text=%C2%A1Hola!%20Vengo%20del%20sitio%20web%20y%20me%20gustar%C3%ADa%20m%C3%A1s%20informaci%C3%B3n%20sobre%20visas."
+            target="_blank"
+            rel="noopener"
+          >Habla con un especialista</a>
+          <p class="pasta-frente__nota">Empresa del Año 2025 y Empresa Destacada 2026</p>
+        </div>
+
+        <div class="destinos" id="destinos">
+          <div class="destinos__prancha entrada" aria-hidden="true">
+            <figure class="destinos__foto e-ativa" data-servico="visto-americano">
+              <img src="images/produto-1.webp" alt="" width="800" height="800" />
+              <svg class="destinos__carimbo" viewBox="0 0 120 120">
+                <defs><path id="curvaEua" d="M 18,60 a 42,42 0 1,1 84,0 a 42,42 0 1,1 -84,0" /></defs>
+                <circle cx="60" cy="60" r="56" fill="none" stroke="currentColor" stroke-width="2.5" />
+                <circle cx="60" cy="60" r="34" fill="none" stroke="currentColor" stroke-width="1.2" />
+                <text font-size="10" font-weight="700" letter-spacing="2.2" fill="currentColor"><textPath href="#curvaEua">UNITED STATES • ADMITTED •</textPath></text>
+                <text x="60" y="66" text-anchor="middle" font-size="19" font-weight="700" fill="currentColor">USA</text>
+              </svg>
+            </figure>
+            <figure class="destinos__foto" data-servico="visto-canadense">
+              <img src="images/produto-2.webp" alt="" width="800" height="800" loading="lazy" />
+              <svg class="destinos__carimbo destinos__carimbo--largo" viewBox="0 0 150 86">
+                <rect x="3" y="3" width="144" height="80" rx="6" fill="none" stroke="currentColor" stroke-width="2.5" />
+                <rect x="10" y="10" width="130" height="66" rx="3" fill="none" stroke="currentColor" stroke-width="1" />
+                <text x="75" y="42" text-anchor="middle" font-size="22" font-weight="700" letter-spacing="3" fill="currentColor">CANADA</text>
+                <text x="75" y="62" text-anchor="middle" font-size="9.5" font-weight="700" letter-spacing="3" fill="currentColor">ENTRY • ENTRÉE</text>
+              </svg>
+            </figure>
+            <figure class="destinos__foto" data-servico="visto-chines">
+              <img src="images/produto-3.webp" alt="" width="800" height="800" loading="lazy" />
+              <svg class="destinos__carimbo destinos__carimbo--largo" viewBox="0 0 140 96">
+                <ellipse cx="70" cy="48" rx="66" ry="44" fill="none" stroke="currentColor" stroke-width="2.5" />
+                <ellipse cx="70" cy="48" rx="56" ry="34" fill="none" stroke="currentColor" stroke-width="1" />
+                <text x="70" y="52" text-anchor="middle" font-size="20" font-weight="700" letter-spacing="3" fill="currentColor">CHINA</text>
+                <text x="70" y="68" text-anchor="middle" font-size="8.5" font-weight="700" letter-spacing="2.5" fill="currentColor">ENTRY</text>
+              </svg>
+            </figure>
+            <figure class="destinos__foto" data-servico="visto-peruano">
+              <img src="images/produto-4.webp" alt="" width="800" height="800" loading="lazy" />
+              <svg class="destinos__carimbo destinos__carimbo--largo" viewBox="0 0 130 100">
+                <path d="M20 4h90l16 46-16 46H20L4 50Z" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round" />
+                <text x="65" y="50" text-anchor="middle" font-size="22" font-weight="700" letter-spacing="3" fill="currentColor">PERÚ</text>
+                <text x="65" y="68" text-anchor="middle" font-size="9" font-weight="700" letter-spacing="2.5" fill="currentColor">ENTRADA</text>
+              </svg>
+            </figure>
+            <figure class="destinos__foto" data-servico="passaporte-brasileiro">
+              <img src="images/produto-5.webp" alt="" width="800" height="800" loading="lazy" />
+              <svg class="destinos__carimbo" viewBox="0 0 120 120">
+                <defs><path id="curvaBra" d="M 18,60 a 42,42 0 1,1 84,0 a 42,42 0 1,1 -84,0" /></defs>
+                <circle cx="60" cy="60" r="56" fill="none" stroke="currentColor" stroke-width="2.5" />
+                <circle cx="60" cy="60" r="34" fill="none" stroke="currentColor" stroke-width="1.2" />
+                <text font-size="10" font-weight="700" letter-spacing="2.2" fill="currentColor"><textPath href="#curvaBra">BRASIL • PASSAPORTE •</textPath></text>
+                <text x="60" y="66" text-anchor="middle" font-size="19" font-weight="700" fill="currentColor">BRA</text>
+              </svg>
+            </figure>
+            <figure class="destinos__foto" data-servico="intercambio">
+              <img src="images/produto-6.webp" alt="" width="800" height="800" loading="lazy" />
+              <svg class="destinos__carimbo destinos__carimbo--largo" viewBox="0 0 150 86">
+                <rect x="3" y="3" width="144" height="80" rx="40" fill="none" stroke="currentColor" stroke-width="2.5" />
+                <text x="75" y="42" text-anchor="middle" font-size="17" font-weight="700" letter-spacing="2.5" fill="currentColor">ESTUDO</text>
+                <text x="75" y="62" text-anchor="middle" font-size="9.5" font-weight="700" letter-spacing="3" fill="currentColor">E TRABALHO</text>
+              </svg>
+            </figure>
+          </div>
+
+          <div class="destinos__coluna">
+            <h2 class="destinos__titulo entrada" id="titulo-servicos">Elige tu destino</h2>
+
+            <div class="destinos__indice entrada" role="tablist" aria-labelledby="titulo-servicos">
+              <button type="button" role="tab" class="destinos__aba" id="aba-visto-americano" aria-controls="painel-visto-americano" aria-selected="true" data-servico="visto-americano">Visa Americana</button>
+              <button type="button" role="tab" class="destinos__aba" id="aba-visto-canadense" aria-controls="painel-visto-canadense" aria-selected="false" tabindex="-1" data-servico="visto-canadense">Visa Canadiense</button>
+              <button type="button" role="tab" class="destinos__aba" id="aba-visto-chines" aria-controls="painel-visto-chines" aria-selected="false" tabindex="-1" data-servico="visto-chines">Visa China</button>
+              <button type="button" role="tab" class="destinos__aba" id="aba-visto-peruano" aria-controls="painel-visto-peruano" aria-selected="false" tabindex="-1" data-servico="visto-peruano">Visa Peruana</button>
+              <button type="button" role="tab" class="destinos__aba" id="aba-passaporte-brasileiro" aria-controls="painel-passaporte-brasileiro" aria-selected="false" tabindex="-1" data-servico="passaporte-brasileiro">Pasaporte Brasileño</button>
+              <button type="button" role="tab" class="destinos__aba" id="aba-intercambio" aria-controls="painel-intercambio" aria-selected="false" tabindex="-1" data-servico="intercambio">Intercambio</button>
+            </div>
+
+            <div class="destinos__paineis entrada">
+              <article class="destinos__painel e-ativo" role="tabpanel" id="painel-visto-americano" aria-labelledby="aba-visto-americano">
+                <h3>Visa Americana</h3>
+                <p>Visa nueva o renovación, para turismo o negocios, sin salir de casa.</p>
+                <div class="destinos__acoes">
+                  <a class="celula celula--acao" href="https://wa.me/51939125188?text=%C2%A1Hola!%20Vengo%20del%20sitio%20web%20y%20me%20gustar%C3%ADa%20m%C3%A1s%20informaci%C3%B3n%20sobre%20Visa%20Americana." target="_blank" rel="noopener">Consultar por WhatsApp</a>
+                  <button type="button" class="celula celula--tom" data-painel="visto-americano" hidden>Qué incluye</button>
+                </div>
+              </article>
+              <article class="destinos__painel" role="tabpanel" id="painel-visto-canadense" aria-labelledby="aba-visto-canadense">
+                <h3>Visa Canadiense</h3>
+                <p>Visa de turista para Canadá, con asesoría completa de principio a fin.</p>
+                <div class="destinos__acoes">
+                  <a class="celula celula--acao" href="https://wa.me/51939125188?text=%C2%A1Hola!%20Vengo%20del%20sitio%20web%20y%20me%20gustar%C3%ADa%20m%C3%A1s%20informaci%C3%B3n%20sobre%20Visa%20Canadiense." target="_blank" rel="noopener">Consultar por WhatsApp</a>
+                  <button type="button" class="celula celula--tom" data-painel="visto-canadense" hidden>Qué incluye</button>
+                </div>
+              </article>
+              <article class="destinos__painel" role="tabpanel" id="painel-visto-chines" aria-labelledby="aba-visto-chines">
+                <h3>Visa China</h3>
+                <p>Turismo y negocios en China, en hasta 10 cuotas sin intereses.</p>
+                <div class="destinos__acoes">
+                  <a class="celula celula--acao" href="https://wa.me/51939125188?text=%C2%A1Hola!%20Vengo%20del%20sitio%20web%20y%20me%20gustar%C3%ADa%20m%C3%A1s%20informaci%C3%B3n%20sobre%20Visa%20China." target="_blank" rel="noopener">Consultar por WhatsApp</a>
+                  <button type="button" class="celula celula--tom" data-painel="visto-chines" hidden>Qué incluye</button>
+                </div>
+              </article>
+              <article class="destinos__painel" role="tabpanel" id="painel-visto-peruano" aria-labelledby="aba-visto-peruano">
+                <h3>Visa Peruana</h3>
+                <p>Asesoría para la visa de entrada a Perú, con atención en portugués y español.</p>
+                <div class="destinos__acoes">
+                  <a class="celula celula--acao" href="https://wa.me/51939125188?text=%C2%A1Hola!%20Vengo%20del%20sitio%20web%20y%20me%20gustar%C3%ADa%20m%C3%A1s%20informaci%C3%B3n%20sobre%20Visa%20Peruana." target="_blank" rel="noopener">Consultar por WhatsApp</a>
+                  <button type="button" class="celula celula--tom" data-painel="visto-peruano" hidden>Qué incluye</button>
+                </div>
+              </article>
+              <article class="destinos__painel" role="tabpanel" id="painel-passaporte-brasileiro" aria-labelledby="aba-passaporte-brasileiro">
+                <h3>Pasaporte Brasileño</h3>
+                <p>Emisión y renovación por WhatsApp: cero burocracia, rapidez y comodidad.</p>
+                <div class="destinos__acoes">
+                  <a class="celula celula--acao" href="https://wa.me/51939125188?text=%C2%A1Hola!%20Vengo%20del%20sitio%20web%20y%20me%20gustar%C3%ADa%20m%C3%A1s%20informaci%C3%B3n%20sobre%20Pasaporte%20Brasile%C3%B1o." target="_blank" rel="noopener">Consultar por WhatsApp</a>
+                  <button type="button" class="celula celula--tom" data-painel="passaporte-brasileiro" hidden>Qué incluye</button>
+                </div>
+              </article>
+              <article class="destinos__painel" role="tabpanel" id="painel-intercambio" aria-labelledby="aba-intercambio">
+                <h3>Intercambio: Estudio y Trabajo</h3>
+                <p>Orientación completa para quien quiere estudiar o trabajar fuera de Brasil.</p>
+                <div class="destinos__acoes">
+                  <a class="celula celula--acao" href="https://wa.me/51939125188?text=%C2%A1Hola!%20Vengo%20del%20sitio%20web%20y%20me%20gustar%C3%ADa%20m%C3%A1s%20informaci%C3%B3n%20sobre%20Intercambio%3A%20Estudio%20y%20Trabajo." target="_blank" rel="noopener">Consultar por WhatsApp</a>
+                  <button type="button" class="celula celula--tom" data-painel="intercambio" hidden>Qué incluye</button>
+                </div>
+              </article>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         COMO FUNCIONA — fileira de quatro momentos (uma coluna no celular,
+         duas no tablet, quatro no desktop), com as fotos subindo e descendo
+         ao longo da fileira. A ordem está nas palavras de cada legenda, não
+         em números.
+         ========================================================================== -->
+    <section class="processo" id="processo" aria-labelledby="titulo-processo">
+      <div class="processo__topo">
+        <h2 id="titulo-processo" class="entrada">Cómo funciona</h2>
+      </div>
+      <ol class="processo__fileira" id="fileiraProcesso">
+        <li class="momento">
+          <h3>Primero, la conversación</h3>
+          <p>Nos cuentas tu objetivo (turismo, estudio o trabajo) y recibes un análisis gratuito por WhatsApp.</p>
+          <img src="images/sobre.webp" alt="La oficina de Amazon Visto en el Centro de Manaus" width="900" height="1100" loading="lazy" />
+        </li>
+        <li class="momento">
+          <h3>Después, los documentos</h3>
+          <p>Nuestro equipo arma la lista exacta de documentos para tu caso, sin rodeos.</p>
+          <img src="assets/belize-passport-stamp.jpg" alt="Sello de entrada en una página de pasaporte" width="1292" height="1292" loading="lazy" />
+        </li>
+        <li class="momento">
+          <h3>Luego, el consulado</h3>
+          <p>Nos encargamos del trámite ante el consulado o la embajada y te avisamos en cada etapa.</p>
+          <img src="assets/passport-boarding-pass.webp" alt="Pasaporte y tarjeta de embarque sobre la mesa" width="1024" height="773" loading="lazy" />
+        </li>
+        <li class="momento">
+          <h3>Por último, el embarque</h3>
+          <p>Visa o pasaporte en mano, listo para el viaje que planeaste.</p>
+          <video
+            class="momento__video"
+            src="assets/clouds-from-airplane-window-1-2016-08.webm"
+            poster="assets/clouds-from-airplane-window-1-2016-08-poster.jpg"
+            muted
+            loop
+            playsinline
+            preload="none"
+            width="854"
+            height="480"
+            aria-label="Vista de las nubes desde la ventana del avión"
+          ></video>
+        </li>
+      </ol>
+    </section>
+
+    <!-- ==========================================================================
+         SOBRE NÓS — uma carta da equipe numa folha de papel dentro da pasta
+         (fundo cor de pasta de arquivo), com a borda de baixo recortada e um
+         canhoto destacável com o WhatsApp.
+         ========================================================================== -->
+    <section class="sobre" id="sobre" aria-labelledby="titulo-sobre">
+      <article class="carta entrada">
+        <img class="carta__selo" src="images/logo.webp" alt="" width="44" height="44" loading="lazy" />
+        <h2 id="titulo-sobre">Líder del mercado en el Norte de Brasil</h2>
+        <p>
+          Somos Amazon Visto, una asesoría de visas, pasaporte e intercambio. Atendemos presencialmente en Manaus, en la Rua Costa Azevedo, 9, sala 901, y en Brasilia. Y atendemos 100% en línea a todo Brasil y a clientes de habla hispana en toda América Latina.
+        </p>
+        <p>
+          Ya ayudamos a miles de clientes a hacer el viaje de sus sueños: para estudiar, trabajar o simplemente conocer el mundo. Con procesos simples, seguros y sin burocracia.
+        </p>
+        <p>
+          Fuimos reconocidos como <mark>Empresa del Año en 2025</mark> y Empresa Destacada en 2026.
+        </p>
+        <p>
+          Resolvemos todo por WhatsApp, con total seguridad de tus datos, y pagas en hasta 10 cuotas sin intereses con tarjeta, en portugués o español.
+        </p>
+        <p class="carta__assinatura">
+          <span translate="no">Equipo Amazon Visto</span>
+          <span>Manaus y Brasilia</span>
+        </p>
+        <svg class="carta__recorte" viewBox="0 0 640 16" preserveAspectRatio="none" aria-hidden="true">
+          <path d="M0 0H640V0C620 0 620 16 600 16S580 0 560 0 540 16 520 16 500 0 480 0 460 16 440 16 420 0 400 0 380 16 360 16 340 0 320 0 300 16 280 16 260 0 240 0 220 16 200 16 180 0 160 0 140 16 120 16 100 0 80 0 60 16 40 16 20 0 0 0Z" />
+        </svg>
+      </article>
+      <div class="canhoto entrada">
+        <p>WhatsApp <strong>(92) 98126-5897</strong></p>
+        <a
+          class="botao botao--tinta"
+          href="https://wa.me/51939125188?text=%C2%A1Hola!%20Vengo%20del%20sitio%20web%20y%20quiero%20hacer%20la%20consulta%20inicial%20gratuita."
+          target="_blank"
+          rel="noopener"
+        >Escribir por WhatsApp</a>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         RECONHECIMENTO — um cartão impresso, levemente torto, cortado pela
+         borda de baixo da seção: os carimbos dos prêmios e a lista de fatos,
+         como os patronos impressos num programa.
+         ========================================================================== -->
+    <section class="reconhecimento" aria-labelledby="titulo-reconhecimento">
+      <div class="lista-impressa entrada">
+        <h2 id="titulo-reconhecimento">Reconocimiento</h2>
+        <div class="lista-impressa__carimbos" aria-hidden="true">
+          <svg class="carimbo-premio" viewBox="0 0 200 200">
+            <defs><path id="anelPremio1" d="M 30,100 a 70,70 0 1,1 140,0 a 70,70 0 1,1 -140,0" /></defs>
+            <circle cx="100" cy="100" r="94" /><circle cx="100" cy="100" r="56" />
+            <text class="carimbo-premio__anel"><textPath href="#anelPremio1">PREMIO • EMPRESA DEL AÑO • PREMIO •</textPath></text>
+            <text class="carimbo-premio__valor" x="100" y="112" text-anchor="middle">2025</text>
+          </svg>
+          <svg class="carimbo-premio carimbo-premio--vermelho" viewBox="0 0 200 200">
+            <defs><path id="anelPremio2" d="M 30,100 a 70,70 0 1,1 140,0 a 70,70 0 1,1 -140,0" /></defs>
+            <circle cx="100" cy="100" r="94" /><circle cx="100" cy="100" r="56" />
+            <text class="carimbo-premio__anel"><textPath href="#anelPremio2">EMPRESA DESTACADA • EMPRESA DESTACADA •</textPath></text>
+            <text class="carimbo-premio__valor" x="100" y="112" text-anchor="middle">2026</text>
+          </svg>
+          <svg class="carimbo-premio carimbo-premio--dourado" viewBox="0 0 200 200">
+            <defs><path id="anelPremio3" d="M 30,100 a 70,70 0 1,1 140,0 a 70,70 0 1,1 -140,0" /></defs>
+            <circle cx="100" cy="100" r="94" /><circle cx="100" cy="100" r="56" />
+            <text class="carimbo-premio__anel"><textPath href="#anelPremio3">CUOTAS • SIN INTERESES • CON TARJETA •</textPath></text>
+            <text class="carimbo-premio__valor" x="100" y="112" text-anchor="middle">10x</text>
+          </svg>
+        </div>
+        <p class="lista-impressa__nomes">
+          Empresa del Año 2025&nbsp;·&nbsp; Empresa Destacada 2026&nbsp;·&nbsp;
+          <span data-contar>55,7 mil</span> seguidores en Instagram&nbsp;·&nbsp;
+          Atención presencial en Manaus y Brasilia&nbsp;·&nbsp; Portugués y español&nbsp;·&nbsp; Hasta 10 cuotas sin intereses con tarjeta
+        </p>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         SOZINHO x COM A AMAZON VISTO — um formulário de verdade (<table>),
+         com a coluna da assessoria preenchida em azul-marinho. Sem prometer
+         aprovação: nenhuma assessoria pode.
+         ========================================================================== -->
+    <section class="comparativo" id="por-que" aria-labelledby="titulo-comparativo">
+      <div class="comparativo__texto entrada">
+        <h2 id="titulo-comparativo">Solo o con nosotros</h2>
+        <p>
+          Puedes tramitar tu visa por tu cuenta. La diferencia está en el camino hasta allí. Ninguna asesoría puede garantizar la aprobación: la decisión es siempre del consulado. Lo que hacemos es quitarte el peso del camino.
+        </p>
+        <a
+          class="botao botao--acao"
+          href="https://wa.me/51939125188?text=%C2%A1Hola!%20Vengo%20del%20sitio%20web%20y%20quiero%20hacer%20la%20consulta%20inicial%20gratuita."
+          target="_blank"
+          rel="noopener"
+        >Empezar con la consulta gratuita</a>
+      </div>
+
+      <div class="comparativo__folha entrada">
+        <table class="comparativo__tabela">
+          <thead>
+            <tr>
+              <th scope="col"><span class="visualmente-oculto">Etapa</span></th>
+              <th scope="col">Por tu cuenta</th>
+              <th scope="col" class="comparativo__nossa">Con <span translate="no">Amazon Visto</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">Documentos</th>
+              <td data-rotulo="Por tu cuenta">Averiguar por tu cuenta lo que exige cada consulado y esperar que no falte nada.</td>
+              <td class="comparativo__nossa" data-rotulo="Con Amazon Visto">Lista exacta de documentos para tu caso específico, sin rodeos.</td>
+            </tr>
+            <tr>
+              <th scope="row">Trámite en el consulado</th>
+              <td data-rotulo="Por tu cuenta">Navegar por sitios web, formularios y citas, muchas veces en otro idioma.</td>
+              <td class="comparativo__nossa" data-rotulo="Con Amazon Visto">Nos encargamos del trámite ante el consulado o la embajada.</td>
+            </tr>
+            <tr>
+              <th scope="row">Acompañamiento</th>
+              <td data-rotulo="Por tu cuenta">Nadie a quien preguntar cuando algo se traba en el camino.</td>
+              <td class="comparativo__nossa" data-rotulo="Con Amazon Visto">Te mantenemos informado en cada etapa, directo por WhatsApp.</td>
+            </tr>
+            <tr>
+              <th scope="row">Primer paso</th>
+              <td data-rotulo="Por tu cuenta">Horas de investigación antes incluso de empezar.</td>
+              <td class="comparativo__nossa" data-rotulo="Con Amazon Visto">Consulta inicial gratuita para entender tu objetivo.</td>
+            </tr>
+            <tr>
+              <th scope="row">Atención</th>
+              <td data-rotulo="Por tu cuenta">Videos y foros genéricos que no conocen tu caso.</td>
+              <td class="comparativo__nossa" data-rotulo="Con Amazon Visto">Presencial en Manaus y Brasilia o 100% en línea, en portugués o español.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         DÚVIDAS — perguntas ao lado de uma foto alta. Os fatos práticos
+         (endereço, horário, WhatsApp) vêm antes das perguntas; <details>
+         nativo, sem linhas entre as perguntas, só espaço.
+         TROCAR/REVISAR: confirmar cada resposta com a Amazon Visto.
+         ========================================================================== -->
+    <section class="duvidas" id="duvidas" aria-labelledby="titulo-duvidas">
+      <div class="duvidas__texto">
+        <h2 id="titulo-duvidas" class="entrada">Preguntas frecuentes</h2>
+        <ul class="duvidas__fatos entrada">
+          <li>Rua Costa Azevedo, 9, sala 901, Centro, Manaus</li>
+          <li>De lunes a viernes, de 9 a 18 h</li>
+          <li>WhatsApp (92) 98126-5897</li>
+        </ul>
+
+        <div class="duvidas__lista entrada">
+          <details class="pergunta">
+            <summary>¿Garantizan la aprobación de la visa?</summary>
+            <p>
+              No, y desconfía de quien lo garantice. La decisión es siempre del consulado o de la embajada de cada país. Nuestro trabajo es reducir los riesgos del camino: armar la documentación correcta para tu caso y acompañar cada etapa del trámite.
+            </p>
+          </details>
+          <details class="pergunta">
+            <summary>¿La primera consulta tiene costo?</summary>
+            <p>
+              No. Nos cuentas tu objetivo (turismo, estudio o trabajo) y recibes un análisis inicial sin costo, por WhatsApp.
+            </p>
+          </details>
+          <details class="pergunta">
+            <summary>¿Tengo que ir a Manaus o Brasilia?</summary>
+            <p>
+              No. Tenemos atención presencial en Manaus-AM y Brasilia-DF, pero todo el proceso con nosotros se puede hacer 100% en línea, desde cualquier lugar de Brasil o de América Latina. Cuando el consulado exige entrevista o toma de datos biométricos, esa etapa la hace personalmente el solicitante, en la oficina consular.
+            </p>
+          </details>
+          <details class="pergunta">
+            <summary>¿La tasa consular está incluida en el precio?</summary>
+            <!-- TROCAR/REVISAR: confirmar a política da empresa sobre a taxa consular. -->
+            <p>
+              La tasa consular la cobra el gobierno de cada país y es independiente de los honorarios de la asesoría. En la consulta inicial te explicamos el valor de la tasa para tu visa y cómo se paga.
+            </p>
+          </details>
+          <details class="pergunta">
+            <summary>¿Cuánto tarda en salir la visa?</summary>
+            <p>
+              Depende del tipo de visa y de la agenda de cada consulado, que cambia a lo largo del año. En la consulta inicial te damos la estimación actualizada para tu caso.
+            </p>
+          </details>
+          <details class="pergunta">
+            <summary>¿Cómo funciona el pago?</summary>
+            <p>Los honorarios se pueden pagar en hasta 10 cuotas sin intereses con tarjeta.</p>
+          </details>
+          <details class="pergunta">
+            <summary>¿Hacen renovación de visa?</summary>
+            <p>
+              Sí. En la visa americana atendemos tanto la primera visa como la renovación, para turismo o negocios.
+            </p>
+          </details>
+          <details class="pergunta">
+            <summary>¿Atienden en español?</summary>
+            <p>
+              Sí. Para clientes de habla hispana, la atención es por WhatsApp al <a href="https://wa.me/51939125188" lang="es">+51 939 125 188</a>.
+            </p>
+          </details>
+        </div>
+
+        <div class="duvidas__acoes entrada">
+          <a
+            class="botao botao--acao"
+            href="https://wa.me/51939125188?text=%C2%A1Hola!%20Vengo%20del%20sitio%20web%20y%20tengo%20una%20duda."
+            target="_blank"
+            rel="noopener"
+          >Pregunta por WhatsApp</a>
+          <a
+            class="link"
+            href="https://www.google.com/maps?q=Rua%20Costa%20Azevedo,%209,%20Centro,%20Manaus%20-%20AM"
+            target="_blank"
+            rel="noopener"
+          >Ver en el mapa</a>
+        </div>
+      </div>
+
+      <div class="duvidas__fotos" aria-hidden="true">
+        <img class="duvidas__foto-alta" src="images/banner.webp" alt="" width="1920" height="1281" loading="lazy" />
+        <img class="duvidas__foto-quadrada" src="assets/teatro-amazonas-atualmente-01.jpg" alt="" width="1920" height="1280" loading="lazy" />
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         CONTATO — cartão de visita sobre uma foto de Manaus (Ponte Rio Negro).
+         ========================================================================== -->
+    <section class="contato" id="contato" aria-labelledby="titulo-contato">
+      <img
+        class="contato__foto"
+        src="assets/ponte-rio-negro-manaus-brasil.jpg"
+        alt="Manaus vista desde lo alto, con el Puente Río Negro al fondo"
+        width="1920"
+        height="1275"
+        loading="lazy"
+      />
+      <div class="cartao-visita entrada">
+        <h2 id="titulo-contato">Visítanos</h2>
+        <address>
+          Rua Costa Azevedo, 9, sala 901<br />
+          Centro, Manaus-AM
+        </address>
+        <p class="cartao-visita__extra">También en Brasilia-DF y 100% en línea.</p>
+        <dl class="cartao-visita__horas">
+          <div>
+            <dt>Lunes a viernes</dt>
+            <!-- TROCAR: horário real de atendimento -->
+            <dd>9 a 18 h</dd>
+          </div>
+        </dl>
+        <ul class="cartao-visita__contatos">
+          <li><a href="https://wa.me/5592981265897">(92) 98126-5897</a> en portugués</li>
+          <li><a href="https://wa.me/51939125188" lang="es">+51 939 125 188</a> en español</li>
+          <li><a href="https://instagram.com/amazonvisto" target="_blank" rel="noopener">@amazonvisto</a> en Instagram</li>
+        </ul>
+        <a
+          class="cartao-visita__mapa link"
+          href="https://www.google.com/maps?q=Rua%20Costa%20Azevedo,%209,%20Centro,%20Manaus%20-%20AM"
+          target="_blank"
+          rel="noopener"
+        >Abrir en el mapa</a>
+        <a
+          class="botao botao--acao cartao-visita__botao"
+          href="https://wa.me/51939125188?text=%C2%A1Hola!%20Vengo%20del%20sitio%20web%20y%20me%20gustar%C3%ADa%20m%C3%A1s%20informaci%C3%B3n%20sobre%20visas."
+          target="_blank"
+          rel="noopener"
+        >Escribir por WhatsApp</a>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         EMBARQUE — o convite final é um cartão de embarque saindo de Manaus
+         (MAO): o destino troca como painel de aeroporto (ver main.js,
+         "ativarPainelDeDestino") e o botão ocupa a largura do bilhete.
+         ========================================================================== -->
+    <section class="embarque-secao" aria-labelledby="titulo-embarque">
+      <p class="embarque-secao__frase entrada">
+        Tu próximo viaje empieza con una conversación. El análisis inicial es gratuito, por WhatsApp.
+      </p>
+
+      <div class="embarque entrada">
+        <h2 id="titulo-embarque">Tarjeta de embarque</h2>
+        <div class="embarque__rota">
+          <div class="embarque__ponto">
+            <span class="embarque__codigo">MAO</span>
+            <span class="embarque__cidade">Desde Manaus</span>
+          </div>
+          <svg class="embarque__aviao" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M21.5 15.2v-1.9l-8.1-5V3.4C13.4 2.6 12.8 2 12 2s-1.4.6-1.4 1.4v4.9l-8.1 5v1.9l8.1-2.5v4.9L8.6 19v1.5L12 19.6l3.4.9V19l-2-1.5v-4.9l8.1 2.6Z" />
+          </svg>
+          <div class="embarque__ponto embarque__ponto--destino">
+            <span
+              class="embarque__codigo embarque__painel"
+              id="painelDestino"
+              data-destinos="JFK:A Nueva York|YYZ:A Toronto|PEK:A Pekín|LIM:A Lima"
+              aria-hidden="true"
+            ><span>J</span><span>F</span><span>K</span></span>
+            <span class="embarque__cidade" id="cidadeDestino" aria-hidden="true">A Nueva York</span>
+            <span class="visualmente-oculto">Tu próximo destino</span>
+          </div>
+        </div>
+        <dl class="embarque__dados">
+          <div><dt>Pasajero</dt><dd>Tú</dd></div>
+          <div><dt>Puerta</dt><dd>WhatsApp</dd></div>
+          <div><dt>Embarque</dt><dd>Ahora</dd></div>
+        </dl>
+        <a
+          class="embarque__acao"
+          href="https://wa.me/51939125188?text=%C2%A1Hola!%20Vengo%20del%20sitio%20web%20y%20me%20gustar%C3%ADa%20m%C3%A1s%20informaci%C3%B3n%20sobre%20visas."
+          target="_blank"
+          rel="noopener"
+        >Escribir por WhatsApp</a>
+      </div>
+    </section>
+  </main>
+
+  <!-- ==========================================================================
+       RODAPÉ — o verso do cartão: borda de cima recortada em ondas, um recado
+       de despedida à esquerda e os endereços à direita, com um "selo" de
+       foto no canto. TROCAR: CNPJ e Reclame Aqui (com "hidden" até lá).
+       ========================================================================== -->
+  <footer class="rodape">
+    <div class="verso">
+      <svg class="verso__recorte" viewBox="0 0 1200 24" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M0 24V24C0 10.7 22.4 0 50 0S100 10.7 100 24C100 10.7 122.4 0 150 0S200 10.7 200 24C200 10.7 222.4 0 250 0S300 10.7 300 24C300 10.7 322.4 0 350 0S400 10.7 400 24C400 10.7 422.4 0 450 0S500 10.7 500 24C500 10.7 522.4 0 550 0S600 10.7 600 24C600 10.7 622.4 0 650 0S700 10.7 700 24C700 10.7 722.4 0 750 0S800 10.7 800 24C800 10.7 822.4 0 850 0S900 10.7 900 24C900 10.7 922.4 0 950 0S1000 10.7 1000 24C1000 10.7 1022.4 0 1050 0S1100 10.7 1100 24C1100 10.7 1122.4 0 1150 0S1200 10.7 1200 24Z" />
+      </svg>
+
+      <div class="verso__recado">
+        <h2 class="verso__titulo">Buen viaje.</h2>
+        <p>
+          Asesoría completa en visas, pasaporte e intercambio. Líder del mercado en el Norte de Brasil, Empresa del Año 2025 y Empresa Destacada 2026, con atención 100% en línea.
+        </p>
+        <p class="verso__cnpj" hidden>Amazon Visto · CNPJ TROCAR</p>
+        <a class="verso__reclame" href="TROCAR" target="_blank" rel="noopener" hidden>Reputación en Reclame Aqui</a>
+      </div>
+
+      <div class="verso__enderecos">
+        <img class="verso__selo" src="images/produto-1.webp" alt="" width="800" height="800" loading="lazy" />
+        <ul>
+          <li><a href="https://wa.me/5592981265897">WhatsApp (92) 98126-5897</a></li>
+          <li><a href="https://wa.me/51939125188" lang="es">Español +51 939 125 188</a></li>
+          <li><a href="https://instagram.com/amazonvisto" target="_blank" rel="noopener">Instagram @amazonvisto</a></li>
+          <li><a href="https://www.google.com/maps?q=Rua%20Costa%20Azevedo,%209,%20Centro,%20Manaus%20-%20AM" target="_blank" rel="noopener">Rua Costa Azevedo, 9, Manaus</a></li>
+          <li><a href="index.html" hreflang="pt-BR" lang="pt-BR">Versão em português</a></li>
+        </ul>
+      </div>
+
+      <p class="verso__imprenta">
+        &copy; <span id="anoAtual">2026</span> <span translate="no">Amazon Visto</span>. Todos los derechos reservados.
+        Desarrollado por <a href="https://wa.me/5592992162419" target="_blank" rel="noopener">Daniel Cardoso</a>.
+      </p>
+      <p class="verso__creditos">
+        Fotos y video: <a href="https://commons.wikimedia.org/w/index.php?curid=43878206">Teatro Amazonas</a>, por Karine Hermes, <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>;
+        <a href="https://commons.wikimedia.org/wiki/File:Ponte_Rio_Negro_Manaus_Brasil.jpg">Puente Río Negro</a>, por Ana Claudia Jatahy (MTUR), CC0;
+        <a href="https://commons.wikimedia.org/w/index.php?curid=25316587">sello de pasaporte</a>, por JPM, CC0;
+        <a href="https://www.rawpixel.com/image/6020363/photo-image-public-domain-blue-business">pasaporte y tarjeta de embarque</a>, CC0, via rawpixel;
+        <a href="https://commons.wikimedia.org/wiki/File:Clouds_from_Airplane_Window_1_2016-08-29.webm">nubes desde la ventana del avión</a>, por F Astily, <a href="https://creativecommons.org/licenses/by-sa/4.0">CC BY-SA 4.0</a>, via Wikimedia Commons.
+      </p>
+    </div>
+  </footer>
+
+  <!-- ==========================================================================
+       PAINEL "O QUE ESTÁ INCLUSO" — um único <dialog> lateral, preenchido
+       com o <template> do serviço clicado (ver main.js,
+       "ativarPainelDeServicos"). Para editar um serviço, mexa só no
+       <template> dele. TROCAR: preço, itens específicos, prazo e documentos
+       de cada serviço. Enquanto estiverem com "TROCAR", o preço, o item
+       específico e o bloco de prazo/documentos ficam com "hidden" (não
+       aparecem no ar): ao preencher, tire o "hidden" de cada um.
+       ========================================================================== -->
+  <dialog class="painel" id="painelServico" aria-labelledby="painelTitulo">
+    <div class="painel__caixa">
+      <button type="button" class="painel__fechar" aria-label="Cerrar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+          <path d="M6 6l12 12M18 6 6 18" stroke-linecap="round" />
+        </svg>
+      </button>
+      <div class="painel__corpo" id="painelCorpo"></div>
+    </div>
+  </dialog>
+
+  <template id="incluso-visto-americano">
+    <h2 class="painel__titulo" id="painelTitulo">Visa Americana</h2>
+    <p class="painel__descricao">Visa nueva o renovación, para turismo o negocios, sin salir de casa.</p>
+    <!-- TROCAR: valor "desde" y moneda de este servicio -->
+    <p class="painel__preco" hidden>Desde <strong>TROCAR</strong> <span>en hasta 10 cuotas sin intereses con tarjeta</span></p>
+    <h3 class="painel__subtitulo">Qué incluye</h3>
+    <ul class="painel__lista">
+      <li>Consulta inicial gratuita para entender tu objetivo</li>
+      <li>Lista exacta de documentos para tu caso</li>
+      <li>Acompañamiento del trámite ante el consulado o la embajada</li>
+      <li>Novedades en cada etapa, por WhatsApp</li>
+      <!-- TROCAR: ítems específicos de este servicio (um <li> por item) -->
+      <li class="painel__trocar" hidden>TROCAR: ítems específicos de este servicio</li>
+    </ul>
+    <dl class="painel__dados" hidden>
+      <div>
+        <dt>Plazo promedio</dt>
+        <dd>TROCAR</dd>
+      </div>
+      <div>
+        <dt>Documentos básicos</dt>
+        <dd>TROCAR</dd>
+      </div>
+    </dl>
+    <a class="botao botao--whatsapp botao--grande painel__cta" href="https://wa.me/51939125188?text=%C2%A1Hola!%20Vengo%20del%20sitio%20web%20y%20quiero%20contratar%3A%20Visa%20Americana." target="_blank" rel="noopener">
+      <svg class="icone" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5.1-1.3A10 10 0 1 0 12 2Zm5.7 14.2c-.2.7-1.4 1.3-2 1.4-.5.1-1.1.1-1.8-.1-.4-.1-.9-.3-1.6-.6-2.8-1.2-4.6-4-4.7-4.2-.1-.2-1.1-1.5-1.1-2.8 0-1.3.7-2 1-2.2.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.4.2.5.7 1.8.8 1.9.1.2.1.3 0 .5-.1.2-.1.3-.3.5l-.4.5c-.1.2-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.4 2.4 1.5.3.1.5.1.6-.1.2-.2.7-.8.9-1.1.2-.3.4-.2.6-.1.2.1 1.5.7 1.8.8.3.1.5.2.5.3.1.2.1.6-.1 1.2Z" /></svg>
+      Quiero este servicio
+    </a>
+  </template>
+
+  <template id="incluso-visto-canadense">
+    <h2 class="painel__titulo" id="painelTitulo">Visa Canadiense</h2>
+    <p class="painel__descricao">Visa de turista para Canadá, con asesoría completa de principio a fin.</p>
+    <!-- TROCAR: valor "desde" y moneda de este servicio -->
+    <p class="painel__preco" hidden>Desde <strong>TROCAR</strong> <span>en hasta 10 cuotas sin intereses con tarjeta</span></p>
+    <h3 class="painel__subtitulo">Qué incluye</h3>
+    <ul class="painel__lista">
+      <li>Consulta inicial gratuita para entender tu objetivo</li>
+      <li>Lista exacta de documentos para tu caso</li>
+      <li>Acompañamiento del trámite ante el consulado o la embajada</li>
+      <li>Novedades en cada etapa, por WhatsApp</li>
+      <!-- TROCAR: ítems específicos de este servicio (um <li> por item) -->
+      <li class="painel__trocar" hidden>TROCAR: ítems específicos de este servicio</li>
+    </ul>
+    <dl class="painel__dados" hidden>
+      <div>
+        <dt>Plazo promedio</dt>
+        <dd>TROCAR</dd>
+      </div>
+      <div>
+        <dt>Documentos básicos</dt>
+        <dd>TROCAR</dd>
+      </div>
+    </dl>
+    <a class="botao botao--whatsapp botao--grande painel__cta" href="https://wa.me/51939125188?text=%C2%A1Hola!%20Vengo%20del%20sitio%20web%20y%20quiero%20contratar%3A%20Visa%20Canadiense." target="_blank" rel="noopener">
+      <svg class="icone" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5.1-1.3A10 10 0 1 0 12 2Zm5.7 14.2c-.2.7-1.4 1.3-2 1.4-.5.1-1.1.1-1.8-.1-.4-.1-.9-.3-1.6-.6-2.8-1.2-4.6-4-4.7-4.2-.1-.2-1.1-1.5-1.1-2.8 0-1.3.7-2 1-2.2.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.4.2.5.7 1.8.8 1.9.1.2.1.3 0 .5-.1.2-.1.3-.3.5l-.4.5c-.1.2-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.4 2.4 1.5.3.1.5.1.6-.1.2-.2.7-.8.9-1.1.2-.3.4-.2.6-.1.2.1 1.5.7 1.8.8.3.1.5.2.5.3.1.2.1.6-.1 1.2Z" /></svg>
+      Quiero este servicio
+    </a>
+  </template>
+
+  <template id="incluso-visto-chines">
+    <h2 class="painel__titulo" id="painelTitulo">Visa China</h2>
+    <p class="painel__descricao">Turismo y negocios en China, en hasta 10 cuotas sin intereses.</p>
+    <!-- TROCAR: valor "desde" y moneda de este servicio -->
+    <p class="painel__preco" hidden>Desde <strong>TROCAR</strong> <span>en hasta 10 cuotas sin intereses con tarjeta</span></p>
+    <h3 class="painel__subtitulo">Qué incluye</h3>
+    <ul class="painel__lista">
+      <li>Consulta inicial gratuita para entender tu objetivo</li>
+      <li>Lista exacta de documentos para tu caso</li>
+      <li>Acompañamiento del trámite ante el consulado o la embajada</li>
+      <li>Novedades en cada etapa, por WhatsApp</li>
+      <!-- TROCAR: ítems específicos de este servicio (um <li> por item) -->
+      <li class="painel__trocar" hidden>TROCAR: ítems específicos de este servicio</li>
+    </ul>
+    <dl class="painel__dados" hidden>
+      <div>
+        <dt>Plazo promedio</dt>
+        <dd>TROCAR</dd>
+      </div>
+      <div>
+        <dt>Documentos básicos</dt>
+        <dd>TROCAR</dd>
+      </div>
+    </dl>
+    <a class="botao botao--whatsapp botao--grande painel__cta" href="https://wa.me/51939125188?text=%C2%A1Hola!%20Vengo%20del%20sitio%20web%20y%20quiero%20contratar%3A%20Visa%20China." target="_blank" rel="noopener">
+      <svg class="icone" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5.1-1.3A10 10 0 1 0 12 2Zm5.7 14.2c-.2.7-1.4 1.3-2 1.4-.5.1-1.1.1-1.8-.1-.4-.1-.9-.3-1.6-.6-2.8-1.2-4.6-4-4.7-4.2-.1-.2-1.1-1.5-1.1-2.8 0-1.3.7-2 1-2.2.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.4.2.5.7 1.8.8 1.9.1.2.1.3 0 .5-.1.2-.1.3-.3.5l-.4.5c-.1.2-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.4 2.4 1.5.3.1.5.1.6-.1.2-.2.7-.8.9-1.1.2-.3.4-.2.6-.1.2.1 1.5.7 1.8.8.3.1.5.2.5.3.1.2.1.6-.1 1.2Z" /></svg>
+      Quiero este servicio
+    </a>
+  </template>
+
+  <template id="incluso-visto-peruano">
+    <h2 class="painel__titulo" id="painelTitulo">Visa Peruana</h2>
+    <p class="painel__descricao">Asesoría para la visa de entrada a Perú, con atención en portugués y español.</p>
+    <!-- TROCAR: valor "desde" y moneda de este servicio -->
+    <p class="painel__preco" hidden>Desde <strong>TROCAR</strong> <span>en hasta 10 cuotas sin intereses con tarjeta</span></p>
+    <h3 class="painel__subtitulo">Qué incluye</h3>
+    <ul class="painel__lista">
+      <li>Consulta inicial gratuita para entender tu objetivo</li>
+      <li>Lista exacta de documentos para tu caso</li>
+      <li>Acompañamiento del trámite ante el consulado o la embajada</li>
+      <li>Novedades en cada etapa, por WhatsApp</li>
+      <!-- TROCAR: ítems específicos de este servicio (um <li> por item) -->
+      <li class="painel__trocar" hidden>TROCAR: ítems específicos de este servicio</li>
+    </ul>
+    <dl class="painel__dados" hidden>
+      <div>
+        <dt>Plazo promedio</dt>
+        <dd>TROCAR</dd>
+      </div>
+      <div>
+        <dt>Documentos básicos</dt>
+        <dd>TROCAR</dd>
+      </div>
+    </dl>
+    <a class="botao botao--whatsapp botao--grande painel__cta" href="https://wa.me/51939125188?text=%C2%A1Hola!%20Vengo%20del%20sitio%20web%20y%20quiero%20contratar%3A%20Visa%20Peruana." target="_blank" rel="noopener">
+      <svg class="icone" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5.1-1.3A10 10 0 1 0 12 2Zm5.7 14.2c-.2.7-1.4 1.3-2 1.4-.5.1-1.1.1-1.8-.1-.4-.1-.9-.3-1.6-.6-2.8-1.2-4.6-4-4.7-4.2-.1-.2-1.1-1.5-1.1-2.8 0-1.3.7-2 1-2.2.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.4.2.5.7 1.8.8 1.9.1.2.1.3 0 .5-.1.2-.1.3-.3.5l-.4.5c-.1.2-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.4 2.4 1.5.3.1.5.1.6-.1.2-.2.7-.8.9-1.1.2-.3.4-.2.6-.1.2.1 1.5.7 1.8.8.3.1.5.2.5.3.1.2.1.6-.1 1.2Z" /></svg>
+      Quiero este servicio
+    </a>
+  </template>
+
+  <template id="incluso-passaporte-brasileiro">
+    <h2 class="painel__titulo" id="painelTitulo">Pasaporte Brasileño</h2>
+    <p class="painel__descricao">Emisión y renovación por WhatsApp: cero burocracia, rapidez y comodidad.</p>
+    <!-- TROCAR: valor "desde" y moneda de este servicio -->
+    <p class="painel__preco" hidden>Desde <strong>TROCAR</strong> <span>en hasta 10 cuotas sin intereses con tarjeta</span></p>
+    <h3 class="painel__subtitulo">Qué incluye</h3>
+    <ul class="painel__lista">
+      <li>Consulta inicial gratuita para entender tu objetivo</li>
+      <li>Lista exacta de documentos para tu caso</li>
+      <li>Acompañamiento de cada etapa de la emisión o renovación</li>
+      <li>Novedades en cada etapa, por WhatsApp</li>
+      <!-- TROCAR: ítems específicos de este servicio (um <li> por item) -->
+      <li class="painel__trocar" hidden>TROCAR: ítems específicos de este servicio</li>
+    </ul>
+    <dl class="painel__dados" hidden>
+      <div>
+        <dt>Plazo promedio</dt>
+        <dd>TROCAR</dd>
+      </div>
+      <div>
+        <dt>Documentos básicos</dt>
+        <dd>TROCAR</dd>
+      </div>
+    </dl>
+    <a class="botao botao--whatsapp botao--grande painel__cta" href="https://wa.me/51939125188?text=%C2%A1Hola!%20Vengo%20del%20sitio%20web%20y%20quiero%20contratar%3A%20Pasaporte%20Brasile%C3%B1o." target="_blank" rel="noopener">
+      <svg class="icone" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5.1-1.3A10 10 0 1 0 12 2Zm5.7 14.2c-.2.7-1.4 1.3-2 1.4-.5.1-1.1.1-1.8-.1-.4-.1-.9-.3-1.6-.6-2.8-1.2-4.6-4-4.7-4.2-.1-.2-1.1-1.5-1.1-2.8 0-1.3.7-2 1-2.2.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.4.2.5.7 1.8.8 1.9.1.2.1.3 0 .5-.1.2-.1.3-.3.5l-.4.5c-.1.2-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.4 2.4 1.5.3.1.5.1.6-.1.2-.2.7-.8.9-1.1.2-.3.4-.2.6-.1.2.1 1.5.7 1.8.8.3.1.5.2.5.3.1.2.1.6-.1 1.2Z" /></svg>
+      Quiero este servicio
+    </a>
+  </template>
+
+  <template id="incluso-intercambio">
+    <h2 class="painel__titulo" id="painelTitulo">Intercambio: Estudio y Trabajo</h2>
+    <p class="painel__descricao">Orientación completa para quien quiere estudiar o trabajar fuera de Brasil.</p>
+    <!-- TROCAR: valor "desde" y moneda de este servicio -->
+    <p class="painel__preco" hidden>Desde <strong>TROCAR</strong> <span>en hasta 10 cuotas sin intereses con tarjeta</span></p>
+    <h3 class="painel__subtitulo">Qué incluye</h3>
+    <ul class="painel__lista">
+      <li>Consulta inicial gratuita para entender tu objetivo</li>
+      <li>Lista exacta de documentos para tu caso</li>
+      <li>Orientación completa para estudiar o trabajar fuera de Brasil</li>
+      <li>Novedades en cada etapa, por WhatsApp</li>
+      <!-- TROCAR: ítems específicos de este servicio (um <li> por item) -->
+      <li class="painel__trocar" hidden>TROCAR: ítems específicos de este servicio</li>
+    </ul>
+    <dl class="painel__dados" hidden>
+      <div>
+        <dt>Plazo promedio</dt>
+        <dd>TROCAR</dd>
+      </div>
+      <div>
+        <dt>Documentos básicos</dt>
+        <dd>TROCAR</dd>
+      </div>
+    </dl>
+    <a class="botao botao--whatsapp botao--grande painel__cta" href="https://wa.me/51939125188?text=%C2%A1Hola!%20Vengo%20del%20sitio%20web%20y%20quiero%20contratar%3A%20Intercambio%3A%20Estudio%20y%20Trabajo." target="_blank" rel="noopener">
+      <svg class="icone" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5.1-1.3A10 10 0 1 0 12 2Zm5.7 14.2c-.2.7-1.4 1.3-2 1.4-.5.1-1.1.1-1.8-.1-.4-.1-.9-.3-1.6-.6-2.8-1.2-4.6-4-4.7-4.2-.1-.2-1.1-1.5-1.1-2.8 0-1.3.7-2 1-2.2.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.4.2.5.7 1.8.8 1.9.1.2.1.3 0 .5-.1.2-.1.3-.3.5l-.4.5c-.1.2-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.4 2.4 1.5.3.1.5.1.6-.1.2-.2.7-.8.9-1.1.2-.3.4-.2.6-.1.2.1 1.5.7 1.8.8.3.1.5.2.5.3.1.2.1.6-.1 1.2Z" /></svg>
+      Quiero este servicio
+    </a>
+  </template>
+
+  <a
+    href="https://wa.me/51939125188?text=%C2%A1Hola!%20Vengo%20del%20sitio%20web%20y%20me%20gustar%C3%ADa%20m%C3%A1s%20informaci%C3%B3n%20sobre%20visas."
+    target="_blank"
+    rel="noopener"
+    class="whatsapp-flutuante"
+    aria-label="Hablar por WhatsApp"
+  >
+    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <path
+        d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5.1-1.3A10 10 0 1 0 12 2Zm5.7 14.2c-.2.7-1.4 1.3-2 1.4-.5.1-1.1.1-1.8-.1-.4-.1-.9-.3-1.6-.6-2.8-1.2-4.6-4-4.7-4.2-.1-.2-1.1-1.5-1.1-2.8 0-1.3.7-2 1-2.2.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.4.2.5.7 1.8.8 1.9.1.2.1.3 0 .5-.1.2-.1.3-.3.5l-.4.5c-.1.2-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.4 2.4 1.5.3.1.5.1.6-.1.2-.2.7-.8.9-1.1.2-.3.4-.2.6-.1.2.1 1.5.7 1.8.8.3.1.5.2.5.3.1.2.1.6-.1 1.2Z"
+      />
+    </svg>
+  </a>
+
+  <script src="js/main.js?v=26"></script>
+</body>
+</html>

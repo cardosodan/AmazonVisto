@@ -1,86 +1,67 @@
 /* ==========================================================================
-   TEMPLATE DE SITE INSTITUCIONAL — FOLHA DE ESTILOS
+   AMAZON VISTO — FOLHA DE ESTILOS
    ==========================================================================
-   Este arquivo é mobile-first: os estilos "de base" (sem @media) valem para
-   celular; as @media (min-width: ...) no final vão AJUSTANDO o layout para
-   telas maiores (tablet, depois desktop). Isso é de propósito — a maioria
-   dos visitantes desse tipo de site acessa pelo celular.
+   Mobile-first: os estilos sem @media valem para celular; as @media
+   (min-width: ...) ajustam para tablet e desktop.
 
-   Para customizar rapidamente um cliente novo, normalmente você só precisa
-   mexer no bloco ":root" logo abaixo (cores e fontes). O resto do arquivo
-   raramente precisa ser tocado.
+   Direção: "a página é o objeto". A papelada de uma viagem vira a
+   papelaria em que o site é impresso: a capa é uma pilha de pastas de
+   documentação (cada aba é uma seção e empresta a cor do fundo dela), os
+   serviços ficam na pasta da frente, aberta, com o carimbo do destino
+   batendo na foto; a equipe escreve uma carta numa folha recortada; os
+   prêmios vêm num cartão impresso; o convite final é um cartão de
+   embarque saindo de Manaus (MAO); o rodapé é o verso do cartão.
 
-   Linguagem visual: "passaporte de luxo". A capa do passaporte brasileiro
-   é azul-marinho com o brasão em dourado — daí a paleta: tinta
-   azul-marinho, papel marfim e dourado só em fios, ícones e detalhes sobre
-   o escuro. O vermelho vira tinta de carimbo: aparece pouco (o selo
-   "Visto aprovado", a ênfase dos títulos). Padrões guilhochê (as linhas de
-   segurança de passaporte e cédula, em images/guilloche-*.svg), carimbos
-   circulares e a zona de leitura mecânica (MRZ) no rodapé fecham o tema.
-
-   Premium = contenção: muito respiro, serifa editorial (Newsreader) nos
-   títulos, botões de cantos retos como papelaria, e um único momento de
-   movimento (o carimbo batendo). Nada de gradiente brilhante, brilho
-   seguindo o mouse, texto digitando ou elementos pulando.
+   Regras da casa: uma família tipográfica (STIX Two Text) em cinco
+   tamanhos; cores chapadas (azul-marinho, papel, vermelho só na ação);
+   cantos retos em tudo; nada de gradiente, sombra em repouso, fio fino ou
+   rótulo em caixa-alta espaçada. Superfícies se separam por um degrau de
+   tom, nunca por linha.
    ========================================================================== */
 
 /* ==========================================================================
-   1. VARIÁVEIS DE CUSTOMIZAÇÃO — TROQUE AQUI PARA REBRANDEAR O SITE INTEIRO
+   1. VARIÁVEIS
    ========================================================================== */
 :root {
-  /* Cores principais — extraídas por amostragem de pixel direto no logo real
-     da Amazon Visto (não é aproximação): azul-marinho #0f1862 e vermelho
-     #df0112, as mesmas cores do escudo EUA/Canadá e do texto "Amazon Visto".
-     --cor-primaria  = tinta principal (títulos, botões, faixas escuras)
-     --cor-secundaria = tinta de carimbo (usada com moderação) */
-  --cor-primaria: #0f1862;
-  --cor-primaria-escura: #090f42;
-  --cor-primaria-clara: #e8e9f3;
-  --cor-secundaria: #df0112;
-  --cor-secundaria-escura: #a3020e;
-  /* Vermelho clareado pra traço sobre o azul-marinho — o #df0112 puro não
-     passa contraste ali (fica ~2,6:1). */
-  --cor-secundaria-clara: #ff6b74;
+  /* Cores — azul-marinho e vermelho tirados do logo; papel frio (página de
+     passaporte); dourado e manila só nas pastas e nos detalhes. */
+  --tinta: #0f1862;
+  --fundo-escuro: #0b1250;
+  --azul-pasta: #34449a;
+  --papel: #f3f4f1;
+  --papel-2: #e4e6e0;
+  --branco: #ffffff;
+  --nevoa: #dde2ec;
+  --manila: #cdb58a;
+  --vermelho: #b3121f;
+  --vermelho-escuro: #8c0d18;
+  --dourado: #c2a36b;
+  --tinta-suave: #434b70;
+  --papel-suave: rgba(243, 244, 241, 0.84);
 
-  /* Dourado "de brasão" — fios, ícones e ênfase SOBRE O ESCURO. No fundo
-     claro ele não tem contraste pra texto; lá só aparece em detalhes. */
-  --cor-dourado: #b8955a;
-  --cor-dourado-claro: #e3cc9c;
+  /* Tipografia — uma família, cinco tamanhos. */
+  --fonte: "STIX Two Text", Georgia, "Times New Roman", serif;
+  --passo-pequeno: clamp(0.8125rem, 0.79rem + 0.1vw, 0.875rem);
+  --passo-texto: clamp(1.125rem, 1.05rem + 0.3vw, 1.3125rem);
+  --passo-destaque: clamp(1.25rem, 1.1rem + 0.7vw, 1.625rem);
+  --passo-titulo: clamp(2rem, 1.3rem + 3.2vw, 4rem);
+  --passo-capa: clamp(4rem, 11vw, 10.5rem);
 
-  /* Cores neutras (texto e fundo) — branco frio e um azul-acinzentado bem
-     claro, o tom das páginas internas do passaporte (não o creme "de bom
-     gosto" padrão). */
-  --cor-texto: #171a2b;
-  --cor-texto-claro: #535a6e;
-  --cor-fundo: #fcfcfd;
-  --cor-fundo-alt: #eef1f6;
-  --cor-borda: #e1e5ee;
-  --cor-branco: #ffffff;
+  /* Grade — uma única margem lateral para a página inteira. */
+  --margem: clamp(20px, 4vw, 48px);
+  --largura: 1320px;
+  --altura-barra: 60px;
+  --entre-secoes: clamp(72px, 9vw, 136px);
 
-  /* Fontes — troque o nome aqui E no link do Google Fonts, no <head> do
-     index.html, se quiser usar outras fontes. */
-  --fonte-titulo: "Newsreader", Georgia, "Times New Roman", serif;
-  --fonte-corpo: "Hanken Grotesk", "Segoe UI", Arial, sans-serif;
-  /* Só pra MRZ do rodapé (que num passaporte real é monoespaçada). */
-  --fonte-mono: "IBM Plex Mono", Consolas, "Liberation Mono", Menlo, monospace;
-
-  /* Cantos, movimento e largura */
-  --raio-borda: 12px;
-  --raio-borda-pequeno: 4px;
   --ease-saida: cubic-bezier(0.16, 1, 0.3, 1);
-  --transicao: 0.25s ease;
-  --largura-max: 1180px;
-  /* Margem lateral que alinha qualquer coisa de largura total (a trilha de
-     serviços) com o .container. Em % (não vw) de propósito: usada como
-     padding, o % é da largura do pai — sem contar a barra de rolagem, que
-     o 100vw inclui e desalinharia uns pixels. */
-  --margem-container: max(1.25rem, calc((100% - var(--largura-max)) / 2 + 1.25rem));
 }
 
 /* ==========================================================================
-   2. RESET BÁSICO + SUPERFÍCIES DO NAVEGADOR
+   2. BASE
    ========================================================================== */
-* {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
@@ -88,65 +69,40 @@
 
 html {
   scroll-behavior: smooth;
-  /* Compensa a altura do cabeçalho fixo ao clicar em links de âncora (#sobre etc) */
-  scroll-padding-top: 84px;
-  /* Rede de segurança: se algum texto/elemento acabar um pouco mais largo
-     que a tela, isso vira corte em vez de "esticar" o layout pro lado.
-     Só no <html>, não no <body>: declarar "overflow-x" nos dois força o
-     navegador a computar "overflow-y" como "auto" em AMBOS (regra do CSS
-     Overflow — um eixo não-visible "puxa" o outro pra auto), o que faz o
-     <body> virar um scroll-container próprio e quebra QUALQUER
-     "position: sticky" da página (ver ".servicos-scroll__pin"). */
+  scroll-padding-top: calc(var(--altura-barra) + 16px);
+  /* Só no <html> (no <body> quebraria qualquer position: sticky). */
   overflow-x: hidden;
-  max-width: 100%;
   color-scheme: light;
-  scrollbar-color: var(--cor-primaria) var(--cor-fundo-alt);
-  accent-color: var(--cor-primaria);
-  caret-color: var(--cor-secundaria);
+  accent-color: var(--vermelho);
   -webkit-tap-highlight-color: transparent;
 }
 
 body {
-  max-width: 100%;
-  font-family: var(--fonte-corpo);
-  font-size: 1.0625rem;
-  color: var(--cor-texto);
-  background: var(--cor-fundo);
-  line-height: 1.65;
+  font-family: var(--fonte);
+  font-size: var(--passo-texto);
+  line-height: 1.5;
+  color: var(--tinta);
+  background: var(--fundo-escuro);
   -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
   overflow-wrap: break-word;
 }
 
 ::selection {
-  background: var(--cor-primaria);
-  color: var(--cor-fundo);
+  background: var(--tinta);
+  color: var(--papel);
 }
 
-::-webkit-scrollbar {
-  width: 11px;
-}
-
-::-webkit-scrollbar-track {
-  background: var(--cor-fundo-alt);
-}
-
-::-webkit-scrollbar-thumb {
-  background: var(--cor-primaria);
-  border-radius: 999px;
-  border: 3px solid var(--cor-fundo-alt);
-}
-
-img {
-  max-width: 100%;
+img,
+video {
   display: block;
+  max-width: 100%;
+  /* Sem isso o atributo height do HTML vence o aspect-ratio do CSS. */
+  height: auto;
 }
 
-/* O atributo "hidden" sempre vence. Sem isso, qualquer regra de autor com
-   display (ex.: ".cartao-produto { display: flex }") ganha do estilo padrão
-   do navegador e o elemento "escondido" aparece — foi o que deixou os cards
-   "TROCAR" visíveis no site publicado. */
+/* O atributo "hidden" sempre vence (sem isso, regras com display ganham do
+   estilo padrão do navegador e o elemento aparece). */
 [hidden] {
   display: none !important;
 }
@@ -161,45 +117,26 @@ button {
   touch-action: manipulation;
 }
 
+button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+
 ul,
 ol {
   list-style: none;
 }
 
-button {
-  font: inherit;
-  color: inherit;
-  cursor: pointer;
-  border: none;
-  background: none;
-}
-
 h1,
 h2,
 h3 {
-  font-family: var(--fonte-titulo);
-  font-optical-sizing: auto;
   font-weight: 400;
-  line-height: 1.05;
-  letter-spacing: -0.02em;
-  color: var(--cor-primaria-escura);
+  line-height: 1.1;
+  letter-spacing: -0.026em;
   text-wrap: balance;
-}
-
-h3 {
-  font-weight: 500;
-  letter-spacing: -0.01em;
-  line-height: 1.15;
-}
-
-/* A palavra-chave de cada título muda só de TINTA — vermelho de carimbo no
-   papel, dourado sobre o azul-marinho (ver hero e rodapé). Sem itálico:
-   título serifado com palavra em itálico virou o clichê das landing pages
-   feitas em série. */
-h1 em,
-h2 em {
-  font-style: normal;
-  color: var(--cor-secundaria-escura);
 }
 
 p {
@@ -207,65 +144,22 @@ p {
 }
 
 :focus-visible {
-  outline: 2px solid var(--cor-secundaria-escura);
+  outline: 3px solid var(--vermelho);
   outline-offset: 3px;
-  border-radius: 2px;
 }
 
-/* No escuro o anel de foco vira dourado (o vermelho escuro some ali). */
-.hero :focus-visible,
-.faixa-numeros :focus-visible,
-.rodape :focus-visible {
-  outline-color: var(--cor-dourado-claro);
+.capa :focus-visible,
+.processo :focus-visible,
+.reconhecimento :focus-visible,
+.embarque-secao :focus-visible,
+.barra :focus-visible {
+  outline-color: var(--dourado);
 }
 
-/* Respeita quem prefere menos animação (acessibilidade) */
-@media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
-  }
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.001ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.001ms !important;
-  }
-}
-
-/* Link "pular para o conteúdo" — só aparece quando focado via teclado (Tab) */
-.pular-conteudo {
-  position: absolute;
-  left: -999px;
-  top: 0;
-  background: var(--cor-primaria);
-  color: var(--cor-branco);
-  padding: 0.8rem 1.2rem;
-  z-index: 1000;
-  border-radius: 0 0 var(--raio-borda-pequeno) 0;
-}
-
-.pular-conteudo:focus {
-  left: 0;
-}
-
-/* ==========================================================================
-   3. LAYOUT / UTILITÁRIOS
-   ========================================================================== */
-.container {
-  width: 100%;
-  max-width: var(--largura-max);
-  margin: 0 auto;
-  padding: 0 1.25rem;
-}
-
-/* Esconde visualmente mas mantém acessível a leitor de tela — usado onde um
-   elemento decorativo é aria-hidden e precisa de um texto "de verdade" ao
-   lado pra quem usa leitor de tela (ex.: legenda dos carimbos). */
 .visualmente-oculto {
   position: absolute;
   width: 1px;
-  height: 1px;
+  height: 1px; /* taste-skill-ignore: utilitário de leitor de tela, não é fio */
   padding: 0;
   margin: -1px;
   overflow: hidden;
@@ -274,1597 +168,1570 @@ p {
   border: 0;
 }
 
-.secao {
-  padding: 5rem 0;
-  position: relative;
-}
-
-.secao--alt {
-  background: var(--cor-fundo-alt);
-}
-
-/* Guilhochê de fundo em todas as seções claras — as linhas onduladas de
-   segurança de uma página de passaporte, em azul-marinho bem fraco. O SVG
-   entra como MÁSCARA (a cor vem do background-color), combinado com um
-   degradê que apaga as bordas de cima e de baixo. Estático: é papel, não
-   efeito. O mesmo padrão vai no pin dos serviços (ver seção 10), que tem
-   fundo próprio e cobriria este. */
-.secao::before,
-.servicos-scroll__pin::before {
-  content: "";
+.pular-conteudo {
   position: absolute;
-  inset: 0;
-  background-color: rgba(15, 24, 98, 0.075);
-  -webkit-mask-image: url("../images/guilloche-faixa.svg"),
-    linear-gradient(180deg, transparent 0%, #000 14%, #000 86%, transparent 100%);
-  -webkit-mask-size: 520px 130px, 100% 100%;
-  -webkit-mask-repeat: repeat, no-repeat;
-  -webkit-mask-composite: source-in;
-  mask-image: url("../images/guilloche-faixa.svg"),
-    linear-gradient(180deg, transparent 0%, #000 14%, #000 86%, transparent 100%);
-  mask-size: 520px 130px, 100% 100%;
-  mask-repeat: repeat, no-repeat;
-  mask-composite: intersect;
-  pointer-events: none;
+  left: -999px;
+  top: 0;
+  z-index: 1000;
+  padding: 0.8rem 1.2rem;
+  background: var(--papel);
+  color: var(--tinta);
 }
 
-.secao > * {
-  position: relative;
-  z-index: 1;
-}
-
-.secao__titulo {
-  font-size: clamp(2.4rem, 5.6vw, 4rem);
-  line-height: 1.02;
-  letter-spacing: -0.025em;
-  margin-bottom: 1.25rem;
-}
-
-.secao__subtitulo {
-  color: var(--cor-texto-claro);
-  font-size: 1.1rem;
-  max-width: 42ch;
-}
-
-/* Cabeçalho de seção alinhado à esquerda (no desktop vira duas colunas:
-   título à esquerda, subtítulo à direita, com um fio embaixo — ver
-   @media 1024px). Nada de bloco centralizado repetido em toda seção. */
-.secao__cabecalho {
-  margin-bottom: 3rem;
-}
-
-.secao__grade {
-  display: grid;
-  gap: 3rem;
+.pular-conteudo:focus {
+  left: 0;
 }
 
 /* ==========================================================================
-   4. BOTÕES
-   Cantos quase retos (papelaria/documento), sem gradiente, sem brilho
-   varrendo, sem "pulo" no hover. O verde do WhatsApp fica só no ÍCONE —
-   reconhecível sem transformar o botão num adesivo verde.
+   3. BOTÕES E LINKS — cantos retos, uma cor chapada. O vermelho é a ação.
    ========================================================================== */
 .botao {
-  position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.65rem;
-  padding: 0.95rem 1.45rem;
-  border: 1px solid transparent;
-  border-radius: var(--raio-borda-pequeno);
-  font-family: var(--fonte-corpo);
+  min-height: 52px;
+  padding: 0.8rem 1.6rem;
+  font-family: var(--fonte);
+  font-size: var(--passo-texto);
   font-weight: 600;
-  font-size: 0.95rem;
   line-height: 1.2;
-  letter-spacing: 0.005em;
   text-align: center;
-  cursor: pointer;
-  transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease, box-shadow 0.35s ease,
-    transform 0.2s ease;
+  transition: background-color 0.2s ease, color 0.2s ease, transform 0.15s ease;
 }
 
 .botao:active {
-  transform: scale(0.98);
+  transform: translateY(1px);
 }
 
-.botao:focus-visible {
-  outline-offset: 4px;
+.botao--acao {
+  background: var(--vermelho);
+  color: var(--papel);
 }
 
-.botao .icone {
-  width: 1.15em;
-  height: 1.15em;
-  flex-shrink: 0;
+.botao--acao:hover {
+  background: var(--vermelho-escuro);
 }
 
-.botao__seta {
-  transition: transform 0.4s var(--ease-saida);
+.botao--tinta {
+  background: var(--tinta);
+  color: var(--papel);
 }
 
-.botao:hover .botao__seta {
-  transform: translateX(3px);
+.botao--tinta:hover {
+  background: var(--fundo-escuro);
 }
 
-/* Primário — tinta azul-marinho. Todos os botões do site levam ao
-   WhatsApp, por isso "botao--whatsapp" é o primário de fato. */
-.botao--primario,
-.botao--whatsapp {
-  background: var(--cor-primaria);
-  color: var(--cor-fundo);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 12px 24px -14px rgba(15, 24, 98, 0.75);
+.link {
+  font-weight: 600;
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 5px;
+  transition: color 0.2s ease;
 }
 
-.botao--primario:hover,
-.botao--whatsapp:hover {
-  background: var(--cor-primaria-escura);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 18px 32px -16px rgba(15, 24, 98, 0.9);
-}
-
-.botao--whatsapp .icone {
-  color: #25d366;
-}
-
-/* Sobre o escuro (hero, rodapé) o primário inverte: papel com tinta. */
-.hero .botao--whatsapp,
-.rodape .botao--whatsapp {
-  background: var(--cor-fundo);
-  color: var(--cor-primaria-escura);
-  box-shadow: 0 16px 34px -18px rgba(0, 0, 0, 0.7);
-}
-
-.hero .botao--whatsapp .icone,
-.rodape .botao--whatsapp .icone {
-  color: #1d9e4f;
-}
-
-.hero .botao--whatsapp:hover,
-.rodape .botao--whatsapp:hover {
-  background: var(--cor-branco);
-  box-shadow: 0 22px 40px -18px rgba(0, 0, 0, 0.8);
-}
-
-.botao--fantasma {
-  background: transparent;
-  color: var(--cor-primaria-escura);
-  border-color: rgba(15, 24, 98, 0.25);
-}
-
-.botao--fantasma:hover {
-  border-color: var(--cor-primaria);
-}
-
-.hero .botao--fantasma {
-  color: var(--cor-branco);
-  border-color: rgba(255, 255, 255, 0.32);
-}
-
-.hero .botao--fantasma:hover {
-  border-color: var(--cor-branco);
-  background: rgba(255, 255, 255, 0.06);
-}
-
-.botao--grande {
-  padding: 1.1rem 1.75rem;
-  font-size: 1rem;
+.link:hover {
+  color: var(--vermelho);
 }
 
 /* ==========================================================================
-   5. CABEÇALHO / NAVEGAÇÃO
-   Transparente por cima do hero (texto claro); ao rolar — ou com o menu do
-   celular aberto — ganha fundo de papel e texto escuro.
+   4. BARRA DO TOPO E MENU
    ========================================================================== */
-.cabecalho {
+.barra {
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
+  inset: 0 0 auto;
   z-index: 100;
-  background: transparent;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
-  transition: background-color 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  height: var(--altura-barra);
+  padding-inline: var(--margem);
+  background: var(--fundo-escuro);
+  color: var(--papel);
 }
 
-.cabecalho--rolado,
-.cabecalho:has(.navegacao--aberta) {
-  background: rgba(252, 252, 253, 0.97);
-  backdrop-filter: blur(14px) saturate(1.3);
-  -webkit-backdrop-filter: blur(14px) saturate(1.3);
-  border-bottom-color: var(--cor-borda);
-  box-shadow: 0 10px 30px -24px rgba(15, 24, 98, 0.5);
-}
-
-.cabecalho__conteudo {
+.barra__lado {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  height: 72px;
+  gap: 1.5rem;
 }
 
-.cabecalho__marca {
-  display: flex;
+.barra__lado--fim {
+  justify-content: flex-end;
+}
+
+.barra__menu {
+  display: inline-flex;
   align-items: center;
-  gap: 0.7rem;
-  min-width: 0;
-  flex-shrink: 1;
+  gap: 0.6rem;
+  min-height: 44px;
+  font-size: var(--passo-pequeno);
+  font-weight: 600;
 }
 
-.cabecalho__logo {
-  width: 40px;
-  height: 40px;
-  border-radius: 8px;
-  object-fit: cover;
-  flex-shrink: 0;
-  /* Fundo claro sólido atrás do PNG transparente — qualquer resquício de
-     anti-aliasing nas bordas se mistura nele em vez de aparecer como
-     pontinho contra o fundo escuro do hero. */
-  background: #eef0f4;
+.barra__menu-icone {
+  display: grid;
+  gap: 6px;
+  width: 22px;
 }
 
-.cabecalho__nome {
-  font-family: var(--fonte-titulo);
-  font-weight: 500;
-  font-size: 1.3rem;
-  letter-spacing: -0.015em;
-  color: var(--cor-branco);
+.barra__menu-icone span {
+  display: block;
+  height: 2px;
+  background: currentColor;
+  transition: transform 0.3s var(--ease-saida);
+}
+
+.barra__menu[aria-expanded="true"] .barra__menu-icone span:first-child {
+  transform: translateY(4px) rotate(45deg);
+}
+
+.barra__menu[aria-expanded="true"] .barra__menu-icone span:last-child {
+  transform: translateY(-4px) rotate(-45deg);
+}
+
+.barra__idioma,
+.barra__acao {
+  display: none;
+  font-size: var(--passo-pequeno);
+  font-weight: 600;
+  transition: color 0.2s ease;
+}
+
+.barra__idioma:hover,
+.barra__acao:hover {
+  color: var(--dourado);
+}
+
+.barra__marca {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: var(--passo-texto);
+  font-weight: 600;
+  letter-spacing: -0.01em;
   white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  /* Sem isso, um filho flex com white-space:nowrap se recusa a encolher
-     abaixo do tamanho do texto ("min-width:auto" do flexbox) e sobra menos
-     espaço pro botão de menu no celular. */
-  min-width: 0;
-  transition: color 0.35s ease;
 }
 
-.cabecalho--rolado .cabecalho__nome,
-.cabecalho:has(.navegacao--aberta) .cabecalho__nome {
-  color: var(--cor-primaria-escura);
+.barra__marca img {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--papel);
 }
 
-/* Navegação — no celular vira um painel de altura total deslizando do
-   topo, com os links grandes em serifa; controlado pela classe
-   .navegacao--aberta (adicionada via JS). */
+/* Painel do menu (todas as larguras) — folha de papel com as seções em
+   letra grande. */
 .navegacao {
   position: fixed;
-  top: 72px;
+  top: var(--altura-barra);
   left: 0;
   right: 0;
-  height: calc(100dvh - 72px);
+  height: calc(100dvh - var(--altura-barra));
   overflow-y: auto;
   overscroll-behavior: contain;
-  background: var(--cor-fundo);
-  padding: 1.5rem 1.5rem calc(2rem + env(safe-area-inset-bottom, 0px));
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
   gap: 2rem;
-  transform: translateY(-8px);
-  opacity: 0;
+  padding: 2rem var(--margem) calc(2rem + env(safe-area-inset-bottom, 0px));
+  background: var(--papel);
+  color: var(--tinta);
+  /* Fechado, o painel fica inteiro acima da tela (não só transparente):
+     nada do menu ocupa a área visível nem recebe foco. */
   visibility: hidden;
-  pointer-events: none;
-  transition: opacity var(--transicao), transform 0.4s var(--ease-saida), visibility var(--transicao);
+  transform: translateY(calc(-100% - var(--altura-barra)));
+  transition: transform 0.5s var(--ease-saida), visibility 0s linear 0.5s;
 }
 
 .navegacao--aberta {
-  transform: translateY(0);
-  opacity: 1;
   visibility: visible;
-  pointer-events: auto;
-}
-
-.navegacao__lista {
-  display: flex;
-  flex-direction: column;
+  transform: none;
+  transition: transform 0.5s var(--ease-saida), visibility 0s;
 }
 
 .navegacao__link {
-  position: relative;
   display: block;
-  padding: 0.85rem 0;
-  border-bottom: 1px solid var(--cor-borda);
-  font-family: var(--fonte-titulo);
-  font-size: 2rem;
-  line-height: 1.2;
-  letter-spacing: -0.02em;
-  color: var(--cor-primaria-escura);
-  transition: color var(--transicao);
+  padding: 0.25em 0;
+  font-size: var(--passo-titulo);
+  line-height: 1.15;
+  letter-spacing: -0.026em;
+  transition: color 0.2s ease, transform 0.3s var(--ease-saida);
 }
 
-.navegacao__link--ativo {
-  color: var(--cor-secundaria-escura);
+.navegacao__link:hover {
+  color: var(--vermelho);
+  transform: translateX(8px);
 }
 
 .navegacao__cta {
-  background: var(--cor-primaria);
-  color: var(--cor-fundo);
-  padding: 1.05rem 1.5rem;
-  font-size: 1rem;
-}
-
-.navegacao__cta:hover {
-  background: var(--cor-primaria-escura);
-}
-
-/* Botão hambúrguer (só aparece no mobile). 44x44 pelo mínimo de área de
-   toque recomendado. Contorno claro por cima do hero, papel depois de
-   rolar. */
-.menu-mobile {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  gap: 5px;
-  width: 44px;
-  min-width: 44px;
-  height: 44px;
-  flex-shrink: 0;
-  border-radius: var(--raio-borda-pequeno);
-  border: 1px solid rgba(255, 255, 255, 0.35);
-  background: transparent;
-  transition: border-color var(--transicao), background-color var(--transicao), transform 0.2s ease;
-  /* Reforço: sempre gruda na borda direita do cabeçalho, sem depender só do
-     justify-content:space-between (a <nav> do meio é position:fixed). */
-  margin-left: auto;
-}
-
-.menu-mobile:active {
-  transform: scale(0.94);
-}
-
-.cabecalho--rolado .menu-mobile,
-.cabecalho:has(.navegacao--aberta) .menu-mobile {
-  border-color: var(--cor-borda);
-  background: var(--cor-branco);
-}
-
-.menu-mobile span {
-  display: block;
-  height: 1.5px;
-  width: 20px;
-  background: var(--cor-branco);
-  border-radius: 999px;
-  transition: background-color var(--transicao);
-}
-
-.cabecalho--rolado .menu-mobile span,
-.cabecalho:has(.navegacao--aberta) .menu-mobile span {
-  background: var(--cor-primaria-escura);
-}
-
-/* Barra do meio mais curta e dourada — um toque de marca discreto no ícone
-   mais "genérico" do site; some (opacity + scaleX, só transform) assim que
-   o menu abre, sobrando as duas barras formando o X. */
-.menu-mobile span:nth-child(2),
-.cabecalho--rolado .menu-mobile span:nth-child(2),
-.cabecalho:has(.navegacao--aberta) .menu-mobile span:nth-child(2) {
-  width: 13px;
-  background: var(--cor-dourado);
-}
-
-/* ABRIR é a mesma animação de FECHAR tocada de trás pra frente — os atrasos
-   abaixo são o espelho matemático exato um do outro.
-
-   FECHANDO (X -> hambúrguer): as duas barras de fora giram de volta
-   primeiro (atraso 0s, duração 0.22s => ativas de 0 a 0.22s), só depois
-   (atraso 0.16s, duração 0.15s => ativa de 0.16 a 0.31s) a barra do meio
-   reaparece. Duração total da sequência: 0.31s.
-
-   ABRINDO (hambúrguer -> X): cada trecho começa no instante espelhado
-   (T - fim_original) e com a MESMA duração:
-   - barra do meio: espelho de [0.16, 0.31] => [0, 0.15]  (atraso 0s)
-   - barras de fora: espelho de [0, 0.22] => [0.09, 0.31] (atraso 0.09s) */
-.menu-mobile span:nth-child(1),
-.menu-mobile span:nth-child(3) {
-  transition: transform 0.22s ease 0s, background-color var(--transicao);
-}
-
-.menu-mobile span:nth-child(2) {
-  transition: opacity 0.15s ease 0.16s, transform 0.15s ease 0.16s;
-}
-
-.menu-mobile[aria-expanded="true"] span:nth-child(1) {
-  transform: translateY(6.5px) rotate(45deg);
-  transition: transform 0.22s ease 0.09s, background-color var(--transicao);
-}
-
-.menu-mobile[aria-expanded="true"] span:nth-child(3) {
-  transform: translateY(-6.5px) rotate(-45deg);
-  transition: transform 0.22s ease 0.09s, background-color var(--transicao);
-}
-
-.menu-mobile[aria-expanded="true"] span:nth-child(2) {
-  opacity: 0;
-  transform: scaleX(0);
-  transition: opacity 0.15s ease 0s, transform 0.15s ease 0s;
-}
-
-/* ==========================================================================
-   6. HERO
-   ========================================================================== */
-.hero {
-  position: relative;
-  isolation: isolate;
-  /* Altura em PIXEL FIXO no celular, não em vh/dvh — vh trocava de valor
-     dependendo se a página tinha sido rolada antes, e dvh recalculava ao
-     vivo durante a rolagem, causando um "salto" visível. Pixel fixo não
-     depende do navegador calcular "quanto é a tela". Calibrado acima da
-     altura real do conteúdo, mas abaixo da tela de qualquer celular comum,
-     pra sempre sobrar uma faixa da próxima seção visível. Cresce de novo a
-     partir do tablet (ver @media 768px). */
-  min-height: 620px;
-  display: flex;
-  /* Ancora o texto perto da base: usa o espaço de verdade em vez de deixar
-     vazio simétrico em cima e embaixo. */
-  align-items: flex-end;
-  padding-top: 72px;
-  background: linear-gradient(160deg, var(--cor-primaria-escura), var(--cor-primaria) 65%);
-  color: var(--cor-branco);
-  overflow: hidden;
-}
-
-/* Foto do banner misturada ao azul da marca (multiply). Entra com um zoom
-   que "assenta" uma única vez — sem o antigo Ken Burns infinito. */
-.hero__foto {
-  position: absolute;
-  inset: 0;
-  z-index: -3;
-  background: url("../images/banner.webp") center 22% / cover no-repeat;
-  mix-blend-mode: multiply;
-  opacity: 0.9;
-  animation: fotoAssentar 2.6s var(--ease-saida) both;
-}
-
-@keyframes fotoAssentar {
-  from {
-    transform: scale(1.08);
-  }
-  to {
-    transform: scale(1);
-  }
-}
-
-/* Faixa guilhochê fina por cima da foto — as linhas de segurança da capa
-   de um passaporte, em branco bem fraco. O SVG entra como MÁSCARA (a cor
-   vem do background-color). */
-.hero::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  background-color: rgba(255, 255, 255, 0.05);
-  -webkit-mask: url("../images/guilloche-faixa.svg") 0 0 / 640px 160px repeat;
-  mask: url("../images/guilloche-faixa.svg") 0 0 / 640px 160px repeat;
-  pointer-events: none;
-}
-
-.hero__overlay {
-  position: absolute;
-  inset: 0;
-  z-index: -2;
-  /* Escuro à esquerda e embaixo (onde fica o texto), mais aberto à direita
-     e no topo, onde a foto e a vitrine respiram. */
-  background: linear-gradient(90deg, rgba(9, 15, 66, 0.85) 0%, rgba(9, 15, 66, 0.5) 50%, rgba(9, 15, 66, 0.2) 100%),
-    linear-gradient(180deg, rgba(9, 15, 66, 0.35) 0%, rgba(9, 15, 66, 0.1) 40%, rgba(9, 15, 66, 0.75) 100%);
-}
-
-/* Roseta guilhochê dourada atrás da vitrine — o "selo-d'água" de um
-   documento oficial. Parada: é impressão, não efeito. */
-.hero__guilloche {
-  position: absolute;
-  z-index: -1;
-  width: min(1000px, 150vw);
-  aspect-ratio: 1;
-  right: -24%;
-  top: 50%;
-  transform: translateY(-50%);
-  background: radial-gradient(closest-side, rgba(227, 204, 156, 0.26), rgba(227, 204, 156, 0.12) 75%, rgba(227, 204, 156, 0.05));
-  -webkit-mask: url("../images/guilloche-roseta.svg") center / contain no-repeat;
-  mask: url("../images/guilloche-roseta.svg") center / contain no-repeat;
-  pointer-events: none;
-}
-
-.hero__grade {
-  position: relative;
-  display: grid;
-  grid-template-columns: 1fr;
-  align-items: center;
-}
-
-.hero__conteudo {
-  max-width: 640px;
-  padding-block: 4rem 3rem;
-}
-
-/* Entrada do hero ao carregar — título, frase, botões e credenciais sobem
-   em sequência, uma vez. CSS puro: sem JS, sem dividir letras. */
-.hero__titulo,
-.hero__frase,
-.hero__acoes,
-.hero__credenciais {
-  animation: entrarSuave 1.1s var(--ease-saida) both;
-}
-
-.hero__frase {
-  animation-delay: 0.15s;
-}
-
-.hero__acoes {
-  animation-delay: 0.28s;
-}
-
-.hero__credenciais {
-  animation-delay: 0.4s;
-}
-
-@keyframes entrarSuave {
-  from {
-    opacity: 0;
-    transform: translateY(18px);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
-}
-
-.hero__titulo {
-  color: var(--cor-branco);
-  font-size: clamp(3rem, 12.5vw, 6.5rem);
-  font-weight: 400;
-  line-height: 0.95;
-  letter-spacing: -0.03em;
-  margin-bottom: 1.5rem;
-}
-
-/* "Visto" sempre na segunda linha, recuado — composição de capa (masthead),
-   não uma palavra que quebrou por acaso. */
-.hero__titulo em {
-  display: block;
-  padding-left: 0.55em;
-  color: var(--cor-dourado-claro);
-}
-
-.hero__frase {
-  font-size: clamp(1.05rem, 1.7vw, 1.22rem);
-  line-height: 1.6;
-  color: rgba(255, 255, 255, 0.8);
-  max-width: 44ch;
-  margin-bottom: 2.25rem;
-}
-
-.hero__acoes {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-}
-
-/* No celular os botões ficam empilhados e com largura total — evita o texto
-   longo do botão forçar o layout a "estourar" para o lado. A partir do
-   tablet (ver @media) voltam a ficar lado a lado. */
-.hero__acoes .botao {
+  margin-top: auto;
   width: 100%;
-}
-
-/* Credenciais — fio dourado em cima, ícones de traço dourados. */
-.hero__credenciais {
-  display: grid;
-  gap: 0.8rem;
-  margin-top: 2.5rem;
-  padding-top: 1.5rem;
-  border-top: 1px solid rgba(227, 204, 156, 0.3);
-}
-
-.hero__credenciais li {
-  display: flex;
-  align-items: flex-start;
-  gap: 0.65rem;
-  font-size: 0.92rem;
-  line-height: 1.45;
-  color: rgba(255, 255, 255, 0.72);
-}
-
-.hero__credenciais .icone {
-  width: 18px;
-  height: 18px;
-  flex-shrink: 0;
-  margin-top: 0.05em;
-  color: var(--cor-dourado-claro);
-}
-
-.hero__credenciais strong {
-  color: var(--cor-branco);
-  font-weight: 600;
-}
-
-/* ==========================================================================
-   VITRINE DE DESTINOS — leque de fotos reais (as mesmas dos cards de
-   Serviços) estilo foto impressa de passaporte, com o selo de "aprovado"
-   por cima. Só desktop (≥1024px): é o momento autoral da página — o leque
-   abre e o carimbo bate.
-   ========================================================================== */
-.hero__vitrine {
-  display: none;
-  position: relative;
-  height: 500px;
-}
-
-.hero__selo {
-  --rot: 0deg;
-  --px: 0px;
-  --py: 0px;
-  position: absolute;
-  width: 196px;
-  margin: 0;
-  padding: 10px 10px 40px;
-  background: #fdfdfb;
-  border-radius: 3px;
-  box-shadow: 0 2px 6px rgba(2, 6, 30, 0.25), 0 34px 60px -24px rgba(2, 6, 30, 0.7);
-  opacity: 0;
-  transform: translate(var(--px), var(--py)) rotate(var(--rot)) scale(0.8) translateY(36px);
-  transition: transform 0.9s var(--ease-saida), opacity 0.6s ease, box-shadow 0.4s ease;
-  cursor: default;
-}
-
-.hero__selo img {
-  width: 100%;
-  /* "height: auto" é essencial aqui: sem isso, o atributo height="800" do
-     HTML (bom pra evitar layout-shift) vence e ignora o aspect-ratio. */
-  height: auto;
-  aspect-ratio: 4 / 5;
-  object-fit: cover;
-  border-radius: 1px;
-  display: block;
-}
-
-.hero__selo figcaption {
-  position: absolute;
-  left: 10px;
-  right: 10px;
-  bottom: 10px;
-  font-family: var(--fonte-titulo);
-  font-style: italic;
-  font-weight: 400;
-  font-size: 1.02rem;
-  color: var(--cor-primaria-escura);
-  text-align: center;
-  letter-spacing: -0.01em;
-}
-
-.hero__selo--1 {
-  --rot: -7deg;
-  top: 0;
-  left: 6%;
-  z-index: 3;
-}
-
-.hero__selo--2 {
-  --rot: 5deg;
-  top: 22px;
-  left: 47%;
-  z-index: 4;
-}
-
-.hero__selo--3 {
-  --rot: 4deg;
-  top: 218px;
-  left: 0%;
-  z-index: 2;
-}
-
-.hero__selo--4 {
-  --rot: -6deg;
-  top: 236px;
-  left: 42%;
-  z-index: 1;
-}
-
-.hero__vitrine--revelada .hero__selo {
-  opacity: 1;
-  transform: translate(var(--px), var(--py)) rotate(var(--rot)) scale(1) translateY(0);
-}
-
-.hero__vitrine--revelada .hero__selo--1 {
-  transition-delay: 0.1s;
-}
-
-.hero__vitrine--revelada .hero__selo--2 {
-  transition-delay: 0.24s;
-}
-
-.hero__vitrine--revelada .hero__selo--3 {
-  transition-delay: 0.38s;
-}
-
-.hero__vitrine--revelada .hero__selo--4 {
-  transition-delay: 0.52s;
-}
-
-/* Ordem no arquivo importa aqui: precisa vir DEPOIS de ".hero__vitrine--revelada
-   .hero__selo" pra vencer no empate de especificidade e "endireitar" o card
-   no hover. */
-.hero__selo:hover {
-  --rot: 0deg;
-  transform: translate(var(--px), var(--py)) rotate(var(--rot)) scale(1.04) translateY(-8px);
-  box-shadow: 0 2px 6px rgba(2, 6, 30, 0.25), 0 44px 70px -26px rgba(2, 6, 30, 0.8);
-  z-index: 10;
-}
-
-/* Selo circular "VISTO APROVADO" — SVG puro, texto seguindo um path
-   circular, com o filtro "tinta de carimbo" (definido no topo do
-   index.html). Bate no leque por último, como um carimbo de verdade. */
-.hero__carimbo {
-  --px: 0px;
-  --py: 0px;
-  position: absolute;
-  top: -22px;
-  right: -8px;
-  width: 132px;
-  height: 132px;
-  color: var(--cor-secundaria-clara);
-  opacity: 0;
-  transform: translate(var(--px), var(--py)) rotate(-16deg) scale(1.9);
-  filter: url(#tintaCarimbo) drop-shadow(0 10px 18px rgba(0, 0, 0, 0.35));
-  z-index: 6;
-  transition: transform 0.45s cubic-bezier(0.5, 0, 0.2, 1), opacity 0.3s ease;
-  transition-delay: 1.1s;
-}
-
-.hero__vitrine--revelada .hero__carimbo {
-  opacity: 0.95;
-  transform: translate(var(--px), var(--py)) rotate(-16deg) scale(1);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .hero__foto,
-  .hero__titulo,
-  .hero__frase,
-  .hero__acoes,
-  .hero__credenciais {
-    animation: none;
-  }
-
-  .hero__selo,
-  .hero__carimbo {
-    transition: none;
-  }
-}
-
-/* ==========================================================================
-   6b. FAIXA DE DESTINOS
-   Os serviços em caixa-alta espaçada, como a linha de destinos de um
-   cartão de embarque. Parada de propósito — a antiga faixa rolando sem fim
-   pedia atenção sem ter nada novo pra mostrar. No celular vira uma grade
-   de 2 colunas (sem separadores, que ficariam soltos na quebra de linha);
-   a partir do tablet, uma linha só com estrelas douradas entre os itens.
-   ========================================================================== */
-.faixa-destinos {
-  background: var(--cor-primaria-escura);
-  border-top: 1px solid rgba(227, 204, 156, 0.22);
-  padding: 1.4rem 0;
-}
-
-.faixa-destinos__lista {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 0.75rem 1rem;
-  text-align: center;
-}
-
-.faixa-destinos__item {
-  font-family: var(--fonte-corpo);
-  font-weight: 600;
-  font-size: 0.68rem;
-  text-transform: uppercase;
-  letter-spacing: 0.14em;
-  color: rgba(255, 255, 255, 0.78);
 }
 
 @media (min-width: 768px) {
-  .faixa-destinos__item {
-    font-size: 0.72rem;
-    letter-spacing: 0.2em;
-    white-space: nowrap;
-  }
-
-  .faixa-destinos__lista {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-items: center;
-    gap: 0.75rem 0;
-  }
-
-  /* Separador: estrela de 4 pontas dourada (máscara CSS, sem glifo
-     unicode), como os ornamentos impressos numa página de passaporte. */
-  .faixa-destinos__item + .faixa-destinos__item::before {
-    content: "";
+  .barra__idioma,
+  .barra__acao {
     display: inline-block;
-    width: 8px;
-    height: 8px;
-    margin: 0 1.6rem;
-    vertical-align: 0.15em;
-    background: var(--cor-dourado-claro);
-    -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 0c.8 6.4 5.6 11.2 12 12-6.4.8-11.2 5.6-12 12-.8-6.4-5.6-11.2-12-12C6.4 11.2 11.2 6.4 12 0Z'/%3E%3C/svg%3E") center / contain no-repeat;
-    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 0c.8 6.4 5.6 11.2 12 12-6.4.8-11.2 5.6-12 12-.8-6.4-5.6-11.2-12-12C6.4 11.2 11.2 6.4 12 0Z'/%3E%3C/svg%3E") center / contain no-repeat;
+  }
+
+  .navegacao__cta {
+    width: auto;
+    align-self: flex-start;
   }
 }
 
-
 /* ==========================================================================
-   7. SOBRE
+   5. CAPA — o nome e a pilha de pastas
    ========================================================================== */
-/* Corta a roseta atrás da foto na borda da seção — senão ela vaza por cima
-   do título de "Como funciona". */
-.sobre {
-  overflow: hidden;
-}
-
-/* Moldura fina por dentro da foto + roseta guilhochê dourada atrás, saindo
-   pelo canto — lê como a foto colada numa página de passaporte. */
-.sobre__imagem {
+.capa {
   position: relative;
+  display: flex;
+  flex-direction: column;
+  /* Alta o bastante pra pasta da frente aparecer no fim da primeira tela,
+     mas com teto: em telas muito altas (tablet em pé) não abre um vão entre
+     o nome e as pastas. */
+  min-height: clamp(560px, calc(100svh - 132px), 820px);
+  padding: calc(var(--altura-barra) + clamp(48px, 9vh, 110px)) var(--margem) 0;
+  background: var(--fundo-escuro);
+  color: var(--papel);
 }
 
-.sobre__imagem::before {
-  content: "";
-  position: absolute;
-  z-index: -1;
-  width: 72%;
-  aspect-ratio: 1;
-  left: -20%;
-  bottom: -18%;
-  background-color: rgba(184, 149, 90, 0.45);
-  -webkit-mask: url("../images/guilloche-roseta.svg") center / contain no-repeat;
-  mask: url("../images/guilloche-roseta.svg") center / contain no-repeat;
-  pointer-events: none;
+.capa__titulo {
+  text-align: center;
 }
 
-.sobre__imagem::after {
-  content: "";
-  position: absolute;
-  inset: 14px;
-  border: 1px solid rgba(255, 255, 255, 0.55);
-  border-radius: calc(var(--raio-borda) - 8px);
-  pointer-events: none;
+.capa h1 {
+  font-size: var(--passo-capa);
+  line-height: 0.95;
 }
 
-.sobre__imagem img {
-  border-radius: var(--raio-borda);
-  box-shadow: 0 40px 80px -40px rgba(15, 24, 98, 0.55);
-  /* No celular a imagem ocupa a LARGURA TODA da tela (a grade vira 1
-     coluna) — com a proporção vertical do desktop ela virava uma foto
-     gigante. Mais baixa/larga aqui; volta pra vertical só no desktop. */
-  aspect-ratio: 4 / 3;
-  max-height: 280px;
-  object-fit: cover;
+.capa__apoio {
+  max-width: 46ch;
+  margin: clamp(24px, 3vw, 40px) auto 0;
+  font-size: var(--passo-texto);
+  color: var(--papel);
+}
+
+/* Pastas: faixas de cor chapada, cada uma mostrando só uma tira de 52px
+   (64px no desktop) por trás da seguinte, com a aba trapezoidal subindo
+   da borda de cima. A ordem no HTML vai do fundo para a frente. */
+.pastas {
+  display: grid;
   width: 100%;
+  margin: clamp(48px, 8vh, 96px) auto 0;
+  margin-top: auto;
+  padding-top: calc(clamp(48px, 8vh, 96px) + 40px);
 }
 
-.sobre__texto p {
-  color: var(--cor-texto-claro);
-  margin-bottom: 1rem;
-  max-width: 60ch;
-}
-
-.sobre__texto .sobre__lead {
-  font-size: 1.2rem;
-  line-height: 1.6;
-  color: var(--cor-texto);
-  margin-bottom: 1.1rem;
-}
-
-.sobre__diferenciais {
-  margin-top: 2.25rem;
-  display: flex;
-  flex-direction: column;
-  border-top: 1px solid var(--cor-borda);
-}
-
-.sobre__diferenciais li {
-  display: grid;
-  grid-template-columns: auto 1fr;
-  gap: 1.1rem;
-  align-items: start;
-  padding: 1.3rem 0;
-  border-bottom: 1px solid var(--cor-borda);
-}
-
-.sobre__diferenciais li div {
-  display: flex;
-  flex-direction: column;
-  gap: 0.2rem;
-}
-
-.sobre__icone {
-  width: 26px;
-  height: 26px;
-  margin-top: 3px;
-  color: var(--cor-secundaria-escura);
-}
-
-.sobre__diferenciais strong {
-  font-family: var(--fonte-titulo);
-  font-size: 1.3rem;
-  font-weight: 500;
-  line-height: 1.2;
-  letter-spacing: -0.01em;
-  color: var(--cor-primaria-escura);
-}
-
-.sobre__diferenciais span {
-  color: var(--cor-texto-claro);
-  font-size: 0.97rem;
-}
-
-/* ==========================================================================
-   8. COMO FUNCIONA (processo em passos)
-   No celular: lista vertical com um pontilhado ligando os círculos. No
-   desktop: 4 colunas com a rota de voo na horizontal e o avião percorrendo
-   conforme a rolagem (ver @media 1024px e main.js).
-   ========================================================================== */
-.processo__lista {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 2.5rem;
-}
-
-.processo__passo {
+.pasta {
+  --cor: var(--papel);
+  --cor-texto: var(--tinta);
+  --aba-x: 6%;
   position: relative;
-  padding-left: 4.25rem;
-}
-
-/* Pontilhado vertical entre um círculo e o próximo (só celular/tablet). */
-.processo__passo:not(:last-child)::before {
-  content: "";
-  position: absolute;
-  left: 1.375rem;
-  top: 3.25rem;
-  bottom: -2rem;
-  border-left: 1px dashed rgba(15, 24, 98, 0.25);
-}
-
-.processo__numero {
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 2.75rem;
-  height: 2.75rem;
   display: flex;
   align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  background: var(--cor-branco);
-  color: var(--cor-primaria);
-  box-shadow: inset 0 0 0 1px rgba(15, 24, 98, 0.22);
-  font-family: var(--fonte-titulo);
-  font-weight: 500;
-  font-size: 1.05rem;
-  font-variant-numeric: lining-nums;
-  transition: background-color 0.5s var(--ease-saida), color 0.5s var(--ease-saida),
-    box-shadow 0.5s var(--ease-saida), transform 0.5s var(--ease-saida);
+  justify-content: flex-end;
+  height: 52px;
+  padding-inline: clamp(16px, 3vw, 32px);
+  background: var(--cor);
+  color: var(--cor-texto);
+  transition: transform 0.35s var(--ease-saida);
 }
 
-/* Passo "alcançado" (o avião já passou por ele, ver main.js) — o círculo
-   enche de azul-marinho, como um carimbo de entrada no passaporte. */
-.processo__passo--alcancado .processo__numero {
-  background: var(--cor-primaria);
-  color: var(--cor-fundo);
-  box-shadow: inset 0 0 0 1px var(--cor-primaria), 0 10px 20px -8px rgba(15, 24, 98, 0.6);
-  transform: scale(1.05);
+@media (prefers-reduced-motion: no-preference) {
+  .pasta {
+    animation: pastaSubir 0.9s var(--ease-saida) both;
+  }
 }
 
-.processo__aviao {
+.pasta:hover {
+  transform: translateY(-6px);
+}
+
+.pasta__aba {
+  position: absolute;
+  left: var(--aba-x);
+  bottom: 100%;
+  display: flex;
+  align-items: center;
+  height: 32px;
+  padding: 0 26px;
+  background: var(--cor);
+  color: var(--cor-texto);
+  font-size: var(--passo-pequeno);
+  font-weight: 600;
+  white-space: nowrap;
+  clip-path: polygon(12px 0, calc(100% - 12px) 0, 100% 100%, 0 100%);
+}
+
+.pasta--contato {
+  --cor: var(--vermelho);
+  --cor-texto: var(--papel);
+  --aba-x: 4%;
+  animation-delay: 0.1s;
+}
+
+.pasta--duvidas {
+  --cor: var(--nevoa);
+  --aba-x: 36%;
+  animation-delay: 0.18s;
+}
+
+.pasta--sobre {
+  --cor: var(--manila);
+  --aba-x: 66%;
+  animation-delay: 0.26s;
+}
+
+.pasta--processo {
+  --cor: var(--azul-pasta);
+  --cor-texto: var(--papel);
+  --aba-x: 20%;
+  animation-delay: 0.34s;
+}
+
+@keyframes pastaSubir {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+}
+
+@media (min-width: 768px) {
+  .pastas,
+  .pasta-frente {
+    width: min(86vw, var(--largura));
+  }
+
+  .pasta {
+    height: 64px;
+  }
+
+  .pasta__aba {
+    height: 40px;
+    padding: 0 32px;
+    font-size: var(--passo-texto);
+    clip-path: polygon(16px 0, calc(100% - 16px) 0, 100% 100%, 0 100%);
+  }
+}
+
+/* ==========================================================================
+   6. SERVIÇOS — a pasta da frente, aberta
+   ========================================================================== */
+.servicos {
+  position: relative;
+  z-index: 1;
+  padding: 0 var(--margem) clamp(48px, 6vw, 88px);
+  background: var(--fundo-escuro);
+}
+
+.pasta-frente {
+  position: relative;
+  margin-inline: auto;
+  padding: clamp(24px, 3.5vw, 48px);
+  background: var(--papel);
+  color: var(--tinta);
+}
+
+.pasta-frente__aba {
+  left: 52%;
+  background: var(--papel);
+  color: var(--tinta);
+}
+
+.pasta-frente__topo {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem 2rem;
+}
+
+.pasta-frente__nota {
+  font-size: var(--passo-texto);
+  color: var(--tinta-suave);
+}
+
+.destinos {
+  display: grid;
+  gap: clamp(28px, 4vw, 64px);
+  margin-top: clamp(32px, 4vw, 56px);
+}
+
+/* Prancha quadrada: as seis fotos empilhadas, a ativa por cima; o carimbo
+   do destino "bate" sobre a foto ao trocar (ver main.js). */
+.destinos__prancha {
+  position: relative;
+  aspect-ratio: 1;
+  overflow: hidden;
+  background: var(--tinta);
+}
+
+.destinos__foto {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 0.24s ease;
+}
+
+.destinos__foto.e-ativa {
+  opacity: 1;
+}
+
+.destinos__foto img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.destinos__carimbo {
+  position: absolute;
+  right: 6%;
+  bottom: 6%;
+  width: 34%;
+  overflow: visible;
+  color: var(--papel);
+  opacity: 0.94;
+  filter: url(#tintaCarimbo);
+  transform: rotate(-10deg);
+}
+
+.destinos__carimbo--largo {
+  width: 40%;
+}
+
+.destinos__foto.carimbando .destinos__carimbo {
+  animation: carimbar 0.45s cubic-bezier(0.5, 0, 0.2, 1) both;
+}
+
+@keyframes carimbar {
+  from {
+    opacity: 0;
+    transform: rotate(-10deg) scale(1.7);
+  }
+  to {
+    opacity: 0.94;
+    transform: rotate(-10deg) scale(1);
+  }
+}
+
+.destinos__coluna {
+  display: flex;
+  flex-direction: column;
+}
+
+.destinos__titulo {
+  font-size: var(--passo-titulo);
+}
+
+.destinos__indice {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.25rem 1.5rem;
+  margin-top: clamp(20px, 3vw, 40px);
+}
+
+.destinos__aba {
+  position: relative;
+  min-height: 44px;
+  padding: 0.35em 0 0.35em 1.1em;
+  text-align: left;
+  font-size: var(--passo-texto);
+  color: var(--tinta-suave);
+  transition: color 0.2s ease;
+}
+
+/* Marcador do destino escolhido: um quadradinho cheio, na cor da ação. */
+.destinos__aba::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 0.45em;
+  height: 0.45em;
+  background: var(--vermelho);
+  opacity: 0;
+  transform: translateY(-50%) scale(0.6);
+  transition: transform 0.25s var(--ease-saida), opacity 0.2s ease;
+}
+
+.destinos__aba:hover {
+  color: var(--tinta);
+}
+
+.destinos__aba[aria-selected="true"] {
+  color: var(--tinta);
+  font-weight: 600;
+}
+
+.destinos__aba[aria-selected="true"]::before {
+  opacity: 1;
+  transform: translateY(-50%) scale(1);
+}
+
+.destinos__paineis {
+  margin-top: clamp(28px, 3vw, 44px);
+}
+
+/* Sem JS, todos os serviços aparecem; com JS, só o escolhido. */
+.js .destinos__painel:not(.e-ativo) {
   display: none;
 }
 
-.processo__passo h3 {
-  font-size: 1.4rem;
-  margin-bottom: 0.5rem;
+.destinos__painel + .destinos__painel {
+  margin-top: 2.5rem;
 }
 
-.processo__passo p {
-  color: var(--cor-texto-claro);
-  font-size: 0.97rem;
+.js .destinos__painel + .destinos__painel {
+  margin-top: 0;
+}
+
+.destinos__painel h3 {
+  font-size: var(--passo-destaque);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.destinos__painel p {
   max-width: 34ch;
+  margin-top: 0.75rem;
+}
+
+.destinos__acoes {
+  display: grid;
+  gap: 8px;
+  margin-top: clamp(24px, 3vw, 40px);
+}
+
+.celula {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 60px;
+  padding: 0.8rem 1.2rem;
+  font-size: var(--passo-texto);
+  font-weight: 600;
+  text-align: center;
+  transition: background-color 0.2s ease;
+}
+
+.celula--acao {
+  background: var(--vermelho);
+  color: var(--papel);
+}
+
+.celula--acao:hover {
+  background: var(--vermelho-escuro);
+}
+
+.celula--tom {
+  background: var(--papel-2);
+  color: var(--tinta);
+}
+
+.celula--tom:hover {
+  background: var(--nevoa);
+}
+
+@media (max-width: 599px) {
+  .destinos__indice {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* No celular o título da seção vem antes da foto. */
+@media (max-width: 899px) {
+  .destinos__coluna {
+    display: contents;
+  }
+
+  .destinos__titulo {
+    order: -1;
+  }
+}
+
+@media (min-width: 900px) {
+  .destinos {
+    grid-template-columns: 1fr 1fr;
+    align-items: start;
+  }
+
+  .destinos__coluna {
+    align-self: stretch;
+  }
+
+  .destinos__indice {
+    grid-template-columns: 1fr;
+  }
+
+  .destinos__aba {
+    font-size: var(--passo-destaque);
+    padding-block: 0.2em;
+  }
+
+  .destinos__paineis {
+    margin-top: auto;
+    padding-top: clamp(28px, 3vw, 44px);
+  }
+
+  .destinos__acoes {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .celula {
+    min-height: 72px;
+  }
 }
 
 /* ==========================================================================
-   9. FAIXA DE RECONHECIMENTO (carimbos)
-   Cada dado vira um carimbo de passaporte: anel duplo + texto em curva
-   (SVG) com o valor no centro, levemente torto como carimbo batido à mão,
-   com o filtro "tinta de carimbo". Papel e dourado alternados.
+   7. COMO FUNCIONA — fileira de quatro momentos
+   Uma coluna no celular, duas no tablet, quatro no desktop. O espaço antes
+   de cada foto varia, então as fotos sobem e descem ao longo da fileira.
    ========================================================================== */
-.faixa-numeros {
-  position: relative;
-  background: radial-gradient(60% 120% at 50% 0%, #18237a 0%, transparent 70%),
-    linear-gradient(160deg, var(--cor-primaria-escura), var(--cor-primaria));
-  padding: 4.5rem 0;
-  overflow: hidden;
+.processo {
+  padding: var(--entre-secoes) var(--margem) clamp(56px, 6vw, 96px);
+  background: var(--azul-pasta);
+  color: var(--papel);
 }
 
-.faixa-numeros::before {
+.processo h2 {
+  font-size: var(--passo-titulo);
+}
+
+.processo__fileira {
+  display: grid;
+  gap: 56px;
+  margin-top: clamp(32px, 4vw, 56px);
+}
+
+.momento {
+  display: flex;
+  flex-direction: column;
+}
+
+.momento h3 {
+  font-size: var(--passo-texto);
+  font-weight: 600;
+  letter-spacing: 0;
+}
+
+.momento p {
+  max-width: 34ch;
+  margin-top: 0.5rem;
+  color: var(--papel-suave);
+}
+
+.momento img,
+.momento video {
+  width: 100%;
+  aspect-ratio: 3 / 2;
+  object-fit: cover;
+  margin-top: 24px;
+}
+
+@media (min-width: 640px) {
+  .processo__fileira {
+    grid-template-columns: 1fr 1fr;
+    column-gap: 32px;
+  }
+
+  .momento img,
+  .momento video {
+    aspect-ratio: 4 / 5;
+    margin-top: 40px;
+  }
+
+  .momento:nth-child(2) img {
+    margin-top: 72px;
+  }
+
+  .momento:nth-child(4) video {
+    margin-top: 72px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .processo__fileira {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .momento img,
+  .momento video {
+    margin-top: 96px;
+  }
+
+  .momento:nth-child(2) img {
+    margin-top: 140px;
+  }
+
+  .momento:nth-child(3) img {
+    margin-top: 72px;
+  }
+
+  .momento:nth-child(4) video {
+    margin-top: 120px;
+  }
+}
+
+
+/* ==========================================================================
+   8. SOBRE NÓS — a carta na pasta manila
+   ========================================================================== */
+.sobre {
+  display: grid;
+  justify-items: center;
+  padding: clamp(56px, 7vw, 112px) var(--margem) var(--entre-secoes);
+  background: var(--manila);
+}
+
+.carta {
+  position: relative;
+  width: min(640px, 100%);
+  padding: clamp(28px, 6vw, 60px) clamp(24px, 6vw, 60px) clamp(36px, 6vw, 64px);
+  background: var(--papel);
+}
+
+.carta__selo {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--nevoa);
+}
+
+.carta h2 {
+  margin-top: 28px;
+  font-size: var(--passo-destaque);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.carta p {
+  margin-top: 1em;
+  line-height: 1.55;
+}
+
+.carta mark {
+  padding: 0 0.15em;
+  background: var(--dourado);
+  color: var(--tinta);
+}
+
+.carta__assinatura {
+  display: flex;
+  flex-direction: column;
+  margin-top: 1.75em !important;
+}
+
+.carta__assinatura span:first-child {
+  font-size: var(--passo-destaque);
+  font-style: italic;
+}
+
+.carta__assinatura span:last-child {
+  font-size: var(--passo-pequeno);
+  color: var(--tinta-suave);
+}
+
+/* Borda de baixo recortada em ondas (SVG na cor do papel). */
+.carta__recorte {
+  position: absolute;
+  left: 0;
+  top: 100%;
+  width: 100%;
+  height: 16px;
+  fill: var(--papel);
+}
+
+/* Canhoto destacável: uma fileira de furos redondos e a tira com o
+   WhatsApp. */
+.canhoto {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 1rem;
+  width: min(640px, 100%);
+  margin-top: 44px;
+  padding: 20px clamp(24px, 6vw, 60px);
+  background: var(--papel);
+}
+
+.canhoto p {
+  white-space: nowrap;
+}
+
+.canhoto::before {
   content: "";
   position: absolute;
-  inset: 0;
-  background-color: rgba(227, 204, 156, 0.08);
-  -webkit-mask: url("../images/guilloche-faixa.svg") 0 50% / 560px 140px repeat;
-  mask: url("../images/guilloche-faixa.svg") 0 50% / 560px 140px repeat;
-  pointer-events: none;
+  left: 0;
+  right: 0;
+  top: -16px;
+  border-top: 6px dotted var(--papel);
 }
 
-.faixa-numeros__grade {
-  position: relative;
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 2rem 1rem;
-  justify-items: center;
+@media (min-width: 640px) {
+  .canhoto {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 88px;
+  }
 }
 
-.carimbo {
-  --giro: -6deg;
-  position: relative;
-  width: min(190px, 40vw);
-  aspect-ratio: 1;
-  display: grid;
-  place-items: center;
-  color: rgba(250, 248, 243, 0.92);
-  transform: rotate(var(--giro));
-  transition: transform 0.5s var(--ease-saida);
+/* ==========================================================================
+   9. RECONHECIMENTO — o cartão impresso, torto e cortado
+   ========================================================================== */
+.reconhecimento {
+  display: flex;
+  justify-content: center;
+  height: clamp(560px, 64vw, 820px);
+  overflow: hidden;
+  padding: var(--entre-secoes) var(--margem) 0;
+  background: var(--fundo-escuro);
 }
 
-.carimbo:nth-child(2) {
-  --giro: 5deg;
+.lista-impressa {
+  flex: none;
+  width: min(92vw, 760px);
+  aspect-ratio: 5 / 7;
+  padding: clamp(28px, 5vw, 56px);
+  background: var(--papel);
+  text-align: center;
+  rotate: -1.5deg;
 }
 
-.carimbo:nth-child(3) {
-  --giro: -3deg;
+.lista-impressa h2 {
+  font-size: var(--passo-destaque);
+  font-weight: 600;
+  letter-spacing: -0.01em;
 }
 
-.carimbo:nth-child(4) {
-  --giro: 8deg;
+.lista-impressa__carimbos {
+  display: flex;
+  justify-content: center;
+  gap: 4%;
+  margin: clamp(24px, 4vw, 44px) 0;
 }
 
-.carimbo--dourado {
-  color: var(--cor-dourado-claro);
-}
-
-.carimbo__anel {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
+.carimbo-premio {
+  width: 30%;
   overflow: visible;
+  color: var(--tinta);
   filter: url(#tintaCarimbo);
 }
 
-.carimbo__anel circle {
+.carimbo-premio:nth-child(1) {
+  rotate: -6deg;
+}
+
+.carimbo-premio:nth-child(2) {
+  rotate: 4deg;
+}
+
+.carimbo-premio:nth-child(3) {
+  rotate: -3deg;
+}
+
+.carimbo-premio--vermelho {
+  color: var(--vermelho);
+}
+
+.carimbo-premio--dourado {
+  color: #8a6d3b;
+}
+
+.carimbo-premio circle {
   fill: none;
   stroke: currentColor;
 }
 
-.carimbo__anel circle:first-of-type {
-  stroke-width: 3.5;
+.carimbo-premio circle:first-of-type {
+  stroke-width: 4;
 }
 
-.carimbo__anel circle:last-of-type {
-  stroke-width: 1.5;
+.carimbo-premio circle:last-of-type {
+  stroke-width: 1.6;
 }
 
-.carimbo__anel text {
+.carimbo-premio text {
   fill: currentColor;
-  font-family: var(--fonte-corpo);
+  font-family: var(--fonte);
+  font-weight: 600;
+}
+
+.carimbo-premio__anel {
   font-size: 14.5px;
-  font-weight: 700;
-  letter-spacing: 2.4px;
+  letter-spacing: 2.2px;
 }
 
-.carimbo__valor {
-  position: relative;
-  font-family: var(--fonte-titulo);
-  font-weight: 500;
-  font-variant-numeric: tabular-nums lining-nums;
-  font-size: clamp(1.25rem, 3.8vw, 1.9rem);
-  letter-spacing: -0.02em;
-  white-space: nowrap;
+.carimbo-premio__valor {
+  font-size: 38px;
 }
 
-/* "55,7 mil" é bem mais largo que um ano de 4 dígitos — menor pra caber
-   dentro do anel interno. */
-.carimbo:first-child .carimbo__valor {
-  font-size: clamp(1.05rem, 3vw, 1.55rem);
+.lista-impressa__nomes {
+  line-height: 1.7;
 }
 
-/* Entrada de carimbo: começa maior e invisível e "bate" no lugar — o mesmo
-   gesto do selo do hero. Duas classes pra vencer o .reveal genérico, que
-   vem depois no arquivo (seção 14). */
-.carimbo.reveal {
-  opacity: 0;
-  transform: rotate(var(--giro)) scale(1.35);
-  transition: opacity 0.3s ease, transform 0.6s var(--ease-saida);
-}
-
-.carimbo.reveal--visivel {
-  opacity: 1;
-  transform: rotate(var(--giro)) scale(1);
-}
-
-.carimbo.reveal--visivel:hover {
-  transform: rotate(0deg) scale(1.04);
+@media (min-width: 900px) {
+  .lista-impressa {
+    width: min(56vw, 760px);
+  }
 }
 
 /* ==========================================================================
-   10. SERVIÇOS — TRILHA COM SCROLL HORIZONTAL "PINADO"
-   A seção (.servicos-scroll) ganha uma altura extra calculada via JS;
-   enquanto essa sobra é rolada, o miolo (.servicos-scroll__pin) fica
-   grudado no topo (position:sticky) e a trilha de cards desliza na
-   horizontal (ver main.js, "ativarScrollHorizontalServicos"). Em telas
-   menores e com menos animação preferida, vira uma faixa comum de rolagem
-   horizontal nativa (classes "--simples"/"--nativa", aplicadas via JS).
+   10. SOZINHO x COM A GENTE — o formulário
    ========================================================================== */
-/* Duas classes (em vez de só ".servicos-scroll") pra especificidade bater a
-   regra ".secao { padding: ... }" dos @media, que vêm DEPOIS desta no
-   arquivo — sem isso o padding genérico voltaria a aparecer aqui e
-   desalinharia a matemática do pin (ver main.js). Só o TOPO é da seção —
-   o resto do espaçamento é da ".pista", que controla sua altura via JS. */
-.secao.servicos-scroll {
-  padding: 5rem 0 0;
+.comparativo {
+  display: grid;
+  gap: clamp(40px, 5vw, 64px);
+  padding: var(--entre-secoes) var(--margem);
+  background: var(--papel);
 }
 
-.servicos-scroll__pista {
+.comparativo h2 {
+  font-size: var(--passo-titulo);
+}
+
+.comparativo__texto p {
+  max-width: 40ch;
+  margin: 1.25rem 0 2rem;
+}
+
+.comparativo__folha {
+  background: var(--branco);
+}
+
+.comparativo__tabela {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+/* Tabela de verdade: as linhas entre as etapas são as do próprio
+   formulário. */
+.comparativo__tabela th,
+.comparativo__tabela td {
+  padding: 1.1rem clamp(16px, 2vw, 28px);
+  vertical-align: top;
+  border-bottom: 1px solid rgba(15, 24, 98, 0.14);
+}
+
+.comparativo__tabela thead th {
+  font-weight: 600;
+}
+
+.comparativo__tabela tbody th {
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.comparativo__tabela td {
+  color: var(--tinta-suave);
+}
+
+.comparativo__tabela .comparativo__nossa {
+  background: var(--tinta);
+  color: var(--papel);
+  border-bottom-color: rgba(243, 244, 241, 0.18);
+}
+
+/* No celular cada etapa vira um bloco: a etapa, e as duas respostas uma
+   embaixo da outra com o nome da coluna antes. */
+@media (max-width: 767px) {
+  .comparativo__tabela thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+  }
+
+  .comparativo__tabela,
+  .comparativo__tabela tbody,
+  .comparativo__tabela tr,
+  .comparativo__tabela th,
+  .comparativo__tabela td {
+    display: block;
+  }
+
+  .comparativo__tabela tr {
+    padding-bottom: 8px;
+  }
+
+  .comparativo__tabela tbody th {
+    border-bottom: 0;
+    padding-bottom: 0.5rem;
+  }
+
+  .comparativo__tabela td {
+    border-bottom: 0;
+    padding-block: 0.6rem;
+  }
+
+  .comparativo__tabela td::before {
+    content: attr(data-rotulo);
+    display: block;
+    font-size: var(--passo-pequeno);
+    font-weight: 600;
+    color: inherit;
+  }
+}
+
+@media (min-width: 1024px) {
+  .comparativo {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.7fr);
+    align-items: start;
+  }
+}
+
+/* ==========================================================================
+   11. DÚVIDAS — perguntas ao lado de uma foto alta
+   ========================================================================== */
+.duvidas {
+  display: grid;
+  background: var(--nevoa);
+}
+
+.duvidas__texto {
+  padding: clamp(48px, 8vw, 96px) var(--margem) var(--entre-secoes);
+}
+
+.duvidas h2 {
+  font-size: var(--passo-titulo);
+}
+
+.duvidas__fatos {
+  display: grid;
+  gap: 0.35rem;
+  margin: clamp(20px, 3vw, 32px) 0 clamp(32px, 4vw, 48px);
+}
+
+.duvidas__lista {
+  display: grid;
+  gap: 24px;
+}
+
+.pergunta summary {
   position: relative;
-  /* Altura calculada via JS igual à distância horizontal que a trilha
-     precisa percorrer — é essa sobra de altura, rolada verticalmente, que
-     "pilota" o deslocamento horizontal dos cards. */
-}
-
-.servicos-scroll__pin {
-  position: sticky;
-  top: 72px; /* altura do cabeçalho fixo */
-  height: calc(100vh - 72px);
   display: flex;
   align-items: center;
-  overflow: hidden;
-  background: linear-gradient(180deg, var(--cor-fundo) 0%, var(--cor-fundo-alt) 100%);
+  min-height: 44px;
+  padding-right: 2.5rem;
+  list-style: none;
+  cursor: pointer;
+  font-weight: 600;
+  transition: color 0.2s ease;
 }
 
-.servicos-scroll--simples .servicos-scroll__pista {
-  height: auto !important;
-}
-
-/* No modo simples o pin não é mais sticky: fica transparente e sem padrão
-   próprio, deixando aparecer o guilhochê da própria seção. */
-.servicos-scroll--simples .servicos-scroll__pin {
-  position: static;
-  height: auto;
-  padding: 1rem 0 4rem;
-  background: transparent;
-}
-
-.servicos-scroll--simples .servicos-scroll__pin::before {
+.pergunta summary::-webkit-details-marker {
   display: none;
 }
 
-/* padding-inline = margem do .container: o primeiro card começa alinhado
-   com o título da seção, em qualquer largura de tela. */
-.servicos-scroll__trilha {
-  position: relative;
-  z-index: 1;
-  display: flex;
-  align-items: stretch;
-  gap: 1.75rem;
-  padding-inline: var(--margem-container);
-  will-change: transform;
-}
-
-/* Fallback: celular/tablet e "prefers-reduced-motion" — faixa com rolagem
-   horizontal nativa do próprio navegador (previsível no touch, sem nenhum
-   "sequestro" de scroll pra quem pediu menos movimento). */
-.servicos-scroll__trilha--nativa {
-  overflow-x: auto;
-  scroll-snap-type: x proximity;
-  scroll-padding-inline: var(--margem-container);
-  padding-block: 0.75rem 1.5rem;
-  overscroll-behavior-x: contain;
-  scrollbar-width: thin;
-  will-change: auto;
-}
-
-.servicos-scroll__trilha--nativa .cartao-produto {
-  scroll-snap-align: start;
-}
-
-/* Cartão de serviço — papel branco, fio fino, foto com margem interna
-   (como a foto colada numa página de passaporte) e um link de WhatsApp com
-   o serviço já escrito na mensagem. Sem brilho seguindo o mouse. */
-.cartao-produto {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  flex: 0 0 clamp(260px, 80vw, 340px);
-  background: var(--cor-branco);
-  border: 1px solid var(--cor-borda);
-  border-radius: var(--raio-borda);
-  padding: 10px;
-  box-shadow: 0 1px 2px rgba(15, 24, 98, 0.05), 0 24px 40px -30px rgba(15, 24, 98, 0.45);
-  transition: border-color 0.3s ease, box-shadow 0.5s var(--ease-saida);
-}
-
-.cartao-produto:hover {
-  border-color: rgba(15, 24, 98, 0.22);
-  box-shadow: 0 1px 2px rgba(15, 24, 98, 0.05), 0 34px 56px -32px rgba(15, 24, 98, 0.6);
-}
-
-.cartao-produto__imagem {
-  width: 100%;
-  /* 4/3 em vez de quadrada — card mais baixo, cabe inteiro dentro da
-     "janela" de altura fixa do pin mesmo em telas mais baixas. */
-  aspect-ratio: 4 / 3;
-  overflow: hidden;
-  border-radius: 6px;
-}
-
-.cartao-produto__imagem img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform 1s var(--ease-saida);
-}
-
-.cartao-produto:hover .cartao-produto__imagem img {
-  transform: scale(1.04);
-}
-
-.cartao-produto__corpo {
-  padding: 1.2rem 0.65rem 0.5rem;
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-}
-
-.cartao-produto__corpo h3 {
-  font-size: 1.5rem;
-  margin-bottom: 0.45rem;
-}
-
-.cartao-produto__corpo p {
-  color: var(--cor-texto-claro);
-  font-size: 0.95rem;
-  margin-bottom: 1.1rem;
-  /* Trava em 3 linhas — mantém os cards com a mesma altura na trilha. */
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
-.cartao-produto__cta {
-  margin-top: auto;
-  align-self: flex-start;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.45rem;
-  font-weight: 600;
-  font-size: 0.92rem;
-  color: var(--cor-primaria);
-  padding: 0.45rem 0;
-  border-bottom: 1px solid rgba(15, 24, 98, 0.22);
-  transition: color 0.25s ease, border-color 0.25s ease;
-}
-
-.cartao-produto__cta .icone {
-  width: 1em;
-  height: 1em;
-  transition: transform 0.4s var(--ease-saida);
-}
-
-.cartao-produto__cta:hover {
-  color: var(--cor-secundaria-escura);
-  border-color: var(--cor-secundaria-escura);
-}
-
-.cartao-produto:hover .cartao-produto__cta .icone {
-  transform: translateX(3px);
-}
-
-/* ==========================================================================
-   11. CONTATO
-   ========================================================================== */
-.contato__info > p {
-  color: var(--cor-texto-claro);
-  max-width: 46ch;
-}
-
-.contato__lista {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  margin: 2rem 0 2.25rem;
-}
-
-.contato__lista li {
-  display: flex;
-  align-items: center;
-  gap: 0.9rem;
-  color: var(--cor-texto-claro);
-}
-
-.contato__lista .icone {
-  width: 18px;
-  height: 18px;
-  padding: 11px;
-  box-sizing: content-box;
-  background: var(--cor-branco);
-  color: var(--cor-secundaria-escura);
-  box-shadow: inset 0 0 0 1px var(--cor-borda);
-  border-radius: 50%;
-  flex-shrink: 0;
-}
-
-.contato__lista a {
-  text-decoration: underline;
-  text-decoration-color: transparent;
-  text-decoration-thickness: 1px;
-  text-underline-offset: 4px;
-  transition: color var(--transicao), text-decoration-color var(--transicao);
-}
-
-.contato__lista a:hover {
-  color: var(--cor-primaria-escura);
-  text-decoration-color: var(--cor-dourado);
-}
-
-/* Mapa numa moldura de papel (fio + margem interna), levemente
-   dessaturado pra não brigar com a paleta — volta à cor cheia no hover. */
-.contato__mapa {
-  border-radius: var(--raio-borda);
-  overflow: hidden;
-  background: var(--cor-branco);
-  border: 1px solid var(--cor-borda);
-  padding: 8px;
-  box-shadow: 0 40px 70px -44px rgba(15, 24, 98, 0.5);
-  /* Altura fixa (não só min-height): o iframe usa height:100% do pai, e
-     percentual de altura só funciona contra um pai com altura definida. */
-  height: 320px;
-}
-
-.contato__mapa iframe {
-  width: 100%;
-  height: 100%;
-  min-height: 300px;
-  border: 0;
-  display: block;
-  border-radius: 6px;
-  filter: saturate(0.55) contrast(1.04);
-  transition: filter 0.5s ease;
-}
-
-.contato__mapa:hover iframe {
-  filter: none;
-}
-
-/* ==========================================================================
-   12. RODAPÉ
-   ========================================================================== */
-.rodape {
-  position: relative;
-  background: var(--cor-primaria-escura);
-  color: rgba(255, 255, 255, 0.8);
-  overflow: hidden;
-}
-
-/* No rodapé os fios (bordas) ficam na caixa do container — sem o padding
-   lateral, a largura encolhe no lugar, pros fios terminarem alinhados com
-   o texto em vez de 20px além dele. */
-.rodape .container {
-  width: calc(100% - 2.5rem);
-  max-width: calc(var(--largura-max) - 2.5rem);
-  padding-inline: 0;
-}
-
-/* Roseta guilhochê dourada, enorme e fraca, atrás do CTA final — fecha a
-   página com o mesmo "selo-d'água" que abre o hero. */
-.rodape::before {
+/* Chevron feito de dois traços de 2px. */
+.pergunta summary::after {
   content: "";
   position: absolute;
-  width: 760px;
-  aspect-ratio: 1;
-  right: -320px;
-  top: -420px;
-  background-color: rgba(227, 204, 156, 0.08);
-  -webkit-mask: url("../images/guilloche-roseta.svg") center / contain no-repeat;
-  mask: url("../images/guilloche-roseta.svg") center / contain no-repeat;
-  pointer-events: none;
+  right: 6px;
+  top: 50%;
+  width: 10px;
+  height: 10px;
+  border-right: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  transform: translateY(-70%) rotate(45deg);
+  transition: transform 0.3s var(--ease-saida);
 }
 
-/* CTA final — última chance de conversão antes do rodapé "administrativo".
-   padding-block (não "padding: X 0"): mantém o respiro lateral do
-   .container, senão o texto encosta na borda da tela no celular. */
-.rodape__cta {
+.pergunta[open] summary::after {
+  transform: translateY(-25%) rotate(-135deg);
+}
+
+.pergunta summary:hover {
+  color: var(--vermelho);
+}
+
+.pergunta p {
+  max-width: 60ch;
+  margin-top: 0.5rem;
+  color: var(--tinta-suave);
+}
+
+.pergunta a {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.duvidas__acoes {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem 2rem;
+  margin-top: clamp(40px, 5vw, 56px);
+}
+
+/* Fotos: a alta sangra pela borda de cima da seção; a quadrada encosta
+   sobre o canto de baixo dela. No celular vêm antes do texto. */
+.duvidas__fotos {
+  position: relative;
+  order: -1;
+  padding-bottom: 72px;
+}
+
+.duvidas__foto-alta {
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+}
+
+.duvidas__foto-quadrada {
+  position: absolute;
+  right: var(--margem);
+  bottom: 0;
+  width: 38%;
+  aspect-ratio: 1;
+  object-fit: cover;
+  object-position: 45% 50%;
+  border: 6px solid var(--nevoa);
+}
+
+@media (max-width: 899px) {
+  .duvidas__acoes .botao {
+    width: 100%;
+  }
+}
+
+@media (min-width: 900px) {
+  .duvidas {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    column-gap: clamp(40px, 5vw, 80px);
+    padding-left: var(--margem);
+  }
+
+  .duvidas__texto {
+    padding: var(--entre-secoes) 0;
+  }
+
+  .duvidas__fotos {
+    order: 0;
+    padding-bottom: 0;
+  }
+
+  .duvidas__foto-alta {
+    width: 82%;
+    margin-left: auto;
+    aspect-ratio: 3 / 4;
+    position: sticky;
+    top: var(--altura-barra);
+  }
+
+  .duvidas__foto-quadrada {
+    position: absolute;
+    right: auto;
+    left: 0;
+    bottom: 80px;
+    width: 34%;
+  }
+}
+
+/* ==========================================================================
+   12. CONTATO — cartão de visita sobre a foto
+   ========================================================================== */
+.contato {
+  position: relative;
+  background: var(--fundo-escuro);
+}
+
+.contato__foto {
+  width: 100%;
+  height: 70svh;
+  object-fit: cover;
+  object-position: 55% 30%;
+}
+
+.cartao-visita {
   position: relative;
   display: flex;
   flex-direction: column;
-  gap: 2rem;
-  align-items: flex-start;
-  padding-block: 5rem 4rem;
-  border-bottom: 1px solid rgba(227, 204, 156, 0.2);
+  margin: -80px var(--margem) 0;
+  padding: 28px 24px 0;
+  background: var(--papel);
+  color: var(--tinta);
 }
 
-.rodape__cta-titulo {
-  font-family: var(--fonte-titulo);
-  font-weight: 400;
-  color: var(--cor-branco);
-  font-size: clamp(2.2rem, 5.2vw, 3.9rem);
-  line-height: 1.02;
-  max-width: 17ch;
-  letter-spacing: -0.03em;
+.cartao-visita h2 {
+  font-size: var(--passo-destaque);
+  letter-spacing: -0.01em;
 }
 
-.rodape__cta-titulo em {
-  color: var(--cor-dourado-claro);
+.cartao-visita address {
+  margin-top: 1rem;
+  font-style: normal;
 }
 
-.rodape__grade {
-  position: relative;
+.cartao-visita__extra {
+  margin-top: 0.5rem;
+  color: var(--tinta-suave);
+}
+
+.cartao-visita__horas {
+  margin-top: 1.25rem;
+}
+
+.cartao-visita__horas div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.cartao-visita__horas dd {
+  font-weight: 600;
+}
+
+.cartao-visita__contatos {
   display: grid;
-  grid-template-columns: 1fr;
-  gap: 2.5rem;
-  padding-block: 3.5rem;
+  gap: 0.35rem;
+  margin-top: 1.25rem;
 }
 
-.rodape__marca {
-  display: flex;
+.cartao-visita__contatos a {
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.cartao-visita__mapa {
+  margin-top: 1.25rem;
+  align-self: flex-start;
+}
+
+.cartao-visita__botao {
+  margin: 1.75rem -24px 0;
+  min-height: 56px;
+}
+
+@media (min-width: 900px) {
+  .contato {
+    min-height: 100svh;
+  }
+
+  .contato__foto {
+    position: absolute;
+    inset: 0;
+    height: 100%;
+  }
+
+  .cartao-visita {
+    position: sticky;
+    top: calc(var(--altura-barra) + 60px);
+    width: 400px;
+    margin: 0 0 0 var(--margem);
+    padding: 32px 32px 0;
+    translate: 0 60px;
+  }
+
+  .cartao-visita__botao {
+    margin-inline: -32px;
+  }
+
+  .contato::after {
+    content: "";
+    display: block;
+    height: 160px;
+  }
+}
+
+/* ==========================================================================
+   13. EMBARQUE — o cartão de resposta
+   ========================================================================== */
+.embarque-secao {
+  display: grid;
+  gap: 40px;
+  overflow: hidden;
+  padding: var(--entre-secoes) var(--margem) 0;
+  background: var(--fundo-escuro);
+  color: var(--papel);
+}
+
+.embarque-secao__frase {
+  max-width: 24ch;
+  font-size: var(--passo-destaque);
+  line-height: 1.35;
+}
+
+.embarque {
+  justify-self: center;
+  width: min(90vw, 620px);
+  margin-bottom: -60px;
+  padding: clamp(28px, 4vw, 48px) clamp(24px, 4vw, 48px) calc(60px + clamp(28px, 4vw, 48px));
+  background: var(--papel);
+  color: var(--tinta);
+  text-align: center;
+  rotate: 1deg;
+}
+
+.embarque h2 {
+  font-size: var(--passo-destaque);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.embarque__rota {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
   align-items: center;
-  gap: 0.65rem;
-  font-family: var(--fonte-titulo);
-  font-weight: 500;
-  font-size: 1.35rem;
-  letter-spacing: -0.015em;
-  color: var(--cor-branco);
-  margin-bottom: 0.9rem;
+  gap: 1rem;
+  margin-top: clamp(24px, 3vw, 36px);
 }
 
-.rodape__marca img {
-  border-radius: 6px;
-}
-
-.rodape__tagline {
-  font-size: 0.93rem;
-  line-height: 1.6;
-  color: rgba(255, 255, 255, 0.6);
-  max-width: 32ch;
-  margin-bottom: 1.5rem;
-}
-
-.rodape__redes {
+.embarque__ponto {
   display: flex;
-  gap: 0.75rem;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.2rem;
 }
 
-.rodape__redes a {
-  width: 42px;
-  height: 42px;
-  border-radius: 50%;
-  border: 1px solid rgba(255, 255, 255, 0.22);
+.embarque__ponto--destino {
+  align-items: flex-end;
+}
+
+.embarque__dados dt {
+  font-size: var(--passo-pequeno);
+  color: var(--tinta-suave);
+}
+
+.embarque__codigo {
+  font-size: var(--passo-titulo);
+  line-height: 1;
+}
+
+.embarque__cidade {
+  font-size: var(--passo-pequeno);
+  color: var(--tinta-suave);
+  transition: opacity 0.25s ease;
+}
+
+.embarque__aviao {
+  justify-self: center;
+  width: 28px;
+  height: 28px;
+  color: var(--vermelho);
+  rotate: 90deg;
+}
+
+/* Painel de aeroporto: cada letra numa plaqueta com vinco de 2px; ao
+   trocar de destino as plaquetas viram uma a uma (rotateX). */
+.embarque__painel {
+  display: inline-flex;
+  gap: 4px;
+  perspective: 300px;
+}
+
+.embarque__painel span {
+  position: relative;
+  min-width: 0.66em;
+  padding: 0.06em 0.05em 0.02em;
+  background: var(--tinta);
+  color: var(--papel);
+  text-align: center;
+}
+
+.embarque__painel span::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(50% - 1px);
+  height: 2px;
+  background: var(--fundo-escuro);
+}
+
+.embarque__painel .virando {
+  animation: virarPlaqueta 0.34s ease-in-out;
+}
+
+@keyframes virarPlaqueta {
+  0% {
+    transform: rotateX(0deg);
+  }
+  49% {
+    transform: rotateX(-90deg);
+  }
+  51% {
+    transform: rotateX(90deg);
+  }
+  100% {
+    transform: rotateX(0deg);
+  }
+}
+
+.embarque__dados {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 1rem 2.5rem;
+  margin-top: clamp(24px, 3vw, 36px);
+}
+
+.embarque__dados dd {
+  font-weight: 600;
+}
+
+.embarque__acao {
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: color var(--transicao), border-color var(--transicao), background-color var(--transicao);
-}
-
-.rodape__redes svg {
-  width: 18px;
-  height: 18px;
-}
-
-.rodape__redes a:hover {
-  color: var(--cor-dourado-claro);
-  border-color: var(--cor-dourado-claro);
-  background: rgba(227, 204, 156, 0.06);
-}
-
-.rodape__titulo-coluna {
-  font-family: var(--fonte-corpo);
+  min-height: 56px;
+  margin-top: clamp(24px, 3vw, 36px);
+  background: var(--vermelho);
+  color: var(--papel);
   font-weight: 600;
-  font-size: 0.72rem;
-  text-transform: uppercase;
-  letter-spacing: 0.16em;
-  color: var(--cor-dourado-claro);
-  margin-bottom: 1.15rem;
+  transition: background-color 0.2s ease;
 }
 
-.rodape__lista-links {
-  display: flex;
-  flex-direction: column;
-  gap: 0.7rem;
+.embarque__acao:hover {
+  background: var(--vermelho-escuro);
 }
 
-.rodape__lista-links a {
-  font-size: 0.92rem;
-  color: rgba(255, 255, 255, 0.65);
-  transition: color var(--transicao);
-}
+@media (min-width: 1024px) {
+  .embarque-secao {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: 24px;
+    min-height: 80svh;
+    align-items: end;
+  }
 
-.rodape__lista-links a:hover {
-  color: var(--cor-branco);
-}
+  .embarque-secao__frase {
+    grid-column: 1 / span 4;
+    align-self: end;
+    margin-bottom: 124px;
+  }
 
-.rodape__lista-links--contato li {
-  font-size: 0.92rem;
-  line-height: 1.5;
-  color: rgba(255, 255, 255, 0.65);
-}
-
-/* Zona de leitura mecânica (MRZ) — duas linhas de 44 caracteres, como na
-   página de dados do passaporte. A fonte escala com a largura da tela pra
-   linha caber inteira sem quebrar. */
-.rodape__mrz {
-  position: relative;
-  border-top: 1px solid rgba(227, 204, 156, 0.18);
-  padding: 1.5rem 0;
-  overflow: hidden;
-}
-
-.rodape__mrz p {
-  font-family: var(--fonte-mono);
-  font-weight: 500;
-  font-size: clamp(0.6rem, 2.05vw, 1.45rem);
-  letter-spacing: 0.12em;
-  line-height: 1.5;
-  white-space: nowrap;
-  color: rgba(227, 204, 156, 0.3);
-}
-
-.rodape__base {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  align-items: center;
-  text-align: center;
-  padding-block: 1.5rem calc(2rem + env(safe-area-inset-bottom, 0px));
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.rodape__copyright {
-  font-size: 0.85rem;
-}
-
-.rodape__creditos {
-  font-size: 0.8rem;
-  color: rgba(255, 255, 255, 0.6);
-}
-
-.rodape__creditos a {
-  text-decoration: underline;
-  text-decoration-color: rgba(227, 204, 156, 0.5);
-  text-underline-offset: 3px;
-}
-
-.rodape__creditos a:hover {
-  color: var(--cor-branco);
+  .embarque {
+    grid-column: 6 / span 7;
+    justify-self: stretch;
+    width: auto;
+    rotate: 2deg;
+  }
 }
 
 /* ==========================================================================
-   13. BOTÃO FLUTUANTE DE WHATSAPP
-   Continua verde (é a affordance que todo mundo reconhece), mas sem pulsar:
-   sombra com deslocamento e respeito à área segura do iPhone.
+   14. RODAPÉ — o verso do cartão
+   ========================================================================== */
+.rodape {
+  padding: clamp(72px, 9vw, 140px) var(--margem) clamp(40px, 5vw, 72px);
+  background: var(--fundo-escuro);
+}
+
+.verso {
+  position: relative;
+  display: grid;
+  gap: 2.5rem;
+  max-width: 1100px;
+  margin-inline: auto;
+  padding: clamp(32px, 5vw, 64px);
+  background: var(--papel);
+  color: var(--tinta);
+}
+
+.verso__recorte {
+  position: absolute;
+  left: 0;
+  bottom: 100%;
+  width: 100%;
+  height: 24px;
+  fill: var(--papel);
+}
+
+.verso__titulo {
+  font-size: var(--passo-titulo);
+}
+
+.verso__recado p {
+  max-width: 40ch;
+  margin-top: 1rem;
+}
+
+.verso__enderecos {
+  position: relative;
+}
+
+.verso__selo {
+  width: 72px;
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
+  padding: 6px;
+  background: var(--branco);
+  rotate: 4deg;
+  margin-bottom: 1.5rem;
+}
+
+.verso__enderecos ul {
+  display: grid;
+  gap: 12px;
+}
+
+.verso__enderecos a {
+  transition: color 0.2s ease;
+}
+
+.verso__enderecos a:hover {
+  color: var(--vermelho);
+}
+
+.verso__imprenta,
+.verso__creditos {
+  font-size: var(--passo-pequeno);
+  color: var(--tinta-suave);
+}
+
+.verso__imprenta a,
+.verso__creditos a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+@media (min-width: 900px) {
+  .verso {
+    grid-template-columns: 1fr 1fr;
+    column-gap: 64px;
+    min-height: 420px;
+  }
+
+  .verso__selo {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 88px;
+    margin: 0;
+  }
+
+  .verso__enderecos ul {
+    padding-top: 6.5rem;
+  }
+
+  .verso__imprenta,
+  .verso__creditos {
+    grid-column: 1 / -1;
+    text-align: center;
+  }
+}
+
+/* ==========================================================================
+   15. BOTÃO FLUTUANTE DE WHATSAPP (flutua de verdade: pode ter sombra)
    ========================================================================== */
 .whatsapp-flutuante {
   position: fixed;
-  right: calc(1.25rem + env(safe-area-inset-right, 0px));
-  bottom: calc(1.25rem + env(safe-area-inset-bottom, 0px));
+  right: calc(16px + env(safe-area-inset-right, 0px));
+  bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+  z-index: 90;
+  display: grid;
+  place-items: center;
   width: 54px;
   height: 54px;
   border-radius: 50%;
   background: #25d366;
-  color: var(--cor-branco);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 14px 30px -12px rgba(4, 8, 40, 0.55), inset 0 0 0 1px rgba(255, 255, 255, 0.2);
-  z-index: 90;
-  transition: transform 0.3s var(--ease-saida), box-shadow 0.3s ease;
+  color: var(--branco);
+  box-shadow: 0 12px 28px -10px rgba(4, 8, 40, 0.6); /* taste-skill-ignore: botão flutuante */
+  transition: transform 0.25s var(--ease-saida);
 }
 
 .whatsapp-flutuante svg {
@@ -1874,337 +1741,218 @@ p {
 
 .whatsapp-flutuante:hover {
   transform: scale(1.06);
-  box-shadow: 0 18px 36px -12px rgba(4, 8, 40, 0.6), inset 0 0 0 1px rgba(255, 255, 255, 0.2);
-}
-
-.whatsapp-flutuante:active {
-  transform: scale(0.96);
 }
 
 /* ==========================================================================
-   14. ANIMAÇÃO DE ENTRADA AO ROLAR (SCROLL REVEAL)
-   Controlado via JS (main.js), que adiciona ".reveal--visivel" quando o
-   elemento entra na tela. Sutil de propósito: fade + deslocamento curto
-   com desaceleração longa.
+   16. PAINEL "O QUE ESTÁ INCLUSO" (diálogo — flutua de verdade)
    ========================================================================== */
-.reveal {
+html:has(.painel[open]) {
+  overflow: hidden;
+}
+
+.painel {
+  position: fixed;
+  inset: 0 0 0 auto;
+  width: min(500px, 100%);
+  max-width: 100%;
+  height: 100dvh;
+  max-height: 100dvh;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: var(--papel);
+  color: var(--tinta);
+  box-shadow: -30px 0 80px -30px rgba(9, 15, 66, 0.6); /* taste-skill-ignore: diálogo */
+  overscroll-behavior: contain;
+}
+
+.painel[open] {
+  animation: painelEntrar 0.5s var(--ease-saida);
+}
+
+.painel::backdrop {
+  background: rgba(9, 15, 66, 0.55);
+}
+
+@keyframes painelEntrar {
+  from {
+    transform: translateX(100%);
+  }
+}
+
+.painel__caixa {
+  position: relative;
+  height: 100%;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 4.5rem clamp(24px, 5vw, 44px) calc(2.5rem + env(safe-area-inset-bottom, 0px));
+}
+
+.painel__fechar {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  background: var(--papel-2);
+  color: var(--tinta);
+  transition: background-color 0.2s ease;
+}
+
+.painel__fechar:hover {
+  background: var(--nevoa);
+}
+
+.painel__fechar svg {
+  width: 20px;
+  height: 20px;
+}
+
+.painel__titulo {
+  font-size: var(--passo-titulo);
+}
+
+.painel__descricao {
+  margin-top: 0.75rem;
+  color: var(--tinta-suave);
+}
+
+.painel__preco {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.25rem 0.5rem;
+  margin-top: 1.5rem;
+  padding: 1rem 1.25rem;
+  background: var(--papel-2);
+}
+
+.painel__preco strong {
+  font-size: var(--passo-destaque);
+}
+
+.painel__preco span {
+  flex-basis: 100%;
+  font-size: var(--passo-pequeno);
+  color: var(--tinta-suave);
+}
+
+.painel__subtitulo {
+  margin-top: 2rem;
+  font-size: var(--passo-texto);
+  font-weight: 600;
+  letter-spacing: 0;
+}
+
+.painel__lista {
+  display: grid;
+  gap: 0.6rem;
+  margin-top: 0.75rem;
+}
+
+.painel__lista li {
+  position: relative;
+  padding-left: 1.4em;
+}
+
+.painel__lista li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.55em;
+  width: 0.45em;
+  height: 0.45em;
+  background: var(--vermelho);
+}
+
+.painel__trocar {
+  color: var(--vermelho);
+  font-style: italic;
+}
+
+.painel__dados {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin: 1.75rem 0 2rem;
+}
+
+.painel__dados div {
+  padding: 0.75rem 1rem;
+  background: var(--papel-2);
+}
+
+.painel__dados dt {
+  font-size: var(--passo-pequeno);
+  color: var(--tinta-suave);
+}
+
+.painel__dados dd {
+  font-weight: 600;
+}
+
+.painel__cta {
+  width: 100%;
+  min-height: 56px;
+  background: var(--vermelho);
+  color: var(--papel);
+}
+
+.painel__cta:hover {
+  background: var(--vermelho-escuro);
+}
+
+.painel__cta .icone {
+  width: 1.1em;
+  height: 1.1em;
+  margin-right: 0.6rem;
+}
+
+/* ==========================================================================
+   17. ENTRADA AO ROLAR — título, depois texto, depois figura, em cascata
+   (60–90ms) dentro de cada seção. Só esconde quando o JS está ativo
+   (classe "js" no <html>), então nada some se o script falhar.
+   ========================================================================== */
+.js .entrada {
   opacity: 0;
-  transform: translateY(16px);
-  transition: opacity 0.9s var(--ease-saida), transform 1s var(--ease-saida);
+  transform: translateY(24px);
+  transition: opacity 0.8s var(--ease-saida), transform 0.9s var(--ease-saida);
 }
 
-.reveal--visivel {
+.js .entrada.entrou {
   opacity: 1;
-  transform: translateY(0);
+  transform: none;
 }
 
-/* ==========================================================================
-   15. RESPONSIVO — TABLET (≥768px)
-   ========================================================================== */
-@media (min-width: 768px) {
-  .secao {
-    padding: 6.5rem 0;
-  }
-
-  .faixa-numeros__grade {
-    grid-template-columns: repeat(4, 1fr);
-  }
-
-  .rodape__cta {
-    flex-direction: row;
-    align-items: flex-end;
-    justify-content: space-between;
-    gap: 2rem;
-  }
-
-  .rodape__grade {
-    grid-template-columns: 1.2fr 1fr;
-  }
-
-  .processo__lista {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 3rem 2.5rem;
-  }
-
-  .processo__passo:not(:last-child)::before {
-    display: none;
-  }
-
-  .hero {
-    min-height: max(660px, 92vh);
-  }
-
-  .hero__conteudo {
-    padding-block: 5rem 4.5rem;
-  }
-
-  .hero__acoes {
-    flex-direction: row;
-    flex-wrap: wrap;
-  }
-
-  .hero__acoes .botao {
-    width: auto;
-  }
-
-  .hero__credenciais {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.8rem 2rem;
-  }
+/* O cartão impresso e o de embarque mantêm a inclinação ao entrar. */
+.js .lista-impressa.entrada,
+.js .embarque.entrada {
+  transform: translateY(48px);
 }
 
-/* ==========================================================================
-   16. RESPONSIVO — DESKTOP (≥1024px)
-   ========================================================================== */
-@media (min-width: 1024px) {
-  .secao {
-    padding: 8rem 0;
+.js .lista-impressa.entrada.entrou,
+.js .embarque.entrada.entrou {
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
   }
 
-  .secao.servicos-scroll {
-    padding-top: 8rem;
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
   }
 
-  /* Cabeçalho de seção em duas colunas: título à esquerda, subtítulo à
-     direita alinhado pela base, com um fio de papel embaixo. */
-  .secao__cabecalho {
-    display: grid;
-    grid-template-columns: 1.35fr 1fr;
-    align-items: end;
-    gap: 4rem;
-    margin-bottom: 4rem;
-    padding-bottom: 2.25rem;
-    border-bottom: 1px solid var(--cor-borda);
-  }
-
-  .secao__cabecalho .secao__titulo {
-    margin-bottom: 0;
-  }
-
-  .secao__cabecalho .secao__subtitulo {
-    justify-self: end;
-    margin-bottom: 0.35rem;
-  }
-
-  .menu-mobile {
-    display: none;
-  }
-
-  .navegacao {
-    position: static;
-    height: auto;
-    overflow: visible;
-    flex-direction: row;
-    align-items: center;
-    justify-content: flex-end;
-    flex: 1;
-    padding: 0;
-    border: 0;
-    background: transparent;
-    transform: none;
+  .js .entrada {
     opacity: 1;
-    visibility: visible;
-    pointer-events: auto;
-    gap: 2.5rem;
-  }
-
-  .navegacao__lista {
-    flex-direction: row;
-    gap: 2rem;
-  }
-
-  .navegacao__link {
-    padding: 0.4rem 0;
-    border-bottom: 0;
-    font-family: var(--fonte-corpo);
-    font-size: 0.93rem;
-    font-weight: 500;
-    letter-spacing: 0;
-    color: rgba(255, 255, 255, 0.82);
-  }
-
-  .navegacao__link:hover {
-    color: var(--cor-branco);
-  }
-
-  .navegacao__link--ativo {
-    color: var(--cor-branco);
-  }
-
-  .cabecalho--rolado .navegacao__link {
-    color: var(--cor-texto-claro);
-  }
-
-  .cabecalho--rolado .navegacao__link:hover,
-  .cabecalho--rolado .navegacao__link--ativo {
-    color: var(--cor-primaria-escura);
-  }
-
-  /* Fio dourado que "desenha" embaixo do link no hover e fica no link da
-     seção atual. */
-  .navegacao__link::after {
-    content: "";
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: -2px;
-    height: 1px;
-    background: var(--cor-dourado);
-    transform: scaleX(0);
-    transform-origin: right;
-    transition: transform 0.45s var(--ease-saida);
-  }
-
-  .navegacao__link:hover::after,
-  .navegacao__link--ativo::after {
-    transform: scaleX(1);
-    transform-origin: left;
-  }
-
-  .navegacao__cta {
-    background: transparent;
-    color: var(--cor-branco);
-    border-color: rgba(255, 255, 255, 0.4);
-    padding: 0.62rem 1.15rem;
-    font-size: 0.88rem;
-  }
-
-  .navegacao__cta:hover {
-    background: rgba(255, 255, 255, 0.08);
-    border-color: var(--cor-branco);
-  }
-
-  .cabecalho--rolado .navegacao__cta {
-    background: var(--cor-primaria);
-    color: var(--cor-fundo);
-    border-color: var(--cor-primaria);
-  }
-
-  .cabecalho--rolado .navegacao__cta:hover {
-    background: var(--cor-primaria-escura);
-  }
-
-  .hero__grade {
-    grid-template-columns: 1.05fr 0.95fr;
-    gap: 3rem;
-  }
-
-  .hero__conteudo {
-    padding-block: 6rem 5.5rem;
-  }
-
-  .hero__vitrine {
-    display: block;
-  }
-
-  .sobre__grade {
-    grid-template-columns: 0.9fr 1fr;
-    align-items: center;
-    gap: 5.5rem;
-  }
-
-  .sobre__imagem img {
-    aspect-ratio: 9 / 11;
-    max-height: none;
-  }
-
-  .contato__grade {
-    grid-template-columns: 1fr 1.1fr;
-    align-items: stretch;
-    gap: 5rem;
-  }
-
-  .contato__mapa {
-    /* No desktop o grid (align-items:stretch) define a altura da célula —
-       volta a ser automática pra acompanhar a coluna de texto ao lado. */
-    height: auto;
-  }
-
-  .rodape__grade {
-    grid-template-columns: 1.4fr 1fr 1fr 1fr;
-  }
-
-  .rodape__base {
-    flex-direction: row;
-    justify-content: space-between;
-    text-align: left;
-  }
-
-  /* Processo em 4 colunas, texto alinhado à esquerda, com a rota de voo
-     pontilhada ligando os círculos. Círculo de 2.75rem (raio 1.375rem) no
-     canto esquerdo de cada coluna; com gap de 2.5rem, a coluna mede
-     25% - 1.875rem — daí o centro do último círculo fica em
-     75% + 3.25rem, e o percurso total mede 75% + 1.875rem. */
-  .processo__lista {
-    grid-template-columns: repeat(4, 1fr);
-    gap: 2.5rem;
-    position: relative;
-  }
-
-  .processo__lista::before {
-    content: "";
-    position: absolute;
-    top: 1.375rem;
-    left: 1.375rem;
-    right: calc(25% - 3.25rem);
-    height: 0;
-    border-top: 1px dashed rgba(15, 24, 98, 0.28);
-    z-index: 0;
-  }
-
-  /* Linha de preenchimento por cima do pontilhado, ligada ao scroll (JS
-     define --progresso-processo de 0 a 1 no wrapper, ver main.js). */
-  .processo__lista::after {
-    content: "";
-    position: absolute;
-    top: calc(1.375rem - 0.5px);
-    left: 1.375rem;
-    right: calc(25% - 3.25rem);
-    height: 2px;
-    border-radius: 2px;
-    background: linear-gradient(to right, var(--cor-primaria), var(--cor-secundaria-escura));
-    transform: scaleX(var(--progresso-processo, 0));
-    transform-origin: left;
-    z-index: 0;
-  }
-
-  .processo__percurso {
-    position: relative;
-  }
-
-  /* Avião na ponta da linha preenchida — mesma variável de progresso. */
-  .processo__aviao {
-    display: block;
-    position: absolute;
-    z-index: 2;
-    top: calc(1.375rem - 13px);
-    left: calc(1.375rem + (75% + 1.875rem) * var(--progresso-processo, 0));
-    width: 26px;
-    height: 26px;
-    margin-left: -13px;
-    color: var(--cor-secundaria-escura);
-    transform: rotate(90deg);
-    filter: drop-shadow(0 4px 6px rgba(15, 24, 98, 0.3));
-    /* Aparece logo que a viagem começa e "pousa" (some) ao chegar no
-       último passo, pra não ficar parado em cima do número 04. */
-    opacity: min(calc(var(--progresso-processo, 0) * 40), calc((1 - var(--progresso-processo, 0)) * 25));
-  }
-
-  /* z-index 1: cada passo vira um contexto de empilhamento (o .reveal usa
-     transform), então precisa ficar acima da linha (::after, z-index 0) —
-     senão a linha risca o número dentro do círculo. */
-  .processo__passo {
-    z-index: 1;
-    padding-left: 0;
-    padding-top: 4.75rem;
-  }
-
-  .processo__numero {
-    z-index: 1;
-  }
-
-  .processo__passo p {
-    max-width: 28ch;
+    transform: none;
   }
 }

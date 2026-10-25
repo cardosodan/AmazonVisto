@@ -165,10 +165,19 @@ já usa a imagem nova automaticamente (não precisa editar o HTML):
 | `depoimento-1.jpg` … `depoimento-3.jpg` | Avatar nos depoimentos | 300×300px (quadrado, vira círculo via CSS) |
 | `og-image.jpg` | Preview ao compartilhar o link (WhatsApp etc.) | 1200×630px |
 
-Se o cliente tiver menos de 6 produtos/serviços, apague os `<article
-class="cartao-produto">` extras no `index.html` (cada um é autocontido, dá
-pra apagar sem afetar os outros). Se tiver mais de 6, copie um bloco inteiro
-e ajuste o número do arquivo de imagem.
+**Serviços ("Escolha o seu destino").** Cada serviço tem três peças no
+`index.html`, ligadas pelo mesmo nome (ex.: `visto-americano`): a foto
+(`<figure class="destinos__foto" data-servico="...">`), a aba
+(`<button role="tab" data-servico="...">`) e o painel de texto
+(`<article id="painel-...">`), mais o `<template id="incluso-...">` do painel
+"O que está incluso". Para incluir um serviço, copie as quatro peças de um
+existente e troque o nome, a foto (`produto-7.webp` em diante já existem como
+reserva) e os textos; para tirar, apague as quatro.
+
+Fotos das coleções abertas (Teatro Amazonas, Ponte Rio Negro, carimbo,
+passaporte e o vídeo das nuvens) ficam em `assets/`, com fonte e licença em
+`assets/credits.json` e o crédito no rodapé. Se trocar ou tirar uma delas,
+atualize o crédito do rodapé também.
 
 ### 2.6. Links de WhatsApp, redes sociais e mapa
 
@@ -330,10 +339,29 @@ com ferramentas como [dnschecker.org](https://dnschecker.org).
 
 ---
 
+## 4b. Versão em espanhol (`es.html`)
+
+O `es.html` é **gerado** a partir do `index.html` — não edite ele à mão.
+Sempre que mudar o `index.html`, rode na pasta do projeto:
+
+```
+node scripts/gerar-es.mjs
+```
+
+O script traduz os textos (lista `TEXTOS` dentro de `scripts/gerar-es.mjs`),
+troca todos os botões de WhatsApp para o número do Peru com a mensagem em
+espanhol e, no fim, avisa se alguma tradução não encontrou o texto ou se
+sobrou algum trecho em português. Texto novo no `index.html` = adicionar o
+par `[português, espanhol]` nessa lista.
+
 ## 5. Checklist antes de entregar para o cliente
 
 - [ ] Todos os `TROCAR` no `index.html` foram substituídos (busque por
-      "TROCAR" com Ctrl+F pra garantir que não sobrou nenhum)
+      "TROCAR" com Ctrl+F pra garantir que não sobrou nenhum) — inclusive
+      nos `<template id="incluso-...">` (preço, itens, prazo e documentos
+      de cada serviço) e no CNPJ/Reclame Aqui do rodapé
+- [ ] `es.html` gerado de novo depois da última mudança no `index.html`
+      (`node scripts/gerar-es.mjs`)
 - [ ] Cores (`:root` em `css/style.css`) refletem a marca do cliente
 - [ ] Todas as imagens em `images/` foram trocadas por fotos reais (nenhum
       placeholder "IMAGEM DE DESTAQUE" sobrando)
