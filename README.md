@@ -381,6 +381,14 @@ espanhol e, no fim, avisa se alguma tradução não encontrou o texto ou se
 sobrou algum trecho em português. Texto novo no `index.html` = adicionar o
 par `[português, espanhol]` nessa lista.
 
+## 4c. Publicar uma mudança no CSS ou no JS
+
+O navegador guarda o `style.css` e o `main.js` para não baixar de novo a
+cada visita. Por isso, **sempre que mudar `css/style.css` ou `js/main.js`,
+aumente o número do `?v=`** nos dois `<link>`/`<script>` do `index.html`
+(ex.: `style.css?v=46` → `?v=47`) e rode o `gerar-es.mjs`. Sem isso, quem já
+visitou o site continua vendo o visual antigo com o HTML novo.
+
 ## 5. Checklist antes de entregar para o cliente
 
 - [ ] Todos os `TROCAR` no `index.html` foram substituídos (busque por
