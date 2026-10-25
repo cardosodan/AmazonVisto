@@ -85,6 +85,7 @@
       aria-controls="navegacao"
       data-rotulo-abrir="Abrir menú"
       data-rotulo-fechar="Cerrar menú"
+      data-texto-fechar="Cerrar"
     >Menú</button>
   </header>
 
@@ -205,11 +206,12 @@
     </section>
 
     <!-- ==========================================================================
-         SERVIÇOS: à esquerda o título; à direita, o painel de partidas, com os
-         destinos em letra grande (Estados Unidos primeiro e maior). Cada nome
-         é o botão que abre a ficha do serviço logo abaixo, uma página de visto
-         com o carimbo e a zona de leitura (main.js, "ativarServicos"); cada
-         ficha tem o próprio endereço (#visto-americano).
+         SERVIÇOS: à esquerda o título e o painel de partidas do aeroporto
+         (uma linha por destino: o código, o nome e a hora local de lá); à
+         direita, a ficha do destino escolhido, uma página de visto com o
+         carimbo e a zona de leitura (main.js, "ativarServicos"). No celular a
+         ficha vem logo abaixo do painel. Cada ficha tem o próprio endereço
+         (#visto-americano).
          Sem JS, todas as fichas aparecem. Para incluir um serviço: copie uma
          linha do painel e a ficha dela e troque o nome (images/produto-7.webp em diante
          estão de reserva).
@@ -229,8 +231,8 @@
            intercâmbio, o código gira pelos destinos. -->
       <div class="painel" id="painel">
         <ul class="destinos" role="list">
-          <li><a class="destino destino--principal" href="#visto-americano" data-servico="visto-americano" data-fuso="America/New_York"><span class="destino__codigo placas" aria-hidden="true"><span>J</span><span>F</span><span>K</span></span><span class="destino__nome">Estados Unidos</span><span class="destino__fato">Visa americana: primera visa y renovación</span><span class="destino__hora placas" aria-hidden="true"></span></a></li>
-          <li><a class="destino" href="#visto-canadense" data-servico="visto-canadense" data-fuso="America/Toronto"><span class="destino__codigo placas" aria-hidden="true"><span>Y</span><span>Y</span><span>Z</span></span><span class="destino__nome">Canadá</span><span class="destino__fato">Visa canadiense: visitante, con la biometría agendada</span><span class="destino__hora placas" aria-hidden="true"></span></a></li>
+          <li><a class="destino destino--principal" href="#visto-americano" data-servico="visto-americano" data-fuso="America/New_York"><span class="destino__codigo placas" aria-hidden="true"><span>J</span><span>F</span><span>K</span></span><span class="destino__nome">Estados Unidos</span><span class="destino__fato">Visa americana: primera y renovación</span><span class="destino__hora placas" aria-hidden="true"></span></a></li>
+          <li><a class="destino" href="#visto-canadense" data-servico="visto-canadense" data-fuso="America/Toronto"><span class="destino__codigo placas" aria-hidden="true"><span>Y</span><span>Y</span><span>Z</span></span><span class="destino__nome">Canadá</span><span class="destino__fato">Visa canadiense de visitante (TRV)</span><span class="destino__hora placas" aria-hidden="true"></span></a></li>
           <li><a class="destino" href="#visto-chines" data-servico="visto-chines" data-fuso="Asia/Shanghai"><span class="destino__codigo placas" aria-hidden="true"><span>P</span><span>E</span><span>K</span></span><span class="destino__nome">China</span><span class="destino__fato">Visa china: turismo y negocios</span><span class="destino__hora placas" aria-hidden="true"></span></a></li>
           <li><a class="destino" href="#visto-peruano" data-servico="visto-peruano" data-fuso="America/Lima"><span class="destino__codigo placas" aria-hidden="true"><span>L</span><span>I</span><span>M</span></span><span class="destino__nome">Perú</span><span class="destino__fato">Visa peruana: en portugués o español</span><span class="destino__hora placas" aria-hidden="true"></span></a></li>
           <li><a class="destino" href="#passaporte-brasileiro" data-servico="passaporte-brasileiro" data-fuso="America/Sao_Paulo"><span class="destino__codigo placas" aria-hidden="true"><span>B</span><span>R</span><span>A</span></span><span class="destino__nome">Pasaporte</span><span class="destino__fato">Brasileño: emisión y renovación</span><span class="destino__hora placas" aria-hidden="true"></span></a></li>
@@ -252,7 +254,7 @@
             </figure>
             <svg class="carimbo ficha__carimbo" viewBox="0 0 120 120" aria-hidden="true" focusable="false"><defs><path id="anel-visto-americano" d="M 17,60 a 43,43 0 1,1 86,0 a 43,43 0 1,1 -86,0" /></defs><circle cx="60" cy="60" r="56" /><circle cx="60" cy="60" r="31" /><text><textPath href="#anel-visto-americano" textLength="266" lengthAdjust="spacing">ESTADOS UNIDOS · AMAZON VISTO · MANAUS ·</textPath></text><use href="#visto" x="41" y="49" width="38" height="24" /></svg>
           </div>
-          <div class="ficha__texto">
+          <div class="ficha__cabeca">
             <h3 id="titulo-visto-americano">Visa americana</h3>
             <p class="ficha__desc">Visa nueva o renovación, para turismo o negocios, sin salir de casa.</p>
             <dl class="ficha__dados">
@@ -261,6 +263,8 @@
               <div><dt>Atención</dt><dd>En línea o presencial</dd></div>
               <div><dt>Pago</dt><dd>Hasta 10 cuotas sin intereses</dd></div>
             </dl>
+          </div>
+          <div class="ficha__resto">
             <h4>El camino, con nosotros</h4>
             <!-- TROCAR/REVISAR: confirmar com a empresa o que ela faz em cada etapa. -->
             <ol class="ficha__caminho">
@@ -292,7 +296,7 @@
             </figure>
             <svg class="carimbo ficha__carimbo" viewBox="0 0 120 120" aria-hidden="true" focusable="false"><defs><path id="anel-visto-canadense" d="M 17,60 a 43,43 0 1,1 86,0 a 43,43 0 1,1 -86,0" /></defs><circle cx="60" cy="60" r="56" /><circle cx="60" cy="60" r="31" /><text><textPath href="#anel-visto-canadense" textLength="266" lengthAdjust="spacing">CANADÁ · AMAZON VISTO · MANAUS ·</textPath></text><use href="#visto" x="41" y="49" width="38" height="24" /></svg>
           </div>
-          <div class="ficha__texto">
+          <div class="ficha__cabeca">
             <h3 id="titulo-visto-canadense">Visa canadiense</h3>
             <p class="ficha__desc">Visa de turista para Canadá, con asesoría completa de principio a fin.</p>
             <dl class="ficha__dados">
@@ -301,6 +305,8 @@
               <div><dt>Atención</dt><dd>En línea o presencial</dd></div>
               <div><dt>Pago</dt><dd>Hasta 10 cuotas sin intereses</dd></div>
             </dl>
+          </div>
+          <div class="ficha__resto">
             <h4>Qué incluye</h4>
             <ul class="vistos">
               <li>Consulta inicial gratuita para entender tu objetivo</li>
@@ -324,7 +330,7 @@
             </figure>
             <svg class="carimbo ficha__carimbo" viewBox="0 0 120 120" aria-hidden="true" focusable="false"><defs><path id="anel-visto-chines" d="M 17,60 a 43,43 0 1,1 86,0 a 43,43 0 1,1 -86,0" /></defs><circle cx="60" cy="60" r="56" /><circle cx="60" cy="60" r="31" /><text><textPath href="#anel-visto-chines" textLength="266" lengthAdjust="spacing">CHINA · AMAZON VISTO · MANAUS ·</textPath></text><use href="#visto" x="41" y="49" width="38" height="24" /></svg>
           </div>
-          <div class="ficha__texto">
+          <div class="ficha__cabeca">
             <h3 id="titulo-visto-chines">Visa china</h3>
             <p class="ficha__desc">Turismo y negocios en China, en hasta 10 cuotas sin intereses.</p>
             <dl class="ficha__dados">
@@ -333,6 +339,8 @@
               <div><dt>Atención</dt><dd>En línea o presencial</dd></div>
               <div><dt>Pago</dt><dd>Hasta 10 cuotas sin intereses</dd></div>
             </dl>
+          </div>
+          <div class="ficha__resto">
             <h4>Qué incluye</h4>
             <ul class="vistos">
               <li>Consulta inicial gratuita para entender tu objetivo</li>
@@ -356,7 +364,7 @@
             </figure>
             <svg class="carimbo ficha__carimbo" viewBox="0 0 120 120" aria-hidden="true" focusable="false"><defs><path id="anel-visto-peruano" d="M 17,60 a 43,43 0 1,1 86,0 a 43,43 0 1,1 -86,0" /></defs><circle cx="60" cy="60" r="56" /><circle cx="60" cy="60" r="31" /><text><textPath href="#anel-visto-peruano" textLength="266" lengthAdjust="spacing">PERÚ · AMAZON VISTO · MANAUS ·</textPath></text><use href="#visto" x="41" y="49" width="38" height="24" /></svg>
           </div>
-          <div class="ficha__texto">
+          <div class="ficha__cabeca">
             <h3 id="titulo-visto-peruano">Visa peruana</h3>
             <p class="ficha__desc">Asesoría para la visa de entrada a Perú, con atención en portugués y español.</p>
             <dl class="ficha__dados">
@@ -365,6 +373,8 @@
               <div><dt>Atención</dt><dd>En portugués o español</dd></div>
               <div><dt>Pago</dt><dd>Hasta 10 cuotas sin intereses</dd></div>
             </dl>
+          </div>
+          <div class="ficha__resto">
             <h4>Qué incluye</h4>
             <ul class="vistos">
               <li>Consulta inicial gratuita para entender tu objetivo</li>
@@ -388,7 +398,7 @@
             </figure>
             <svg class="carimbo ficha__carimbo" viewBox="0 0 120 120" aria-hidden="true" focusable="false"><defs><path id="anel-passaporte-brasileiro" d="M 17,60 a 43,43 0 1,1 86,0 a 43,43 0 1,1 -86,0" /></defs><circle cx="60" cy="60" r="56" /><circle cx="60" cy="60" r="31" /><text><textPath href="#anel-passaporte-brasileiro" textLength="266" lengthAdjust="spacing">BRASIL · PASAPORTE · MANAUS ·</textPath></text><use href="#visto" x="41" y="49" width="38" height="24" /></svg>
           </div>
-          <div class="ficha__texto">
+          <div class="ficha__cabeca">
             <h3 id="titulo-passaporte-brasileiro">Pasaporte brasileño</h3>
             <p class="ficha__desc">Emisión y renovación por WhatsApp: cero burocracia, rapidez y comodidad.</p>
             <dl class="ficha__dados">
@@ -397,6 +407,8 @@
               <div><dt>Atención</dt><dd>Por WhatsApp</dd></div>
               <div><dt>Pago</dt><dd>Hasta 10 cuotas sin intereses</dd></div>
             </dl>
+          </div>
+          <div class="ficha__resto">
             <h4>Qué incluye</h4>
             <ul class="vistos">
               <li>Consulta inicial gratuita para entender tu objetivo</li>
@@ -420,7 +432,7 @@
             </figure>
             <svg class="carimbo ficha__carimbo" viewBox="0 0 120 120" aria-hidden="true" focusable="false"><defs><path id="anel-intercambio" d="M 17,60 a 43,43 0 1,1 86,0 a 43,43 0 1,1 -86,0" /></defs><circle cx="60" cy="60" r="56" /><circle cx="60" cy="60" r="31" /><text><textPath href="#anel-intercambio" textLength="266" lengthAdjust="spacing">INTERCAMBIO · AMAZON VISTO · MANAUS ·</textPath></text><use href="#visto" x="41" y="49" width="38" height="24" /></svg>
           </div>
-          <div class="ficha__texto">
+          <div class="ficha__cabeca">
             <h3 id="titulo-intercambio">Intercambio</h3>
             <p class="ficha__desc">Orientación completa para quien quiere estudiar o trabajar fuera de Brasil.</p>
             <dl class="ficha__dados">
@@ -429,6 +441,8 @@
               <div><dt>Atención</dt><dd>En línea o presencial</dd></div>
               <div><dt>Pago</dt><dd>Hasta 10 cuotas sin intereses</dd></div>
             </dl>
+          </div>
+          <div class="ficha__resto">
             <h4>Qué incluye</h4>
             <ul class="vistos">
               <li>Consulta inicial gratuita para entender tu objetivo</li>
@@ -749,6 +763,10 @@
       <svg class="verso__recorte" viewBox="0 0 1200 24" preserveAspectRatio="none" aria-hidden="true" focusable="false">
         <path d="M0 24V24C0 10.7 22.4 0 50 0S100 10.7 100 24C100 10.7 122.4 0 150 0S200 10.7 200 24C200 10.7 222.4 0 250 0S300 10.7 300 24C300 10.7 322.4 0 350 0S400 10.7 400 24C400 10.7 422.4 0 450 0S500 10.7 500 24C500 10.7 522.4 0 550 0S600 10.7 600 24C600 10.7 622.4 0 650 0S700 10.7 700 24C700 10.7 722.4 0 750 0S800 10.7 800 24C800 10.7 822.4 0 850 0S900 10.7 900 24C900 10.7 922.4 0 950 0S1000 10.7 1000 24C1000 10.7 1022.4 0 1050 0S1100 10.7 1100 24C1100 10.7 1122.4 0 1150 0S1200 10.7 1200 24Z" />
       </svg>
+      <div class="verso__selos" aria-hidden="true">
+        <img class="verso__selo" src="assets/teatro-amazonas-atualmente-01.jpg" alt="" width="1920" height="1280" loading="lazy" />
+        <svg class="carimbo verso__carimbo" viewBox="0 0 120 120" focusable="false"><defs><path id="anel-postal" d="M 17,60 a 43,43 0 1,1 86,0 a 43,43 0 1,1 -86,0" /></defs><circle cx="60" cy="60" r="56" /><circle cx="60" cy="60" r="31" /><text><textPath href="#anel-postal" textLength="266" lengthAdjust="spacing">MANAUS-AM · AMAZON VISTO ·</textPath></text><use href="#visto" x="41" y="49" width="38" height="24" /></svg>
+      </div>
 
       <div class="verso__recado">
         <h2 class="verso__titulo">Buen viaje.</h2>
@@ -782,10 +800,6 @@
       </div>
 
       <div class="verso__enderecos">
-        <div class="verso__selos" aria-hidden="true">
-          <img class="verso__selo" src="assets/teatro-amazonas-atualmente-01.jpg" alt="" width="1920" height="1280" loading="lazy" />
-          <svg class="carimbo verso__carimbo" viewBox="0 0 120 120" focusable="false"><defs><path id="anel-postal" d="M 17,60 a 43,43 0 1,1 86,0 a 43,43 0 1,1 -86,0" /></defs><circle cx="60" cy="60" r="56" /><circle cx="60" cy="60" r="31" /><text><textPath href="#anel-postal" textLength="266" lengthAdjust="spacing">MANAUS-AM · AMAZON VISTO ·</textPath></text><use href="#visto" x="41" y="49" width="38" height="24" /></svg>
-        </div>
         <ul>
           <li><a href="https://wa.me/5592981265897">WhatsApp (92) 98126-5897</a></li>
           <li><a href="https://wa.me/51939125188" lang="es">Español +51 939 125 188</a></li>

@@ -212,12 +212,12 @@ Cinco cores da marca (decisão do usuário) em campos chapados, com tons de apoi
 
 ### Hierarchy
 Seis passos em `clamp()`. Em 1440px: 15 / 19 / 26 / 36 / 64 / 76px. Em 390px: 14 / 17 / 19,5 / 20 / 31,7 / 38px.
-- **Capa** (600, `--t-capa`, 1): o h1 da página do passaporte e o nome do destino principal (Estados Unidos) no painel.
-- **Título** (600, `--t-titulo`, 1.04, -0.03em): h2 de seção, h3 das fichas, nomes dos destinos (-0.035em, 1.02), código do cartão de embarque, título do postal, links do menu no celular.
-- **Fala** (500, `--t-fala`, 1.18, -0.02em): frase, não título. Falas das provas, frase do contato, h2 do cartão de visita no desktop.
-- **Destaque** (500 a 600, `--t-destaque`): apoio da capa a partir de 640px, mensagem de abertura da conversa, h4 das fichas, legenda da foto nas provas, perguntas a partir de 768px, marca da barra, h2 do cartão de embarque e do cartão de visita no celular.
-- **Texto** (400, `--t-texto`, 1.5): corpo, botões, campos. Larguras de leitura entre 30ch e 40ch.
-- **Pequeno** (400 a 500, `--t-pequeno`): rótulos `dt`, códigos e horas do painel no celular, horas das mensagens, respostas rápidas, pé do rodapé.
+- **Capa** (600, `--t-capa`, 1): o h1 da página do passaporte.
+- **Título** (600, `--t-titulo`, 1.04, -0.03em): h2 de seção, h3 das fichas até 1024px, código do cartão de embarque, título do postal, links do menu até 1024px.
+- **Fala** (500, `--t-fala`, 1.18, -0.02em): frase, não título. Falas das provas, frase do contato, h2 do cartão de visita no desktop, h3 da ficha a partir de 1024px (ao lado do painel).
+- **Destaque** (500 a 600, `--t-destaque`): apoio da capa a partir de 640px, mensagem de abertura da conversa, nomes dos destinos no painel (600, 1.15, -0.02em), legenda da foto nas provas, perguntas a partir de 768px, marca da barra, h2 do cartão de embarque e do cartão de visita no celular.
+- **Texto** (400, `--t-texto`, 1.5): corpo, botões, campos, h4 das fichas (600). Larguras de leitura entre 30ch e 40ch.
+- **Pequeno** (400 a 500, `--t-pequeno`): rótulos `dt`, o que é cada destino no painel, códigos e horas do painel até 1024px, horas das mensagens, respostas rápidas, pé do rodapé.
 - **MRZ** (`--fonte-mrz`, 17px no SVG): linhas de `<` esticadas com `textLength`, então o tamanho real segue a largura do SVG.
 
 ### Named Rules
@@ -229,11 +229,11 @@ Seis passos em `clamp()`. Em 1440px: 15 / 19 / 26 / 36 / 64 / 76px. Em 390px: 14
 
 ## Layout
 
-**Grade e margens.** Mobile-first. Margem lateral `--margem` (20px a 72px); ritmo vertical entre seções `--entre` (64px a 112px); barra fixa de `--altura-barra` (72px), com `scroll-padding-top` de 72px + 16px. Pontos de quebra: 640px, 768px, 900px, 1024px. As seções de duas colunas usam 3/12 para o título e 9/12 para o conteúdo a partir de 1024px.
+**Grade e margens.** Mobile-first. Margem lateral `--margem` (20px a 72px); ritmo vertical entre seções `--entre` (64px a 112px); barra fixa de `--altura-barra` (72px), com `scroll-padding-top` de 72px + 16px. Pontos de quebra: 640px, 768px, 900px, 1024px. A partir de 1024px, provas e dúvidas usam 3/12 para o título e 9/12 para o conteúdo; serviços usa 5fr | 6fr (título e painel | ficha).
 
 **Sequência de campos** (o fundo de cada seção, de cima para baixo):
-1. **Capa** (`--noite`): moldura de 12px (`moldura-capa`) em volta de duas peças. A página do passaporte em papel, com a listra no topo; a foto do avião com a conversa dourada no pé. A partir de 900px, duas colunas iguais em `100svh`.
-2. **Serviços** (`--papel` + `--grao`): o painel de partidas e a ficha aberta, direto no papel. A partir de 1024px, título em 3/12 e painel em 9/12; a ficha em 5/12 (foto fixa, `sticky`) e 7/12 (texto).
+1. **Capa** (`--noite`): moldura de 12px (`moldura-capa`) em volta das peças. A página do passaporte em papel, com a listra no topo; a foto do avião; a conversa dourada. A partir de 900px, duas colunas iguais em `100svh`, com a conversa sobre o pé da foto.
+2. **Serviços** (`--papel` + `--grao`): o painel de partidas (um quadro azul-marinho, compacto) e a ficha aberta, direto no papel. A partir de 1024px, duas colunas (5fr | 6fr): título e painel à esquerda, a ficha à direita ocupando as duas linhas (`grid-template-rows: auto 1fr`), para a seção caber em pouco mais de uma tela. Abaixo disso, a ficha vem depois do painel, com 40px a mais de respiro.
 3. **Provas** (`--noite`, guilhoche dourado): as falas douradas em fio, uma embaixo da outra.
 4. **Sobre** (`--tinta`): campo azul-marinho; a foto da sala na máscara de 38%, cortada pela borda de baixo da seção.
 5. **Dúvidas** (`--noite`): perguntas à direita, respostas à esquerda, como numa conversa.
@@ -243,11 +243,13 @@ Seis passos em `clamp()`. Em 1440px: 15 / 19 / 26 / 36 / 64 / 76px. Em 390px: 14
 
 **Decisões de tamanho no celular (390px).**
 - Botão principal com altura mínima de 58px; botão pequeno 46px; respostas rápidas e botão do menu 44px; perguntas 56px; campos 50px; botão flutuante 56px, afastado do `safe-area-inset`.
-- A capa empilha: página do passaporte, foto do avião em `38svh` (mínimo 240px), e a conversa sobe 76px sobre o pé da foto.
-- O menu vira um painel que desce da barra, com os links em `--t-titulo`.
-- O painel de partidas mantém as três colunas (código, nome, hora), com códigos e horas em `--t-pequeno`; sobem para `--t-texto` a partir de 640px.
+- A capa abre com o avião: a foto vem primeiro (`order: -1`, `46svh`, entre 280px e 480px, foco em 54% 40%), a página do passaporte sobe 56px sobre o pé dela (recuada 10px de cada lado) e a conversa vem depois, inteira.
+- Até 1024px os cinco links ficam no menu: um painel que desce da barra e cobre a tela inteira abaixo dela, com os links em `--t-titulo`; aberto, o botão diz "Fechar" (`data-texto-fechar`).
+- O painel de partidas mantém as três colunas (código, nome, hora), com códigos e horas em `--t-pequeno` (sobem para `--t-texto` a partir de 1024px); no celular o que é cada destino passa por baixo da hora, para caber numa linha, e o tique duplo do destino escolhido só aparece a partir de 640px (o dourado já marca a escolha).
 - Listra do envelope com 24px de altura (40px a partir de 640px); listra fina com 8px (10px).
-- Carimbo da capa com 76px (até 128px no desktop); carimbo da ficha com 92px (até 150px).
+- Carimbo da capa com 76px (até 128px no desktop); carimbo da ficha com 76px (até 116px).
+- A foto da ficha é uma faixa 16:9 no celular; a partir de 640px fica quadrada, ao lado do nome do serviço e dos dados (0.7fr | 1.3fr).
+- No cartão-postal, o selo fica no canto de cima, como num postal de verdade; até 900px o título reserva o lugar dele (124px de altura e 110px à direita).
 - No cartão de embarque, nome e cidade lado a lado e os dois seletores na largura inteira; o canhoto fica embaixo, separado por furos na horizontal, e mostra a MRZ. A partir de 640px o canhoto vai para a direita (190px), os furos ficam na vertical e a MRZ some (44 caracteres num canhoto estreito viram pó).
 - A janela do avião com 96px ao lado da frase (132px a partir de 640px, até 18rem a partir de 1024px).
 - O cartão de visita sobe 56px sobre o pé da foto de Manaus (`34svh`, mínimo 220px).
@@ -300,25 +302,25 @@ O botão é um balão: a ação que manda a mensagem.
 
 ### Navigation
 - **Barra** (`.barra`): fixa, `--noite`, 72px; marca com o escudo em círculo e o nome em `--t-destaque`.
-- **Desktop (a partir de 768px):** links em linha, `--t-texto` 500, sublinhado de 2px que aparece em `--ouro` no hover.
-- **Celular:** o botão "Menu" abre um painel que desce da barra (entra em 0.5s com `--ease-gaveta`, sai em 0.3s com `--ease-out`); fechado, fica inteiro acima da tela e com `visibility: hidden`. Fecha com Esc ou ao tocar num link; rótulos em `data-rotulo-abrir` e `data-rotulo-fechar`.
+- **Desktop (a partir de 1024px):** links em linha, `--t-texto` 500, sublinhado de 2px que aparece em `--ouro` no hover (só com mouse).
+- **Celular e tablet:** o botão "Menu" abre um painel que desce da barra e cobre a tela abaixo dela (entra em 0.5s com `--ease-gaveta`, sai em 0.3s com `--ease-out`); fechado, fica inteiro acima da tela e com `visibility: hidden`. Aberto, o botão diz "Fechar". Fecha com Esc ou ao tocar num link; rótulos em `data-rotulo-abrir`, `data-rotulo-fechar` e `data-texto-fechar`.
 
 ### A conversa da capa (signature)
-O balão dourado (`.conversa`) com o rabinho em cima à esquerda, no pé da foto do avião.
+O balão dourado (`.conversa`) com o rabinho em cima à esquerda: no desktop, no pé da foto do avião; no celular, logo abaixo da página do passaporte.
 - **Topo:** logo e a linha de presença (`#presenca`), calculada na hora de Manaus (`America/Manaus`): "online agora" de segunda a sexta, das 9h às 18h; fora disso, "visto por último {dia} às 18:00", com `{dia}` = hoje (depois das 18h num dia útil), sexta (domingo, ou segunda antes das 9h) ou ontem. Recalcula na virada de cada minuto e quando a aba volta a ficar visível. Os textos vêm dos `data-*` do HTML.
 - **Mensagens:** a Amazon Visto fala direto no dourado (`.msg--deles`, sem balão próprio; a abertura em `--t-destaque` 600); o cliente fala num balão de papel (`.msg--minha`). Cada mensagem leva a hora de Manaus.
 - **Roteiro (`ativarConversa` no main.js):** tocar numa resposta rápida limpa a conversa até a saudação, publica a mensagem do cliente com o tique duplo cinza e carrega a mensagem pronta (`data-mensagem`) no compositor. Aos **450ms** o tique fica "visto" (`.e-vista`, `--tinta`) e aparecem os três pontos de "digitando"; **1100ms** depois chega a resposta (`data-resposta`). Uma escolha nova cancela a anterior (contador de rodada).
 - **Compositor:** com JS, só aparece quando a resposta chega (`.conversa.e-respondida`); antes disso, o caminho direto é o botão da página do passaporte. Sem JS, o formulário aparece e envia sozinho (`action` do wa.me). Enviar abre `wa.me/{data-whatsapp}?text=…`.
 
 ### O painel de partidas (signature)
-Cada serviço é uma linha do painel do aeroporto (`.destino`): código em plaquetas | nome em `--t-titulo` (Estados Unidos em `--t-capa`) com o fato embaixo | hora local de lá.
+Um quadro azul-marinho (`.painel`, `--tinta`, `--canto-papel`), como o do aeroporto. Cada serviço é uma linha curta (`.destino`), em faixas alternadas (`--tinta` e `--tinta-2`): código em plaquetas | nome em `--t-destaque` 600, com o que é embaixo em `--t-pequeno` e `--papel-suave` | hora local de lá. As plaquetas do painel são `--noite` com o vinco em `--tinta`. O destino escolhido acende em `--ouro` com texto `--noite`; a pressão escurece a linha para `--noite`. O pé (`.painel__origem`, em `--noite`) usa a mesma grade das linhas.
 - **Hora local (`ativarPainel`):** cada linha com `data-fuso` (Nova York, Toronto, Xangai, Lima, São Paulo) mostra a hora de lá; o pé (`.painel__origem`, "Partidas de Manaus") mostra a data por extenso no idioma da página e a hora de Manaus. Atualiza na virada do minuto. Sem JS, as horas não aparecem.
 - **Plaquetas (`.placas`):** uma letra por plaqueta em `--tinta`, com o vinco de 2px em `--noite` a 55%; os dois-pontos não são plaqueta. Quando o texto muda, cada plaqueta que mudou vira (`virarPlaqueta`, 0.34s, `rotateX` com `perspective: 240px`), 90ms depois da anterior, com a letra trocada aos 170ms.
 - **Código que gira:** no intercâmbio, o código percorre `data-codigos` (JFK, YYZ, PEK, LIM) a cada 2,8s, só enquanto o painel está na tela.
-- **Abrir a ficha (`ativarServicos`):** cada nome é um link para a ficha (`#visto-americano`); com JS só a ficha escolhida aparece, o destino aberto ganha o tique duplo depois do nome (`aria-current`), a ficha troca com `trocarFicha` (0.32s) e o carimbo bate de novo. O endereço com `#` abre a ficha certa.
+- **Abrir a ficha (`ativarServicos`):** cada linha é um link para a ficha (`#visto-americano`); com JS só a ficha escolhida aparece, a linha aberta acende (`aria-current`), a ficha troca com `trocarFicha` (0.32s) e o carimbo bate de novo. A página só rola até a ficha quando ela não está à vista (no celular, abaixo do painel); no desktop, com a ficha ao lado, fica parada. O endereço com `#` abre a ficha certa.
 
 ### A página de visto (ficha)
-- Foto na máscara de 38% e o carimbo do serviço no canto de baixo; nome em `--t-titulo`, dados em `dl` de duas colunas, o caminho em quatro etapas sem caixas, a lista com o tique duplo como marcador (`.vistos`), o botão de ação e a MRZ no pé.
+- Duas partes: a cabeça (`.ficha__cabeca`: nome, descrição e dados em `dl` de duas colunas), ao lado da foto na máscara de 38% com o carimbo no canto de baixo; e o resto (`.ficha__resto`, na largura inteira): o caminho em quatro etapas sem caixas, a lista com o tique duplo como marcador (`.vistos`), o botão de ação e a MRZ no pé.
 - A primeira foto (visto americano) abre como obturador (`.obturador`) e o carimbo bate em seguida.
 
 ### O carimbo
@@ -336,7 +338,7 @@ O formulário de contato (`#embarque`) é um cartão de embarque em papel, girad
 - **Dúvidas:** a pergunta é o balão de papel do cliente, à direita, com o tique que fica "visto" quando aberta; a resposta é o balão dourado da Amazon Visto, à esquerda. Uma aberta por vez; a primeira começa aberta. Sem JS, todas aparecem.
 
 ### Botão flutuante
-Balão vermelho de 56px (círculo com o rabinho embaixo à esquerda), com a única sombra do sistema. Escondido enquanto a capa está na tela; entra em 0.24s com `--ease-out` e sai mais rápido, em 0.16s. Hover `scale(1.06)`, pressão `scale(0.94)` em 100ms.
+Balão vermelho de 56px (círculo com o rabinho embaixo à esquerda), com a única sombra do sistema. Escondido enquanto estão na tela a capa (que tem a conversa), o cartão de embarque (que tem o próprio enviar) e o rodapé, para não cobrir botões nem textos; entra em 0.24s com `--ease-out` e sai mais rápido, em 0.16s. Hover `scale(1.06)`, pressão `scale(0.94)` em 100ms.
 
 ### Movimento
 Curvas: `--ease-out` (pressão, chegadas, trocas), `--ease-expo` (entradas ao rolar), `--ease-in-out` (obturador, feixe), `--ease-soft` (zoom da foto do obturador), `--ease-gaveta` (menu). Tempos: `--t-press` 140ms, `--t-hover` 180ms.

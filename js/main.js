@@ -117,19 +117,21 @@ function girarCodigos(grupo, codigos) {
 
 /* --------------------------------------------------------------------------
    1. MENU (celular)
-   O botão "Menu" abre o painel com as seções. Fecha ao tocar num link ou
-   com Esc. Os rótulos vêm do HTML (data-rotulo-*), para a versão em
-   espanhol não ficar com "Abrir menu" em português.
+   O botão "Menu" abre o painel com as seções (e passa a dizer "Fechar").
+   Fecha ao tocar num link ou com Esc. Os rótulos vêm do HTML (data-rotulo-*
+   e data-texto-fechar), para a versão em espanhol não ficar em português.
    -------------------------------------------------------------------------- */
 function ativarMenu() {
   const botao = document.getElementById("botaoMenu");
   const painel = document.getElementById("navegacao");
   if (!botao || !painel) return;
 
+  const textoAbrir = botao.textContent;
   const definir = (aberto) => {
     painel.classList.toggle("e-aberta", aberto);
     botao.setAttribute("aria-expanded", String(aberto));
     botao.setAttribute("aria-label", aberto ? botao.dataset.rotuloFechar : botao.dataset.rotuloAbrir);
+    botao.textContent = aberto ? botao.dataset.textoFechar || textoAbrir : textoAbrir;
   };
 
   botao.addEventListener("click", () => definir(!painel.classList.contains("e-aberta")));
@@ -324,7 +326,12 @@ function ativarServicos() {
     // Trocar de ficha à mão mostra a foto já aberta (o obturador é só da
     // primeira vez que a vitrine aparece ao rolar).
     if (animar) alvo.querySelector(".obturador")?.classList.add("e-aberto");
-    if (rolar) alvo.scrollIntoView({ behavior: prefereMenosMovimento() ? "auto" : "smooth", block: "start" });
+    // Só rola quando a ficha não está à vista (no celular ela fica abaixo
+    // do painel; no desktop, ao lado, e a página fica parada).
+    const topo = alvo.getBoundingClientRect().top;
+    if (rolar && (topo < 0 || topo > window.innerHeight * 0.6)) {
+      alvo.scrollIntoView({ behavior: prefereMenosMovimento() ? "auto" : "smooth", block: "start" });
+    }
     return alvo;
   };
 
@@ -577,17 +584,25 @@ function ativarVideos() {
 
 /* --------------------------------------------------------------------------
    12. BOTÃO FLUTUANTE DE WHATSAPP
-   Escondido enquanto a capa (que já tem a conversa) está na tela.
+   Escondido enquanto está na tela uma parte que já tem o próprio enviar (a
+   capa, com a conversa, e o cartão de embarque) e no rodapé, para não
+   cobrir os botões nem os textos de lá.
    -------------------------------------------------------------------------- */
 function ativarBotaoFlutuante() {
   const botao = document.querySelector(".flutuante");
-  const capa = document.querySelector(".capa");
-  if (!botao || !capa || !("IntersectionObserver" in window)) return;
+  const partes = Array.from(document.querySelectorAll(".capa, .embarque-secao, .rodape"));
+  if (!botao || !partes.length || !("IntersectionObserver" in window)) return;
 
+  const visiveis = new Set();
   botao.classList.add("e-escondido");
-  new IntersectionObserver(([entrada]) => botao.classList.toggle("e-escondido", entrada.isIntersecting), {
-    rootMargin: "0px 0px -35% 0px",
-  }).observe(capa);
+  const observador = new IntersectionObserver(
+    (entradas) => {
+      entradas.forEach((entrada) => (entrada.isIntersecting ? visiveis.add(entrada.target) : visiveis.delete(entrada.target)));
+      botao.classList.toggle("e-escondido", visiveis.size > 0);
+    },
+    { rootMargin: "0px 0px -35% 0px" }
+  );
+  partes.forEach((parte) => observador.observe(parte));
 }
 
 /* --------------------------------------------------------------------------

@@ -359,6 +359,9 @@ svg use,
   top: var(--altura-barra);
   left: 0;
   right: 0;
+  bottom: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
@@ -389,13 +392,15 @@ svg use,
   }
 }
 
-@media (min-width: 768px) {
+/* Os cinco links só cabem na barra do desktop; antes disso, "Menu". */
+@media (min-width: 1024px) {
   .barra__menu {
     display: none;
   }
 
   .barra__nav {
     position: static;
+    overflow: visible;
     flex-direction: row;
     gap: 2.25rem;
     padding: 0;
@@ -419,7 +424,7 @@ svg use,
 
 }
 
-@media (min-width: 768px) and (hover: hover) and (pointer: fine) {
+@media (min-width: 1024px) and (hover: hover) and (pointer: fine) {
   .barra__nav a:hover {
     text-decoration-color: var(--ouro);
   }
@@ -530,7 +535,7 @@ svg use,
 
 .placas > span {
   position: relative;
-  width: 0.95em;
+  width: 1.1em;
   padding: 0.26em 0.1em 0.22em;
   border-radius: var(--canto-papel);
   background: var(--tinta);
@@ -657,9 +662,13 @@ svg use,
   opacity: 0.85;
 }
 
+/* No celular o avião vem primeiro, como a capa da viagem, e a página do
+   passaporte sobe por cima do pé da foto. */
 .capa__foto {
-  height: 38svh;
-  min-height: 240px;
+  order: -1;
+  height: 46svh;
+  min-height: 280px;
+  max-height: 480px;
   overflow: hidden;
   border-radius: var(--canto-papel);
 }
@@ -668,15 +677,19 @@ svg use,
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: 62% 50%;
+  object-position: 54% 40%;
 }
 
-/* A conversa: um balão dourado sobre o pé da foto, com o canto agudo em
-   cima, à esquerda, como a mensagem que chega. */
+.capa__cartao {
+  z-index: 1;
+  margin: -56px 10px 0;
+}
+
+/* A conversa: um balão dourado, com o canto agudo em cima, à esquerda,
+   como a mensagem que chega. No desktop fica sobre o pé da foto. */
 .conversa {
   position: relative;
   z-index: 1;
-  margin: -76px 12px 0;
   border-radius: var(--rabinho) var(--raio) var(--raio) var(--raio);
   background: var(--ouro);
   color: var(--noite);
@@ -921,6 +934,7 @@ svg use,
   .capa__cartao {
     grid-column: 1;
     grid-row: 1;
+    margin: 0;
   }
 
   .capa__foto {
@@ -928,6 +942,11 @@ svg use,
     grid-row: 1;
     height: auto;
     min-height: 100%;
+    max-height: none;
+  }
+
+  .capa__foto img {
+    object-position: 62% 50%;
   }
 
   /* A conversa ocupa a mesma célula da foto, encostada no pé dela. */
@@ -947,14 +966,16 @@ svg use,
 }
 
 /* ==========================================================================
-   7. SERVIÇOS: o painel de partidas. Cada destino é uma linha do painel do
-   aeroporto: o código, o nome em letra grande e a hora local de lá; cada
-   nome abre a página de visto do serviço logo abaixo, com o carimbo e a
-   zona de leitura, direto no papel.
+   7. SERVIÇOS: o painel de partidas e a página de visto. O painel é o do
+   aeroporto: azul-marinho, uma linha curta por destino (o código, o nome e
+   a hora local de lá), em faixas alternadas; o destino escolhido acende em
+   dourado. Cada linha abre a ficha do serviço, uma página de visto com o
+   carimbo e a zona de leitura, direto no papel. No desktop a ficha fica ao
+   lado do painel; no celular, logo abaixo.
    ========================================================================== */
 .servicos {
   display: grid;
-  gap: clamp(28px, 4vw, 48px) clamp(32px, 4vw, 64px);
+  gap: clamp(28px, 3.4vw, 40px) clamp(40px, 5vw, 80px);
   overflow: clip;
   padding: var(--entre) var(--margem);
 }
@@ -973,54 +994,43 @@ svg use,
 }
 
 .servicos__topo p {
-  max-width: 30ch;
+  max-width: 34ch;
   margin-top: 1rem;
 }
 
-/* A origem, no pé do painel: Manaus, a data e a hora daqui. */
-.painel__origem {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.5rem 0.75rem;
-  padding-top: 16px;
-  font-size: var(--t-pequeno);
-  color: var(--tinta-suave);
-}
-
-.painel__titulo {
-  font-weight: 600;
-  color: var(--tinta);
-}
-
-.painel__origem .placas {
-  font-size: var(--t-pequeno);
-}
-
-.painel__hora {
-  margin-left: auto;
+/* O painel. */
+.painel {
+  overflow: hidden;
+  border-radius: var(--canto-papel);
+  background: var(--tinta);
+  color: var(--papel);
 }
 
 .destinos {
   display: grid;
 }
 
-/* Uma linha do painel: código | nome e o que é | hora local. */
+/* Uma linha: código | nome e o que é | hora local. No celular o que é
+   passa por baixo da hora, para caber numa linha. */
 .destino {
   display: grid;
   grid-template-columns: auto minmax(0, 1fr) auto;
   grid-template-areas:
     "codigo nome hora"
     "codigo fato fato";
-  align-items: start;
-  column-gap: 14px;
-  row-gap: 0.15rem;
-  padding: 12px 0;
+  align-items: center;
+  column-gap: 12px;
+  row-gap: 0.1rem;
+  padding: 12px 14px;
+  transition: background-color var(--t-hover) ease, color var(--t-hover) ease;
+}
+
+.destinos li:nth-child(even) .destino {
+  background: var(--tinta-2);
 }
 
 .destino__codigo,
 .destino__hora {
-  margin-top: 0.3rem;
   font-size: var(--t-pequeno);
 }
 
@@ -1036,37 +1046,62 @@ svg use,
   grid-area: nome;
   display: inline-flex;
   align-items: center;
-  gap: 0.25em;
-  font-size: var(--t-titulo);
+  gap: 0.35em;
+  font-size: var(--t-destaque);
   font-weight: 600;
-  line-height: 1.02;
-  letter-spacing: -0.035em;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
   text-decoration: underline;
   text-decoration-color: transparent;
-  text-decoration-thickness: 0.06em;
-  text-underline-offset: 0.14em;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 0.18em;
   transition: text-decoration-color var(--t-hover) ease;
-}
-
-.destino--principal .destino__nome {
-  font-size: var(--t-capa);
 }
 
 .destino__fato {
   grid-area: fato;
   font-size: var(--t-pequeno);
-  color: var(--tinta-suave);
+  line-height: 1.35;
+  color: var(--papel-suave);
 }
 
-/* O destino aberto ganha o tique duplo ao lado do nome (visto). */
-.destino[aria-current="true"] .destino__nome::after {
-  content: "";
-  flex: none;
-  width: 0.62em;
-  height: 0.4em;
+/* As plaquetas do painel são escuras sobre o azul. */
+.painel .placas > span {
+  background: var(--noite);
+  color: var(--papel);
+}
+
+.painel .placas > span::after {
   background: var(--tinta);
+}
+
+.painel .placas > .placas__sep {
+  background: none;
+  color: var(--papel);
+}
+
+/* O destino escolhido acende em dourado, com o tique duplo (visto). */
+.destinos li .destino[aria-current="true"] {
+  background: var(--ouro);
+  color: var(--noite);
+}
+
+.destino[aria-current="true"] .destino__fato {
+  color: var(--noite);
+}
+
+.destino[aria-current="true"] .destino__nome::after {
+  content: none;
+  flex: none;
+  width: 1em;
+  height: 0.64em;
+  background: currentColor;
   -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 22 14' fill='none' stroke='%23000' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M1.5 7.6 5.6 11.6 13 2.6M8.9 11.6 16.3 2.6M7.4 10.1 8.9 11.6'/%3E%3C/svg%3E") center / contain no-repeat;
   mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 22 14' fill='none' stroke='%23000' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M1.5 7.6 5.6 11.6 13 2.6M8.9 11.6 16.3 2.6M7.4 10.1 8.9 11.6'/%3E%3C/svg%3E") center / contain no-repeat;
+}
+
+.destino:active {
+  background: var(--noite);
 }
 
 @media (hover: hover) and (pointer: fine) {
@@ -1075,9 +1110,52 @@ svg use,
   }
 }
 
+/* O pé do painel: a origem, Manaus, com a data e a hora daqui, na mesma
+   grade das linhas (código | nome e data | hora). */
+.painel__origem {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  grid-template-areas:
+    "codigo titulo hora"
+    "codigo data hora";
+  align-items: center;
+  column-gap: 12px;
+  padding: 12px 14px;
+  background: var(--noite);
+  font-size: var(--t-pequeno);
+  color: var(--papel-suave);
+}
+
+.painel__origem > .placas:first-child {
+  grid-area: codigo;
+}
+
+.painel__titulo {
+  grid-area: titulo;
+  font-weight: 600;
+  color: var(--papel);
+}
+
+.painel__data {
+  grid-area: data;
+}
+
+.painel__origem .placas {
+  font-size: var(--t-pequeno);
+}
+
+.painel__origem .placas > span {
+  background: var(--tinta);
+}
+
+.painel__hora {
+  grid-area: hora;
+}
+
+/* As fichas. Até o desktop vêm abaixo do painel, com um respiro maior
+   que o da grade (a data do painel não pode parecer rótulo da ficha). */
 .fichas {
-  grid-column: 1 / -1;
-  margin-top: clamp(8px, 3vw, 40px);
+  margin-top: 40px;
 }
 
 .js .ficha:not(.e-aberta) {
@@ -1086,8 +1164,8 @@ svg use,
 
 .ficha {
   display: grid;
-  gap: clamp(28px, 4vw, 64px);
-  scroll-margin-top: calc(var(--altura-barra) + 24px);
+  gap: 24px;
+  scroll-margin-top: calc(var(--altura-barra) + 16px);
 }
 
 .ficha + .ficha {
@@ -1098,7 +1176,8 @@ svg use,
   margin-top: 0;
 }
 
-.ficha.trocando .ficha__texto,
+.ficha.trocando .ficha__cabeca,
+.ficha.trocando .ficha__resto,
 .ficha.trocando .ficha__foto img {
   animation: trocarFicha 0.32s var(--ease-out) both;
 }
@@ -1124,7 +1203,7 @@ svg use,
 
 .ficha__foto img {
   width: 100%;
-  aspect-ratio: 4 / 3;
+  aspect-ratio: 16 / 9;
   object-fit: cover;
   /* Cada foto pode dizer onde está o foco (--foco no figure). */
   object-position: var(--foco, 50% 50%);
@@ -1132,27 +1211,28 @@ svg use,
 
 .ficha__carimbo {
   position: absolute;
-  right: -6px;
-  bottom: -26px;
-  width: 92px;
+  right: -4px;
+  bottom: -20px;
+  width: 76px;
   rotate: -10deg;
   opacity: 0.9;
 }
 
-.ficha__texto h3 {
+.ficha__cabeca h3 {
   font-size: var(--t-titulo);
+  letter-spacing: -0.03em;
 }
 
 .ficha__desc {
   max-width: 40ch;
-  margin-top: 1rem;
+  margin-top: 0.6rem;
 }
 
 .ficha__dados {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 1.1rem 2rem;
-  margin-top: clamp(24px, 3vw, 32px);
+  gap: 0.9rem 1.5rem;
+  margin-top: 20px;
 }
 
 .ficha__dados dt {
@@ -1166,18 +1246,24 @@ svg use,
   line-height: 1.3;
 }
 
-.ficha__texto h4 {
-  margin-top: clamp(28px, 3.4vw, 40px);
-  font-size: var(--t-destaque);
-  font-weight: 500;
+.ficha__resto h4 {
+  font-size: var(--t-texto);
+  font-weight: 600;
   letter-spacing: -0.01em;
+}
+
+.ficha__resto h4 + * {
+  margin-top: 0.75rem;
+}
+
+.ficha__resto * + h4 {
+  margin-top: 28px;
 }
 
 /* O caminho do visto americano: quatro etapas em ordem, sem caixas. */
 .ficha__caminho {
   display: grid;
-  gap: 1rem 2rem;
-  margin-top: 0.9rem;
+  gap: 0.9rem 2rem;
 }
 
 .ficha__caminho li {
@@ -1192,8 +1278,7 @@ svg use,
 /* Lista com o tique duplo no lugar do marcador. */
 .vistos {
   display: grid;
-  gap: 0.6rem 2rem;
-  margin-top: 0.9rem;
+  gap: 0.55rem 2rem;
 }
 
 .vistos li {
@@ -1219,36 +1304,33 @@ svg use,
   font-weight: 500;
 }
 
-.ficha__texto .botao {
-  margin-top: clamp(24px, 3vw, 36px);
+.ficha__resto .botao {
+  margin-top: 28px;
 }
 
 /* A zona de leitura no pé da página de visto. */
 .ficha__mrz {
-  margin-top: clamp(28px, 3.4vw, 40px);
+  margin-top: 28px;
   color: var(--tinta-suave);
   opacity: 0.8;
 }
 
 @media (min-width: 640px) {
+  .destino[aria-current="true"] .destino__nome::after {
+    content: "";
+  }
+
   .destino {
-    column-gap: clamp(16px, 2vw, 28px);
-    padding: clamp(12px, 1.4vw, 18px) 0;
+    grid-template-areas:
+      "codigo nome hora"
+      "codigo fato hora";
+    column-gap: 16px;
+    padding: 14px 18px;
   }
 
-  .destino__codigo,
-  .destino__hora,
-  .painel__origem .placas {
-    font-size: var(--t-texto);
-  }
-
-  .destino__codigo,
-  .destino__hora {
-    margin-top: 0.45em;
-  }
-
-  .destino__fato {
-    font-size: var(--t-texto);
+  .painel__origem {
+    column-gap: 16px;
+    padding: 12px 18px;
   }
 
   .ficha__caminho,
@@ -1256,31 +1338,57 @@ svg use,
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .ficha__carimbo {
-    width: clamp(110px, 24%, 150px);
-    right: -2%;
-    bottom: -7%;
-  }
-}
-
-@media (min-width: 1024px) {
-  .servicos {
-    grid-template-columns: minmax(0, 3fr) minmax(0, 9fr);
-    align-items: start;
-  }
-
+  /* A foto ao lado do nome do serviço e dos dados. */
   .ficha {
-    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    grid-template-columns: minmax(0, 0.7fr) minmax(0, 1.3fr);
+    column-gap: clamp(24px, 3vw, 40px);
+    row-gap: 32px;
     align-items: start;
   }
 
-  .ficha__visual {
-    position: sticky;
-    top: calc(var(--altura-barra) + 32px);
+  .ficha__resto {
+    grid-column: 1 / -1;
   }
 
   .ficha__foto img {
     aspect-ratio: 1;
+  }
+
+  .ficha__carimbo {
+    width: clamp(84px, 30%, 116px);
+    right: -6%;
+    bottom: -9%;
+  }
+}
+
+@media (min-width: 1024px) {
+  .destino__codigo,
+  .destino__hora,
+  .painel__origem .placas {
+    font-size: var(--t-texto);
+  }
+
+  .servicos {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+    grid-template-rows: auto 1fr;
+    align-items: start;
+  }
+
+  .servicos__topo,
+  .painel {
+    grid-column: 1;
+  }
+
+  .ficha__cabeca h3 {
+    font-size: var(--t-fala);
+    letter-spacing: -0.025em;
+  }
+
+  /* A ficha ao lado do painel, ocupando as duas linhas da esquerda. */
+  .fichas {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+    margin-top: 0;
   }
 }
 
@@ -2073,16 +2181,19 @@ svg use,
   }
 }
 
-.verso__enderecos {
-  position: relative;
+/* O selo: a foto com a borda picotada (os pontos da borda são da cor do
+   postal, como os furos do selo) e, por cima, o carimbo do correio. Fica
+   no canto de cima do postal; o título reserva o lugar dele. */
+.verso__selos {
+  position: absolute;
+  top: 28px;
+  right: 20px;
+  width: 84px;
 }
 
-/* O selo: a foto com a borda picotada (os pontos da borda são da cor do
-   postal, como os furos do selo) e, por cima, o carimbo do correio. */
-.verso__selos {
-  position: relative;
-  width: 84px;
-  margin: 0 0 1.5rem auto;
+.verso__titulo {
+  min-height: 124px;
+  padding-right: 110px;
 }
 
 .verso__selo {
@@ -2141,6 +2252,11 @@ svg use,
   .verso__selo {
     width: 96px;
   }
+
+  .verso__selos {
+    top: clamp(36px, 5vw, 64px);
+    right: clamp(36px, 5vw, 64px);
+  }
 }
 
 @media (min-width: 900px) {
@@ -2151,11 +2267,9 @@ svg use,
     margin-inline: auto;
   }
 
-  .verso__selos {
-    position: absolute;
-    top: 0;
-    right: 0;
-    margin: 0;
+  .verso__titulo {
+    min-height: 0;
+    padding-right: 0;
   }
 
   .verso__enderecos ul {
