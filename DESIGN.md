@@ -238,7 +238,7 @@ Seis passos em `clamp()`. Em 1440px: 15 / 19 / 26 / 36 / 64 / 76px. Em 390px: 14
 4. **Sobre** (`--tinta`): campo azul-marinho; a foto da sala na máscara de 38%, cortada pela borda de baixo da seção.
 5. **Dúvidas** (`--noite`): perguntas à direita, respostas à esquerda, como numa conversa.
 6. **Visite** (foto de Manaus vista do alto): o cartão de visita em papel e o mapa do Google com o endereço, numa moldura de papel de 6px. A partir de 900px a foto cobre a seção inteira (`82svh`), com o cartão à esquerda (27rem) e o mapa à direita (até 40rem, na altura do cartão, mínimo 420px); no celular, o mapa vem embaixo do cartão, com 300px de altura.
-7. **A janela** (`--papel` + `--grao`, a parede da cabine): a cena das nuvens. Uma janela de avião abre com a rolagem até a tela inteira; no fim, as duas falas da Amazon Visto chegam sobre o céu.
+7. **A janela** (`--papel`, a parede da cabine): a cena das nuvens. Quando a cena aparece, a janela do avião abre sozinha até a tela inteira; no fim, as duas falas da Amazon Visto chegam sobre o céu.
 8. **Contato** (`--noite`, guilhoche dourado): o cartão de embarque sozinho, no centro (até 880px).
 9. **Rodapé** (`--noite`): a listra fina do correio aéreo e, abaixo, o verso do cartão-postal com a borda de cima recortada.
 
@@ -252,7 +252,7 @@ Seis passos em `clamp()`. Em 1440px: 15 / 19 / 26 / 36 / 64 / 76px. Em 390px: 14
 - A foto da ficha é uma faixa 16:9 no celular; a partir de 640px fica quadrada, ao lado do nome do serviço e dos dados (0.7fr | 1.3fr).
 - No cartão-postal, o selo fica no canto de cima, como num postal de verdade; até 900px o título reserva o lugar dele (124px de altura e 110px à direita).
 - No cartão de embarque, nome e cidade lado a lado e os dois seletores na largura inteira; o canhoto fica embaixo, separado por furos na horizontal, e mostra a MRZ. A partir de 640px o canhoto vai para a direita (190px), os furos ficam na vertical e a MRZ some (44 caracteres num canhoto estreito viram pó).
-- A janela do avião fechada ocupa 74% da largura e quase toda a altura do palco (recuos de 13%, raio de 96px); no desktop, 34% da largura (recuos de 33% e 11%, raio de 200px). Aberta, é a tela inteira nas duas larguras.
+- A janela do avião fechada tem 72vw × 60svh (raio de 120px); no desktop, 30vw × 64svh (raio de 220px). Aberta, é a tela inteira nas duas larguras.
 - O cartão de visita sobe 56px sobre o pé da foto de Manaus (`34svh`, mínimo 220px).
 
 ## Elevation & Depth
@@ -272,7 +272,7 @@ Duas linguagens de canto, uma por família.
 - **Documento** (`--canto-papel`, 4px): quase reto, como papel cortado. Página do passaporte, foto do avião, cartão de visita, cartão de embarque, plaquetas do painel.
 - **Balão** (cantos redondos e um canto agudo de `--rabinho`, 6px). A posição do rabinho diz quem fala: **em cima à esquerda** é a Amazon Visto chegando (conversa, falas, respostas das dúvidas, foto dentro da fala); **em cima à direita** é o cliente (mensagem do cliente, perguntas, respostas rápidas, compositor, campos do cartão de embarque); **embaixo à esquerda** é o botão (`.botao`, `.flutuante`). Raios: `--raio-p` (20px) em mensagens, campos e perguntas; `--raio` (26px) em botões, falas e no balão da conversa.
 - **Máscara de foto** (`--rabinho 38% 38% 38%`): a foto como um balão grande, na ficha de serviço e na foto da sala.
-- **Janela de avião** (`clip-path: inset(... round --raio-janela)`): o recorte da vista na cena da janela, com a moldura (`--moldura`, 16px a 20px, em `--papel-2`) no mesmo formato, um pouco maior.
+- **Janela de avião** (`--janela-r`, 120px a 220px): o vão da cena da janela, com a moldura (`--moldura`, 14px a 18px, em `--papel-2`) e a parede da cabine em volta (`outline` em `--papel`).
 - **Círculo** (50%): logo na barra e no topo da conversa; o botão flutuante é um círculo com o canto do rabinho.
 - **Bordas que um papel tem:** a listra do envelope (`.listra`), o picote do postal (`.verso__recorte`), os furos do canhoto (`4px dotted` em `--papel-2`), a borda serrilhada do selo (`5px dotted` em `--papel`).
 
@@ -329,11 +329,12 @@ Um quadro azul-marinho (`.painel`, `--tinta`, `--canto-papel`), como o do aeropo
 SVG com dois anéis (traço 2.6 e 1.3), o texto na volta (`textPath`, 600, 8.6px, 0.06em) e o tique duplo no meio, em `--tinta` com o filtro `#tintaCarimbo` (tinta desgastada), girado entre -10deg e -14deg, com opacidade de 0.85 a 0.9. Aparece na capa, em cada ficha e no cartão-postal.
 
 ### A janela (signature)
-A cena das nuvens (`.janela`): o vídeo da asa sobre as nuvens visto pela janela do avião.
-- **Palco:** com JS e sem pedido de menos movimento, a seção tem `210svh` e o palco (`100svh`, mínimo 560px) gruda no topo (`position: sticky`). O `ativarJanela` mede só a rolagem e passa o quanto abriu para o CSS em `--abre` (0 a 1): abre nos primeiros 70% do tempo grudado; o resto segura a vista aberta. Sem JS ou com menos movimento, `--abre` vale 1 e a seção é um palco de `100svh` com a janela já aberta e as falas à vista.
-- **Janela:** a vista (`.janela__vista`) é recortada por `clip-path: inset(...)` com recuos e raio multiplicados por `1 - --abre`; a janela começa abaixo da barra do topo. A moldura (`.janela__moldura`, `--papel-2`) tem o mesmo formato, `--moldura` maior. O vídeo dá um leve zoom de fora para dentro (`scale` de 1.18 a 1). A persiana (`.janela__vista::after`, papel com a borda em `--papel-2`) cobre o alto do vidro na janela fechada e sobe enquanto ela abre.
-- **Falas:** dois balões dourados da Amazon Visto no canto de baixo, à esquerda: "Sua próxima viagem começa com uma conversa." (`--t-fala`, até 18ch) e "A análise inicial é gratuita, pelo WhatsApp." (`--t-texto`). Chegam com a janela quase aberta (`--abre` de 0.62 a 0.82 e de 0.82 a 1), em opacidade e 18px de subida.
-- O botão flutuante some durante a cena.
+A cena das nuvens (`.janela`): o vídeo da asa sobre as nuvens visto pela janela do avião, num palco de `100svh` (mínimo 560px) com a parede clara da cabine (`--papel`).
+- **Como abre:** o vídeo (`.janela__vista`) fica parado, do tamanho do palco. Por cima, a parede (`.janela__parede`) é a janela vazada: o vão com a moldura (`border` de `--moldura` em `--papel-2`, raio `--janela-r`) e a parede da cabine em volta, desenhada por um `outline` largo em `--papel` (`--parede`). Abrir é só aumentar a escala dela (`--janela-aberta`: 3 no celular, 4.4 no desktop) até o vão passar das bordas da tela. A persiana (`.janela__persiana`) cobre o alto do vidro e sobe antes.
+- **Quando abre (`ativarJanela`):** quando mais da metade da cena está na tela, liga `.e-aberta`; quando a cena sai inteira, desliga sem animar, para abrir de novo na próxima vez. Tudo é transição de `transform` e `opacity`, que roda no compositor (na placa de vídeo): nada acompanha a rolagem quadro a quadro, para não travar no celular. Tempos: persiana 0.7s (`--ease-out`, aos 0.15s); janela 1.5s (`--ease-in-out`, aos 0.6s); o vídeo sai de `scale(1.12)` em 2.2s (`--ease-soft`); as falas aos 1.9s e 2.15s (0.45s).
+- **Tamanhos da janela fechada:** 72vw × 60svh com raio de 120px no celular; 30vw × 64svh com raio de 220px a partir de 900px.
+- **Falas:** dois balões dourados da Amazon Visto no canto de baixo, à esquerda: "Sua próxima viagem começa com uma conversa." (`--t-fala`, até 18ch) e "A análise inicial é gratuita, pelo WhatsApp." (`--t-texto`).
+- **Sem JS ou com menos movimento:** a janela já aparece aberta, com as falas. O botão flutuante some durante a cena.
 
 ### O cartão de embarque (signature)
 O formulário de contato (`#embarque`) é um cartão de embarque em papel, no centro da seção (até 880px), girado 0.6deg (1.2deg a partir de 1024px).

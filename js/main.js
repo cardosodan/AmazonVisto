@@ -420,31 +420,24 @@ function ativarDuvidas() {
 
 /* --------------------------------------------------------------------------
    7b. A JANELA DO AVIÃO
-   Mede só a rolagem: enquanto o palco fica grudado no topo, o quanto a
-   janela abriu (de 0 a 1) vai para o CSS em --abre, que recorta a vista,
-   sobe a persiana e faz as falas chegarem. Abre nos primeiros 70% do tempo
-   grudado; o resto segura a vista aberta. Com menos movimento, nada disso
-   roda e a janela já aparece aberta.
+   Quando mais da metade da cena está na tela, liga ".e-aberta" e o CSS
+   abre a janela numa transição só de transform e opacity (roda na placa
+   de vídeo, sem nada por quadro aqui). Quando a cena sai inteira da tela,
+   desliga, para abrir de novo na próxima vez. Com menos movimento, nada
+   disso roda e a janela já aparece aberta.
    -------------------------------------------------------------------------- */
 function ativarJanela() {
   const janela = document.getElementById("janela");
-  if (!janela || prefereMenosMovimento()) return;
+  if (!janela || prefereMenosMovimento() || !("IntersectionObserver" in window)) return;
   janela.classList.add("e-viva");
 
-  let pedido = 0;
-  const medir = () => {
-    pedido = 0;
-    const caixa = janela.getBoundingClientRect();
-    const curso = caixa.height - window.innerHeight;
-    const abre = curso > 0 ? Math.min(1, Math.max(0, -caixa.top / (curso * 0.7))) : 1;
-    janela.style.setProperty("--abre", abre.toFixed(3));
-  };
-  const pedir = () => {
-    if (!pedido) pedido = requestAnimationFrame(medir);
-  };
-  window.addEventListener("scroll", pedir, { passive: true });
-  window.addEventListener("resize", pedir);
-  medir();
+  new IntersectionObserver(
+    ([entrada]) => {
+      if (entrada.intersectionRatio >= 0.55) janela.classList.add("e-aberta");
+      else if (!entrada.isIntersecting) janela.classList.remove("e-aberta");
+    },
+    { threshold: [0, 0.55] }
+  ).observe(janela);
 }
 
 /* --------------------------------------------------------------------------

@@ -33,7 +33,7 @@
   <link rel="icon" type="image/png" href="images/favicon.png" />
   <link rel="preload" href="fonts/chillax-600.woff2" as="font" type="font/woff2" crossorigin />
   <link rel="preload" href="fonts/chillax-400.woff2" as="font" type="font/woff2" crossorigin />
-  <link rel="stylesheet" href="css/style.css?v=46" />
+  <link rel="stylesheet" href="css/style.css?v=47" />
 </head>
 <body>
   <a class="pular" href="#conteudo">Pular para o conteúdo</a>
@@ -671,15 +671,13 @@
 
     <!-- ==========================================================================
          A JANELA: a cena das nuvens. Na parede clara da cabine, uma janela de
-         avião; ao rolar, ela abre até a tela inteira e o céu toma tudo; aí
-         chegam, em balões dourados, as duas falas da Amazon Visto (main.js,
-         "ativarJanela", que só mede a rolagem e passa o quanto abriu para o
-         CSS em --abre). Com menos movimento ou sem JS, a janela já aparece
-         aberta, com as falas.
+         avião; quando a cena aparece, a persiana sobe, a janela abre até a
+         tela inteira e chegam, em balões dourados, as duas falas da Amazon
+         Visto (main.js, "ativarJanela", que só liga a classe; a animação é do
+         CSS). Com menos movimento ou sem JS, a janela já aparece aberta.
          ========================================================================== -->
     <div class="janela" id="janela">
       <div class="janela__palco">
-        <div class="janela__moldura" aria-hidden="true"></div>
         <figure class="janela__vista" aria-hidden="true">
           <video
             src="assets/clouds-from-airplane-window-1-2016-08.webm"
@@ -692,6 +690,7 @@
             height="480"
           ></video>
         </figure>
+        <div class="janela__parede" aria-hidden="true"><span class="janela__persiana"></span></div>
         <div class="janela__falas">
           <p class="janela__fala">Sua próxima viagem começa com uma conversa.</p>
           <p class="janela__fala janela__fala--apoio">A análise inicial é gratuita, pelo WhatsApp.</p>
@@ -878,6 +877,6 @@
     </svg>
   </a>
 
-  <script src="js/main.js?v=46"></script>
+  <script src="js/main.js?v=47"></script>
 </body>
 </html>
