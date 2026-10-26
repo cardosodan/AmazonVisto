@@ -1806,17 +1806,21 @@ svg use,
 }
 
 /* ==========================================================================
-   12. A JANELA: a parede clara da cabine com a janela do avião. Quando a
-   cena chega na tela, a persiana sobe, a janela abre até a tela inteira e
-   as falas chegam sobre o céu. Tudo em transform e opacity, numa transição
-   que roda na placa de vídeo, sem repintar a tela a cada quadro: nada
-   segue a rolagem, para não travar no celular. Sem JS ou com menos
-   movimento, a janela já aparece aberta, com as falas.
+   12. A JANELA: a parede clara da cabine com a janela do avião. Enquanto o
+   palco fica grudado no topo, a rolagem abre a janela: a persiana sobe, o
+   vão cresce até a tela inteira e as falas chegam sobre o céu; rolar de
+   volta fecha. Sem JS ou com menos movimento, a janela já aparece aberta,
+   com as falas, sem palco grudado.
 
    Como abre: o vídeo fica parado, do tamanho do palco. Por cima, a
    "parede" é uma janela vazada (só a moldura) com a parede da cabine
    desenhada em volta dela por um outline largo (segue o canto redondo);
    abrir é só aumentar a escala dela até o vão passar das bordas da tela.
+   Tudo é transform e opacity, em @keyframes presas à rolagem
+   (animation-timeline): o navegador move as camadas na placa de vídeo,
+   sem repintar nada a cada quadro, para não travar no celular. Onde não
+   há animation-timeline, o main.js ("ativarJanela") passa a rolagem para
+   as mesmas animações.
    ========================================================================== */
 .janela {
   /* A janela fechada: largura, altura e raio do vão; a escala que leva o
@@ -1824,7 +1828,7 @@ svg use,
   --janela-l: 72vw;
   --janela-a: 60svh;
   --janela-r: 120px;
-  --janela-aberta: 3;
+  --janela-aberta: 2.4;
   --parede: max(34vw, 44svh);
   --moldura: 14px;
   background: var(--papel);
@@ -1909,50 +1913,131 @@ svg use,
   letter-spacing: 0;
 }
 
-/* Com JS e movimento: a janela começa fechada, com a persiana descida e a
-   vista de perto; ".e-aberta" (main.js, quando a cena aparece) abre. Ao
-   sair da tela, fecha de novo sem animar, para abrir na próxima vez. */
-.janela.e-viva .janela__parede {
-  transform: scale(1);
-  will-change: transform;
+/* Com JS e movimento: a seção fica mais alta que a tela e o palco gruda no
+   topo; o caminho da rolagem enquanto ele está grudado é a linha do tempo
+   das animações, de 0% a 100%. O palco tem a altura da tela sem a barra do
+   navegador (lvh), para não sobrar uma faixa de parede embaixo quando a
+   barra some; as falas sobem o tanto que a barra pode cobrir. A linha do
+   tempo ignora o scroll-padding da barra do site (inset 0), para começar
+   junto com o palco grudado. */
+.janela.e-viva {
+  height: calc(100lvh + 130svh);
+  view-timeline-name: --janela;
+  view-timeline-inset: 0;
+}
+
+.janela.e-viva .janela__palco {
+  position: sticky;
+  top: 0;
+  height: 100lvh;
+}
+
+.janela.e-viva .janela__falas {
+  bottom: calc(clamp(28px, 7vh, 72px) + 100lvh - 100svh);
 }
 
 .janela.e-viva .janela__persiana {
-  transform: none;
+  animation: janela-persiana 1s linear both paused;
+}
+
+.janela.e-viva .janela__parede {
+  animation: janela-parede 1s linear both paused;
 }
 
 .janela.e-viva .janela__vista video {
-  transform: scale(1.12);
+  animation: janela-vista 1s linear both paused;
 }
 
 .janela.e-viva .janela__fala {
-  opacity: 0;
-  transform: translateY(16px) scale(0.96);
+  animation: janela-fala 1s linear both paused;
 }
 
-.janela.e-viva.e-aberta .janela__persiana {
-  transform: translateY(-101%);
-  transition: transform 0.7s var(--ease-out) 0.15s;
+.janela.e-viva .janela__fala--apoio {
+  animation-name: janela-fala-apoio;
 }
 
-.janela.e-viva.e-aberta .janela__parede {
-  transform: scale(var(--janela-aberta));
-  transition: transform 1.5s var(--ease-in-out) 0.6s;
+@supports (animation-timeline: view()) {
+  .janela.e-viva :is(.janela__persiana, .janela__parede, .janela__vista video, .janela__fala) {
+    animation-play-state: running;
+    animation-timeline: --janela;
+    animation-range: contain;
+  }
 }
 
-.janela.e-viva.e-aberta .janela__vista video {
-  transform: none;
-  transition: transform 2.2s var(--ease-soft) 0.6s;
+/* Os tempos, em partes do caminho grudado: a persiana sobe no primeiro
+   quinto; a janela cresce de 10% a 70% enquanto a vista se afasta; as falas
+   chegam de 64% a 82%; o resto segura o céu aberto. As curvas são mais
+   brandas que os tokens: presa à rolagem, uma curva forte vira um tranco
+   sob o dedo. */
+@keyframes janela-persiana {
+  0% {
+    transform: none;
+    animation-timing-function: cubic-bezier(0.3, 0.2, 0.4, 1);
+  }
+  20%,
+  100% {
+    transform: translateY(-101%);
+  }
 }
 
-.janela.e-viva.e-aberta .janela__fala {
-  opacity: 1;
-  transform: none;
-  transition: opacity 0.45s var(--ease-out) 1.9s, transform 0.45s var(--ease-out) 1.9s;
+@keyframes janela-parede {
+  0%,
+  10% {
+    transform: scale(1);
+    animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1);
+  }
+  70%,
+  100% {
+    transform: scale(var(--janela-aberta));
+  }
 }
 
-.janela.e-viva.e-aberta .janela__fala--apoio {
-  transition-delay: 2.15s;
+@keyframes janela-vista {
+  0%,
+  10% {
+    transform: scale(1.12);
+    animation-timing-function: cubic-bezier(0.3, 0.2, 0.4, 1);
+  }
+  78%,
+  100% {
+    transform: none;
+  }
+}
+
+@keyframes janela-fala {
+  0%,
+  64% {
+    opacity: 0;
+    transform: translateY(16px) scale(0.96);
+    animation-timing-function: cubic-bezier(0.3, 0.2, 0.4, 1);
+  }
+  76%,
+  100% {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes janela-fala-apoio {
+  0%,
+  70% {
+    opacity: 0;
+    transform: translateY(16px) scale(0.96);
+    animation-timing-function: cubic-bezier(0.3, 0.2, 0.4, 1);
+  }
+  82%,
+  100% {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Celular deitado: o vão fica baixo e comprido e precisa crescer mais
+   para passar das bordas da tela. */
+@media (orientation: landscape) and (max-width: 899px) {
+  .janela {
+    --janela-aberta: 3;
+  }
 }
 
 @media (min-width: 900px) {

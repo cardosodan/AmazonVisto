@@ -420,24 +420,36 @@ function ativarDuvidas() {
 
 /* --------------------------------------------------------------------------
    7b. A JANELA DO AVIÃO
-   Quando mais da metade da cena está na tela, liga ".e-aberta" e o CSS
-   abre a janela numa transição só de transform e opacity (roda na placa
-   de vídeo, sem nada por quadro aqui). Quando a cena sai inteira da tela,
-   desliga, para abrir de novo na próxima vez. Com menos movimento, nada
-   disso roda e a janela já aparece aberta.
+   A abertura é do CSS: @keyframes presas à rolagem (animation-timeline),
+   que o navegador roda na placa de vídeo. Aqui só se liga a cena. Onde
+   não há animation-timeline, a rolagem é medida uma vez por quadro e
+   passada para as mesmas animações (currentTime), que só mexem em
+   transform e opacity. Com menos movimento, nada disso roda e a janela já
+   aparece aberta.
    -------------------------------------------------------------------------- */
 function ativarJanela() {
   const janela = document.getElementById("janela");
-  if (!janela || prefereMenosMovimento() || !("IntersectionObserver" in window)) return;
+  if (!janela || prefereMenosMovimento() || !janela.getAnimations) return;
   janela.classList.add("e-viva");
+  if (window.CSS && CSS.supports("animation-timeline: view()")) return;
 
-  new IntersectionObserver(
-    ([entrada]) => {
-      if (entrada.intersectionRatio >= 0.55) janela.classList.add("e-aberta");
-      else if (!entrada.isIntersecting) janela.classList.remove("e-aberta");
-    },
-    { threshold: [0, 0.55] }
-  ).observe(janela);
+  const animacoes = Array.from(janela.querySelectorAll(".janela__palco *")).flatMap((el) => el.getAnimations());
+  if (!animacoes.length) return janela.classList.remove("e-viva");
+
+  let pedido = 0;
+  const medir = () => {
+    pedido = 0;
+    const caixa = janela.getBoundingClientRect();
+    const curso = caixa.height - window.innerHeight;
+    const abre = curso > 0 ? Math.min(1, Math.max(0, -caixa.top / curso)) : 1;
+    animacoes.forEach((animacao) => (animacao.currentTime = abre * 1000));
+  };
+  const pedir = () => {
+    if (!pedido) pedido = requestAnimationFrame(medir);
+  };
+  window.addEventListener("scroll", pedir, { passive: true });
+  window.addEventListener("resize", pedir);
+  medir();
 }
 
 /* --------------------------------------------------------------------------
