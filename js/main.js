@@ -420,17 +420,59 @@ function ativarDuvidas() {
 
 /* --------------------------------------------------------------------------
    7b. A JANELA DO AVIÃO
-   A abertura é do CSS: @keyframes presas à rolagem (animation-timeline),
-   que o navegador roda na placa de vídeo. Aqui só se liga a cena. Onde
-   não há animation-timeline, a rolagem é medida uma vez por quadro e
-   passada para as mesmas animações (currentTime), que só mexem em
-   transform e opacity. Com menos movimento, nada disso roda e a janela já
-   aparece aberta.
+   A chegada até a janela é do CSS: @keyframes presas à rolagem
+   (animation-timeline), que o navegador roda na placa de vídeo. Aqui se
+   liga a cena e se mede, a cada tamanho de tela, a escala que leva o vidro
+   para fora dela (--janela-aberta): a menor em que os quatro cantos do
+   palco caem dentro do vão de cantos redondos. Onde não há
+   animation-timeline, a rolagem é medida uma vez por quadro e passada para
+   as mesmas animações (currentTime), que só mexem em transform e opacity.
+   Com menos movimento, nada disso roda: só o céu e as falas.
    -------------------------------------------------------------------------- */
 function ativarJanela() {
   const janela = document.getElementById("janela");
   if (!janela || prefereMenosMovimento() || !janela.getAnimations) return;
   janela.classList.add("e-viva");
+
+  const palco = janela.querySelector(".janela__palco");
+  const aviao = janela.querySelector(".janela__aviao");
+  let escala = 0;
+  const medirAbertura = () => {
+    const p = palco.getBoundingClientRect();
+    const v = aviao.getBoundingClientRect();
+    // O vão: metade da largura e da altura do vidro e o raio dos cantos
+    // (110 de 250, o mesmo do desenho).
+    const a = v.width / 2;
+    const b = v.height / 2;
+    const r = v.width * 0.44;
+    const x = v.left - p.left + a;
+    const y = v.top - p.top + b;
+    const cantos = [[x, y], [p.width - x, y], [x, p.height - y], [p.width - x, p.height - y]];
+    const cabe = (s) =>
+      cantos.every(([cx, cy]) => {
+        const qx = cx / s - (a - r);
+        const qy = cy / s - (b - r);
+        if (qx <= 0) return cy / s <= b;
+        if (qy <= 0) return cx / s <= a;
+        return qx * qx + qy * qy <= r * r;
+      });
+    let menor = 1;
+    let maior = 40;
+    for (let i = 0; i < 24; i++) {
+      const meio = (menor + maior) / 2;
+      if (cabe(meio)) maior = meio;
+      else menor = meio;
+    }
+    // Um pouco além, para a vedação também sair da tela; só regrava se
+    // mudar de verdade (a barra do celular aparecendo não muda nada).
+    const nova = maior * 1.04;
+    if (Math.abs(nova - escala) > nova * 0.01) {
+      escala = nova;
+      janela.style.setProperty("--janela-aberta", nova.toFixed(3));
+    }
+  };
+  medirAbertura();
+  window.addEventListener("resize", medirAbertura);
   if (window.CSS && CSS.supports("animation-timeline: view()")) return;
 
   const animacoes = Array.from(janela.querySelectorAll(".janela__palco *")).flatMap((el) => el.getAnimations());

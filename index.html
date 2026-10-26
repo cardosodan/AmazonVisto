@@ -33,7 +33,7 @@
   <link rel="icon" type="image/png" href="images/favicon.png" />
   <link rel="preload" href="fonts/chillax-600.woff2" as="font" type="font/woff2" crossorigin />
   <link rel="preload" href="fonts/chillax-400.woff2" as="font" type="font/woff2" crossorigin />
-  <link rel="stylesheet" href="css/style.css?v=48" />
+  <link rel="stylesheet" href="css/style.css?v=49" />
 </head>
 <body>
   <a class="pular" href="#conteudo">Pular para o conteúdo</a>
@@ -670,28 +670,190 @@
     </section>
 
     <!-- ==========================================================================
-         A JANELA: a cena das nuvens. Na parede clara da cabine, uma janela de
-         avião; enquanto a cena fica grudada na tela, a rolagem sobe a
-         persiana, abre a janela até a tela inteira e traz, em balões
-         dourados, as duas falas da Amazon Visto (a animação é do CSS, presa à
-         rolagem; main.js, "ativarJanela", só liga a cena). Com menos
-         movimento ou sem JS, a janela já aparece aberta.
+         A JANELA: a cena das nuvens. Na parede da cabine, uma janela de avião
+         de verdade; enquanto a cena fica grudada na tela, a rolagem leva a
+         câmera até ela: a persiana sobe, a janela cresce até o céu tomar a
+         tela e chegam, em balões dourados, as duas falas da Amazon Visto (a
+         animação é do CSS, presa à rolagem; main.js, "ativarJanela", liga a
+         cena e mede o quanto a janela cresce). Com menos movimento ou sem JS,
+         só o céu e as falas.
          ========================================================================== -->
     <div class="janela" id="janela">
       <div class="janela__palco">
         <figure class="janela__vista" aria-hidden="true">
+          <!-- 720p até 899px (o celular), 1080p no computador; quem não lê o
+               "media" das fontes fica com a primeira, a mais leve. -->
           <video
-            src="assets/clouds-from-airplane-window-1-2016-08.webm"
             poster="assets/clouds-from-airplane-window-1-2016-08-poster.jpg"
             muted
             loop
             playsinline
             preload="none"
-            width="854"
-            height="480"
-          ></video>
+            width="1920"
+            height="1080"
+          >
+            <source src="assets/clouds-from-airplane-window-1-2016-08-720p.webm" type="video/webm" media="(max-width: 899px)" />
+            <source src="assets/clouds-from-airplane-window-1-2016-08-1080p.webm" type="video/webm" />
+          </video>
         </figure>
-        <div class="janela__parede" aria-hidden="true"><span class="janela__persiana"></span></div>
+        <!-- A janela de verdade, desenhada em SVG numa mesma medida (o vidro é
+             250 × 350, com o centro em 0,0; as vizinhas a 525), em duas
+             camadas que a rolagem aproxima em ritmos diferentes, como uma
+             câmera chegando perto: a de longe tem o túnel da moldura, a
+             vedação, o vidro e as persianas; a de perto, a parede da cabine e
+             a luz que o céu joga nela. O que se repete nas vizinhas entra com
+             <use>.
+             taste-skill-ignore: os degradês aqui são a luz do céu no túnel, na
+             parede e no vidro, que fazem a janela parecer real (pedido do
+             cliente: janela ultrarrealista). -->
+        <div class="janela__aviao" aria-hidden="true">
+          <div class="janela__longe">
+            <svg class="janela__tunel" viewBox="-125 -175 250 350" focusable="false">
+              <defs>
+                <!-- O túnel: o alto olha para baixo e fica na sombra; a soleira
+                     olha para o céu e fica clara. -->
+                <linearGradient id="janelaTunel" gradientUnits="userSpaceOnUse" x1="0" y1="-300" x2="0" y2="340">
+                  <stop offset="0.1" style="stop-color: var(--cabine-sombra)" />
+                  <stop offset="0.32" style="stop-color: var(--cabine)" />
+                  <stop offset="0.62" style="stop-color: var(--cabine-clara)" />
+                  <stop offset="0.86" style="stop-color: var(--papel-claro)" />
+                </linearGradient>
+                <!-- Perto do vidro o túnel recebe mais céu. -->
+                <radialGradient id="janelaTunelLuz" gradientUnits="userSpaceOnUse" cx="0" cy="0" r="1" gradientTransform="matrix(192 0 0 262 0 0)">
+                  <stop offset="0.64" style="stop-color: var(--papel-claro); stop-opacity: 0.55" />
+                  <stop offset="0.8" style="stop-color: var(--papel-claro); stop-opacity: 0.14" />
+                  <stop offset="0.96" style="stop-color: var(--papel-claro); stop-opacity: 0" />
+                </radialGradient>
+                <!-- A persiana: plástico fosco, mais escuro no alto, dentro do
+                     trilho, e nas laterais, que entram no túnel. -->
+                <linearGradient id="janelaPersiana" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0" style="stop-color: var(--cabine)" />
+                  <stop offset="0.6" style="stop-color: var(--cabine-clara)" />
+                  <stop offset="1" style="stop-color: var(--papel-claro)" />
+                </linearGradient>
+                <linearGradient id="janelaPersianaLados" x1="0" y1="0" x2="1" y2="0">
+                  <stop offset="0" style="stop-color: var(--noite); stop-opacity: 0.16" />
+                  <stop offset="0.16" style="stop-color: var(--noite); stop-opacity: 0" />
+                  <stop offset="0.84" style="stop-color: var(--noite); stop-opacity: 0" />
+                  <stop offset="1" style="stop-color: var(--noite); stop-opacity: 0.16" />
+                </linearGradient>
+                <!-- A alça: a face de cima pega a luz da cabine, a frente desce
+                     para a sombra e a quina de baixo pega o céu. -->
+                <linearGradient id="janelaAlca" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0" style="stop-color: var(--papel-claro)" />
+                  <stop offset="0.35" style="stop-color: var(--cabine-clara)" />
+                  <stop offset="1" style="stop-color: var(--cabine)" />
+                </linearGradient>
+                <linearGradient id="janelaReflexo" gradientUnits="userSpaceOnUse" x1="-125" y1="-175" x2="60" y2="40">
+                  <stop offset="0.18" style="stop-color: var(--papel-claro); stop-opacity: 0" />
+                  <stop offset="0.38" style="stop-color: var(--papel-claro); stop-opacity: 0.16" />
+                  <stop offset="0.52" style="stop-color: var(--papel-claro); stop-opacity: 0.05" />
+                  <stop offset="0.6" style="stop-color: var(--papel-claro); stop-opacity: 0" />
+                </linearGradient>
+                <filter id="janelaBorrao" x="-20%" y="-20%" width="140%" height="140%">
+                  <feGaussianBlur stdDeviation="2.2" />
+                </filter>
+                <filter id="janelaBorraoForte" x="-20%" y="-20%" width="140%" height="140%">
+                  <feGaussianBlur stdDeviation="4" />
+                </filter>
+                <clipPath id="janelaVidroRecorte">
+                  <rect x="-125" y="-175" width="250" height="350" rx="110" />
+                </clipPath>
+                <!-- Uma janela: o túnel, a sombra da vedação no túnel e a
+                     vedação de borracha. -->
+                <g id="janelaTunelForma">
+                  <path fill-rule="evenodd" d="M-20 -300H20A220 220 0 0 1 240 -80V120A220 220 0 0 1 20 340H-20A220 220 0 0 1 -240 120V-80A220 220 0 0 1 -20 -300ZM-15 -175A110 110 0 0 0 -125 -65V65A110 110 0 0 0 -15 175H15A110 110 0 0 0 125 65V-65A110 110 0 0 0 15 -175Z" fill="url(#janelaTunel)" />
+                  <path fill-rule="evenodd" d="M-20 -300H20A220 220 0 0 1 240 -80V120A220 220 0 0 1 20 340H-20A220 220 0 0 1 -240 120V-80A220 220 0 0 1 -20 -300ZM-15 -175A110 110 0 0 0 -125 -65V65A110 110 0 0 0 -15 175H15A110 110 0 0 0 125 65V-65A110 110 0 0 0 15 -175Z" fill="url(#janelaTunelLuz)" />
+                  <rect class="janela__tunel-sombra" x="-129" y="-179" width="258" height="358" rx="114" filter="url(#janelaBorrao)" />
+                  <rect class="janela__vedacao" x="-125" y="-175" width="250" height="350" rx="110" />
+                  <rect class="janela__vedacao-brilho" x="-127.4" y="-177.4" width="254.8" height="354.8" rx="112.4" />
+                </g>
+                <!-- A persiana: o painel estica até a altura em que ela está;
+                     a alça (20 de altura) vai embaixo dele, sem esticar. -->
+                <symbol id="janelaPainel" viewBox="0 0 250 100" preserveAspectRatio="none">
+                  <rect width="250" height="100" fill="url(#janelaPersiana)" />
+                  <rect width="250" height="100" fill="url(#janelaPersianaLados)" />
+                </symbol>
+                <g id="janelaAlcaForma">
+                  <rect class="janela__alca-sombra" y="-4" width="250" height="5" filter="url(#janelaBorrao)" />
+                  <rect width="250" height="20" fill="url(#janelaAlca)" />
+                  <rect width="250" height="20" fill="url(#janelaPersianaLados)" />
+                  <rect class="janela__alca-brilho" y="18.2" width="250" height="1.8" />
+                  <rect class="janela__alca-dedo" x="99" y="6.5" width="52" height="7" rx="3.5" />
+                  <rect class="janela__alca-dedo-brilho" x="101" y="12.6" width="48" height="1" rx="0.5" />
+                </g>
+                <!-- O vidro: o reflexo da cabine, a borda grossa do acrílico de
+                     fora vista através do vidro de dentro e o furinho de
+                     respiro. -->
+                <g id="janelaVidroForma">
+                  <rect x="-125" y="-175" width="250" height="350" fill="url(#janelaReflexo)" />
+                  <rect class="janela__acrilico" x="-118" y="-168" width="236" height="336" rx="103" filter="url(#janelaBorraoForte)" />
+                  <rect class="janela__acrilico-fio" x="-114.5" y="-164.5" width="229" height="329" rx="99.5" />
+                  <circle class="janela__respiro" cx="0" cy="141" r="2.7" />
+                  <circle class="janela__respiro-brilho" cx="-0.8" cy="140.2" r="0.9" />
+                </g>
+              </defs>
+              <!-- As vizinhas: o vidro, a persiana (cada uma numa altura) e o
+                   túnel, parados. -->
+              <g transform="translate(-525 0)">
+                <g clip-path="url(#janelaVidroRecorte)">
+                  <use href="#janelaVidroForma" />
+                  <use href="#janelaPainel" x="-125" y="-175" width="250" height="221" />
+                  <use href="#janelaAlcaForma" x="-125" y="46" />
+                </g>
+                <use href="#janelaTunelForma" />
+              </g>
+              <g transform="translate(525 0)">
+                <g clip-path="url(#janelaVidroRecorte)">
+                  <use href="#janelaVidroForma" />
+                  <use href="#janelaPainel" x="-125" y="-175" width="250" height="48" />
+                  <use href="#janelaAlcaForma" x="-125" y="-127" />
+                </g>
+                <use href="#janelaTunelForma" />
+              </g>
+              <use href="#janelaTunelForma" />
+            </svg>
+            <div class="janela__vidro">
+              <span class="janela__persiana">
+                <svg viewBox="0 0 250 161" preserveAspectRatio="none" focusable="false"><use href="#janelaPainel" width="250" height="141" /><use href="#janelaAlcaForma" y="141" /></svg>
+              </span>
+              <svg class="janela__brilho" viewBox="-125 -175 250 350" focusable="false"><use href="#janelaVidroForma" /></svg>
+            </div>
+          </div>
+          <div class="janela__perto">
+            <svg class="janela__parede" viewBox="-125 -175 250 350" focusable="false">
+              <path fill-rule="evenodd" d="M-3000-3000H3000V3000H-3000ZM-540 -211A156 156 0 0 0 -696 -55V81A156 156 0 0 0 -540 237H-510A156 156 0 0 0 -354 81V-55A156 156 0 0 0 -510 -211ZM-15 -211A156 156 0 0 0 -171 -55V81A156 156 0 0 0 -15 237H15A156 156 0 0 0 171 81V-55A156 156 0 0 0 15 -211ZM510 -211A156 156 0 0 0 354 -55V81A156 156 0 0 0 510 237H540A156 156 0 0 0 696 81V-55A156 156 0 0 0 540 -211Z" />
+            </svg>
+            <svg class="janela__luz" viewBox="-125 -175 250 350" focusable="false">
+              <defs>
+                <!-- A luz do céu na parede, mais forte embaixo de cada janela. -->
+                <radialGradient id="janelaLuz" gradientUnits="userSpaceOnUse" cx="0" cy="0" r="1" gradientTransform="matrix(330 0 0 430 0 40)">
+                  <stop offset="0.42" style="stop-color: var(--papel-claro); stop-opacity: 0.62" />
+                  <stop offset="0.68" style="stop-color: var(--papel-claro); stop-opacity: 0.2" />
+                  <stop offset="1" style="stop-color: var(--papel-claro); stop-opacity: 0" />
+                </radialGradient>
+                <!-- A quina da parede que dobra para dentro do túnel: brilha
+                     embaixo, onde o céu bate, e some em cima. -->
+                <linearGradient id="janelaQuina" gradientUnits="userSpaceOnUse" x1="0" y1="-211" x2="0" y2="237">
+                  <stop offset="0.1" style="stop-color: var(--papel-claro); stop-opacity: 0" />
+                  <stop offset="1" style="stop-color: var(--papel-claro); stop-opacity: 0.9" />
+                </linearGradient>
+                <mask id="janelaVaos" maskUnits="userSpaceOnUse" x="-3000" y="-3000" width="6000" height="6000">
+                  <path fill-rule="evenodd" fill="#fff" d="M-3000-3000H3000V3000H-3000ZM-540 -211A156 156 0 0 0 -696 -55V81A156 156 0 0 0 -540 237H-510A156 156 0 0 0 -354 81V-55A156 156 0 0 0 -510 -211ZM-15 -211A156 156 0 0 0 -171 -55V81A156 156 0 0 0 -15 237H15A156 156 0 0 0 171 81V-55A156 156 0 0 0 15 -211ZM510 -211A156 156 0 0 0 354 -55V81A156 156 0 0 0 510 237H540A156 156 0 0 0 696 81V-55A156 156 0 0 0 540 -211Z" />
+                </mask>
+                <g id="janelaLuzForma">
+                  <ellipse cx="0" cy="40" rx="330" ry="430" fill="url(#janelaLuz)" />
+                  <rect x="-172.5" y="-212.5" width="345" height="451" rx="157.5" fill="none" stroke="url(#janelaQuina)" stroke-width="4.5" filter="url(#janelaBorrao)" />
+                </g>
+              </defs>
+              <g mask="url(#janelaVaos)">
+                <use href="#janelaLuzForma" x="-525" />
+                <use href="#janelaLuzForma" x="525" />
+                <use href="#janelaLuzForma" />
+              </g>
+            </svg>
+          </div>
+        </div>
         <div class="janela__falas">
           <p class="janela__fala">Sua próxima viagem começa com uma conversa.</p>
           <p class="janela__fala janela__fala--apoio">A análise inicial é gratuita, pelo WhatsApp.</p>
@@ -878,6 +1040,6 @@
     </svg>
   </a>
 
-  <script src="js/main.js?v=48"></script>
+  <script src="js/main.js?v=49"></script>
 </body>
 </html>

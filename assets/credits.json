@@ -68,7 +68,7 @@
     "saved": "2026-10-25T04:34:51.136Z"
   },
   {
-    "file": "assets/clouds-from-airplane-window-1-2016-08.webm",
+    "file": "assets/clouds-from-airplane-window-1-2016-08-720p.webm",
     "media": "video",
     "poster": "assets/clouds-from-airplane-window-1-2016-08-poster.jpg",
     "ref": "commons:50969936",
@@ -82,16 +82,42 @@
     "creditRequired": true,
     "page": "https://commons.wikimedia.org/wiki/File:Clouds_from_Airplane_Window_1_2016-08-29.webm",
     "via": "Wikimedia Commons",
-    "video": "https://upload.wikimedia.org/wikipedia/commons/transcoded/3/39/Clouds_from_Airplane_Window_1_2016-08-29.webm/Clouds_from_Airplane_Window_1_2016-08-29.webm.480p.vp9.webm",
-    "width": 854,
-    "height": 480,
+    "video": "https://upload.wikimedia.org/wikipedia/commons/transcoded/3/39/Clouds_from_Airplane_Window_1_2016-08-29.webm/Clouds_from_Airplane_Window_1_2016-08-29.webm.720p.vp9.webm",
+    "width": 1280,
+    "height": 720,
     "duration": 19.2,
-    "bytes": 768369,
+    "bytes": 1783826,
     "credit": "\"Clouds from Airplane Window 1 2016-08-29\" by F ASTILY, CC BY-SA 4.0, via Wikimedia Commons",
     "notes": [
       "Share-alike: an altered version (recoloured, combined with other pictures) must be shared under the same licence."
     ],
-    "saved": "2026-10-25T04:34:58.706Z"
+    "saved": "2026-10-25T22:45:00.000Z"
+  },
+  {
+    "file": "assets/clouds-from-airplane-window-1-2016-08-1080p.webm",
+    "media": "video",
+    "poster": "assets/clouds-from-airplane-window-1-2016-08-poster.jpg",
+    "ref": "commons:50969936",
+    "title": "Clouds from Airplane Window 1 2016-08-29",
+    "creator": "F ASTILY",
+    "creatorUrl": null,
+    "date": "2016-08-29",
+    "license": "CC BY-SA 4.0",
+    "licenseCode": "by-sa",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "creditRequired": true,
+    "page": "https://commons.wikimedia.org/wiki/File:Clouds_from_Airplane_Window_1_2016-08-29.webm",
+    "via": "Wikimedia Commons",
+    "video": "https://upload.wikimedia.org/wikipedia/commons/transcoded/3/39/Clouds_from_Airplane_Window_1_2016-08-29.webm/Clouds_from_Airplane_Window_1_2016-08-29.webm.1080p.vp9.webm",
+    "width": 1920,
+    "height": 1080,
+    "duration": 19.2,
+    "bytes": 5312816,
+    "credit": "\"Clouds from Airplane Window 1 2016-08-29\" by F ASTILY, CC BY-SA 4.0, via Wikimedia Commons",
+    "notes": [
+      "Share-alike: an altered version (recoloured, combined with other pictures) must be shared under the same licence."
+    ],
+    "saved": "2026-10-25T22:45:00.000Z"
   },
   {
     "file": "assets/passport-boarding-pass.webp",

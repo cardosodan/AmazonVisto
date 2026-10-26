@@ -1806,32 +1806,38 @@ svg use,
 }
 
 /* ==========================================================================
-   12. A JANELA: a parede clara da cabine com a janela do avião. Enquanto o
-   palco fica grudado no topo, a rolagem abre a janela: a persiana sobe, o
-   vão cresce até a tela inteira e as falas chegam sobre o céu; rolar de
-   volta fecha. Sem JS ou com menos movimento, a janela já aparece aberta,
-   com as falas, sem palco grudado.
+   12. A JANELA: a parede da cabine com uma janela de avião de verdade.
+   Enquanto o palco fica grudado no topo, a rolagem leva a câmera até a
+   janela: a persiana sobe, a luz do céu clareia a parede, a janela cresce
+   até o vidro passar das bordas da tela e as falas chegam sobre o céu;
+   rolar de volta afasta. Sem JS ou com menos movimento, só o céu e as
+   falas, sem palco grudado.
 
-   Como abre: o vídeo fica parado, do tamanho do palco. Por cima, a
-   "parede" é uma janela vazada (só a moldura) com a parede da cabine
-   desenhada em volta dela por um outline largo (segue o canto redondo);
-   abrir é só aumentar a escala dela até o vão passar das bordas da tela.
-   Tudo é transform e opacity, em @keyframes presas à rolagem
+   A janela (no index.html) é desenhada em SVG numa mesma medida, com o
+   vidro de 250 × 350 e o centro em 0,0, em duas camadas: a de longe (o
+   túnel da moldura, a vedação de borracha, o vidro e a persiana) e a de
+   perto (a parede da cabine e a luz do céu nela). Chegar perto é aumentar
+   a escala das duas, a de perto mais que a de longe (--janela-fundo), como
+   numa câmera de verdade: o túnel se alarga enquanto a janela cresce. Tudo
+   é transform e opacity, em @keyframes presas à rolagem
    (animation-timeline): o navegador move as camadas na placa de vídeo,
    sem repintar nada a cada quadro, para não travar no celular. Onde não
    há animation-timeline, o main.js ("ativarJanela") passa a rolagem para
    as mesmas animações.
    ========================================================================== */
 .janela {
-  /* A janela fechada: largura, altura e raio do vão; a escala que leva o
-     vão para fora da tela; o quanto de parede cobre o resto do palco. */
-  --janela-l: 72vw;
-  --janela-a: 60svh;
-  --janela-r: 120px;
-  --janela-aberta: 2.4;
-  --parede: max(34vw, 44svh);
-  --moldura: 14px;
-  background: var(--papel);
+  /* A largura do vidro na janela fechada; a escala que leva o vidro para
+     fora da tela (o main.js mede a exata); quanto a parede, mais perto da
+     câmera, cresce além do vidro. */
+  --vidro: min(62vw, 32svh);
+  --janela-aberta: 3.6;
+  --janela-fundo: 1.22;
+  /* A cabine fica na sombra perto do céu: cinza do papel puxado para a
+     tinta, que a luz da janela clareia em volta do vão. */
+  --cabine: color-mix(in oklab, var(--papel-2) 78%, var(--tinta-suave) 22%);
+  --cabine-sombra: color-mix(in oklab, var(--papel-2) 56%, var(--tinta-suave) 44%);
+  --cabine-clara: color-mix(in oklab, var(--papel-2) 92%, var(--tinta-suave) 8%);
+  background: var(--cabine);
 }
 
 .janela__palco {
@@ -1858,27 +1864,124 @@ svg use,
   object-position: 60% 50%;
 }
 
-.janela__parede {
+/* A caixa da janela tem o tamanho do vidro; o túnel, a parede e a luz são
+   desenhados para fora dela (overflow visível). As duas camadas crescem a
+   partir do centro do vidro. */
+.janela__aviao {
   position: relative;
-  width: var(--janela-l);
-  height: var(--janela-a);
-  overflow: hidden;
-  border: var(--moldura) solid var(--papel-2);
-  border-radius: var(--janela-r);
-  outline: var(--parede) solid var(--papel);
-  transform: scale(var(--janela-aberta));
+  display: none;
+  width: var(--vidro);
+  aspect-ratio: 250 / 350;
 }
 
-/* A persiana: cobre o alto do vidro na janela fechada e sobe ao abrir. */
+.janela__longe,
+.janela__perto,
+.janela__aviao svg {
+  position: absolute;
+  inset: 0;
+}
+
+.janela__aviao svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+/* O desenho se repete com <use>: aqui ele não herda o traço dos ícones
+   (svg use, na base). */
+.janela__aviao svg use {
+  fill: none;
+  stroke: none;
+}
+
+.janela__parede {
+  fill: var(--cabine);
+}
+
+.janela__tunel-sombra {
+  fill: none;
+  stroke: var(--noite);
+  stroke-opacity: 0.22;
+  stroke-width: 6;
+}
+
+.janela__vedacao {
+  fill: none;
+  stroke: color-mix(in oklab, var(--cabine-sombra) 72%, var(--noite) 28%);
+  stroke-width: 2.8;
+}
+
+.janela__vedacao-brilho {
+  fill: none;
+  stroke: var(--papel-claro);
+  stroke-opacity: 0.45;
+  stroke-width: 1.2;
+}
+
+/* O vidro: recorta a persiana e o brilho no formato do vão (o raio é o
+   da vedação, 110 de 250 por 350). */
+.janela__vidro {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: 44% / 31.43%;
+}
+
+/* A persiana: cobre o alto do vidro na janela fechada e sobe para dentro
+   do túnel. */
 .janela__persiana {
   position: absolute;
   left: 0;
   right: 0;
   top: 0;
   height: 46%;
-  border-bottom: 8px solid var(--papel-2);
-  background: var(--papel);
-  transform: translateY(-101%);
+}
+
+.janela__alca-sombra {
+  fill: var(--noite);
+  fill-opacity: 0.2;
+}
+
+.janela__alca-brilho {
+  fill: var(--papel-claro);
+  fill-opacity: 0.75;
+}
+
+.janela__alca-dedo {
+  fill: var(--cabine-sombra);
+  fill-opacity: 0.7;
+}
+
+.janela__alca-dedo-brilho {
+  fill: var(--papel-claro);
+  fill-opacity: 0.7;
+}
+
+.janela__acrilico {
+  fill: none;
+  stroke: var(--tinta-suave);
+  stroke-opacity: 0.3;
+  stroke-width: 10;
+}
+
+.janela__acrilico-fio {
+  fill: none;
+  stroke: var(--papel-claro);
+  stroke-opacity: 0.22;
+  stroke-width: 0.8;
+}
+
+.janela__respiro {
+  fill: var(--papel-claro);
+  fill-opacity: 0.3;
+  stroke: var(--noite);
+  stroke-opacity: 0.5;
+  stroke-width: 1;
+}
+
+.janela__respiro-brilho {
+  fill: var(--papel-claro);
+  fill-opacity: 0.85;
 }
 
 /* As falas da Amazon Visto chegam sobre o céu, em balões dourados. */
@@ -1913,39 +2016,54 @@ svg use,
   letter-spacing: 0;
 }
 
-/* Com JS e movimento: a seção fica mais alta que a tela e o palco gruda no
-   topo; o caminho da rolagem enquanto ele está grudado é a linha do tempo
-   das animações, de 0% a 100%. O palco tem a altura da tela sem a barra do
-   navegador (lvh), para não sobrar uma faixa de parede embaixo quando a
-   barra some; as falas sobem o tanto que a barra pode cobrir. A linha do
-   tempo ignora o scroll-padding da barra do site (inset 0), para começar
-   junto com o palco grudado. */
+/* Com JS e movimento: a janela aparece, a seção fica mais alta que a tela
+   e o palco gruda no topo; o caminho da rolagem enquanto ele está grudado
+   é a linha do tempo das animações, de 0% a 100%. O palco tem a altura da
+   tela sem a barra do navegador (lvh), para não sobrar uma faixa de parede
+   embaixo quando a barra some; as falas sobem o tanto que a barra pode
+   cobrir. A linha do tempo ignora o scroll-padding da barra do site
+   (inset 0), para começar junto com o palco grudado. */
 .janela.e-viva {
   height: calc(100lvh + 130svh);
   view-timeline-name: --janela;
   view-timeline-inset: 0;
 }
 
+/* Grudado, o palco é a tela e nada mais: sem a altura mínima, que no
+   celular deitado empurraria a janela e as falas para baixo da tela. */
 .janela.e-viva .janela__palco {
   position: sticky;
   top: 0;
   height: 100lvh;
+  min-height: 0;
+}
+
+.janela.e-viva .janela__aviao {
+  display: block;
 }
 
 .janela.e-viva .janela__falas {
   bottom: calc(clamp(28px, 7vh, 72px) + 100lvh - 100svh);
 }
 
+.janela.e-viva .janela__longe {
+  animation: janela-longe 1s linear both paused;
+}
+
+.janela.e-viva .janela__perto {
+  animation: janela-perto 1s linear both paused;
+}
+
 .janela.e-viva .janela__persiana {
   animation: janela-persiana 1s linear both paused;
 }
 
-.janela.e-viva .janela__parede {
-  animation: janela-parede 1s linear both paused;
+.janela.e-viva .janela__luz {
+  animation: janela-luz 1s linear both paused;
 }
 
-.janela.e-viva .janela__vista video {
-  animation: janela-vista 1s linear both paused;
+.janela.e-viva .janela__brilho {
+  animation: janela-brilho 1s linear both paused;
 }
 
 .janela.e-viva .janela__fala {
@@ -1957,7 +2075,7 @@ svg use,
 }
 
 @supports (animation-timeline: view()) {
-  .janela.e-viva :is(.janela__persiana, .janela__parede, .janela__vista video, .janela__fala) {
+  .janela.e-viva :is(.janela__longe, .janela__perto, .janela__persiana, .janela__luz, .janela__brilho, .janela__fala) {
     animation-play-state: running;
     animation-timeline: --janela;
     animation-range: contain;
@@ -1965,14 +2083,15 @@ svg use,
 }
 
 /* Os tempos, em partes do caminho grudado: a persiana sobe no primeiro
-   quinto; a janela cresce de 10% a 70% enquanto a vista se afasta; as falas
-   chegam de 64% a 82%; o resto segura o céu aberto. As curvas são mais
-   brandas que os tokens: presa à rolagem, uma curva forte vira um tranco
-   sob o dedo. */
+   quinto e a luz do céu clareia a parede junto; a câmera chega perto de
+   10% a 70%, e o reflexo do vidro some quando o vidro toma a tela; as
+   falas chegam de 64% a 82%; o resto segura o céu aberto. Presa à rolagem,
+   uma curva forte vira um tranco sob o dedo: a câmera usa o easeInOutQuad
+   e o resto o easeOutSine (easings.net). */
 @keyframes janela-persiana {
   0% {
     transform: none;
-    animation-timing-function: cubic-bezier(0.3, 0.2, 0.4, 1);
+    animation-timing-function: cubic-bezier(0.61, 1, 0.88, 1);
   }
   20%,
   100% {
@@ -1980,7 +2099,18 @@ svg use,
   }
 }
 
-@keyframes janela-parede {
+@keyframes janela-luz {
+  0% {
+    opacity: 0.45;
+    animation-timing-function: cubic-bezier(0.61, 1, 0.88, 1);
+  }
+  22%,
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes janela-longe {
   0%,
   10% {
     transform: scale(1);
@@ -1992,15 +2122,27 @@ svg use,
   }
 }
 
-@keyframes janela-vista {
+@keyframes janela-perto {
   0%,
   10% {
-    transform: scale(1.12);
-    animation-timing-function: cubic-bezier(0.3, 0.2, 0.4, 1);
+    transform: scale(1);
+    animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1);
   }
-  78%,
+  70%,
   100% {
-    transform: none;
+    transform: scale(calc(var(--janela-aberta) * var(--janela-fundo)));
+  }
+}
+
+@keyframes janela-brilho {
+  0%,
+  26% {
+    opacity: 1;
+    animation-timing-function: cubic-bezier(0.61, 1, 0.88, 1);
+  }
+  50%,
+  100% {
+    opacity: 0;
   }
 }
 
@@ -2009,7 +2151,7 @@ svg use,
   64% {
     opacity: 0;
     transform: translateY(16px) scale(0.96);
-    animation-timing-function: cubic-bezier(0.3, 0.2, 0.4, 1);
+    animation-timing-function: cubic-bezier(0.61, 1, 0.88, 1);
   }
   76%,
   100% {
@@ -2023,7 +2165,7 @@ svg use,
   70% {
     opacity: 0;
     transform: translateY(16px) scale(0.96);
-    animation-timing-function: cubic-bezier(0.3, 0.2, 0.4, 1);
+    animation-timing-function: cubic-bezier(0.61, 1, 0.88, 1);
   }
   82%,
   100% {
@@ -2032,22 +2174,10 @@ svg use,
   }
 }
 
-/* Celular deitado: o vão fica baixo e comprido e precisa crescer mais
-   para passar das bordas da tela. */
-@media (orientation: landscape) and (max-width: 899px) {
-  .janela {
-    --janela-aberta: 3;
-  }
-}
-
 @media (min-width: 900px) {
   .janela {
-    --janela-l: 30vw;
-    --janela-a: 64svh;
-    --janela-r: 220px;
-    --janela-aberta: 4.4;
-    --parede: max(48vw, 40svh);
-    --moldura: 18px;
+    --vidro: min(22vw, 36svh);
+    --janela-aberta: 5.4;
   }
 }
 
