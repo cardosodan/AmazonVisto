@@ -231,22 +231,18 @@ usar, credite no rodapé.
 - **Redes sociais**: no rodapé, troque `href="https://instagram.com/"` e
   `href="https://facebook.com/"` pelos perfis reais. Se alguma rede não
   existir, apague a tag `<a>` inteira daquele ícone.
-- **Mapa**: no "Visite a gente" aparece primeiro uma imagem do mapa
-  (`images/mapa-centro.webp`, do OpenStreetMap, nas cores do site, com o
-  pino no centro); o Google Maps interativo só carrega quando a pessoa toca
-  em "Ver no mapa do Google", para a página não levar os scripts e os
-  cookies do Google de graça. Para mudar o endereço:
-  1. Troque o endereço nos links do Google Maps do `index.html` (o
-     `q=` do botão do mapa, do seu `data-mapa` e do "Abrir no mapa"; espaços
-     viram `%20`).
-  2. Troque `LAT` e `LON` (o ponto do pino) em `scripts/gerar-mapa.py` e
-     rode `python scripts/gerar-mapa.py`, que baixa os quadrados do
-     OpenStreetMap e gera a imagem de novo.
-  3. Troque o `geo` (as mesmas coordenadas) e o endereço nos dados para o
-     Google (`application/ld+json`, no `<head>`).
-
-  O crédito "© Colaboradores do OpenStreetMap" é obrigatório (licença ODbL)
-  e já está na imagem e no rodapé.
+- **Mapa (Google Maps)**: a forma mais simples é trocar só o endereço na URL
+  do `iframe` do "Visite a gente":
+  ```html
+  <iframe src="https://www.google.com/maps?q=SEU+ENDEREÇO+AQUI&output=embed" ...>
+  ```
+  Troque `SEU+ENDEREÇO+AQUI` pelo endereço do cliente (espaços viram `+`) e
+  o mesmo endereço no link "Abrir no mapa" e nos dados para o Google
+  (`application/ld+json`, no `<head>`, com as coordenadas em `geo`). Para
+  um resultado mais preciso (pino exato, não só busca por texto), use o
+  método oficial: no Google Maps, busque o endereço → **Compartilhar** →
+  **Incorporar um mapa** → copie o código e cole todo o `<iframe>` no lugar
+  do atual.
 
 ### 2.7. SEO e Open Graph (aparência no Google e ao compartilhar o link)
 

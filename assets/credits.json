@@ -161,25 +161,5 @@
       "assets/passport-boarding-pass-800.webp",
       "assets/passport-boarding-pass-1024.webp"
     ]
-  },
-  {
-    "file": "images/mapa-centro.webp",
-    "media": "image",
-    "title": "Mapa do Centro de Manaus (Rua Costa Azevedo)",
-    "creator": "Colaboradores do OpenStreetMap",
-    "creatorUrl": "https://www.openstreetmap.org/copyright",
-    "license": "ODbL 1.0",
-    "licenseCode": "odbl",
-    "licenseUrl": "https://opendatacommons.org/licenses/odbl/1-0/",
-    "creditRequired": true,
-    "page": "https://www.openstreetmap.org/#map=17/-3.130189/-60.02228",
-    "via": "OpenStreetMap (tile.openstreetmap.org, zoom 17)",
-    "width": 632,
-    "height": 632,
-    "credit": "© Colaboradores do OpenStreetMap, ODbL",
-    "notes": [
-      "Nine standard tiles joined, cropped around the address and recoloured in the site's ink and paper (scripts/gerar-mapa.py). The pin is drawn in the HTML."
-    ],
-    "saved": "2026-10-27T12:00:00.000Z"
   }
 ]

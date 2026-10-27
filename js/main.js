@@ -26,7 +26,6 @@ document.addEventListener("DOMContentLoaded", () => {
   ativarContadores();
   ativarObturador();
   ativarVideos();
-  ativarMapa();
   ativarBotaoFlutuante();
   ativarFotosSuaves();
   acompanharMenosMovimento();
@@ -318,14 +317,21 @@ function ativarConversa() {
    5. SERVIÇOS: AS LINHAS DO PAINEL ABREM A FICHA
    Cada linha do painel de partidas é um link para a ficha do serviço
    (#visto-americano). Com JS, só a ficha escolhida aparece: tocar numa
-   linha troca a ficha (a página entra em 0,32s e o carimbo bate), marca a
-   linha com o tique duplo e leva até ela. Links do rodapé e o endereço na
-   barra (#visto-canadense) abrem a ficha certa.
+   linha troca a ficha ali do lado (a página entra em 0,32s e o carimbo
+   bate) e marca a linha com o tique duplo. O painel fica grudado ao lado
+   da ficha, então a página não desce. Até 1279px, onde o painel é a coluna
+   estreita que começa na altura da ficha, ela sobe quando o começo da
+   ficha ficou para cima da tela (quem lia o fim de uma ficha longa vê a
+   nova do começo), e o painel fica onde estava. No desktop a página fica
+   parada: lá o painel começa abaixo do título, e subir tiraria a linha de
+   baixo do cursor. Links do rodapé e o endereço na barra
+   (#visto-canadense) abrem a ficha certa.
    -------------------------------------------------------------------------- */
 function ativarServicos() {
   const fichas = Array.from(document.querySelectorAll(".ficha"));
   if (!fichas.length) return;
   const ladrilhos = Array.from(document.querySelectorAll(".destino[data-servico]"));
+  const estreito = window.matchMedia("(max-width: 1279px)");
 
   const abrir = (id, { animar = true, rolar = false } = {}) => {
     const alvo = fichas.find((f) => f.id === id) || fichas[0];
@@ -342,10 +348,9 @@ function ativarServicos() {
     // Trocar de ficha à mão mostra a foto já aberta (o obturador é só da
     // primeira vez que a vitrine aparece ao rolar).
     if (animar) alvo.querySelector(".obturador")?.classList.add("e-aberto");
-    // Só rola quando a ficha não está à vista (no celular ela fica abaixo
-    // do painel; no desktop, ao lado, e a página fica parada).
+    const barra = document.querySelector(".barra");
     const topo = alvo.getBoundingClientRect().top;
-    if (rolar && (topo < 0 || topo > window.innerHeight * 0.6)) {
+    if (rolar && estreito.matches && topo < (barra ? barra.offsetHeight : 0)) {
       alvo.scrollIntoView({ behavior: prefereMenosMovimento() ? "auto" : "smooth", block: "start" });
     }
     return alvo;
@@ -700,29 +705,6 @@ function ativarVideos() {
   videos.forEach((v) => {
     v.muted = true;
     observador.observe(v);
-  });
-}
-
-/* --------------------------------------------------------------------------
-   11b. O MAPA DO "VISITE A GENTE"
-   A imagem do OpenStreetMap vira o Google Maps interativo só quando a
-   pessoa pede: o link, que sem JS abre o Google Maps numa aba nova, aqui
-   carrega o mapa no lugar da imagem e passa o foco para ele. Com Ctrl,
-   Cmd, Shift ou o botão do meio, continua abrindo numa aba nova.
-   -------------------------------------------------------------------------- */
-function ativarMapa() {
-  const link = document.querySelector("[data-mapa]");
-  if (!link) return;
-  link.addEventListener("click", (evento) => {
-    if (evento.button !== 0 || evento.ctrlKey || evento.metaKey || evento.shiftKey || evento.altKey) return;
-    evento.preventDefault();
-    const mapa = document.createElement("iframe");
-    mapa.src = link.dataset.mapa;
-    mapa.title = link.dataset.titulo;
-    mapa.referrerPolicy = "no-referrer-when-downgrade";
-    mapa.allowFullscreen = true;
-    link.parentElement.replaceChildren(mapa);
-    mapa.focus();
   });
 }
 

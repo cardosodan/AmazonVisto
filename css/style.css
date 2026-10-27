@@ -996,8 +996,10 @@ svg use {
    aeroporto: azul-marinho, uma linha curta por destino (o código, o nome e
    a hora local de lá), em faixas alternadas; o destino escolhido acende em
    dourado. Cada linha abre a ficha do serviço, uma página de visto com o
-   carimbo e a zona de leitura, direto no papel. No desktop a ficha fica ao
-   lado do painel; no celular, logo abaixo.
+   carimbo e a zona de leitura, direto no papel. Em todas as larguras o
+   painel fica ao lado da ficha e grudado no alto da tela enquanto se lê a
+   ficha: trocar de serviço é um toque, sem voltar para cima. Até 1279px o
+   painel é uma coluna estreita de plaquetas (o código e o nome).
    ========================================================================== */
 .servicos {
   display: grid;
@@ -1024,8 +1026,10 @@ svg use {
   margin-top: 1rem;
 }
 
-/* O painel. */
+/* O painel. Grudado no alto da tela enquanto a ficha ao lado passa. */
 .painel {
+  position: sticky;
+  top: calc(var(--altura-barra) + 12px);
   overflow: hidden;
   border-radius: var(--canto-papel);
   background: var(--tinta);
@@ -1178,10 +1182,10 @@ svg use {
   grid-area: hora;
 }
 
-/* As fichas. Até o desktop vêm abaixo do painel, com um respiro maior
-   que o da grade (a data do painel não pode parecer rótulo da ficha). */
+/* As fichas, ao lado do painel. A ficha se arruma pela largura que tem
+   (contêiner), não pela da tela: ao lado do painel ela é mais estreita. */
 .fichas {
-  margin-top: 40px;
+  container: fichas / inline-size;
 }
 
 .js .ficha:not(.e-aberta) {
@@ -1190,8 +1194,8 @@ svg use {
 
 .ficha {
   display: grid;
-  gap: 24px;
-  scroll-margin-top: calc(var(--altura-barra) + 16px);
+  gap: 18px;
+  scroll-margin-top: calc(var(--altura-barra) + 12px);
 }
 
 .ficha + .ficha {
@@ -1238,15 +1242,16 @@ svg use {
 .ficha__carimbo {
   position: absolute;
   right: -4px;
-  bottom: -20px;
-  width: 76px;
+  bottom: -16px;
+  width: 64px;
   rotate: -10deg;
   opacity: 0.9;
 }
 
 .ficha__cabeca h3 {
-  font-size: var(--t-titulo);
-  letter-spacing: -0.03em;
+  font-size: var(--t-destaque);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
 }
 
 .ficha__desc {
@@ -1257,8 +1262,8 @@ svg use {
 .ficha__dados {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0.9rem 1.5rem;
-  margin-top: 20px;
+  gap: 0.75rem 1.25rem;
+  margin-top: 16px;
 }
 
 .ficha__dados dt {
@@ -1283,7 +1288,7 @@ svg use {
 }
 
 .ficha__resto * + h4 {
-  margin-top: 28px;
+  margin-top: 22px;
 }
 
 /* O caminho do visto americano: quatro etapas em ordem, sem caixas. */
@@ -1331,12 +1336,12 @@ svg use {
 }
 
 .ficha__resto .botao {
-  margin-top: 28px;
+  margin-top: 22px;
 }
 
 /* A zona de leitura no pé da página de visto. */
 .ficha__mrz {
-  margin-top: 28px;
+  margin-top: 22px;
   color: var(--tinta-suave);
   opacity: 0.8;
 }
@@ -1358,17 +1363,20 @@ svg use {
     column-gap: 16px;
     padding: 12px 18px;
   }
+}
 
+/* Com a ficha larga (460px ou mais), a foto vai ao lado do nome do serviço
+   e dos dados, e as listas ficam em duas colunas. */
+@container fichas (min-width: 460px) {
   .ficha__caminho,
   .vistos {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  /* A foto ao lado do nome do serviço e dos dados. */
   .ficha {
     grid-template-columns: minmax(0, 0.7fr) minmax(0, 1.3fr);
-    column-gap: clamp(24px, 3vw, 40px);
-    row-gap: 32px;
+    column-gap: clamp(20px, 3vw, 36px);
+    row-gap: 24px;
     align-items: start;
   }
 
@@ -1381,13 +1389,71 @@ svg use {
   }
 
   .ficha__carimbo {
-    width: clamp(84px, 30%, 116px);
+    width: clamp(76px, 30%, 108px);
     right: -6%;
     bottom: -9%;
   }
 }
 
-@media (min-width: 1024px) {
+/* Até 1279px: o painel vira uma coluna estreita de plaquetas, cada uma com
+   o código e o nome, ao lado da ficha; o título da seção fica em cima das
+   duas. A hora local e o que é cada destino ficam na ficha (e, a partir de
+   1280px, no painel inteiro, que só cabe ao lado da ficha a partir daí). */
+@media (max-width: 1279px) {
+  .servicos {
+    --trilho: clamp(92px, 20vw, 150px);
+    grid-template-columns: var(--trilho) minmax(0, 1fr);
+    grid-template-areas:
+      "topo topo"
+      "painel fichas";
+    column-gap: clamp(12px, 3vw, 28px);
+    align-items: start;
+  }
+
+  .servicos__topo {
+    grid-area: topo;
+  }
+
+  .painel {
+    grid-area: painel;
+  }
+
+  .fichas {
+    grid-area: fichas;
+  }
+
+  .destino {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      "codigo"
+      "nome";
+    justify-items: center;
+    row-gap: 6px;
+    padding: 12px 4px;
+    text-align: center;
+  }
+
+  .destino__fato,
+  .destino__hora,
+  .painel__origem {
+    display: none;
+  }
+
+  /* O nome cabe inteiro na plaqueta: quebra só entre palavras ("Estados
+     Unidos"); "Intercâmbio", a mais longa, cabe numa linha a 92px. */
+  .destino__nome {
+    display: block;
+    font-size: clamp(0.8125rem, 0.65rem + 0.7vw, 0.875rem);
+    line-height: 1.2;
+    letter-spacing: -0.015em;
+  }
+
+  .destino[aria-current="true"] .destino__nome::after {
+    content: none;
+  }
+}
+
+@media (min-width: 1280px) {
   .destino__codigo,
   .destino__hora,
   .painel__origem .placas {
@@ -1768,9 +1834,7 @@ svg use {
   margin-top: 1.1rem;
 }
 
-/* O mapa numa moldura de papel, como um mapa impresso: primeiro a imagem
-   do OpenStreetMap em tinta e papel, com o pino; no toque do botão, o
-   Google Maps interativo entra no lugar dela (main.js, "ativarMapa"). */
+/* O mapa do Google, numa moldura de papel, como um mapa impresso. */
 .visita__mapa {
   position: relative;
   margin: 16px var(--margem) 0;
@@ -1779,62 +1843,13 @@ svg use {
   background: var(--papel) var(--grao);
 }
 
-.visita__mapa iframe,
-.visita__mapa-imagem {
+.visita__mapa iframe {
   display: block;
   width: 100%;
   height: 300px;
   border: 0;
   border-radius: 2px;
   background: var(--papel-2);
-}
-
-/* O endereço fica no centro da imagem, e o cover recorta por igual. */
-.visita__mapa-imagem {
-  object-fit: cover;
-}
-
-/* O pino é da Amazon Visto (dourado é a voz dela), com a ponta no centro. */
-.visita__pino {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  width: 28px;
-  height: 38px;
-  transform: translate(-50%, -100%);
-  fill: var(--ouro);
-  stroke: var(--noite);
-  stroke-width: 1.6;
-}
-
-.visita__pino circle {
-  fill: var(--noite);
-  stroke: none;
-}
-
-.visita__mapa-abrir {
-  position: absolute;
-  left: 18px;
-  bottom: 18px;
-  background: var(--noite);
-  color: var(--papel);
-}
-
-@media (hover: hover) and (pointer: fine) {
-  .visita__mapa-abrir:hover {
-    background: var(--tinta);
-  }
-}
-
-.visita__mapa-credito {
-  position: absolute;
-  top: 6px;
-  right: 6px;
-  padding: 0.15rem 0.55rem 0.2rem;
-  border-radius: 0 0 0 var(--canto-papel);
-  background: var(--papel);
-  color: var(--tinta);
-  font-size: var(--t-pequeno);
 }
 
 .cartao-visita :focus-visible,
@@ -1863,8 +1878,7 @@ svg use {
     margin: 0;
   }
 
-  .visita__mapa iframe,
-  .visita__mapa-imagem {
+  .visita__mapa iframe {
     height: 100%;
     min-height: 420px;
   }
@@ -2949,8 +2963,7 @@ svg use {
   box-shadow: var(--quina-clara), var(--sombra-acima); /* taste-skill-ignore: balão um pouco acima da página */
 }
 
-.resposta,
-.visita__mapa-abrir {
+.resposta {
   box-shadow: var(--quina-escura), var(--sombra-acima); /* taste-skill-ignore: botão um pouco acima do papel */
 }
 
