@@ -101,26 +101,18 @@
   /* O canto do papel: quase reto, como um documento. */
   --canto-papel: 4px;
 
-  /* Luz e sombra (seção 15c). Uma luz só, de cima e um pouco da esquerda,
-     como uma luminária sobre a mesa. As sombras caem para baixo e um pouco
-     para a direita, na cor da noite (não preto), em camadas: o contato,
-     uma média e uma longa e macia. A quina de cima pega a luz. */
+  /* Luz e sombra (seção 15c), lisas: as superfícies são de cor chapada e a
+     profundidade é uma sombra só, macia e difusa, que cai para baixo, na
+     cor da noite (não preto). A luz fica no fundo escuro: um brilho suave
+     no alto da seção e atrás do papel. */
   --sombra: 0 1 10;
-  --sombra-pousada: 0 1px 2px rgb(var(--sombra) / 0.42), 2px 10px 18px -6px rgb(var(--sombra) / 0.5), 10px 36px 60px -20px rgb(var(--sombra) / 0.78);
-  --sombra-acima: 0 1px 2px rgb(var(--sombra) / 0.36), 2px 12px 24px -8px rgb(var(--sombra) / 0.66);
-  --sombra-botao: 0 2px 2px rgb(var(--sombra) / 0.38), 2px 14px 26px -10px rgb(var(--sombra) / 0.88);
-  --quina-clara: inset 0 1px 0 rgb(255 255 255 / 0.95);
-  --quina-ouro: inset 0 1px 0 rgb(255 255 255 / 0.55);
-  --quina-escura: inset 0 1px 0 rgb(255 255 255 / 0.2);
-  --luz-papel: radial-gradient(140% 100% at 10% 0%, rgb(255 255 255 / 0.9), rgb(255 255 255 / 0) 58%), linear-gradient(180deg, rgb(255 255 255 / 0) 42%, rgb(var(--sombra) / 0.11)); /* taste-skill-ignore: a luz no papel: o clarão da luminária em cima e o pé na sombra (pedido: luz e sombra bem visíveis) */
-  --luz-mesa: radial-gradient(80% 70% at 16% 0%, rgb(255 255 255 / 0.95), rgb(255 255 255 / 0) 72%), linear-gradient(180deg, rgb(255 255 255 / 0) 55%, rgb(var(--sombra) / 0.07)); /* taste-skill-ignore: a luz na mesa dos serviços (pedido: luz e sombra bem visíveis) */
-  --luz-noite: radial-gradient(95% 75% at 16% 0%, rgb(110 124 230 / 0.3), rgb(110 124 230 / 0) 72%); /* taste-skill-ignore: a luz no alto das seções escuras (pedido: luz e sombra bem visíveis) */
-  /* A poça da luminária na mesa escura, atrás do papel: é contra ela que a
-     sombra do papel aparece. Cada seção diz onde o papel está (--poca-x,
-     --poca-y) e o tamanho dela (--poca-l, --poca-a). */
-  --poca: radial-gradient(var(--poca-l, 60%) var(--poca-a, 55%) at var(--poca-x, 50%) var(--poca-y, 50%), rgb(110 124 230 / 0.26), rgb(110 124 230 / 0) 72%); /* taste-skill-ignore: a poça de luz atrás do papel (pedido: luz e sombra bem visíveis) */
-  --brilho-ouro: linear-gradient(172deg, rgb(255 255 255 / 0.4), rgb(255 255 255 / 0) 52%), linear-gradient(180deg, rgb(255 255 255 / 0) 55%, rgb(var(--sombra) / 0.12)); /* taste-skill-ignore: o dourado acetinado, com volume (pedido: luz e sombra bem visíveis) */
-  --brilho-botao: linear-gradient(180deg, rgb(255 255 255 / 0.24), rgb(255 255 255 / 0) 48%, rgb(var(--sombra) / 0.22)); /* taste-skill-ignore: o volume do botão (pedido: luz e sombra bem visíveis) */
+  --sombra-pousada: 0 1px 2px rgb(var(--sombra) / 0.16), 0 16px 40px -16px rgb(var(--sombra) / 0.42);
+  --sombra-acima: 0 1px 2px rgb(var(--sombra) / 0.14), 0 10px 24px -12px rgb(var(--sombra) / 0.38);
+  --sombra-botao: 0 8px 18px -10px rgb(var(--sombra) / 0.5);
+  --luz-noite: radial-gradient(95% 75% at 16% 0%, rgb(110 124 230 / 0.2), rgb(110 124 230 / 0) 72%); /* taste-skill-ignore: o brilho suave no alto das seções escuras (pedido do cliente: luz minimalista) */
+  /* O brilho atrás do papel, na mesa escura. Cada seção diz onde o papel
+     está (--poca-x, --poca-y) e o tamanho do brilho (--poca-l, --poca-a). */
+  --poca: radial-gradient(var(--poca-l, 60%) var(--poca-a, 55%) at var(--poca-x, 50%) var(--poca-y, 50%), rgb(110 124 230 / 0.16), rgb(110 124 230 / 0) 72%); /* taste-skill-ignore: o brilho atrás do papel (pedido do cliente: luz minimalista) */
 
   /* Movimento */
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
@@ -2864,133 +2856,56 @@ svg use {
 }
 
 /* ==========================================================================
-   15c. LUZ E SOMBRA (pedido do cliente: acabamento premium). A luz da
-   luminária (tokens --sombra-*, --quina-*, --luz-*, --brilho-*): os papéis
-   pousam na mesa e pegam luz na quina de cima; os balões e os botões ficam
-   um pouco acima deles; as plaquetas do painel são abas de verdade, claras
-   em cima e na sombra embaixo; as seções escuras recebem a luz no alto.
-   As sombras e os degradês daqui são a luz da cena, não enfeite (exceção
-   às regras da casa, registrada no DESIGN.md).
+   15c. LUZ E SOMBRA, LISAS (pedido do cliente: minimalista). As superfícies
+   são lisas, de cor chapada: sem brilho, sem degradê, sem relevo. A
+   profundidade é uma sombra só, macia e difusa, que tira o papel e o balão
+   do fundo sem desenhar volume. A luz fica no fundo escuro, lisa: um
+   brilho suave no alto da seção e atrás do papel. (Exceção às regras da
+   casa, registrada no DESIGN.md.)
    ========================================================================== */
 
-/* Os papéis sobre a mesa: a sombra pousada e a luz no papel. */
+/* Os papéis, as fotos impressas, o painel e o balão grande da capa: a
+   sombra macia de quem pousa sobre o fundo. */
 .capa__cartao,
-.cartao-visita,
-.visita__mapa,
-.embarque {
-  box-shadow: var(--quina-clara), var(--sombra-pousada); /* taste-skill-ignore: papel pousado na mesa (pedido: premium) */
-}
-
-.capa__cartao,
+.capa__foto,
 .cartao-visita,
 .visita__mapa,
 .embarque,
-.verso {
-  background-image: var(--luz-papel), var(--grao);
-}
-
-/* O cartão-postal: a sombra pousada no corpo e, na tira recortada de cima
-   (um SVG por cima dele), um filtro que segue o recorte. O filtro fica só
-   na tira, que é pequena: no postal inteiro ele pesa para desenhar. */
-.verso {
-  box-shadow: var(--sombra-pousada); /* taste-skill-ignore: papel pousado na mesa (pedido: premium) */
-}
-
-.verso__recorte {
-  filter: drop-shadow(1px -1px 1px rgb(var(--sombra) / 0.25)); /* taste-skill-ignore: a borda recortada pega a mesma luz */
-}
-
-/* A mesa dos serviços pega a luz da luminária no canto de cima. */
-.servicos {
-  background-image: var(--luz-mesa), var(--grao);
-}
-
-/* As fotos impressas: a da ficha e a da sala, coladas no papel. */
+.verso,
+.painel,
 .ficha__foto,
-.sobre__foto {
-  box-shadow: var(--sombra-pousada); /* taste-skill-ignore: foto impressa sobre a mesa */
-}
-
-/* Na capa, a página do passaporte e a foto ficam rente ao pé da seção: a
-   sombra é a curta, para não escorrer para a mesa dos serviços. */
-.capa__cartao {
-  box-shadow: var(--quina-clara), var(--sombra-acima); /* taste-skill-ignore: papel pousado, sombra curta */
-}
-
-.capa__foto {
-  box-shadow: var(--sombra-acima); /* taste-skill-ignore: foto impressa, sombra curta */
-}
-
-.verso__selo {
-  box-shadow: var(--sombra-acima); /* taste-skill-ignore: o selo colado no postal */
-}
-
-/* O painel do aeroporto é uma peça de verdade: a sombra dele na mesa e a
-   luz na borda de cima. Cada plaqueta é uma aba: a metade de cima pega
-   luz, a de baixo fica na sombra, e ela tem espessura. */
-.painel {
-  box-shadow: var(--quina-escura), var(--sombra-pousada); /* taste-skill-ignore: o painel pousado na mesa */
-}
-
-.placas > span:not(.placas__sep) {
-  background-image: linear-gradient(180deg, rgb(255 255 255 / 0.1) 0 50%, rgb(var(--sombra) / 0.22) 50% 100%); /* taste-skill-ignore: a aba da plaqueta, clara em cima e na sombra embaixo */
-  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.16), 0 1px 0 rgb(var(--sombra) / 0.6), 0 2px 0 rgb(var(--sombra) / 0.25); /* taste-skill-ignore: a espessura da plaqueta (sem borrão: são quase 70) */
-}
-
-/* O dourado é acetinado: um brilho de cima nos balões da Amazon Visto e no
-   destino escolhido do painel. */
-.conversa,
-.fala,
-.pergunta__resposta,
-.janela__fala,
-.destinos li .destino[aria-current="true"] {
-  background-image: var(--brilho-ouro);
-}
-
+.sobre__foto,
 .conversa {
-  box-shadow: var(--quina-ouro), var(--sombra-pousada); /* taste-skill-ignore: o balão grande sobre a foto */
+  box-shadow: var(--sombra-pousada); /* taste-skill-ignore: o papel sobre o fundo (pedido do cliente: luz minimalista) */
 }
 
+/* Os balões, as respostas rápidas e o selo do postal: a mesma sombra, mais
+   perto do fundo. */
 .fala,
 .pergunta__resposta,
-.janela__fala {
-  box-shadow: var(--quina-ouro), var(--sombra-acima); /* taste-skill-ignore: balão um pouco acima da página */
-}
-
-/* Os balões do cliente (papel) e as respostas rápidas (noite). */
+.pergunta__balao,
 .msg--minha,
-.pergunta__balao {
-  box-shadow: var(--quina-clara), var(--sombra-acima); /* taste-skill-ignore: balão um pouco acima da página */
+.resposta,
+.janela__fala,
+.verso__selo {
+  box-shadow: var(--sombra-acima); /* taste-skill-ignore: o balão um pouco acima da página (pedido do cliente: luz minimalista) */
 }
 
-.resposta {
-  box-shadow: var(--quina-escura), var(--sombra-acima); /* taste-skill-ignore: botão um pouco acima do papel */
-}
-
-/* O botão de ação tem volume: a luz em cima e a sombra embaixo; apertado,
-   ele desce até o papel. */
+/* O botão de ação, liso: só a sombra macia embaixo; apertado, ela some. */
 .botao--acao {
-  background-image: var(--brilho-botao);
-  box-shadow: var(--quina-ouro), var(--sombra-botao); /* taste-skill-ignore: o volume do botão de ação */
+  box-shadow: var(--sombra-botao); /* taste-skill-ignore: o botão um pouco acima da página (pedido do cliente: luz minimalista) */
 }
 
 .botao--acao:active {
-  box-shadow: var(--quina-escura), 0 1px 1px rgb(var(--sombra) / 0.3); /* taste-skill-ignore: o botão apertado, no papel */
-}
-
-/* Os campos do cartão de embarque ficam um pouco fundos no papel. */
-.embarque__campo input,
-.embarque__campo select {
-  box-shadow: inset 0 1px 2px rgb(var(--sombra) / 0.16); /* taste-skill-ignore: o campo fundo no papel */
+  box-shadow: none; /* taste-skill-ignore: apertado, o botão perde a sombra */
 }
 
 /* A barra do topo flutua sobre a página. */
 .barra {
-  box-shadow: inset 0 -1px 0 rgb(255 255 255 / 0.06), 0 12px 30px -16px rgb(var(--sombra) / 0.9); /* taste-skill-ignore: a barra flutua de verdade */
+  box-shadow: 0 10px 30px -18px rgb(var(--sombra) / 0.8); /* taste-skill-ignore: a barra flutua de verdade */
 }
 
-/* As seções escuras recebem a luz no alto e, atrás do papel, a poça da
-   luminária, contra a qual a sombra do papel aparece. */
+/* As seções escuras recebem o brilho suave no alto e atrás do papel. */
 .capa,
 .provas,
 .sobre,
@@ -3012,7 +2927,7 @@ svg use {
   --poca-y: 58%;
   --poca-l: 70%;
   --poca-a: 70%;
-  overflow: clip; /* a sombra dos papéis da capa não escorre para a mesa dos serviços */
+  overflow: clip; /* a sombra dos papéis da capa não escorre para a seção dos serviços */
 }
 
 .provas {

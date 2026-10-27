@@ -18,19 +18,8 @@ colors:
   cabine-sombra: "#999fae"
   cabine-clara: "#d7d9d7"
   vedacao: "#6b7289"
-  luz-noite: "rgb(110 124 230 / 0.3)"
-  poca: "rgb(110 124 230 / 0.26)"
-  quina-clara: "rgb(255 255 255 / 0.95)"
-  luz-mesa: "rgb(255 255 255 / 0.95)"
-  luz-papel: "rgb(255 255 255 / 0.9)"
-  luz-forte: "rgb(255 255 255 / 0.7)"
-  quina-ouro: "rgb(255 255 255 / 0.55)"
-  brilho-ouro: "rgb(255 255 255 / 0.4)"
-  brilho-botao: "rgb(255 255 255 / 0.24)"
-  quina-escura: "rgb(255 255 255 / 0.2)"
-  quina-plaqueta: "rgb(255 255 255 / 0.16)"
-  brilho-plaqueta: "rgb(255 255 255 / 0.1)"
-  fio-barra: "rgb(255 255 255 / 0.06)"
+  luz-noite: "rgb(110 124 230 / 0.2)"
+  poca: "rgb(110 124 230 / 0.16)"
 typography:
   capa:
     fontFamily: "Chillax, Segoe UI, system-ui, sans-serif"
@@ -179,7 +168,7 @@ O site é a viagem de quem sai de Manaus, contada por dois tipos de peça. De um
 
 O tique duplo do WhatsApp, que em português se chama "visto", liga as duas famílias. Na conversa ele marca a mensagem lida; no documento ele é o miolo do carimbo, o visto que o papel recebe. Todo "visto" do sistema (carimbo, marcador de lista, destino aberto, pergunta aberta, botão de enviar) usa o mesmo desenho (`#visto`, traço 1.9, pontas redondas).
 
-As cores entram em campos inteiros e chapados: azul-meia-noite de fundo, azul-marinho como campo de uma seção, papel nos documentos, dourado na voz da empresa e vermelho nas ações e na listra do envelope. Uma família tipográfica (Chillax, servida do próprio site). As cores são chapadas e iluminadas por uma luz só, como papéis sobre uma mesa (Elevation & Depth); sem fio fino. A densidade é de página de passaporte: blocos grandes de tipo e só os ornamentos que um documento de verdade tem.
+As cores entram em campos inteiros e chapados: azul-meia-noite de fundo, azul-marinho como campo de uma seção, papel nos documentos, dourado na voz da empresa e vermelho nas ações e na listra do envelope. Uma família tipográfica (Chillax, servida do próprio site). As cores são chapadas e lisas, com uma sombra macia para separar o papel do fundo e um brilho suave no fundo escuro (Elevation & Depth); sem fio fino. A densidade é de página de passaporte: blocos grandes de tipo e só os ornamentos que um documento de verdade tem.
 
 **Key Characteristics:**
 - Duas famílias com papéis fixos: documento (papel, `--canto-papel`) e conversa (balão, `--rabinho`).
@@ -275,29 +264,22 @@ Seis passos em `clamp()`. Em 1440px: 15 / 19 / 26 / 36 / 64 / 76px. Em 390px: 14
 
 ## Elevation & Depth
 
-Uma luz só, de cima e um pouco da esquerda, como uma luminária sobre a mesa (pedido do cliente, outubro de 2026: acabamento premium, com sombra e luz). A profundidade vem da sobreposição de peças (a conversa sobre o pé da foto, o cartão de visita e o mapa sobre Manaus, a janela na parede da cabine, o carimbo sobre a zona de leitura, o cartão de embarque levemente girado, 0.6deg; 1.2deg a partir de 1024px) e dessa luz: os papéis pousam e pegam luz na quina de cima, os balões e os botões ficam um pouco acima deles, o que flutua fica mais alto. O papel tem textura (`--grao`) e marca d'água (o guilhoche `--roseta`, entre 5% e 10% de opacidade). Tudo vem dos tokens (`--sombra-*`, `--quina-*`, `--luz-*`, `--brilho-*`) e é aplicado na seção 15c do CSS.
+Liso e minimalista (pedido do cliente, outubro de 2026: depois de uma luz realista, com brilhos e relevo, que ficou "ultrarrealista" demais). As superfícies são de cor chapada: sem brilho, sem degradê, sem relevo, sem quina de luz. A profundidade vem da sobreposição de peças (a conversa sobre o pé da foto, o cartão de visita e o mapa sobre Manaus, a janela na parede da cabine, o carimbo sobre a zona de leitura, o cartão de embarque levemente girado, 0.6deg; 1.2deg a partir de 1024px) e de uma sombra só, macia e difusa, que tira o papel e o balão do fundo sem desenhar volume. A luz fica no fundo escuro, lisa. O papel tem textura (`--grao`) e marca d'água (o guilhoche `--roseta`, entre 5% e 10% de opacidade). Os tokens (`--sombra-*`, `--luz-noite`, `--poca`) ficam no `:root` e a aplicação na seção 15c do CSS.
 
 ### Shadow Vocabulary
-As sombras caem para baixo e um pouco para a direita, em camadas, na cor da noite (`--sombra: 0 1 10`), nunca preto. São marcadas de propósito (pedido do cliente: a diferença tem de se ver).
-- **Pousada** (`--sombra-pousada`: o contato de 2px, uma média de 18px e uma longa de 60px que desce 36px): os papéis (cartão de visita, mapa, cartão de embarque, cartão-postal), as fotos impressas (ficha, sala), o painel do aeroporto e o balão grande da capa.
-- **Acima** (`--sombra-acima`: o contato e uma de 24px): os balões (falas, respostas, perguntas, mensagens), as respostas rápidas, o botão do mapa, o selo do postal, e a página do passaporte e a foto da capa (a capa corta o que passa da borda dela, `overflow: clip`, para a sombra não escorrer para a mesa dos serviços).
-- **Botão** (`--sombra-botao`): o botão de ação; apertado (`:active`), desce até o papel e fica só o contato.
-- **Flutuante** (`0 12px 28px -10px`): o botão fixo de WhatsApp; e a barra do topo, com uma sombra longa embaixo.
-- **Quinas** (`--quina-clara` no papel, `--quina-ouro` no dourado e no vermelho, `--quina-escura` no azul): o fio de luz de 1px na borda de cima, por dentro.
-- **Plaquetas**: cada aba do painel e do cartão de embarque é clara na metade de cima e na sombra na de baixo, com 2px de espessura sem borrão (são quase 70).
-- **Campos**: os campos do cartão de embarque ficam um pouco fundos no papel (sombra de dentro, 2px).
+Uma sombra macia que cai para baixo, na cor da noite (`--sombra: 0 1 10`), nunca preto, em duas camadas: um contato de 2px e uma difusa.
+- **Pousada** (`--sombra-pousada`: a difusa de 40px, descendo 16px, a 42%): os papéis (página do passaporte, cartão de visita, mapa, cartão de embarque, cartão-postal), as fotos impressas (capa, ficha, sala), o painel do aeroporto e o balão grande da capa. A capa corta o que passa da borda dela (`overflow: clip`), para a sombra não escorrer para os serviços.
+- **Acima** (`--sombra-acima`: a difusa de 24px, descendo 10px): os balões (falas, respostas, perguntas, mensagens), as respostas rápidas e o selo do postal.
+- **Botão** (`--sombra-botao`: só a difusa de 18px): o botão de ação, liso; apertado (`:active`), a sombra some.
+- **Flutuante** (`0 12px 28px -10px`): o botão fixo de WhatsApp; e a barra do topo, com uma sombra longa e leve embaixo.
 
 ### A luz
-- `--luz-papel`: no papel dos documentos, um clarão forte vindo do canto de cima à esquerda e o pé do papel na sombra.
-- `--luz-mesa`: na mesa dos serviços, o mesmo clarão, mais aberto.
-- `--luz-noite`: no alto das seções escuras (capa, provas, sobre, dúvidas, contato, rodapé), um azul claro.
-- `--poca`: a poça da luminária na mesa escura, atrás do papel de cada seção (a página do passaporte, as falas, as perguntas, o cartão de embarque, o postal), é contra ela que a sombra do papel aparece no azul. Cada seção diz onde o papel está (`--poca-x`, `--poca-y`) e o tamanho da poça (`--poca-l`, `--poca-a`).
-- `--brilho-ouro`: o dourado é acetinado (falas, respostas, o balão da capa, o destino escolhido do painel).
-- `--brilho-botao`: o volume do botão de ação.
+- `--luz-noite`: no alto das seções escuras (capa, provas, sobre, dúvidas, contato, rodapé), um brilho azul suave, liso.
+- `--poca`: o mesmo brilho, atrás do papel de cada seção escura (a página do passaporte, as falas, as perguntas, o cartão de embarque, o postal). Cada seção diz onde o papel está (`--poca-x`, `--poca-y`) e o tamanho do brilho (`--poca-l`, `--poca-a`).
 - A janela do avião tem a luz própria dela, a do céu (túnel, vedação, persiana), desenhada no SVG.
 
 ### Named Rules
-**The Uma Luz Rule.** Toda sombra e todo brilho vêm da mesma luminária, de cima e um pouco da esquerda: sombra que cai para baixo e para a direita, na cor da noite, luz na quina de cima. Sem sombra colorida, sem brilho em volta da peça (glow) e sem sombra que sobe. Peça repetida muitas vezes (as plaquetas) leva sombra sem borrão. Exceções às regras da casa (cor chapada, sombra só no que flutua) registradas aqui e no `taste-skill-ignore` de cada linha.
+**The Liso Rule.** Superfície lisa, de cor chapada: nada de brilho, degradê, relevo ou quina de luz em botão, balão, papel ou plaqueta. A profundidade é uma sombra só, macia, que cai para baixo na cor da noite; a luz é um brilho suave no fundo escuro. Sem sombra colorida e sem brilho em volta da peça (glow). Exceções às regras da casa (sombra só no que flutua; degradê só no brilho do fundo) registradas aqui e no `taste-skill-ignore` de cada linha.
 
 ## Shapes
 
