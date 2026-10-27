@@ -18,12 +18,17 @@ colors:
   cabine-sombra: "#999fae"
   cabine-clara: "#d7d9d7"
   vedacao: "#6b7289"
-  luz-noite: "rgb(92 104 200 / 0.16)"
+  luz-noite: "rgb(110 124 230 / 0.3)"
+  poca: "rgb(110 124 230 / 0.26)"
+  quina-clara: "rgb(255 255 255 / 0.95)"
+  luz-mesa: "rgb(255 255 255 / 0.95)"
+  luz-papel: "rgb(255 255 255 / 0.9)"
   luz-forte: "rgb(255 255 255 / 0.7)"
-  luz-papel: "rgb(255 255 255 / 0.55)"
-  brilho-ouro: "rgb(255 255 255 / 0.22)"
+  quina-ouro: "rgb(255 255 255 / 0.55)"
+  brilho-ouro: "rgb(255 255 255 / 0.4)"
+  brilho-botao: "rgb(255 255 255 / 0.24)"
+  quina-escura: "rgb(255 255 255 / 0.2)"
   quina-plaqueta: "rgb(255 255 255 / 0.16)"
-  quina-escura: "rgb(255 255 255 / 0.12)"
   brilho-plaqueta: "rgb(255 255 255 / 0.1)"
   fio-barra: "rgb(255 255 255 / 0.06)"
 typography:
@@ -273,9 +278,9 @@ Seis passos em `clamp()`. Em 1440px: 15 / 19 / 26 / 36 / 64 / 76px. Em 390px: 14
 Uma luz só, de cima e um pouco da esquerda, como uma luminária sobre a mesa (pedido do cliente, outubro de 2026: acabamento premium, com sombra e luz). A profundidade vem da sobreposição de peças (a conversa sobre o pé da foto, o cartão de visita e o mapa sobre Manaus, a janela na parede da cabine, o carimbo sobre a zona de leitura, o cartão de embarque levemente girado, 0.6deg; 1.2deg a partir de 1024px) e dessa luz: os papéis pousam e pegam luz na quina de cima, os balões e os botões ficam um pouco acima deles, o que flutua fica mais alto. O papel tem textura (`--grao`) e marca d'água (o guilhoche `--roseta`, entre 5% e 10% de opacidade). Tudo vem dos tokens (`--sombra-*`, `--quina-*`, `--luz-*`, `--brilho-*`) e é aplicado na seção 15c do CSS.
 
 ### Shadow Vocabulary
-As sombras caem para baixo e um pouco para a direita, em camadas, na cor da noite (`--sombra: 1 2 14`), nunca preto.
-- **Pousada** (`--sombra-pousada`: o contato de 1px, uma média de 12px e uma longa de 44px): os papéis (cartão de visita, mapa, cartão de embarque, cartão-postal), as fotos impressas (ficha, sala), o painel do aeroporto e o balão grande da capa.
-- **Acima** (`--sombra-acima`: o contato e uma de 18px): os balões (falas, respostas, perguntas, mensagens), as respostas rápidas, o botão do mapa, o selo do postal, e a página do passaporte e a foto da capa (curta, para não escorrer da capa para a mesa dos serviços).
+As sombras caem para baixo e um pouco para a direita, em camadas, na cor da noite (`--sombra: 0 1 10`), nunca preto. São marcadas de propósito (pedido do cliente: a diferença tem de se ver).
+- **Pousada** (`--sombra-pousada`: o contato de 2px, uma média de 18px e uma longa de 60px que desce 36px): os papéis (cartão de visita, mapa, cartão de embarque, cartão-postal), as fotos impressas (ficha, sala), o painel do aeroporto e o balão grande da capa.
+- **Acima** (`--sombra-acima`: o contato e uma de 24px): os balões (falas, respostas, perguntas, mensagens), as respostas rápidas, o botão do mapa, o selo do postal, e a página do passaporte e a foto da capa (a capa corta o que passa da borda dela, `overflow: clip`, para a sombra não escorrer para a mesa dos serviços).
 - **Botão** (`--sombra-botao`): o botão de ação; apertado (`:active`), desce até o papel e fica só o contato.
 - **Flutuante** (`0 12px 28px -10px`): o botão fixo de WhatsApp; e a barra do topo, com uma sombra longa embaixo.
 - **Quinas** (`--quina-clara` no papel, `--quina-ouro` no dourado e no vermelho, `--quina-escura` no azul): o fio de luz de 1px na borda de cima, por dentro.
@@ -283,9 +288,10 @@ As sombras caem para baixo e um pouco para a direita, em camadas, na cor da noit
 - **Campos**: os campos do cartão de embarque ficam um pouco fundos no papel (sombra de dentro, 2px).
 
 ### A luz
-- `--luz-papel`: no papel dos documentos, um clarão vindo do canto de cima à esquerda e um leve escurecer embaixo.
+- `--luz-papel`: no papel dos documentos, um clarão forte vindo do canto de cima à esquerda e o pé do papel na sombra.
 - `--luz-mesa`: na mesa dos serviços, o mesmo clarão, mais aberto.
-- `--luz-noite`: no alto das seções escuras (capa, provas, sobre, dúvidas, contato, rodapé), um azul claro bem leve.
+- `--luz-noite`: no alto das seções escuras (capa, provas, sobre, dúvidas, contato, rodapé), um azul claro.
+- `--poca`: a poça da luminária na mesa escura, atrás do papel de cada seção (a página do passaporte, as falas, as perguntas, o cartão de embarque, o postal), é contra ela que a sombra do papel aparece no azul. Cada seção diz onde o papel está (`--poca-x`, `--poca-y`) e o tamanho da poça (`--poca-l`, `--poca-a`).
 - `--brilho-ouro`: o dourado é acetinado (falas, respostas, o balão da capa, o destino escolhido do painel).
 - `--brilho-botao`: o volume do botão de ação.
 - A janela do avião tem a luz própria dela, a do céu (túnel, vedação, persiana), desenhada no SVG.
