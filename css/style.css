@@ -101,6 +101,23 @@
   /* O canto do papel: quase reto, como um documento. */
   --canto-papel: 4px;
 
+  /* Luz e sombra (seção 15c). Uma luz só, de cima e um pouco da esquerda,
+     como uma luminária sobre a mesa. As sombras caem para baixo e um pouco
+     para a direita, na cor da noite (não preto), em camadas: o contato,
+     uma média e uma longa e macia. A quina de cima pega a luz. */
+  --sombra: 1 2 14;
+  --sombra-pousada: 0 1px 1px rgb(var(--sombra) / 0.32), 1px 6px 12px -4px rgb(var(--sombra) / 0.36), 5px 26px 44px -16px rgb(var(--sombra) / 0.6);
+  --sombra-acima: 0 1px 1px rgb(var(--sombra) / 0.24), 1px 8px 18px -8px rgb(var(--sombra) / 0.52);
+  --sombra-botao: 0 1px 1px rgb(var(--sombra) / 0.3), 1px 10px 22px -10px rgb(var(--sombra) / 0.75);
+  --quina-clara: inset 0 1px 0 rgb(255 255 255 / 0.75);
+  --quina-ouro: inset 0 1px 0 rgb(255 255 255 / 0.38);
+  --quina-escura: inset 0 1px 0 rgb(255 255 255 / 0.12);
+  --luz-papel: radial-gradient(130% 90% at 12% 0%, rgb(255 255 255 / 0.55), rgb(255 255 255 / 0) 60%), linear-gradient(180deg, rgb(255 255 255 / 0) 55%, rgb(var(--sombra) / 0.05)); /* taste-skill-ignore: a luz no papel (pedido: premium) */
+  --luz-mesa: radial-gradient(75% 60% at 18% 0%, rgb(255 255 255 / 0.7), rgb(255 255 255 / 0) 70%); /* taste-skill-ignore: a luz na mesa dos serviços */
+  --luz-noite: radial-gradient(90% 70% at 16% 0%, rgb(92 104 200 / 0.16), rgb(92 104 200 / 0) 70%); /* taste-skill-ignore: a luz no alto das seções escuras */
+  --brilho-ouro: linear-gradient(172deg, rgb(255 255 255 / 0.22), rgb(255 255 255 / 0) 52%); /* taste-skill-ignore: o brilho acetinado do dourado */
+  --brilho-botao: linear-gradient(180deg, rgb(255 255 255 / 0.12), rgb(255 255 255 / 0) 50%, rgb(var(--sombra) / 0.1)); /* taste-skill-ignore: o volume do botão */
+
   /* Movimento */
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
   --ease-expo: cubic-bezier(0.16, 1, 0.3, 1);
@@ -250,20 +267,12 @@ p {
 }
 
 /* O tique duplo desenhado: traço único, sempre na cor do texto. */
-svg use,
-.icone-visto {
+svg use {
   fill: none;
   stroke: currentColor;
   stroke-width: 1.9;
   stroke-linecap: round;
   stroke-linejoin: round;
-}
-
-.icone-visto {
-  display: inline-block;
-  width: 1.15em;
-  height: 0.74em;
-  vertical-align: 0.05em;
 }
 
 /* ==========================================================================
@@ -379,6 +388,11 @@ svg use,
   visibility: visible;
   transform: none;
   transition: transform 0.5s var(--ease-gaveta), visibility 0s;
+}
+
+/* Com o menu aberto, a página atrás dele não rola (main.js, "ativarMenu"). */
+.menu-aberto {
+  overflow: hidden;
 }
 
 .barra__nav a {
@@ -666,6 +680,7 @@ svg use,
    passaporte sobe por cima do pé da foto. */
 .capa__foto {
   order: -1;
+  height: 46vh; /* taste-skill-ignore: reserva para navegador sem svh/lvh; a linha de baixo vale */
   height: 46svh;
   min-height: 280px;
   max-height: 480px;
@@ -928,6 +943,7 @@ svg use,
 @media (min-width: 900px) {
   .capa {
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    min-height: 100vh; /* taste-skill-ignore: reserva para navegador sem svh/lvh; a linha de baixo vale */
     min-height: 100svh;
   }
 
@@ -1677,6 +1693,7 @@ svg use,
 
 .visita__foto {
   width: 100%;
+  height: 34vh; /* taste-skill-ignore: reserva para navegador sem svh/lvh; a linha de baixo vale */
   height: 34svh;
   min-height: 220px;
   object-fit: cover;
@@ -1824,6 +1841,7 @@ svg use,
     grid-template-columns: minmax(0, 27rem) minmax(0, 1fr);
     column-gap: 24px;
     align-items: center;
+    min-height: 82vh; /* taste-skill-ignore: reserva para navegador sem svh/lvh; a linha de baixo vale */
     min-height: 82svh;
     padding: var(--entre) var(--margem);
   }
@@ -1887,9 +1905,9 @@ svg use,
   --janela-fundo: 1.22;
   /* A cabine fica na sombra perto do céu: cinza do papel puxado para a
      tinta, que a luz da janela clareia em volta do vão. */
-  --cabine: color-mix(in oklab, var(--papel-2) 78%, var(--tinta-suave) 22%);
-  --cabine-sombra: color-mix(in oklab, var(--papel-2) 56%, var(--tinta-suave) 44%);
-  --cabine-clara: color-mix(in oklab, var(--papel-2) 92%, var(--tinta-suave) 8%);
+  --cabine: #bec2c7; /* papel-2 com 22% de tinta-suave (oklab) */
+  --cabine-sombra: #999fae; /* com 44% */
+  --cabine-clara: #d7d9d7; /* com 8% */
   background: var(--cabine);
 }
 
@@ -1897,6 +1915,7 @@ svg use,
   position: relative;
   display: grid;
   place-items: center;
+  height: 100vh; /* taste-skill-ignore: reserva para navegador sem svh/lvh; a linha de baixo vale */
   height: 100svh;
   min-height: 560px;
   padding-top: var(--altura-barra);
@@ -1910,11 +1929,18 @@ svg use,
   background: var(--tinta-2);
 }
 
-.janela__vista video {
+.janela__vista video,
+.janela__vista img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   object-position: 60% 50%;
+}
+
+/* Sem JS, o quadro parado (no <noscript>) fica por cima do vídeo parado. */
+.janela__vista img {
+  position: absolute;
+  inset: 0;
 }
 
 /* A caixa da janela tem o tamanho do vidro; o túnel, a parede e a luz são
@@ -1960,7 +1986,7 @@ svg use,
 
 .janela__vedacao {
   fill: none;
-  stroke: color-mix(in oklab, var(--cabine-sombra) 72%, var(--noite) 28%);
+  stroke: #6b7289; /* cabine-sombra com 28% de noite (oklab) */
   stroke-width: 2.8;
 }
 
@@ -2077,6 +2103,7 @@ svg use,
    cobrir. A linha do tempo ignora o scroll-padding da barra do site
    (inset 0), para começar junto com o palco grudado. */
 .janela.e-viva {
+  height: calc(100vh + 130vh); /* taste-skill-ignore: reserva para navegador sem svh/lvh; a linha de baixo vale */
   height: calc(100lvh + 130svh);
   view-timeline-name: --janela;
   view-timeline-inset: 0;
@@ -2087,6 +2114,7 @@ svg use,
 .janela.e-viva .janela__palco {
   position: sticky;
   top: 0;
+  height: 100vh; /* taste-skill-ignore: reserva para navegador sem svh/lvh; a linha de baixo vale */
   height: 100lvh;
   min-height: 0;
 }
@@ -2096,6 +2124,7 @@ svg use,
 }
 
 .janela.e-viva .janela__falas {
+  bottom: calc(clamp(28px, 7vh, 72px) + 100vh - 100vh); /* taste-skill-ignore: reserva para navegador sem svh/lvh; a linha de baixo vale */
   bottom: calc(clamp(28px, 7vh, 72px) + 100lvh - 100svh);
 }
 
@@ -2132,6 +2161,20 @@ svg use,
     animation-play-state: running;
     animation-timeline: --janela;
     animation-range: contain;
+  }
+}
+
+/* Navegador sem svh: a largura do vidro em vh. Numa variável a reserva
+   não cai sozinha, como nas outras propriedades, então vem aqui. */
+@supports not (height: 1svh) {
+  .janela {
+    --vidro: min(62vw, 32vh);
+  }
+
+  @media (min-width: 900px) {
+    .janela {
+      --vidro: min(22vw, 36vh);
+    }
   }
 }
 
@@ -2794,6 +2837,143 @@ svg use,
 .perdida__es {
   color: var(--papel-suave);
   font-size: var(--t-pequeno);
+}
+
+/* ==========================================================================
+   15c. LUZ E SOMBRA (pedido do cliente: acabamento premium). A luz da
+   luminária (tokens --sombra-*, --quina-*, --luz-*, --brilho-*): os papéis
+   pousam na mesa e pegam luz na quina de cima; os balões e os botões ficam
+   um pouco acima deles; as plaquetas do painel são abas de verdade, claras
+   em cima e na sombra embaixo; as seções escuras recebem a luz no alto.
+   As sombras e os degradês daqui são a luz da cena, não enfeite (exceção
+   às regras da casa, registrada no DESIGN.md).
+   ========================================================================== */
+
+/* Os papéis sobre a mesa: a sombra pousada e a luz no papel. */
+.capa__cartao,
+.cartao-visita,
+.visita__mapa,
+.embarque {
+  box-shadow: var(--quina-clara), var(--sombra-pousada); /* taste-skill-ignore: papel pousado na mesa (pedido: premium) */
+}
+
+.capa__cartao,
+.cartao-visita,
+.visita__mapa,
+.embarque,
+.verso {
+  background-image: var(--luz-papel), var(--grao);
+}
+
+/* O cartão-postal: a sombra pousada no corpo e, na tira recortada de cima
+   (um SVG por cima dele), um filtro que segue o recorte. O filtro fica só
+   na tira, que é pequena: no postal inteiro ele pesa para desenhar. */
+.verso {
+  box-shadow: var(--sombra-pousada); /* taste-skill-ignore: papel pousado na mesa (pedido: premium) */
+}
+
+.verso__recorte {
+  filter: drop-shadow(1px -1px 1px rgb(var(--sombra) / 0.25)); /* taste-skill-ignore: a borda recortada pega a mesma luz */
+}
+
+/* A mesa dos serviços pega a luz da luminária no canto de cima. */
+.servicos {
+  background-image: var(--luz-mesa), var(--grao);
+}
+
+/* As fotos impressas: a da ficha e a da sala, coladas no papel. */
+.ficha__foto,
+.sobre__foto {
+  box-shadow: var(--sombra-pousada); /* taste-skill-ignore: foto impressa sobre a mesa */
+}
+
+/* Na capa, a página do passaporte e a foto ficam rente ao pé da seção: a
+   sombra é a curta, para não escorrer para a mesa dos serviços. */
+.capa__cartao {
+  box-shadow: var(--quina-clara), var(--sombra-acima); /* taste-skill-ignore: papel pousado, sombra curta */
+}
+
+.capa__foto {
+  box-shadow: var(--sombra-acima); /* taste-skill-ignore: foto impressa, sombra curta */
+}
+
+.verso__selo {
+  box-shadow: var(--sombra-acima); /* taste-skill-ignore: o selo colado no postal */
+}
+
+/* O painel do aeroporto é uma peça de verdade: a sombra dele na mesa e a
+   luz na borda de cima. Cada plaqueta é uma aba: a metade de cima pega
+   luz, a de baixo fica na sombra, e ela tem espessura. */
+.painel {
+  box-shadow: var(--quina-escura), var(--sombra-pousada); /* taste-skill-ignore: o painel pousado na mesa */
+}
+
+.placas > span:not(.placas__sep) {
+  background-image: linear-gradient(180deg, rgb(255 255 255 / 0.1) 0 50%, rgb(var(--sombra) / 0.22) 50% 100%); /* taste-skill-ignore: a aba da plaqueta, clara em cima e na sombra embaixo */
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.16), 0 1px 0 rgb(var(--sombra) / 0.6), 0 2px 0 rgb(var(--sombra) / 0.25); /* taste-skill-ignore: a espessura da plaqueta (sem borrão: são quase 70) */
+}
+
+/* O dourado é acetinado: um brilho de cima nos balões da Amazon Visto e no
+   destino escolhido do painel. */
+.conversa,
+.fala,
+.pergunta__resposta,
+.janela__fala,
+.destinos li .destino[aria-current="true"] {
+  background-image: var(--brilho-ouro);
+}
+
+.conversa {
+  box-shadow: var(--quina-ouro), var(--sombra-pousada); /* taste-skill-ignore: o balão grande sobre a foto */
+}
+
+.fala,
+.pergunta__resposta,
+.janela__fala {
+  box-shadow: var(--quina-ouro), var(--sombra-acima); /* taste-skill-ignore: balão um pouco acima da página */
+}
+
+/* Os balões do cliente (papel) e as respostas rápidas (noite). */
+.msg--minha,
+.pergunta__balao {
+  box-shadow: var(--quina-clara), var(--sombra-acima); /* taste-skill-ignore: balão um pouco acima da página */
+}
+
+.resposta,
+.visita__mapa-abrir {
+  box-shadow: var(--quina-escura), var(--sombra-acima); /* taste-skill-ignore: botão um pouco acima do papel */
+}
+
+/* O botão de ação tem volume: a luz em cima e a sombra embaixo; apertado,
+   ele desce até o papel. */
+.botao--acao {
+  background-image: var(--brilho-botao);
+  box-shadow: var(--quina-ouro), var(--sombra-botao); /* taste-skill-ignore: o volume do botão de ação */
+}
+
+.botao--acao:active {
+  box-shadow: var(--quina-escura), 0 1px 1px rgb(var(--sombra) / 0.3); /* taste-skill-ignore: o botão apertado, no papel */
+}
+
+/* Os campos do cartão de embarque ficam um pouco fundos no papel. */
+.embarque__campo input,
+.embarque__campo select {
+  box-shadow: inset 0 1px 2px rgb(var(--sombra) / 0.16); /* taste-skill-ignore: o campo fundo no papel */
+}
+
+/* A barra do topo flutua sobre a página. */
+.barra {
+  box-shadow: inset 0 -1px 0 rgb(255 255 255 / 0.06), 0 12px 30px -16px rgb(var(--sombra) / 0.9); /* taste-skill-ignore: a barra flutua de verdade */
+}
+
+/* As seções escuras recebem um pouco da luz no alto. */
+.capa,
+.provas,
+.sobre,
+.duvidas,
+.embarque-secao,
+.rodape {
+  background-image: var(--luz-noite);
 }
 
 /* ==========================================================================

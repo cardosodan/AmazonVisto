@@ -1,0 +1,10 @@
+# Texto sempre com LF no repositório e na pasta de trabalho (Windows
+# incluído): o scripts/publicar.mjs e o gerar-es.mjs dão o mesmo resultado
+# em qualquer máquina e na verificação do GitHub.
+* text=auto eol=lf
+
+*.webp binary
+*.webm binary
+*.jpg binary
+*.png binary
+*.woff2 binary

@@ -408,11 +408,29 @@ par `[português, espanhol]` nessa lista.
 ## 4c. Publicar uma mudança no CSS ou no JS
 
 O navegador guarda o `style.css` e o `main.js` para não baixar de novo a
-cada visita. Por isso, **sempre que mudar `css/style.css` ou `js/main.js`,
-aumente o número do `?v=`** nos dois `<link>`/`<script>` do `index.html`
-(ex.: `style.css?v=46` → `?v=47`) e no `404.html`, e rode o `gerar-es.mjs`.
-Sem isso, quem já visitou o site continua vendo o visual antigo com o HTML
-novo.
+cada visita (o GitHub Pages diz para guardar por 10 minutos). Por isso, o
+endereço deles tem uma versão (`style.css?v=…`), e ela precisa mudar quando
+o arquivo muda. **Antes de cada commit, rode:**
+
+```bash
+node scripts/publicar.mjs
+```
+
+Ele calcula a versão pelo conteúdo do CSS e do JS (muda sozinha quando o
+arquivo muda, e só então) no `index.html` e no `404.html`, e gera o
+`es.html`. Sem isso, quem já visitou o site continua vendo o visual antigo
+com o HTML novo.
+
+### Verificação automática no GitHub
+
+A cada push, o GitHub roda `.github/workflows/verificar.yml`:
+
+1. **Versões e espanhol em dia**: roda o `publicar.mjs` e falha se ele mudar
+   algum arquivo (alguém esqueceu de rodar antes do commit).
+2. **Lighthouse no celular** (`.github/lighthouserc.json`), no `index.html`
+   e no `es.html`: desempenho, acessibilidade, boas práticas e SEO, com
+   aviso quando uma nota cai (sem barrar o push). O relatório fica nos
+   artefatos da execução, na aba **Actions** do repositório.
 
 ## 4d. Trocar o domínio
 

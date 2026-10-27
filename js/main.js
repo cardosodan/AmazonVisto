@@ -13,8 +13,6 @@
    cartão de embarque troca o destino conforme o serviço escolhido.
    ========================================================================== */
 
-document.documentElement.classList.add("js");
-
 document.addEventListener("DOMContentLoaded", () => {
   ativarMenu();
   ativarEntradas();
@@ -31,6 +29,7 @@ document.addEventListener("DOMContentLoaded", () => {
   ativarMapa();
   ativarBotaoFlutuante();
   ativarFotosSuaves();
+  acompanharMenosMovimento();
 });
 
 const prefereMenosMovimento = () => window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -119,9 +118,13 @@ function girarCodigos(grupo, codigos) {
 
 /* --------------------------------------------------------------------------
    1. MENU (celular)
-   O botão "Menu" abre o painel com as seções (e passa a dizer "Fechar").
-   Fecha ao tocar num link ou com Esc. Os rótulos vêm do HTML (data-rotulo-*
-   e data-texto-fechar), para a versão em espanhol não ficar em português.
+   O botão "Menu" abre o painel com as seções (e passa a dizer "Fechar") e
+   leva o foco ao primeiro link. Aberto, o painel cobre a tela: o resto da
+   página fica inerte (o Tab e o leitor de tela não passam por trás dele) e
+   não rola. Fecha ao tocar num link, com Esc, ou quando a tela chega a
+   1024px, onde os links ficam na barra. Os rótulos vêm do HTML
+   (data-rotulo-* e data-texto-fechar), para a versão em espanhol não ficar
+   em português.
    -------------------------------------------------------------------------- */
 function ativarMenu() {
   const botao = document.getElementById("botaoMenu");
@@ -129,14 +132,21 @@ function ativarMenu() {
   if (!botao || !painel) return;
 
   const textoAbrir = botao.textContent;
+  const atras = document.querySelectorAll(".pular, #conteudo, .rodape, .flutuante");
   const definir = (aberto) => {
     painel.classList.toggle("e-aberta", aberto);
     botao.setAttribute("aria-expanded", String(aberto));
     botao.setAttribute("aria-label", aberto ? botao.dataset.rotuloFechar : botao.dataset.rotuloAbrir);
     botao.textContent = aberto ? botao.dataset.textoFechar || textoAbrir : textoAbrir;
+    atras.forEach((parte) => (parte.inert = aberto));
+    document.documentElement.classList.toggle("menu-aberto", aberto);
   };
 
-  botao.addEventListener("click", () => definir(!painel.classList.contains("e-aberta")));
+  botao.addEventListener("click", () => {
+    const abrir = !painel.classList.contains("e-aberta");
+    definir(abrir);
+    if (abrir) painel.querySelector("a")?.focus();
+  });
   painel.querySelectorAll("a").forEach((link) => link.addEventListener("click", () => definir(false)));
   document.addEventListener("keydown", (evento) => {
     if (evento.key === "Escape" && painel.classList.contains("e-aberta")) {
@@ -144,6 +154,8 @@ function ativarMenu() {
       botao.focus();
     }
   });
+  const largo = window.matchMedia("(min-width: 1024px)");
+  if (largo.addEventListener) largo.addEventListener("change", (evento) => evento.matches && definir(false));
 }
 
 /* --------------------------------------------------------------------------
@@ -280,8 +292,10 @@ function ativarConversa() {
       setTimeout(() => {
         if (esta !== rodada) return;
         minha.classList.add("e-vista");
-        const pontos = novaMensagem("msg--deles msg--digitando", "<p><span></span><span></span><span></span></p>");
-        pontos.setAttribute("aria-label", digitando ? digitando.textContent : "");
+        // Os três pontos são só desenho; quem usa leitor de tela ouve o
+        // "digitando…" (a lista é aria-live).
+        const pontos = novaMensagem("msg--deles msg--digitando", '<p aria-hidden="true"><span></span><span></span><span></span></p><span class="visualmente-oculto"></span>');
+        pontos.querySelector(".visualmente-oculto").textContent = digitando ? digitando.textContent : "";
         setTimeout(responder, 1100);
       }, 450);
     });
@@ -404,19 +418,24 @@ function ativarDuvidas() {
   const abas = Array.from(document.querySelectorAll(".pergunta__balao"));
   if (!abas.length) return;
 
+  // As respostas fechadas ficam "until-found": o Ctrl+F do navegador acha o
+  // texto delas e abre a pergunta certa (onde o navegador não conhece o
+  // valor, ficam só escondidas, como antes).
   const definir = (aba) => {
     abas.forEach((a) => {
       const aberta = a === aba;
       a.setAttribute("aria-expanded", String(aberta));
       const resposta = document.getElementById(a.getAttribute("aria-controls"));
-      if (resposta) resposta.hidden = !aberta;
+      if (resposta) resposta.hidden = aberta ? false : "until-found";
     });
   };
 
   definir(abas.find((a) => a.getAttribute("aria-expanded") === "true") || abas[0]);
-  abas.forEach((aba) =>
-    aba.addEventListener("click", () => definir(aba.getAttribute("aria-expanded") === "true" ? null : aba))
-  );
+  abas.forEach((aba) => {
+    aba.addEventListener("click", () => definir(aba.getAttribute("aria-expanded") === "true" ? null : aba));
+    const resposta = document.getElementById(aba.getAttribute("aria-controls"));
+    if (resposta) resposta.addEventListener("beforematch", () => definir(aba));
+  });
 }
 
 /* --------------------------------------------------------------------------
@@ -551,11 +570,13 @@ function ativarEmbarque() {
     const cidadeDigitada = valor("cidade");
     let texto = cartao.dataset.modelo;
     if (!cidadeDigitada) texto = texto.replace(/,[^,{]*\{cidade\}/, "");
+    // Com função no replace, um "$&" ou "$1" digitado no nome entra como
+    // texto (com uma string, o replace leria como código de substituição).
     texto = texto
-      .replace("{nome}", valor("nome"))
-      .replace("{cidade}", cidadeDigitada)
-      .replace("{servico}", valor("servico"))
-      .replace("{situacao}", valor("situacao"));
+      .replace("{nome}", () => valor("nome"))
+      .replace("{cidade}", () => cidadeDigitada)
+      .replace("{servico}", () => valor("servico"))
+      .replace("{situacao}", () => valor("situacao"));
     abrirWhatsApp(cartao.dataset.whatsapp, texto);
   });
 }
@@ -634,11 +655,33 @@ function ativarObturador() {
 /* --------------------------------------------------------------------------
    11. VÍDEO (as nuvens da janela do avião)
    Loop mudo que só toca enquanto está na tela; quem prefere menos movimento
-   vê só o quadro parado.
+   vê só o quadro parado. O quadro parado (pôster) fica no data-poster e só
+   baixa quando a cena está a uma tela e meia de distância, para não pesar
+   na abertura da página; sem JS, o <noscript> mostra a mesma imagem.
    -------------------------------------------------------------------------- */
 function ativarVideos() {
   const videos = document.querySelectorAll("video[muted]");
-  if (!videos.length || prefereMenosMovimento() || !("IntersectionObserver" in window)) return;
+  if (!videos.length) return;
+
+  const porPoster = (video) => {
+    if (video.dataset.poster && !video.getAttribute("poster")) video.poster = video.dataset.poster;
+  };
+  if (!("IntersectionObserver" in window)) {
+    videos.forEach(porPoster);
+    return;
+  }
+  const perto = new IntersectionObserver(
+    (entradas, obs) => {
+      entradas.forEach((entrada) => {
+        if (!entrada.isIntersecting) return;
+        porPoster(entrada.target);
+        obs.unobserve(entrada.target);
+      });
+    },
+    { rootMargin: "150% 0px" }
+  );
+  videos.forEach((video) => perto.observe(video));
+  if (prefereMenosMovimento()) return;
 
   const observador = new IntersectionObserver(
     (entradas) => {
@@ -723,5 +766,25 @@ function ativarFotosSuaves() {
       foto.addEventListener("load", marcar, { once: true });
       foto.addEventListener("error", marcar, { once: true });
     }
+  });
+}
+
+/* --------------------------------------------------------------------------
+   14. "REDUZIR MOVIMENTO" LIGADO NO MEIO DA VISITA
+   O CSS já zera as animações; aqui, o que dependia de JS para de se mexer:
+   o que ainda ia entrar aparece, o obturador fica aberto, o vídeo para e a
+   janela do avião fica só no céu. O resto das funções consulta a
+   preferência a cada vez.
+   -------------------------------------------------------------------------- */
+function acompanharMenosMovimento() {
+  const consulta = window.matchMedia("(prefers-reduced-motion: reduce)");
+  if (!consulta.addEventListener) return;
+  consulta.addEventListener("change", () => {
+    if (!consulta.matches) return;
+    document.querySelectorAll(".entrada").forEach((el) => el.classList.add("entrou"));
+    document.querySelectorAll(".obturador").forEach((el) => el.classList.add("e-aberto"));
+    document.querySelectorAll("video[muted]").forEach((video) => video.pause());
+    document.getElementById("janela")?.classList.remove("e-viva");
+    document.documentElement.classList.remove("fotos-suaves");
   });
 }

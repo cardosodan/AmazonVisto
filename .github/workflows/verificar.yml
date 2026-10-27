@@ -1,0 +1,34 @@
+# Verificação a cada push e pull request no GitHub.
+#
+# 1. Versões e espanhol em dia: roda o scripts/publicar.mjs e falha se ele
+#    mudar algum arquivo (alguém esqueceu de rodar antes do commit: o CSS ou
+#    o JS mudou sem versão nova, ou o es.html ficou para trás).
+# 2. Lighthouse no celular, no index.html e no es.html: desempenho,
+#    acessibilidade, boas práticas e SEO. Avisa quando uma nota cai, sem
+#    barrar o push; o relatório fica nos artefatos da execução.
+name: Verificar
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  verificar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Versões do CSS e do JS e es.html em dia
+        run: |
+          node scripts/publicar.mjs
+          git diff --exit-code
+
+      - name: Lighthouse (celular)
+        uses: treosh/lighthouse-ci-action@v12
+        with:
+          configPath: ./.github/lighthouserc.json
+          uploadArtifacts: true
