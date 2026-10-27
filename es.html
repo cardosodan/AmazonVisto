@@ -16,9 +16,16 @@
     name="description"
     content="Asesoría completa en visas (americana, canadiense, china, peruana), pasaporte brasileño e intercambio. Atención presencial en Manaus-AM y Brasilia-DF, y 100% en línea para Brasil y América Latina. Hasta 10 cuotas sin intereses."
   />
-  <meta name="keywords" content="visa americana, visa canadiense, visa china, visa peruana, pasaporte, intercambio, Manaus, Brasilia, asesoría de visas" />
   <meta name="author" content="Amazon Visto" />
   <meta name="robots" content="index, follow" />
+
+  <!-- O endereço do site: o GitHub Pages, por enquanto. Ao passar para o
+       domínio próprio, troque "https://cardosodan.github.io/AmazonVisto/" em todo lugar
+       (README, "Trocar o domínio"). -->
+  <link rel="canonical" href="https://cardosodan.github.io/AmazonVisto/es.html" />
+  <link rel="alternate" hreflang="pt-BR" href="https://cardosodan.github.io/AmazonVisto/" />
+  <link rel="alternate" hreflang="es" href="https://cardosodan.github.io/AmazonVisto/es.html" />
+  <link rel="alternate" hreflang="x-default" href="https://cardosodan.github.io/AmazonVisto/" />
 
   <!-- Open Graph -->
   <meta property="og:type" content="website" />
@@ -27,16 +34,20 @@
     property="og:description"
     content="Visa americana, canadiense, china, peruana y pasaporte, sin salir de casa y en hasta 10 cuotas. Líder del mercado en el Norte de Brasil."
   />
-  <meta property="og:image" content="images/og-image.jpg" />
-  <!-- TROCAR: colocar a URL real depois do deploy -->
-  <meta property="og:url" content="https://www.amazonvisto.com.br/es.html" />
+  <meta property="og:site_name" content="Amazon Visto" />
+  <meta property="og:image" content="https://cardosodan.github.io/AmazonVisto/images/og-image.jpg" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:url" content="https://cardosodan.github.io/AmazonVisto/es.html" />
   <meta property="og:locale" content="es_LA" />
+  <meta property="og:locale:alternate" content="pt_BR" />
   <meta name="twitter:card" content="summary_large_image" />
 
   <link rel="icon" type="image/png" href="images/favicon.png" />
   <link rel="preload" href="fonts/chillax-600.woff2" as="font" type="font/woff2" crossorigin />
   <link rel="preload" href="fonts/chillax-400.woff2" as="font" type="font/woff2" crossorigin />
-  <link rel="stylesheet" href="css/style.css?v=49" />
+  <link rel="stylesheet" href="css/style.css?v=50" />
+
 </head>
 <body>
   <a class="pular" href="#conteudo">Saltar al contenido</a>
@@ -67,7 +78,7 @@
        ========================================================================== -->
   <header class="barra" id="topo">
     <a class="barra__marca" href="#inicio">
-      <img src="images/logo.webp" alt="" width="36" height="36" />
+      <img src="images/logo-128.webp" alt="" width="36" height="36" />
       <span translate="no">Amazon Visto</span>
     </a>
     <nav class="barra__nav" id="navegacao" aria-label="Navegación principal">
@@ -129,7 +140,9 @@
 
       <figure class="capa__foto">
         <img
-          src="images/banner.webp"
+          src="images/banner-1280.webp"
+          srcset="images/banner-640.webp 640w, images/banner-960.webp 960w, images/banner-1280.webp 1280w, images/banner-1600.webp 1600w, images/banner-1920.webp 1920w"
+          sizes="(min-width: 1440px) 84vw, (min-width: 768px) 98vw, 150vw"
           alt="Avión en la pista del aeropuerto al atardecer"
           width="1920"
           height="1281"
@@ -141,7 +154,7 @@
         <div class="conversa__janela">
           <!-- TROCAR: horário real de atendimento (a presença usa seg. a sex., 9h às 18h, hora de Manaus) -->
           <div class="conversa__topo">
-            <img src="images/logo.webp" alt="" width="44" height="44" />
+            <img src="images/logo-128.webp" alt="" width="44" height="44" />
             <p>
               <strong translate="no">Amazon Visto</strong>
               <span
@@ -250,7 +263,7 @@
         <article class="ficha" id="visto-americano" aria-labelledby="titulo-visto-americano">
           <div class="ficha__visual">
             <figure class="ficha__foto obturador" style="--foco: 0% 50%">
-              <img src="assets/passport-boarding-pass.webp" alt="Pasaporte y tarjeta de embarque sobre la mesa" width="1024" height="773" loading="lazy" />
+              <img src="assets/passport-boarding-pass-800.webp" srcset="assets/passport-boarding-pass-480.webp 480w, assets/passport-boarding-pass-800.webp 800w, assets/passport-boarding-pass-1024.webp 1024w" sizes="(min-width: 1024px) 21vw, (min-width: 768px) 40vw, 90vw" alt="Pasaporte y tarjeta de embarque sobre la mesa" width="1024" height="773" loading="lazy" />
             </figure>
             <svg class="carimbo ficha__carimbo" viewBox="0 0 120 120" aria-hidden="true" focusable="false"><defs><path id="anel-visto-americano" d="M 17,60 a 43,43 0 1,1 86,0 a 43,43 0 1,1 -86,0" /></defs><circle cx="60" cy="60" r="56" /><circle cx="60" cy="60" r="31" /><text><textPath href="#anel-visto-americano" textLength="266" lengthAdjust="spacing">ESTADOS UNIDOS · AMAZON VISTO · MANAUS ·</textPath></text><use href="#visto" x="41" y="49" width="38" height="24" /></svg>
           </div>
@@ -292,7 +305,7 @@
         <article class="ficha" id="visto-canadense" aria-labelledby="titulo-visto-canadense">
           <div class="ficha__visual">
             <figure class="ficha__foto">
-              <img src="images/produto-2.webp" alt="Toronto al atardecer, con la CN Tower" width="800" height="800" loading="lazy" />
+              <img src="images/produto-2-800.webp" srcset="images/produto-2-480.webp 480w, images/produto-2-800.webp 800w" sizes="(min-width: 1024px) 21vw, (min-width: 768px) 40vw, 90vw" alt="Toronto al atardecer, con la CN Tower" width="800" height="800" loading="lazy" />
             </figure>
             <svg class="carimbo ficha__carimbo" viewBox="0 0 120 120" aria-hidden="true" focusable="false"><defs><path id="anel-visto-canadense" d="M 17,60 a 43,43 0 1,1 86,0 a 43,43 0 1,1 -86,0" /></defs><circle cx="60" cy="60" r="56" /><circle cx="60" cy="60" r="31" /><text><textPath href="#anel-visto-canadense" textLength="266" lengthAdjust="spacing">CANADÁ · AMAZON VISTO · MANAUS ·</textPath></text><use href="#visto" x="41" y="49" width="38" height="24" /></svg>
           </div>
@@ -326,7 +339,7 @@
         <article class="ficha" id="visto-chines" aria-labelledby="titulo-visto-chines">
           <div class="ficha__visual">
             <figure class="ficha__foto">
-              <img src="images/produto-3.webp" alt="La Gran Muralla China entre montañas" width="800" height="800" loading="lazy" />
+              <img src="images/produto-3-800.webp" srcset="images/produto-3-480.webp 480w, images/produto-3-800.webp 800w" sizes="(min-width: 1024px) 21vw, (min-width: 768px) 40vw, 90vw" alt="La Gran Muralla China entre montañas" width="800" height="800" loading="lazy" />
             </figure>
             <svg class="carimbo ficha__carimbo" viewBox="0 0 120 120" aria-hidden="true" focusable="false"><defs><path id="anel-visto-chines" d="M 17,60 a 43,43 0 1,1 86,0 a 43,43 0 1,1 -86,0" /></defs><circle cx="60" cy="60" r="56" /><circle cx="60" cy="60" r="31" /><text><textPath href="#anel-visto-chines" textLength="266" lengthAdjust="spacing">CHINA · AMAZON VISTO · MANAUS ·</textPath></text><use href="#visto" x="41" y="49" width="38" height="24" /></svg>
           </div>
@@ -360,7 +373,7 @@
         <article class="ficha" id="visto-peruano" aria-labelledby="titulo-visto-peruano">
           <div class="ficha__visual">
             <figure class="ficha__foto">
-              <img src="images/produto-4.webp" alt="Machu Picchu, en Perú, entre las montañas" width="800" height="800" loading="lazy" />
+              <img src="images/produto-4-800.webp" srcset="images/produto-4-480.webp 480w, images/produto-4-800.webp 800w" sizes="(min-width: 1024px) 21vw, (min-width: 768px) 40vw, 90vw" alt="Machu Picchu, en Perú, entre las montañas" width="800" height="800" loading="lazy" />
             </figure>
             <svg class="carimbo ficha__carimbo" viewBox="0 0 120 120" aria-hidden="true" focusable="false"><defs><path id="anel-visto-peruano" d="M 17,60 a 43,43 0 1,1 86,0 a 43,43 0 1,1 -86,0" /></defs><circle cx="60" cy="60" r="56" /><circle cx="60" cy="60" r="31" /><text><textPath href="#anel-visto-peruano" textLength="266" lengthAdjust="spacing">PERÚ · AMAZON VISTO · MANAUS ·</textPath></text><use href="#visto" x="41" y="49" width="38" height="24" /></svg>
           </div>
@@ -394,7 +407,7 @@
         <article class="ficha" id="passaporte-brasileiro" aria-labelledby="titulo-passaporte-brasileiro">
           <div class="ficha__visual">
             <figure class="ficha__foto">
-              <img src="images/produto-5.webp" alt="Río de Janeiro visto desde lo alto, con las montañas al fondo" width="800" height="800" loading="lazy" />
+              <img src="images/produto-5-800.webp" srcset="images/produto-5-480.webp 480w, images/produto-5-800.webp 800w" sizes="(min-width: 1024px) 21vw, (min-width: 768px) 40vw, 90vw" alt="Río de Janeiro visto desde lo alto, con las montañas al fondo" width="800" height="800" loading="lazy" />
             </figure>
             <svg class="carimbo ficha__carimbo" viewBox="0 0 120 120" aria-hidden="true" focusable="false"><defs><path id="anel-passaporte-brasileiro" d="M 17,60 a 43,43 0 1,1 86,0 a 43,43 0 1,1 -86,0" /></defs><circle cx="60" cy="60" r="56" /><circle cx="60" cy="60" r="31" /><text><textPath href="#anel-passaporte-brasileiro" textLength="266" lengthAdjust="spacing">BRASIL · PASAPORTE · MANAUS ·</textPath></text><use href="#visto" x="41" y="49" width="38" height="24" /></svg>
           </div>
@@ -428,7 +441,7 @@
         <article class="ficha" id="intercambio" aria-labelledby="titulo-intercambio">
           <div class="ficha__visual">
             <figure class="ficha__foto">
-              <img src="images/produto-6.webp" alt="Estudiantes en un aula" width="800" height="800" loading="lazy" />
+              <img src="images/produto-6-800.webp" srcset="images/produto-6-480.webp 480w, images/produto-6-800.webp 800w" sizes="(min-width: 1024px) 21vw, (min-width: 768px) 40vw, 90vw" alt="Estudiantes en un aula" width="800" height="800" loading="lazy" />
             </figure>
             <svg class="carimbo ficha__carimbo" viewBox="0 0 120 120" aria-hidden="true" focusable="false"><defs><path id="anel-intercambio" d="M 17,60 a 43,43 0 1,1 86,0 a 43,43 0 1,1 -86,0" /></defs><circle cx="60" cy="60" r="56" /><circle cx="60" cy="60" r="31" /><text><textPath href="#anel-intercambio" textLength="266" lengthAdjust="spacing">INTERCAMBIO · AMAZON VISTO · MANAUS ·</textPath></text><use href="#visto" x="41" y="49" width="38" height="24" /></svg>
           </div>
@@ -470,7 +483,7 @@
       <ol class="fio" role="list">
         <li class="fala entrada"><p>Fuimos <strong>Empresa del Año en 2025</strong> y <strong>Empresa Destacada en 2026</strong>.</p></li>
         <li class="fala fala--foto entrada">
-          <img src="assets/teatro-amazonas-atualmente-01.jpg" alt="El Teatro Amazonas, en el Centro de Manaus" width="1920" height="1280" loading="lazy" />
+          <img src="assets/teatro-amazonas-atualmente-01-960.webp" srcset="assets/teatro-amazonas-atualmente-01-480.webp 480w, assets/teatro-amazonas-atualmente-01-960.webp 960w" sizes="(min-width: 1024px) 464px, (min-width: 768px) 60vw, 72vw" alt="El Teatro Amazonas, en el Centro de Manaus" width="1920" height="1280" loading="lazy" />
           <p>Desde el Centro de Manaus atendemos a todo Brasil y a América Latina.</p>
         </li>
         <li class="fala entrada"><p>Ya ayudamos a miles de clientes, y <strong><span data-contar>55,7 mil</span> personas</strong> nos siguen en Instagram.</p></li>
@@ -488,7 +501,7 @@
       <div class="sobre__painel">
         <h2 id="titulo-sobre" class="entrada">Líder en el Norte de Brasil</h2>
         <figure class="sobre__foto entrada">
-          <img src="images/sobre.webp" alt="La oficina de Amazon Visto en el Centro de Manaus" width="900" height="1100" loading="lazy" />
+          <img src="images/sobre-900.webp" srcset="images/sobre-480.webp 480w, images/sobre-900.webp 900w" sizes="(min-width: 1024px) 38vw, (min-width: 768px) 55vw, 62vw" alt="La oficina de Amazon Visto en el Centro de Manaus" width="900" height="1100" loading="lazy" />
         </figure>
         <div class="sobre__textos">
           <div class="entrada">
@@ -611,7 +624,9 @@
     <section class="visita" id="visite" aria-labelledby="titulo-visita">
       <img
         class="visita__foto"
-        src="assets/ponte-rio-negro-manaus-brasil.jpg"
+        src="assets/ponte-rio-negro-manaus-brasil-1280.webp"
+        srcset="assets/ponte-rio-negro-manaus-brasil-640.webp 640w, assets/ponte-rio-negro-manaus-brasil-960.webp 960w, assets/ponte-rio-negro-manaus-brasil-1280.webp 1280w, assets/ponte-rio-negro-manaus-brasil-1600.webp 1600w, assets/ponte-rio-negro-manaus-brasil-1920.webp 1920w"
+        sizes="(max-width: 767px) 111vw, 100vw"
         alt="Manaus vista desde lo alto, con el Puente Río Negro al fondo"
         width="1920"
         height="1275"
@@ -643,15 +658,33 @@
           rel="noopener"
         >Abrir en el mapa</a>
       </div>
-      <!-- O mapa do Google com o endereço (incorporação sem chave). -->
+      <!-- O mapa: a imagem do OpenStreetMap (scripts/gerar-mapa.py) com o
+           pino no endereço. O Google Maps interativo só carrega quando a
+           pessoa pede (main.js, "ativarMapa"), para a página não levar os
+           scripts e os cookies do Google sem precisar; sem JS, o mesmo link
+           abre o Google Maps numa aba nova. -->
       <div class="visita__mapa entrada">
-        <iframe
-          src="https://www.google.com/maps?q=Rua%20Costa%20Azevedo,%209,%20Centro,%20Manaus%20-%20AM&amp;z=16&amp;output=embed"
-          title="Mapa: Rua Costa Azevedo, 9, Centro, Manaus-AM"
+        <img
+          class="visita__mapa-imagem"
+          src="images/mapa-centro.webp"
+          alt="Mapa del Centro de Manaus con la dirección marcada en la Rua Costa Azevedo, junto al Largo de São Sebastião"
+          width="632"
+          height="632"
           loading="lazy"
-          referrerpolicy="no-referrer-when-downgrade"
-          allowfullscreen
-        ></iframe>
+        />
+        <svg class="visita__pino" viewBox="0 0 28 38" aria-hidden="true" focusable="false">
+          <path d="M14 36.5S2.5 22.4 2.5 14a11.5 11.5 0 0 1 23 0c0 8.4-11.5 22.5-11.5 22.5Z" />
+          <circle cx="14" cy="14" r="4.4" />
+        </svg>
+        <a
+          class="botao botao--pequeno visita__mapa-abrir"
+          href="https://www.google.com/maps?q=Rua%20Costa%20Azevedo,%209,%20Centro,%20Manaus%20-%20AM"
+          target="_blank"
+          rel="noopener"
+          data-mapa="https://www.google.com/maps?q=Rua%20Costa%20Azevedo,%209,%20Centro,%20Manaus%20-%20AM&amp;z=16&amp;output=embed"
+          data-titulo="Mapa: Rua Costa Azevedo, 9, Centro, Manaus-AM"
+        >Ver en el mapa de Google</a>
+        <a class="visita__mapa-credito" href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">© Colaboradores de OpenStreetMap</a>
       </div>
     </section>
 
@@ -947,7 +980,7 @@
         <path d="M0 24V24C0 10.7 22.4 0 50 0S100 10.7 100 24C100 10.7 122.4 0 150 0S200 10.7 200 24C200 10.7 222.4 0 250 0S300 10.7 300 24C300 10.7 322.4 0 350 0S400 10.7 400 24C400 10.7 422.4 0 450 0S500 10.7 500 24C500 10.7 522.4 0 550 0S600 10.7 600 24C600 10.7 622.4 0 650 0S700 10.7 700 24C700 10.7 722.4 0 750 0S800 10.7 800 24C800 10.7 822.4 0 850 0S900 10.7 900 24C900 10.7 922.4 0 950 0S1000 10.7 1000 24C1000 10.7 1022.4 0 1050 0S1100 10.7 1100 24C1100 10.7 1122.4 0 1150 0S1200 10.7 1200 24Z" />
       </svg>
       <div class="verso__selos" aria-hidden="true">
-        <img class="verso__selo" src="assets/teatro-amazonas-atualmente-01.jpg" alt="" width="1920" height="1280" loading="lazy" />
+        <img class="verso__selo" src="assets/teatro-amazonas-atualmente-01-480.webp" srcset="assets/teatro-amazonas-atualmente-01-480.webp 480w, assets/teatro-amazonas-atualmente-01-960.webp 960w" sizes="(min-width: 768px) 202px, 46vw" alt="" width="1920" height="1280" loading="lazy" />
         <svg class="carimbo verso__carimbo" viewBox="0 0 120 120" focusable="false"><defs><path id="anel-postal" d="M 17,60 a 43,43 0 1,1 86,0 a 43,43 0 1,1 -86,0" /></defs><circle cx="60" cy="60" r="56" /><circle cx="60" cy="60" r="31" /><text><textPath href="#anel-postal" textLength="266" lengthAdjust="spacing">MANAUS-AM · AMAZON VISTO ·</textPath></text><use href="#visto" x="41" y="49" width="38" height="24" /></svg>
       </div>
 
@@ -999,10 +1032,11 @@
           Desarrollado por <a href="https://wa.me/5592992162419" target="_blank" rel="noopener">Daniel Cardoso</a>.
         </p>
         <p>
-          Fotos y video: <a href="https://commons.wikimedia.org/w/index.php?curid=43878206">Teatro Amazonas</a>, por Karine Hermes, <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>;
+          Fotos, video y mapa: <a href="https://commons.wikimedia.org/w/index.php?curid=43878206">Teatro Amazonas</a>, por Karine Hermes, <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>;
           <a href="https://commons.wikimedia.org/wiki/File:Ponte_Rio_Negro_Manaus_Brasil.jpg">Puente Río Negro</a>, por Ana Claudia Jatahy (MTUR), CC0;
           <a href="https://www.rawpixel.com/image/6020363/photo-image-public-domain-blue-business">pasaporte y tarjeta de embarque</a>, CC0, via rawpixel;
-          <a href="https://commons.wikimedia.org/wiki/File:Clouds_from_Airplane_Window_1_2016-08-29.webm">nubes desde la ventana del avión</a>, por F Astily, <a href="https://creativecommons.org/licenses/by-sa/4.0">CC BY-SA 4.0</a>, via Wikimedia Commons.
+          <a href="https://commons.wikimedia.org/wiki/File:Clouds_from_Airplane_Window_1_2016-08-29.webm">nubes desde la ventana del avión</a>, por F Astily, <a href="https://creativecommons.org/licenses/by-sa/4.0">CC BY-SA 4.0</a>, via Wikimedia Commons;
+          mapa del Centro, <a href="https://www.openstreetmap.org/copyright">© Colaboradores de OpenStreetMap</a>, ODbL.
           Fuente Chillax, de Indian Type Foundry, vía Fontshare.
         </p>
         <a class="verso__topo" href="#inicio">Volver al inicio</a>
@@ -1024,6 +1058,6 @@
     </svg>
   </a>
 
-  <script src="js/main.js?v=49"></script>
+  <script src="js/main.js?v=50"></script>
 </body>
 </html>

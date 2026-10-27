@@ -19,9 +19,14 @@
     "bytes": 718506,
     "credit": "\"Teatro Amazonas Atualmente 01\" by Karine Hermes, CC BY-SA 4.0, via Wikimedia Commons",
     "notes": [
-      "Share-alike: an altered version (recoloured, combined with other pictures) must be shared under the same licence."
+      "Share-alike: an altered version (recoloured, combined with other pictures) must be shared under the same licence.",
+      "The page uses the resized WebP versions (scripts/gerar-imagens.py); the original stays as the master."
     ],
-    "saved": "2026-10-25T04:34:47.121Z"
+    "saved": "2026-10-25T04:34:47.121Z",
+    "versions": [
+      "assets/teatro-amazonas-atualmente-01-480.webp",
+      "assets/teatro-amazonas-atualmente-01-960.webp"
+    ]
   },
   {
     "file": "assets/ponte-rio-negro-manaus-brasil.jpg",
@@ -42,8 +47,17 @@
     "height": 1275,
     "bytes": 599143,
     "credit": "\"Ponte Rio Negro Manaus Brasil\" by Ana Claudia Jatahy - MTUR, CC0, via Wikimedia Commons",
-    "notes": [],
-    "saved": "2026-10-25T04:34:48.619Z"
+    "notes": [
+      "The page uses the resized WebP versions (scripts/gerar-imagens.py); the original stays as the master."
+    ],
+    "saved": "2026-10-25T04:34:48.619Z",
+    "versions": [
+      "assets/ponte-rio-negro-manaus-brasil-640.webp",
+      "assets/ponte-rio-negro-manaus-brasil-960.webp",
+      "assets/ponte-rio-negro-manaus-brasil-1280.webp",
+      "assets/ponte-rio-negro-manaus-brasil-1600.webp",
+      "assets/ponte-rio-negro-manaus-brasil-1920.webp"
+    ]
   },
   {
     "file": "assets/belize-passport-stamp.jpg",
@@ -138,7 +152,34 @@
     "height": 773,
     "bytes": 286250,
     "credit": "\"Passport boarding pass\", CC0, via rawpixel",
-    "notes": [],
-    "saved": "2026-10-25T04:35:40.989Z"
+    "notes": [
+      "The page uses the resized WebP versions (scripts/gerar-imagens.py); the original stays as the master."
+    ],
+    "saved": "2026-10-25T04:35:40.989Z",
+    "versions": [
+      "assets/passport-boarding-pass-480.webp",
+      "assets/passport-boarding-pass-800.webp",
+      "assets/passport-boarding-pass-1024.webp"
+    ]
+  },
+  {
+    "file": "images/mapa-centro.webp",
+    "media": "image",
+    "title": "Mapa do Centro de Manaus (Rua Costa Azevedo)",
+    "creator": "Colaboradores do OpenStreetMap",
+    "creatorUrl": "https://www.openstreetmap.org/copyright",
+    "license": "ODbL 1.0",
+    "licenseCode": "odbl",
+    "licenseUrl": "https://opendatacommons.org/licenses/odbl/1-0/",
+    "creditRequired": true,
+    "page": "https://www.openstreetmap.org/#map=17/-3.130189/-60.02228",
+    "via": "OpenStreetMap (tile.openstreetmap.org, zoom 17)",
+    "width": 632,
+    "height": 632,
+    "credit": "© Colaboradores do OpenStreetMap, ODbL",
+    "notes": [
+      "Nine standard tiles joined, cropped around the address and recoloured in the site's ink and paper (scripts/gerar-mapa.py). The pin is drawn in the HTML."
+    ],
+    "saved": "2026-10-27T12:00:00.000Z"
   }
 ]

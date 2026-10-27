@@ -155,12 +155,24 @@ precisa virar conteúdo real do cliente está marcado com um comentário
 
 ### 2.5. Imagens
 
-Troque os arquivos dentro de `images/` **mantendo o mesmo nome**, e o site
-já usa a imagem nova automaticamente (não precisa editar o HTML):
+Cada foto tem um arquivo **mestre** (a tabela abaixo e as fotos de
+`assets/`) e versões menores em WebP ao lado dele (`banner-640.webp`,
+`banner-960.webp`…), que são as que a página usa: no `srcset` de cada
+`<img>`, o navegador escolhe a menor que basta para o tamanho da foto na
+tela, então o celular não baixa a foto de 1920px. Para trocar uma foto,
+troque o mestre **mantendo o mesmo nome** e gere as versões de novo:
 
-| Arquivo | Onde aparece | Tamanho recomendado |
+```bash
+pip install pillow
+python scripts/gerar-imagens.py
+```
+
+As larguras de cada foto ficam no próprio script (foto nova = uma linha
+nele e o `srcset` no HTML).
+
+| Arquivo (mestre) | Onde aparece | Tamanho recomendado |
 |---|---|---|
-| `logo.webp` | Barra, conversa da capa | Quadrado, ~160×160px |
+| `logo.webp` | Barra, conversa da capa (a página usa o `logo-128.webp`) | Quadrado, 320×320px |
 | `favicon.png` | Aba do navegador | Quadrado, 64×64px |
 | `banner.webp` | Capa, ao lado da página do passaporte | 1920×1281px (paisagem) |
 | `sobre.webp` | Seção "Quem somos" (recortada no balão) | 900×1100px (retrato) |
@@ -216,16 +228,22 @@ usar, credite no rodapé.
 - **Redes sociais**: no rodapé, troque `href="https://instagram.com/"` e
   `href="https://facebook.com/"` pelos perfis reais. Se alguma rede não
   existir, apague a tag `<a>` inteira daquele ícone.
-- **Mapa (Google Maps)**: a forma mais simples é trocar só o endereço na URL
-  do `iframe` da seção Contato:
-  ```html
-  <iframe src="https://www.google.com/maps?q=SEU+ENDEREÇO+AQUI&output=embed" ...>
-  ```
-  Troque `SEU+ENDEREÇO+AQUI` pelo endereço do cliente (espaços viram `+`).
-  Para um resultado mais preciso (pino exato, não só busca por texto), use o
-  método oficial: no Google Maps, busque o endereço → **Compartilhar** →
-  **Incorporar um mapa** → copie o código e cole todo o `<iframe>` no lugar
-  do atual.
+- **Mapa**: no "Visite a gente" aparece primeiro uma imagem do mapa
+  (`images/mapa-centro.webp`, do OpenStreetMap, nas cores do site, com o
+  pino no centro); o Google Maps interativo só carrega quando a pessoa toca
+  em "Ver no mapa do Google", para a página não levar os scripts e os
+  cookies do Google de graça. Para mudar o endereço:
+  1. Troque o endereço nos links do Google Maps do `index.html` (o
+     `q=` do botão do mapa, do seu `data-mapa` e do "Abrir no mapa"; espaços
+     viram `%20`).
+  2. Troque `LAT` e `LON` (o ponto do pino) em `scripts/gerar-mapa.py` e
+     rode `python scripts/gerar-mapa.py`, que baixa os quadrados do
+     OpenStreetMap e gera a imagem de novo.
+  3. Troque o `geo` (as mesmas coordenadas) e o endereço nos dados para o
+     Google (`application/ld+json`, no `<head>`).
+
+  O crédito "© Colaboradores do OpenStreetMap" é obrigatório (licença ODbL)
+  e já está na imagem e no rodapé.
 
 ### 2.7. SEO e Open Graph (aparência no Google e ao compartilhar o link)
 
@@ -237,12 +255,18 @@ No `<head>` do `index.html`:
 ...
 <meta property="og:title" content="..." />
 <meta property="og:description" content="..." />
-<meta property="og:image" content="images/og-image.jpg" />
+<meta property="og:image" content="https://www.dominio-real-do-cliente.com.br/images/og-image.jpg" />
 <meta property="og:url" content="https://www.dominio-real-do-cliente.com.br/" />
 ```
 
-`og:url` precisa ser a URL final de produção — atualize depois do deploy
-(seção 3).
+O `og:image` e o `og:url` precisam ser endereços completos (o WhatsApp e o
+Facebook não acham um caminho relativo). Logo abaixo ficam o `canonical` e
+os `hreflang` (que ligam a versão em português à em espanhol) e, no fim do
+`<head>`, os dados para o Google em JSON-LD (agência de viagem: endereço,
+telefones, horário, coordenadas, Instagram e serviços), que ajudam a
+empresa a aparecer na busca local e no mapa. Os mesmos dados que estão na
+página; ao mudar telefone, horário ou endereço, mude lá também. Para trocar
+o domínio, veja a seção 4d.
 
 ### 2.8. Favicon "de verdade" antes de entregar
 
@@ -386,8 +410,27 @@ par `[português, espanhol]` nessa lista.
 O navegador guarda o `style.css` e o `main.js` para não baixar de novo a
 cada visita. Por isso, **sempre que mudar `css/style.css` ou `js/main.js`,
 aumente o número do `?v=`** nos dois `<link>`/`<script>` do `index.html`
-(ex.: `style.css?v=46` → `?v=47`) e rode o `gerar-es.mjs`. Sem isso, quem já
-visitou o site continua vendo o visual antigo com o HTML novo.
+(ex.: `style.css?v=46` → `?v=47`) e no `404.html`, e rode o `gerar-es.mjs`.
+Sem isso, quem já visitou o site continua vendo o visual antigo com o HTML
+novo.
+
+## 4d. Trocar o domínio
+
+O site diz ao Google e às redes qual é o endereço dele: hoje,
+`https://cardosodan.github.io/AmazonVisto/`. Ao passar para o domínio
+próprio, faça um Buscar-e-substituir desse endereço pelo novo (com a barra
+no fim) nestes arquivos, e rode o `gerar-es.mjs`:
+
+- `index.html`: `canonical`, os três `hreflang`, `og:image`, `og:url` e os
+  dados para o Google (`url`, `logo`, `image` no `application/ld+json`);
+- `scripts/gerar-es.mjs`: o `og:url` e o `canonical` da versão em espanhol;
+- `404.html`: o `<base>`;
+- `robots.txt` e `sitemap.xml`.
+
+No GitHub Pages de um repositório (`usuario.github.io/Repositorio/`), o
+Google só lê o `robots.txt` da raiz do domínio, então o deste projeto só
+passa a valer no domínio próprio; até lá, envie o `sitemap.xml` pelo
+Google Search Console.
 
 ## 5. Checklist antes de entregar para o cliente
 

@@ -28,6 +28,7 @@ document.addEventListener("DOMContentLoaded", () => {
   ativarContadores();
   ativarObturador();
   ativarVideos();
+  ativarMapa();
   ativarBotaoFlutuante();
   ativarFotosSuaves();
 });
@@ -656,6 +657,29 @@ function ativarVideos() {
   videos.forEach((v) => {
     v.muted = true;
     observador.observe(v);
+  });
+}
+
+/* --------------------------------------------------------------------------
+   11b. O MAPA DO "VISITE A GENTE"
+   A imagem do OpenStreetMap vira o Google Maps interativo só quando a
+   pessoa pede: o link, que sem JS abre o Google Maps numa aba nova, aqui
+   carrega o mapa no lugar da imagem e passa o foco para ele. Com Ctrl,
+   Cmd, Shift ou o botão do meio, continua abrindo numa aba nova.
+   -------------------------------------------------------------------------- */
+function ativarMapa() {
+  const link = document.querySelector("[data-mapa]");
+  if (!link) return;
+  link.addEventListener("click", (evento) => {
+    if (evento.button !== 0 || evento.ctrlKey || evento.metaKey || evento.shiftKey || evento.altKey) return;
+    evento.preventDefault();
+    const mapa = document.createElement("iframe");
+    mapa.src = link.dataset.mapa;
+    mapa.title = link.dataset.titulo;
+    mapa.referrerPolicy = "no-referrer-when-downgrade";
+    mapa.allowFullscreen = true;
+    link.parentElement.replaceChildren(mapa);
+    mapa.focus();
   });
 }
 

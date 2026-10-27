@@ -1741,7 +1741,9 @@ svg use,
   margin-top: 1.1rem;
 }
 
-/* O mapa do Google, numa moldura de papel, como um mapa impresso. */
+/* O mapa numa moldura de papel, como um mapa impresso: primeiro a imagem
+   do OpenStreetMap em tinta e papel, com o pino; no toque do botão, o
+   Google Maps interativo entra no lugar dela (main.js, "ativarMapa"). */
 .visita__mapa {
   position: relative;
   margin: 16px var(--margem) 0;
@@ -1750,7 +1752,8 @@ svg use,
   background: var(--papel) var(--grao);
 }
 
-.visita__mapa iframe {
+.visita__mapa iframe,
+.visita__mapa-imagem {
   display: block;
   width: 100%;
   height: 300px;
@@ -1759,7 +1762,56 @@ svg use,
   background: var(--papel-2);
 }
 
+/* O endereço fica no centro da imagem, e o cover recorta por igual. */
+.visita__mapa-imagem {
+  object-fit: cover;
+}
+
+/* O pino é da Amazon Visto (dourado é a voz dela), com a ponta no centro. */
+.visita__pino {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 28px;
+  height: 38px;
+  transform: translate(-50%, -100%);
+  fill: var(--ouro);
+  stroke: var(--noite);
+  stroke-width: 1.6;
+}
+
+.visita__pino circle {
+  fill: var(--noite);
+  stroke: none;
+}
+
+.visita__mapa-abrir {
+  position: absolute;
+  left: 18px;
+  bottom: 18px;
+  background: var(--noite);
+  color: var(--papel);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .visita__mapa-abrir:hover {
+    background: var(--tinta);
+  }
+}
+
+.visita__mapa-credito {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  padding: 0.15rem 0.55rem 0.2rem;
+  border-radius: 0 0 0 var(--canto-papel);
+  background: var(--papel);
+  color: var(--tinta);
+  font-size: var(--t-pequeno);
+}
+
 .cartao-visita :focus-visible,
+.visita__mapa :focus-visible,
 .embarque :focus-visible,
 .verso :focus-visible,
 .capa__cartao :focus-visible {
@@ -1783,7 +1835,8 @@ svg use,
     margin: 0;
   }
 
-  .visita__mapa iframe {
+  .visita__mapa iframe,
+  .visita__mapa-imagem {
     height: 100%;
     min-height: 420px;
   }
@@ -2686,6 +2739,61 @@ svg use,
   pointer-events: none;
   transform: scale(0.9) translateY(8px);
   transition: transform 0.16s ease, opacity 0.16s ease, visibility 0s linear 0.16s;
+}
+
+/* ==========================================================================
+   15b. PÁGINA 404 (404.html): o destino que não existe, com a volta ao
+   início e o WhatsApp; a listra fina do correio aéreo fecha a página, como
+   no rodapé.
+   ========================================================================== */
+.perdida {
+  display: grid;
+  grid-template-rows: 1fr auto;
+  min-height: 100vh; /* taste-skill-ignore: reserva para navegador sem svh; a linha de baixo vale */
+  min-height: 100svh;
+}
+
+.perdida__miolo {
+  display: grid;
+  align-content: center;
+  justify-items: start;
+  gap: 1.25rem;
+  width: min(100%, 40rem);
+  margin-inline: auto;
+  padding: var(--entre) var(--margem);
+}
+
+.perdida__miolo img {
+  border-radius: 50%;
+  background: var(--papel);
+}
+
+.perdida h1 {
+  font-size: var(--t-titulo);
+  font-weight: 600;
+  line-height: 1.04;
+  letter-spacing: -0.03em;
+}
+
+.perdida__acoes {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem 1.5rem;
+  margin-top: 0.5rem;
+}
+
+.perdida__inicio,
+.perdida__es a {
+  font-weight: 600;
+  text-decoration: underline;
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 4px;
+}
+
+.perdida__es {
+  color: var(--papel-suave);
+  font-size: var(--t-pequeno);
 }
 
 /* ==========================================================================

@@ -14,6 +14,10 @@ let h = readFileSync(new URL("index.html", raiz), "utf8");
 const nl = h.includes("\r\n") ? "\r\n" : "\n";
 h = h.replace(/\r\n/g, "\n");
 
+// Os dados para o Google (JSON-LD) ficam só na versão em português, que é
+// a página principal; a versão em espanhol aponta para ela pelo hreflang.
+h = h.replace(/\n  <!-- Dados para o Google[\s\S]*?<\/script>/, "");
+
 // --------------------------------------------------------------------------
 // Nomes dos serviços dentro das mensagens prontas do WhatsApp. Os mais
 // longos primeiro, para "Intercâmbio" não pegar antes do nome completo.
@@ -60,7 +64,9 @@ h = h.replace(new RegExp(`https://wa\\.me/${WHATSAPP_PT}\\?text=([^"]+)`, "g"), 
 const ESTRUTURA = [
   [`<html lang="pt-BR">`, `<html lang="es">`],
   [`<meta property="og:locale" content="pt_BR" />`, `<meta property="og:locale" content="es_LA" />`],
-  [`<meta property="og:url" content="https://www.amazonvisto.com.br/" />`, `<meta property="og:url" content="https://www.amazonvisto.com.br/es.html" />`],
+  [`<meta property="og:url" content="https://cardosodan.github.io/AmazonVisto/" />`, `<meta property="og:url" content="https://cardosodan.github.io/AmazonVisto/es.html" />`],
+  [`<meta property="og:locale:alternate" content="es_LA" />`, `<meta property="og:locale:alternate" content="pt_BR" />`],
+  [`<link rel="canonical" href="https://cardosodan.github.io/AmazonVisto/" />`, `<link rel="canonical" href="https://cardosodan.github.io/AmazonVisto/es.html" />`],
   // O seletor de idioma, na barra e no rodapé, passa a levar ao português.
   [
     `<a class="barra__idioma" href="es.html" hreflang="es" lang="es">Español</a>`,
@@ -102,10 +108,6 @@ const TEXTOS = [
   [
     "Assessoria completa em vistos (Americano, Canadense, Chinês, Peruano), passaporte brasileiro e intercâmbio. Atendimento presencial em Manaus-AM e Brasília-DF, e 100% online para todo o Brasil. Parcele em até 10x sem juros.",
     "Asesoría completa en visas (americana, canadiense, china, peruana), pasaporte brasileño e intercambio. Atención presencial en Manaus-AM y Brasilia-DF, y 100% en línea para Brasil y América Latina. Hasta 10 cuotas sin intereses.",
-  ],
-  [
-    "visto americano, visto canadense, visto chinês, passaporte, intercâmbio, Manaus, Brasília, assessoria de visto",
-    "visa americana, visa canadiense, visa china, visa peruana, pasaporte, intercambio, Manaus, Brasilia, asesoría de visas",
   ],
   ["Amazon Visto | Turismo, Estudo e Trabalho", "Amazon Visto | Turismo, Estudio y Trabajo"],
   [
@@ -395,7 +397,14 @@ const TEXTOS = [
   ["Reputação no Reclame Aqui", "Reputación en Reclame Aqui"],
   ["Todos os direitos reservados.", "Todos los derechos reservados."],
   ["Desenvolvido por", "Desarrollado por"],
-  ["Fotos e vídeo:", "Fotos y video:"],
+  ["Fotos, vídeo e mapa:", "Fotos, video y mapa:"],
+  ["mapa do Centro,", "mapa del Centro,"],
+  ["© Colaboradores do OpenStreetMap", "© Colaboradores de OpenStreetMap"],
+  [
+    "Mapa do Centro de Manaus com o endereço marcado na Rua Costa Azevedo, ao lado do Largo de São Sebastião",
+    "Mapa del Centro de Manaus con la dirección marcada en la Rua Costa Azevedo, junto al Largo de São Sebastião",
+  ],
+  [">Ver no mapa do Google<", ">Ver en el mapa de Google<"],
   [">passaporte e cartão de embarque</a>", ">pasaporte y tarjeta de embarque</a>"],
   [">nuvens pela janela do avião</a>", ">nubes desde la ventana del avión</a>"],
   ["Fonte Chillax, da Indian Type Foundry, via Fontshare.", "Fuente Chillax, de Indian Type Foundry, vía Fontshare."],
