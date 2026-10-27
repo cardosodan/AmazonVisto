@@ -168,7 +168,10 @@ python scripts/gerar-imagens.py
 ```
 
 As larguras de cada foto ficam no próprio script (foto nova = uma linha
-nele e o `srcset` no HTML).
+nele e o `srcset` no HTML). A foto da capa, que é a primeira coisa grande
+da página, ganha também versões AVIF (um terço menores), servidas por um
+`<picture>` e pré-carregadas no `<head>`; ao mudar as larguras dela, mude
+o `srcset` e o `sizes` nos dois lugares, que precisam ser iguais.
 
 | Arquivo (mestre) | Onde aparece | Tamanho recomendado |
 |---|---|---|

@@ -385,6 +385,7 @@ Curvas: `--ease-out` (pressão, chegadas, trocas), `--ease-expo` (entradas ao ro
 
 | Movimento | Onde | Valor |
 |---|---|---|
+| Chegada da capa | título, apoio, botão e selos da `.capa__cartao` | `capaChega` 0.6s `--ease-expo`, sobe 14px, 60ms entre um e outro; só CSS, no carregamento (o topo nunca espera o JS) |
 | Entrada ao rolar | `.entrada` | sobe 24px; opacidade 0.8s, transform 0.9s, `--ease-expo`; cascata de 75ms por seção (máx. 0.45s) |
 | Mensagem que chega | `.msg.chegando`, compositor, resposta das dúvidas | `chegar` 0.42s (0.36s no compositor e nas dúvidas), cresce do canto do rabinho |
 | Digitando | `.msg--digitando` | três pontos, 1s em loop, 0.15s de defasagem |

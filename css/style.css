@@ -688,6 +688,12 @@ svg use {
   border-radius: var(--canto-papel);
 }
 
+/* O <picture> só escolhe o formato (AVIF ou WebP): na caixa, a foto vale
+   como filha direta da figura. */
+.capa__foto picture {
+  display: contents;
+}
+
 .capa__foto img {
   width: 100%;
   height: 100%;
@@ -2983,6 +2989,25 @@ svg use {
    ativo e sem pedido de menos movimento.
    ========================================================================== */
 @media (prefers-reduced-motion: no-preference) {
+  /* A capa chega sozinha, sem esperar o JS (o resto da página entra ao
+     rolar): o título, o apoio, o botão e os selos sobem em cascata logo no
+     carregamento, para o topo nunca ficar em branco. */
+  .capa__cartao :is(h1, .capa__apoio, .botao, .capa__selos) {
+    animation: capaChega 0.6s var(--ease-expo) both;
+  }
+
+  .capa__cartao .capa__apoio {
+    animation-delay: 60ms;
+  }
+
+  .capa__cartao .botao {
+    animation-delay: 120ms;
+  }
+
+  .capa__cartao .capa__selos {
+    animation-delay: 180ms;
+  }
+
   .js .entrada {
     opacity: 0;
     transform: translateY(24px);
@@ -3101,6 +3126,13 @@ svg use {
   from {
     opacity: 0;
     transform: translateY(10px) scale(0.96);
+  }
+}
+
+@keyframes capaChega {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
   }
 }
 

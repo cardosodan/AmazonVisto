@@ -41,9 +41,13 @@
   <meta name="twitter:card" content="summary_large_image" />
 
   <link rel="icon" type="image/png" href="images/favicon.png" />
+  <!-- A foto da capa é a primeira coisa grande da página (o LCP): o
+       navegador começa a baixar a AVIF dela antes de ler o resto do HTML.
+       Mesmo srcset e sizes do <picture> da capa (senão baixa duas vezes). -->
+  <link rel="preload" as="image" type="image/avif" imagesrcset="images/banner-640.avif 640w, images/banner-960.avif 960w, images/banner-1280.avif 1280w, images/banner-1600.avif 1600w, images/banner-1920.avif 1920w" imagesizes="(min-width: 1440px) 84vw, (min-width: 768px) 98vw, 150vw" fetchpriority="high" />
   <link rel="preload" href="fonts/chillax-600.woff2" as="font" type="font/woff2" crossorigin />
   <link rel="preload" href="fonts/chillax-400.woff2" as="font" type="font/woff2" crossorigin />
-  <link rel="stylesheet" href="css/style.css?v=21d9f4782c" />
+  <link rel="stylesheet" href="css/style.css?v=207dc77c17" />
 
   <!-- Dados para o Google (busca local e mapa), os mesmos da página.
        TROCAR: o horário, quando a empresa confirmar (o mesmo do "Visite a
@@ -226,19 +230,19 @@
           <path d="M2 11h21M41 11h21M2 29h21M41 29h21" />
         </svg>
         <div class="capa__texto">
-          <h1 class="entrada">Seu visto, visto por nós</h1>
-          <p class="capa__apoio entrada">
+          <h1>Seu visto, visto por nós</h1>
+          <p class="capa__apoio">
             Assessoria de visto americano, canadense, chinês e peruano,
             passaporte e intercâmbio. Em Manaus, Brasília ou 100% online, em
             até 10x sem juros.
           </p>
           <a
-            class="botao botao--acao entrada"
+            class="botao botao--acao"
             href="https://wa.me/5592981265897?text=Ol%C3%A1!%20Vim%20pelo%20site%20e%20gostaria%20de%20mais%20informa%C3%A7%C3%B5es%20sobre%20visto."
             target="_blank"
             rel="noopener"
           >Conversar no WhatsApp</a>
-          <p class="capa__selos entrada">Empresa do Ano 2025 · Empresa Destaque 2026</p>
+          <p class="capa__selos">Empresa do Ano 2025 · Empresa Destaque 2026</p>
         </div>
         <div class="capa__pe" aria-hidden="true">
           <svg class="mrz capa__mrz" viewBox="0 0 600 44" preserveAspectRatio="none" focusable="false"><text x="0" y="16" textLength="600" lengthAdjust="spacingAndGlyphs">P&lt;BRAAMAZON&lt;&lt;VISTO&lt;MANAUS&lt;BRASILIA&lt;ONLINE&lt;&lt;&lt;</text><text x="0" y="38" textLength="600" lengthAdjust="spacingAndGlyphs">VISTOS&lt;PASSAPORTE&lt;INTERCAMBIO&lt;&lt;10X&lt;SEM&lt;JUROS</text></svg>
@@ -247,15 +251,18 @@
       </div>
 
       <figure class="capa__foto">
-        <img
-          src="images/banner-1280.webp"
-          srcset="images/banner-640.webp 640w, images/banner-960.webp 960w, images/banner-1280.webp 1280w, images/banner-1600.webp 1600w, images/banner-1920.webp 1920w"
-          sizes="(min-width: 1440px) 84vw, (min-width: 768px) 98vw, 150vw"
-          alt="Avião na pista do aeroporto ao entardecer"
-          width="1920"
-          height="1281"
-          fetchpriority="high"
-        />
+        <picture>
+          <source type="image/avif" srcset="images/banner-640.avif 640w, images/banner-960.avif 960w, images/banner-1280.avif 1280w, images/banner-1600.avif 1600w, images/banner-1920.avif 1920w" sizes="(min-width: 1440px) 84vw, (min-width: 768px) 98vw, 150vw" />
+          <img
+            src="images/banner-1280.webp"
+            srcset="images/banner-640.webp 640w, images/banner-960.webp 960w, images/banner-1280.webp 1280w, images/banner-1600.webp 1600w, images/banner-1920.webp 1920w"
+            sizes="(min-width: 1440px) 84vw, (min-width: 768px) 98vw, 150vw"
+            alt="Avião na pista do aeroporto ao entardecer"
+            width="1920"
+            height="1281"
+            fetchpriority="high"
+          />
+        </picture>
       </figure>
 
       <div class="conversa" id="conversa">

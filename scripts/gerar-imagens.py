@@ -9,6 +9,10 @@ versões, no srcset de cada <img>; o navegador escolhe a menor que basta
 para o tamanho da foto na tela e a densidade da tela. Para trocar uma foto,
 troque o mestre (mesmo nome) e rode de novo. As larguras saem das medidas
 da foto na tela de 390px a 1920px (cover incluído) e vão até 3x no celular.
+
+A foto da capa é a primeira coisa grande da página (o LCP): ela ganha
+também versões AVIF ("<nome>-<largura>.avif", um terço menores que as WebP
+no mesmo olho), servidas por um <picture> com a WebP de reserva.
 """
 from pathlib import Path
 
@@ -16,6 +20,7 @@ from PIL import Image
 
 RAIZ = Path(__file__).resolve().parent.parent
 QUALIDADE = 78
+QUALIDADE_AVIF = 50
 
 # mestre -> larguras das versões (nunca maiores que o próprio mestre)
 FOTOS = {
@@ -28,6 +33,9 @@ FOTOS = {
     **{f"images/produto-{n}.webp": [480, 800] for n in range(2, 7)},
 }
 
+# fotos que ganham também AVIF (as mesmas larguras)
+AVIF = {"images/banner.webp"}
+
 
 def gerar(mestre: Path, larguras: list[int]) -> None:
     with Image.open(mestre) as foto:
@@ -36,10 +44,14 @@ def gerar(mestre: Path, larguras: list[int]) -> None:
         for largura in larguras:
             largura = min(largura, foto.width)
             altura = round(foto.height * largura / foto.width)
-            saida = mestre.with_name(f"{mestre.stem}-{largura}.webp")
             versao = foto if largura == foto.width else foto.resize((largura, altura), Image.LANCZOS)
-            versao.save(saida, "WEBP", quality=QUALIDADE, method=6)
-            print(f"{saida.relative_to(RAIZ)}  {largura}x{altura}  {saida.stat().st_size // 1024} KB")
+            formatos = [("webp", "WEBP", {"quality": QUALIDADE, "method": 6})]
+            if mestre.relative_to(RAIZ).as_posix() in AVIF:
+                formatos.append(("avif", "AVIF", {"quality": QUALIDADE_AVIF}))
+            for extensao, formato, opcoes in formatos:
+                saida = mestre.with_name(f"{mestre.stem}-{largura}.{extensao}")
+                versao.save(saida, formato, **opcoes)
+                print(f"{saida.relative_to(RAIZ)}  {largura}x{altura}  {saida.stat().st_size // 1024} KB")
 
 
 if __name__ == "__main__":

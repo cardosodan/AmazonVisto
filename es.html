@@ -44,9 +44,13 @@
   <meta name="twitter:card" content="summary_large_image" />
 
   <link rel="icon" type="image/png" href="images/favicon.png" />
+  <!-- A foto da capa é a primeira coisa grande da página (o LCP): o
+       navegador começa a baixar a AVIF dela antes de ler o resto do HTML.
+       Mesmo srcset e sizes do <picture> da capa (senão baixa duas vezes). -->
+  <link rel="preload" as="image" type="image/avif" imagesrcset="images/banner-640.avif 640w, images/banner-960.avif 960w, images/banner-1280.avif 1280w, images/banner-1600.avif 1600w, images/banner-1920.avif 1920w" imagesizes="(min-width: 1440px) 84vw, (min-width: 768px) 98vw, 150vw" fetchpriority="high" />
   <link rel="preload" href="fonts/chillax-600.woff2" as="font" type="font/woff2" crossorigin />
   <link rel="preload" href="fonts/chillax-400.woff2" as="font" type="font/woff2" crossorigin />
-  <link rel="stylesheet" href="css/style.css?v=21d9f4782c" />
+  <link rel="stylesheet" href="css/style.css?v=207dc77c17" />
 
 </head>
 <body>
@@ -120,17 +124,17 @@
           <path d="M2 11h21M41 11h21M2 29h21M41 29h21" />
         </svg>
         <div class="capa__texto">
-          <h1 class="entrada">Tu visa, vista por nosotros</h1>
-          <p class="capa__apoio entrada">
+          <h1>Tu visa, vista por nosotros</h1>
+          <p class="capa__apoio">
             Asesoría de visa americana, canadiense, china y peruana, pasaporte e intercambio. En Manaus, Brasilia o 100% en línea, en hasta 10 cuotas sin intereses.
           </p>
           <a
-            class="botao botao--acao entrada"
+            class="botao botao--acao"
             href="https://wa.me/51939125188?text=%C2%A1Hola!%20Vengo%20del%20sitio%20web%20y%20me%20gustar%C3%ADa%20m%C3%A1s%20informaci%C3%B3n%20sobre%20visas."
             target="_blank"
             rel="noopener"
           >Conversar por WhatsApp</a>
-          <p class="capa__selos entrada">Empresa del Año 2025 · Empresa Destacada 2026</p>
+          <p class="capa__selos">Empresa del Año 2025 · Empresa Destacada 2026</p>
         </div>
         <div class="capa__pe" aria-hidden="true">
           <svg class="mrz capa__mrz" viewBox="0 0 600 44" preserveAspectRatio="none" focusable="false"><text x="0" y="16" textLength="600" lengthAdjust="spacingAndGlyphs">P&lt;BRAAMAZON&lt;&lt;VISTO&lt;MANAUS&lt;BRASILIA&lt;ONLINE&lt;&lt;&lt;</text><text x="0" y="38" textLength="600" lengthAdjust="spacingAndGlyphs">VISAS&lt;PASAPORTE&lt;INTERCAMBIO&lt;&lt;10&lt;CUOTAS&lt;&lt;&lt;</text></svg>
@@ -139,15 +143,18 @@
       </div>
 
       <figure class="capa__foto">
-        <img
-          src="images/banner-1280.webp"
-          srcset="images/banner-640.webp 640w, images/banner-960.webp 960w, images/banner-1280.webp 1280w, images/banner-1600.webp 1600w, images/banner-1920.webp 1920w"
-          sizes="(min-width: 1440px) 84vw, (min-width: 768px) 98vw, 150vw"
-          alt="Avión en la pista del aeropuerto al atardecer"
-          width="1920"
-          height="1281"
-          fetchpriority="high"
-        />
+        <picture>
+          <source type="image/avif" srcset="images/banner-640.avif 640w, images/banner-960.avif 960w, images/banner-1280.avif 1280w, images/banner-1600.avif 1600w, images/banner-1920.avif 1920w" sizes="(min-width: 1440px) 84vw, (min-width: 768px) 98vw, 150vw" />
+          <img
+            src="images/banner-1280.webp"
+            srcset="images/banner-640.webp 640w, images/banner-960.webp 960w, images/banner-1280.webp 1280w, images/banner-1600.webp 1600w, images/banner-1920.webp 1920w"
+            sizes="(min-width: 1440px) 84vw, (min-width: 768px) 98vw, 150vw"
+            alt="Avión en la pista del aeropuerto al atardecer"
+            width="1920"
+            height="1281"
+            fetchpriority="high"
+          />
+        </picture>
       </figure>
 
       <div class="conversa" id="conversa">
