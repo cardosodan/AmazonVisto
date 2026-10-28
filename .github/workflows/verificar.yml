@@ -4,8 +4,10 @@
 #    mudar algum arquivo (alguém esqueceu de rodar antes do commit: o CSS ou
 #    o JS mudou sem versão nova, ou o es.html ficou para trás).
 # 2. Lighthouse no celular, no index.html e no es.html: desempenho,
-#    acessibilidade, boas práticas e SEO. Avisa quando uma nota cai, sem
-#    barrar o push; o relatório fica nos artefatos da execução.
+#    acessibilidade, boas práticas e SEO. Roda 3 vezes cada página e julga
+#    pela mediana (uma rodada só oscila na máquina compartilhada). Avisa
+#    quando uma nota cai, sem barrar o push; os relatórios ficam nos
+#    artefatos da execução.
 name: Verificar
 
 on:

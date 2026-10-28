@@ -428,8 +428,10 @@ A cada push, o GitHub roda `.github/workflows/verificar.yml`:
    algum arquivo (alguém esqueceu de rodar antes do commit).
 2. **Lighthouse no celular** (`.github/lighthouserc.json`), no `index.html`
    e no `es.html`: desempenho, acessibilidade, boas práticas e SEO, com
-   aviso quando uma nota cai (sem barrar o push). O relatório fica nos
-   artefatos da execução, na aba **Actions** do repositório.
+   aviso quando uma nota cai (sem barrar o push). Cada página roda 3 vezes
+   e vale a mediana, porque uma rodada só oscila na máquina do GitHub. Os
+   relatórios ficam nos artefatos da execução, na aba **Actions** do
+   repositório.
 
 ## 4d. Trocar o domínio
 
